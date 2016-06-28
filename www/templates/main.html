@@ -1,0 +1,31 @@
+<ion-side-menus>
+    <ion-side-menu-content class="mainView" id="mainViewSideMenus" drag-content="false">
+        <ion-nav-bar class="bar-positive">
+            <ion-nav-buttons side="left">
+                <button class="button custom-button-icon-small ion-navicon" on-tap="toggleMenu()"></button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+
+        <div class="overlay" ng-if="disconnectedNetwork">
+            <div class="text">
+                <strong>Server connection lost</strong>
+                <br />
+                Trying to reconnect...
+            </div>
+        </div>
+
+        <ion-nav-view name="main" animation="no-animation" class="no-animation"></ion-nav-view>
+    </ion-side-menu-content>
+
+    <ion-side-menu side="left">
+        <ion-header-bar class="bar-dark" menu-close>
+            <h1 class="title item-text-wrap">Menu</h1>
+        </ion-header-bar>
+        <ion-content has-bouncing="false">
+            <ul class="list">
+                <a ui-sref="login" class="item">Logout</a>
+                <a user-settings class="item" ng-click="toggleMenu()">Settings</a>
+            </ul>
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus>

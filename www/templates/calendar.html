@@ -1,0 +1,14 @@
+<ion-view title="{{navTitle}}">
+    <ion-content drag-content="false" scroll="false" direction="xy" has-bouncing="false">
+        <div style="float:left;width:20%;">
+            <daypilot-navigator id="navi" daypilot-config="navigatorConfig"></daypilot-navigator>
+        </div>
+        <div style="margin:auto;width:80%;">
+            <daypilot-calendar id="week" daypilot-config="weekConfig" events="events"></daypilot-calendar>
+        </div>
+        <div>
+            <button ng-click="showDay()">Day</button>
+            <button ng-click="showWeek()">Week</button>
+        </div>
+    </ion-content>
+</ion-view>
