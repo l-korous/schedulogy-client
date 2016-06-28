@@ -308,3 +308,8 @@ ul.shareDetails {
     bottom:0;
     width:100%;
 }
+
+.indigo-bg {
+    background-color:#1b4a6b ! important;
+    border-color:#000 ! important;
+}
