@@ -1,41 +1,47 @@
 # AngularUI Router &nbsp;[![Build Status](https://travis-ci.org/angular-ui/ui-router.svg?branch=master)](https://travis-ci.org/angular-ui/ui-router)
 
-#### The de-facto solution to flexible routing with nested views
+**Note: this is the Angular 1.x source for UI-Router version 1.0 alpha.  If you are looking for the source for UI-Router 
+version 0.2.x, it can be found [here](https://github.com/angular-ui/ui-router/tree/legacy)**
+
 ---
-**[Download 0.2.11](http://angular-ui.github.io/ui-router/release/angular-ui-router.js)** (or **[Minified](http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js)**) **|**
+
+
+#### The de-facto solution to flexible routing in angular
+---
+**[Docs 1.0.0-alpha.3](http://angular-ui.github.io/ui-router/1.0.0-alpha.3)** |
+**[Download stable](http://angular-ui.github.io/ui-router/release/angular-ui-router.js)** (or **[Minified](http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js)**) **|**
 **[Guide](https://github.com/angular-ui/ui-router/wiki) |**
 **[API](http://angular-ui.github.io/ui-router/site) |**
-**[Sample](http://angular-ui.github.com/ui-router/sample/) ([Src](https://github.com/angular-ui/ui-router/tree/gh-pages/sample)) |**
+**[Sample](http://ui-router.github.io/sample-app/#/mymessages) ([Src](https://github.com/ui-router/sample-app)) |**
 **[FAQ](https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions) |**
 **[Resources](#resources) |**
 **[Report an Issue](https://github.com/angular-ui/ui-router/blob/master/CONTRIBUTING.md#report-an-issue) |**
 **[Contribute](https://github.com/angular-ui/ui-router/blob/master/CONTRIBUTING.md#contribute) |**
 **[Help!](http://stackoverflow.com/questions/ask?tags=angularjs,angular-ui-router) |**
-**[Discuss](https://groups.google.com/forum/#!categories/angular-ui/router)**
+
 
 ---
 
-AngularUI Router is a routing framework for [AngularJS](http://angularjs.org), which allows you to organize the
-parts of your interface into a [*state machine*](https://en.wikipedia.org/wiki/Finite-state_machine). Unlike the
-[`$route` service](http://docs.angularjs.org/api/ngRoute.$route) in the Angular ngRoute module, which is organized around URL
-routes, UI-Router is organized around [*states*](https://github.com/angular-ui/ui-router/wiki),
-which may optionally have routes, as well as other behavior, attached.
+Angular UI-Router is a client-side [Single Page Application](https://en.wikipedia.org/wiki/Single-page_application) 
+routing framework for [AngularJS](http://angularjs.org).  
+  
+Routing frameworks for SPAs update the browser's URL as the user navigates through the app.  Conversely, this allows 
+changes to the browser's URL to drive navigation through the app, thus allowing the user to create a bookmark to a 
+location deep within the SPA.
 
-States are bound to *named*, *nested* and *parallel views*, allowing you to powerfully manage your application's interface.
-
-Check out the sample app: http://angular-ui.github.io/ui-router/sample/
-
--
-**Note:** *UI-Router is under active development. As such, while this library is well-tested, the API may change. Consider using it in production applications only if you're comfortable following a changelog and updating your usage accordingly.*
-
+UI-Router applications are modeled as a hierarchical tree of states. UI-Router provides a 
+[*state machine*](https://en.wikipedia.org/wiki/Finite-state_machine) to manage the transitions between those 
+application states in a transaction-like manner. 
 
 ## Get Started
 
 **(1)** Get UI-Router in one of the following ways:
  - clone & [build](CONTRIBUTING.md#developing) this repository
  - [download the release](http://angular-ui.github.io/ui-router/release/angular-ui-router.js) (or [minified](http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js))
- - via **[Bower](http://bower.io/)**: by running `$ bower install angular-ui-router` from your console
+ - [link to cdn](http://cdnjs.com/libraries/angular-ui-router)
+ - via **[jspm](http://jspm.io/)**: by running `$ jspm install angular-ui-router` from your console
  - or via **[npm](https://www.npmjs.org/)**: by running `$ npm install angular-ui-router` from your console
+ - or via **[Bower](http://bower.io/)**: by running `$ bower install angular-ui-router` from your console
  - or via **[Component](https://github.com/component/component)**: by running `$ component install angular-ui/ui-router` from your console
 
 **(2)** Include `angular-ui-router.js` (or `angular-ui-router.min.js`) in your `index.html`, after including Angular itself (For Component users: ignore this step)

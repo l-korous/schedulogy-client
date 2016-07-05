@@ -1,0 +1,91 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">{{$parent.currentEvent.title ? $parent.currentEvent.title : 'New Task'}}</h1>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Type
+                </div>
+                <select ng-model="$parent.currentEvent.type" required>
+                    <option value="fixed">Fixed</option>
+                    <option value="floating">Floating</option>
+                </select>
+            </label>
+            <label class="item item-input">
+                <div class="input-label">
+                    Title
+                </div>
+                <input type="text" ng-model="$parent.currentEvent.title">
+            </label>
+            <label class="item item-input">
+                <div class="input-label" style="vertical-align: top">
+                    Description
+                </div>
+                <textarea ng-model="$parent.currentEvent.desc" rows="5"></textarea>
+            </label>
+
+            <label class="item item-input" ng-show="$parent.currentEvent.type === 'fixed'">
+                <div class="input-label">
+                    Start date
+                </div>
+                <input type="text" ng-model="$parent.currentEvent.startDateText" ng-click="$parent.openDatePicker('start');" />
+            </label>
+
+            <label class="item item-input" ng-show="$parent.currentEvent.type === 'fixed'">
+                <div class="input-label">
+                    Start time
+                </div>
+                <input type="text" ng-model="$parent.currentEvent.startTimeText" ng-change="$parent.updateDurationWithStartTime()" ng-click="$parent.openTimePicker('start');" />
+            </label>
+
+            <label class="item item-input range" ng-show="$parent.currentEvent.type === 'fixed'">
+                <div class="input-label">
+                    End time<br />[duration]
+                </div>
+                <input type="range" min="1" max="{{$parent.modalSettings.maxDuration}}" ng-model="$parent.currentEvent.duration" ng-change="$parent.updateEndTimeWithDuration()" step="1" required>
+                <div class="input-label">
+                    {{$parent.currentEvent.endDayText}} {{$parent.currentEvent.endTimeText}} - [ {{$parent.currentEvent.duration}} hrs ]
+                </div>
+            </label>
+
+            <label class="item item-input" ng-show="$parent.currentEvent.type === 'floating'">
+                <div class="input-label">
+                    Due date
+                </div>
+                <input type="text" ng-model="$parent.currentEvent.dueDateText" ng-click="$parent.openDatePicker('due');" />
+            </label>
+
+            <label class="item item-input" ng-show="$parent.currentEvent.type === 'floating'">
+                <div class="input-label">
+                    Due time
+                </div>
+                <input type="text" ng-model="$parent.currentEvent.dueTimeText" ng-click="$parent.openTimePicker('due');" />
+            </label>
+
+            <label class="item item-input range" ng-show="$parent.currentEvent.type === 'floating'">
+                <div class="input-label">
+                    Duration
+                </div>
+                <input type="range" min="1" max="{{$parent.modalSettings.maxDuration}}" ng-model="$parent.currentEvent.duration" step="1" required>
+                <div class="input-label">
+                    {{$parent.currentEvent.duration}} hrs
+                </div>
+            </label>
+        </div>
+    </ion-content>
+    <div class="row" style="position:absolute;bottom:0">
+        <div class="col-50 padding-horizontal padding-top">
+            <button class="button button-block button-positive" ng-click="$parent.saveCurrentTask();">
+                Save
+            </button>
+
+        </div>
+        <div class="col-50 padding-horizontal padding-top">
+            <button class="button button-block button-outline button-stable" ng-click="$parent.closeModal();">
+                Cancel
+            </button>
+        </div>
+    </div>
+</ion-modal-view>

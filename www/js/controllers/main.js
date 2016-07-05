@@ -1,19 +1,28 @@
 angular.module('Scheduler')
-        .controller('MainCtrl', function ($scope, $ionicSideMenuDelegate, $rootScope, $state) {
-            $scope.toggleMenu = function () {
-                $ionicSideMenuDelegate.toggleLeft();
-            };
-            $scope.$on('logoutCloseMenu', function () {
-                $ionicSideMenuDelegate.toggleLeft(false);
-            });
-            $scope.disconnectedNetwork = false;
-            $scope.$on('disconnectedNetwork', function () {
-                $scope.disconnectedNetwork = true;
-            });
-            $scope.$on('connectedNetwork', function () {
-                $scope.disconnectedNetwork = false;
-            });
-            $scope.refreshTimeSlots = function () {
-                $state.go('main.calendar:callRefresh', {callRefresh: true});
-            };
+    .controller('MainCtrl', function ($scope, $window, $ionicPopover) {
+        // Popover
+        $ionicPopover.fromTemplateUrl('templates/popovers/user_menu.html', {
+            scope: $scope
+        }).then(function (popover) {
+            $scope.popover = popover;
         });
+
+        $scope.openPopover = function ($event) {
+            $scope.popover.show($event);
+        };
+        $scope.closePopover = function () {
+            $scope.popover.hide();
+        };
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.popover.remove();
+        });
+        // Execute action on hide popover
+        $scope.$on('popover.hidden', function () {
+            // Execute action
+        });
+        // Execute action on remove popover
+        $scope.$on('popover.removed', function () {
+            // Execute action
+        });
+    });

@@ -1,52 +1,73 @@
-angular.module('Secretary')
-        .factory('Task', function ($resource, $http, serverUrl, moment, dateTimeFormatEdit, dateTimeFormatDisplay) {
-                var Task = $resource(serverUrl + "/tasks/:userId:taskId", {
-                    taskId: "@_id"
-                }, {
-                    queryMine: {
-                        method: "GET",
-                        isArray: true,
-                        params: {
-                            userId: "@userId"
-                        },
-                        transformResponse: $http.defaults.transformResponse.concat([function (tasks) {
-                                return tasks.map(unserialize);
-                            }])
-                    },
-                    get: {
-                        method: "GET",
-                        url: serverUrl + "/task/:taskId",
-                        transformResponse: $http.defaults.transformResponse.concat([unserialize])
-                    },
-                    save: {
-                        method: "POST",
-                        transformRequest: [serialize].concat($http.defaults.transformRequest)
-                    },
-                    remove: {
-                        method: "DELETE"
-                    }
-                });
-
-                function serialize(task) {
-                    var new_task = angular.extend({}, task, {
-                    });
-                    return new_task;
+angular.module('Scheduler')
+    .factory('Task', ['$resource', '$http', 'settings', 'moment', function ($resource, $http, settings, moment) {
+            var Task = $resource(settings.serverUrl + "/task", {}, {
+                query: {
+                    method: "GET",
+                    url: settings.serverUrl + "/task",
+                    //params: {
+                    //    userId: "@userId"
+                    //},
+                },
+                get: {
+                    method: "GET",
+                    url: settings.serverUrl + "/task/:taskId"
+                },
+                save: {
+                    method: "POST"
+                },
+                remove: {
+                    method: "DELETE"
                 }
-                
-                function unserialize(task) {
-                    var new_task = angular.extend(new Task(), task, {
-                        dueDate: moment(task.dueDate).local().format(dateTimeFormatEdit),
-                        createdOn: moment(task.createdOn).local().format(dateTimeFormatEdit),
-                        updated: moment(task.updated).local().format(dateTimeFormatEdit),
-                        dueDateDisplay: moment(task.dueDate).local().format(dateTimeFormatDisplay),
-                        createdOnDisplay: moment(task.createdOn).local().format(dateTimeFormatDisplay),
-                        updatedDisplay: moment(task.updated).local().format(dateTimeFormatDisplay)
-                    });
-                    return new_task;
-                }
-                
-                Task.serialize = serialize;
-                Task.unserialize = unserialize;
-
-                return Task;
             });
+
+            Task.fromEvent = function (event) {
+                var task = new Task;
+                task._id = event._id;
+                // DELETE
+                task.name = event.title;
+                task.title = event.title;
+                task.start = event.start;
+                // DELETE
+                task.starts = event.start;
+                task.desc = event.desc;
+                task.duration = event.duration;
+                task.due = event.due;
+                task.deps = event.deps;
+                task.type = event.type;
+
+                return task;
+            };
+
+            Task.toEvent = function (task) {
+                // DELETE
+                var start = moment(task.starts);
+                var end = start.clone().add(task.duration, 'hours');
+                var event = angular.extend({
+                    id: task._id,
+                    title: task.name,
+                    // DELETE
+                    start: start,
+                    // PRYC S
+                    startDateText: start.format(settings.dateFormat),
+                    // PRYC S
+                    startTimeText: start.format(settings.timeFormat),
+                    // DELETE
+                    end: end,
+                    // PRYC S
+                    endDateText: end.format(settings.dateFormat),
+                    // PRYC S
+                    endTimeText: end.format(settings.timeFormat),
+                    stick: true
+                }, task);
+
+                if (task.type === 'floating') {
+                    event.due = moment(task.due);
+                    event.dueDateText = event.due.format(settings.dateFormat);
+                    event.dueTimeText = event.due.format(settings.timeFormat);
+                }
+
+                return event;
+            };
+
+            return Task;
+        }]);
