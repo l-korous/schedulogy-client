@@ -16,48 +16,41 @@ angular.module('Scheduler')
                     method: "POST"
                 },
                 remove: {
-                    method: "DELETE"
+                    method: "DELETE",
+                    url: settings.serverUrl + "/task/:taskId",
+                    params: {
+                        taskId: "@taskId"
+                    }
                 }
             });
 
             Task.fromEvent = function (event) {
-                var task = new Task;
-                task._id = event._id;
-                // DELETE
-                task.name = event.title;
-                task.title = event.title;
-                task.start = event.start;
-                // DELETE
-                task.starts = event.start;
-                task.desc = event.desc;
-                task.duration = event.duration;
-                task.due = event.due;
-                task.deps = event.deps;
-                task.type = event.type;
-
+                var task = angular.extend(new Task, {
+                    _id: event._id,
+                    title: event.title,
+                    start: event.start,
+                    dur: event.dur,
+                    type: event.type,
+                    due: event.due,
+                    desc: event.desc,
+                    deps: event.deps
+                });
                 return task;
             };
 
             Task.toEvent = function (task) {
-                // DELETE
-                var start = moment(task.starts);
-                var end = start.clone().add(task.duration, 'hours');
-                var event = angular.extend({
+                var start = moment(task.start);
+                var end = start.clone().add(task.type === 'fixedAllDay' ? task.dur - 1 : task.dur, task.type === 'fixedAllDay' ? 'days' : 'hours');
+                var event = angular.extend(task, {
                     id: task._id,
-                    title: task.name,
-                    // DELETE
                     start: start,
-                    // PRYC S
                     startDateText: start.format(settings.dateFormat),
-                    // PRYC S
                     startTimeText: start.format(settings.timeFormat),
-                    // DELETE
                     end: end,
-                    // PRYC S
                     endDateText: end.format(settings.dateFormat),
-                    // PRYC S
                     endTimeText: end.format(settings.timeFormat),
-                    stick: true
+                    stick: true,
+                    allDay: (task.type === 'fixedAllDay')
                 }, task);
 
                 if (task.type === 'floating') {

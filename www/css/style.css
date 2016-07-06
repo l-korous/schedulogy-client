@@ -41,8 +41,23 @@ footer {
     background-color: #263238;
 }
 
-.fc-basic-view .fc-body .fc-row {
-    min-height:8em;
+h2 {
+    font-size:25px;
+}
+
+.smallPopover h2 {
+    font-size:13px;
+    margin:0;
+}
+
+.rangeInfo {
+    position: absolute;
+    bottom: 7px;
+    right: 15%;
+}
+
+.rangeInfoFloating {
+    right: 29%;
 }
 
 .calendarControls {
@@ -64,36 +79,76 @@ footer {
     margin:0;
 }
 
-h2 {
-    font-size:25px;
-}
-
-.smallPopover h2 {
-    font-size:13px;
+.customFormErrorList {
     margin:0;
+    padding:0;
 }
 
-//Scale-In Animation
-.scale-in {
-    transform: scale(0.9);
-    opacity: 0;
-}
-.scale-in.ng-enter,
-.scale-in > .ng-enter {
-    transition: all cubic-bezier(.1, .7, .1, 1) 400ms;
-}
-
-.scale-in.ng-enter-active,
-.scale-in > .ng-enter-active {
-    transform: scale(1);
-    opacity: 1;
+.eventDeleter {
+    z-index: 55;
+    position: absolute;
+    top: 0;
+    right: 5px;
+    font-size: 20px;
+    color: white;
 }
 
-.scale-in.ng-leave,
-.scale-in > .ng-leave {
-    transition: all ease-in-out 250ms;
+.eventDeleter:hover {
+    color: #aaa;
 }
 
-.range {
+.has-error {
+    background-color:rgba(255,0,0,.15);
+}
+
+.help-block {
+    background-color:rgba(255,0,0,.15);
+    font-size:85%;
+    line-height:85%;
+    font-weight:bold;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+/* FullCalendar fixes */
+
+.fc-basic-view .fc-body .fc-row {
+    min-height:8em;
+}
+
+.fc-event .fc-bg {
+    opacity:0;
+}
+
+.fc-event .fc-content {
+    padding:5px;
+    height:100%;
+}
+
+.fc-event .fc-content .fc-time {
+    margin:5px 0 10px 5px;
+    text-align:left;
+    font-size: 12px;
+}
+.fc-event .fc-content .fc-title {
+    margin:10px 5px 0 5px;
+    text-align:center;
+    font-size: 15px;
+    overflow: hidden;
+}
+
+/* Ionic fixes */
+
+.modal .range {
+    position:relative;
     padding: 6px 0 5px 16px;
+}
+
+.modal .range input[type="range"] {
+    margin-top:-13px;
+}
+
+.button-small {
+    min-width:35px ! important;
+    min-height:30px ! important;
 }

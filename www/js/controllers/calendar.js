@@ -1,16 +1,37 @@
 angular.module('Scheduler')
-    .controller('CalendarCtrl', ['DateUtils', '$scope', '$ionicModal', 'uiCalendarConfig', 'settings', '$window', '$ionicPopover', '$timeout', 'Task', 'moment', 'ionicDatePicker', 'ionicTimePicker', function (DateUtils, $scope, $ionicModal, uiCalendarConfig, settings, $window, $ionicPopover, $timeout, Task, moment, ionicDatePicker, ionicTimePicker) {
+    .controller('CalendarCtrl', ['DateUtils', '$scope', '$ionicModal', 'uiCalendarConfig', 'settings', 'Event',
+        '$window', '$ionicPopover', '$timeout', 'Task', 'moment', 'ionicDatePicker', 'ionicTimePicker', '$filter', '$ionicLoading',
+        function (DateUtils, $scope, $ionicModal, uiCalendarConfig, settings, Event, $window, $ionicPopover, $timeout, Task, moment, ionicDatePicker, ionicTimePicker, $filter, $ionicLoading) {
             /* event source that pulls from google.com */
             $scope.eventSource = {
                 url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
                 className: 'gcal-event', // an option!
                 currentTimezone: 'America/Chicago' // an option!
             };
-            $scope.tasks = [];
-            $scope.eventSources = [$scope.tasks];
-            $scope.printEvent = function () {
-                console.dir($scope.currentEvent);
+            $scope.events = [];
+            $scope.eventSources = [$scope.events];
+
+            $scope.emptyCurrentEvent = function () {
+                var btime = DateUtils.getBTime();
+                var btimePlusDuration = btime.clone().add(settings.defaultTaskDuration, 'hours');
+
+                $scope.currentEvent = {
+                    new : true,
+                    stick: true,
+                    type: settings.defaultTaskType,
+                    dur: settings.defaultTaskDuration,
+                    start: btime,
+                    startDateText: btime.format(settings.dateFormat),
+                    startTimeText: btime.format(settings.timeFormat),
+                    end: btimePlusDuration,
+                    endDateText: btimePlusDuration.format(settings.dateFormat),
+                    endTimeText: btimePlusDuration.format(settings.timeFormat),
+                    due: btimePlusDuration,
+                    dueDateText: btimePlusDuration.format(settings.dateFormat),
+                    dueTimeText: btimePlusDuration.format(settings.timeFormat)
+                };
             };
+
             $scope.uiConfig = {
                 calendar: {
                     defaultView: 'agendaWeek',
@@ -18,6 +39,9 @@ angular.module('Scheduler')
                     timezone: 'local',
                     timeFormat: 'H:mm',
                     slotLabelFormat: 'H:mm',
+                    eventBackgroundColor: '#387ef5',
+                    eventBorderColor: '#aaa',
+                    eventColor: '#387ef5',
                     axisFormat: 'H:mm',
                     selectConstraint: {
                         start: DateUtils.getBTime(),
@@ -42,31 +66,18 @@ angular.module('Scheduler')
                         end: settings.endHour + ':00:00'
                     },
                     eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-                        Task.fromEvent(event).$save(function (resp, headers) {
-                            //success callback
-                            console.log(resp);
-                        },
-                            function (err) {
-                                // error callback
-                                console.log(err);
-                            });
+                        $scope.saveEvent(event);
                     },
                     eventClick: function (calEvent, jsEvent, view) {
                         $scope.currentEvent = calEvent;
                         $scope.openModal();
                     },
                     eventDrop: function (event, delta, revertFunc) {
-                        Task.fromEvent(event).$save(function (resp, headers) {
-                            //success callback
-                            console.log(resp);
-                        },
-                            function (err) {
-                                // error callback
-                                console.log(err);
-                            });
+                        $scope.saveEvent(event);
                     },
                     select: function (start, end, jsEvent, view, resource) {
-                        $scope.currentEvent = {
+                        $scope.emptyCurrentEvent();
+                        $scope.currentEvent = angular.extend($scope.currentEvent, {
                             type: 'fixed',
                             start: start,
                             startDateText: start.format(settings.dateFormat),
@@ -74,9 +85,38 @@ angular.module('Scheduler')
                             end: end,
                             endDateText: end.format(settings.dateFormat),
                             endTimeText: end.format(settings.timeFormat),
-                            duration: end.diff(start, 'h')
-                        };
+                            dur: end.diff(start, 'h')
+                        });
+
+                        if (view.name === 'month' || !(start.hasTime() || end.hasTime())) {
+                            $scope.currentEvent.dur = end.diff(start, 'd');
+                            $scope.currentEvent.type = 'fixedAllDay';
+                        }
+
                         $scope.openModal();
+                    },
+                    viewRender: function (view, element) {
+                        if (view.name === 'month')
+                            $timeout(function () {
+                                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'additionalSelectConstraint', '');
+                            });
+                        else
+                            $timeout(function () {
+                                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'additionalSelectConstraint', 'businessHours');
+                            });
+                    },
+                    eventMouseover: function (event, jsEvent, view) {
+                        var newdiv1 = $('<i class="icon ion-close assertive eventDeleter">');
+
+                        $(jsEvent.currentTarget).append(newdiv1);
+
+                        $('.eventDeleter').click(function (evt) {
+                            evt.stopPropagation();
+                            angular.element(this).scope().deleteEventById(event._id);
+                        });
+                    },
+                    eventMouseout: function (event, jsEvent, view) {
+                        $('i').remove(".eventDeleter");
                     }
                 }
             };
@@ -92,16 +132,27 @@ angular.module('Scheduler')
                     uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - settings.shiftCalendar);
                 });
             };
-            Task.query(function (data) {
-                data.tasks.forEach(function (task) {
-                    $scope.tasks.push(Task.toEvent(task));
-                });
-            });
+
             $scope.calculateCalendarRowHeight();
+
             angular.element($window).bind('resize', function () {
                 $scope.calculateCalendarRowHeight();
             });
-            // Popover coming soon.
+
+            // Events bulk operations.
+            $scope.importFromTasks = function (tasks) {
+                $scope.events.splice(0, $scope.events.length);
+
+                tasks.forEach(function (task) {
+                    $scope.events.push(Task.toEvent(task));
+                });
+            };
+
+            Task.query(function (data) {
+                $scope.importFromTasks(data.tasks);
+            });
+
+            // Popover 'coming soon'.
             $ionicPopover.fromTemplateUrl('templates/popovers/coming_soon.html', {
                 scope: $scope
             }).then(function (popover) {
@@ -121,57 +172,109 @@ angular.module('Scheduler')
                 $scope.modal = modal;
             });
             $scope.modalSettings = {
-                maxDuration: settings.endHour - settings.startHour
-            };
-            $scope.openModal = function () {
-                if (!$scope.currentEvent) {
-                    var btime = DateUtils.getBTime();
-                    var btimePlusDuration = btime.clone().add(settings.defaultTaskDuration, 'hours');
-                    $scope.currentEvent = {
-                        type: settings.defaultTaskType,
-                        duration: settings.defaultTaskDuration,
-                        start: btime,
-                        startDateText: btime.format(settings.dateFormat),
-                        startTimeText: btime.format(settings.timeFormat),
-                        end: btimePlusDuration,
-                        endDateText: btimePlusDuration.format(settings.dateFormat),
-                        endTimeText: btimePlusDuration.format(settings.timeFormat),
-                        due: btimePlusDuration,
-                        dueDateText: btimePlusDuration.format(settings.dateFormat),
-                        dueTimeText: btimePlusDuration.format(settings.timeFormat)
-                    };
+                maxDuration: {
+                    fixed: 24,
+                    fixedAllDay: 14,
+                    floating: settings.endHour - settings.startHour
                 }
-                $scope.modal.show();
             };
-            $scope.updateEndTimeWithDuration = function () {
-                $scope.currentEvent.end = $scope.currentEvent.start.clone().add($scope.currentEvent.duration, 'hours');
+            $scope.openModal = function (clear) {
+                if (!$scope.currentEvent || clear) {
+                    $scope.emptyCurrentEvent();
+                }
+                $scope.modal.show().then(document.getElementById('eventTitleEdit').focus());
+            };
+
+            $scope.updateEndDateTimeWithDuration = function () {
+                $scope.currentEvent.end = $scope.currentEvent.start.clone().add($scope.currentEvent.type === 'fixedAllDay' ? $scope.currentEvent.dur - 1 : $scope.currentEvent.dur, $scope.currentEvent.type === 'fixedAllDay' ? 'days' : 'hours');
                 $scope.currentEvent.endDateText = $scope.currentEvent.end.format(settings.dateFormat);
                 $scope.currentEvent.endTimeText = $scope.currentEvent.end.format(settings.timeFormat);
             };
-            $scope.updateDurationWithStartTime = function () {
-                if ($scope.currentEvent.start.hours() + $scope.currentEvent.duration > settings.endHour) {
-                    $scope.currentEvent.duration = settings.endHour - $scope.currentEvent.start.hours();
-                    $scope.updateEndTimeWithDuration();
-                }
+
+            $scope.handleChangeOfEventType = function () {
+                if ($scope.currentEvent.dur > $scope.modalSettings.maxDuration[$scope.currentEvent.type])
+                    $scope.currentEvent.dur = $scope.modalSettings.maxDuration[$scope.currentEvent.type];
+                $scope.updateEndDateTimeWithDuration();
             };
+
             $scope.closeModal = function () {
                 $scope.modal.hide();
             };
-            // Cleanup everything.
-            $scope.$on('$destroy', function () {
-                $scope.comingSoonPopover.remove();
-                $scope.modal.remove();
-            });
-            $scope.saveCurrentTask = function () {
-                Task.fromEvent($scope.currentEvent).$save(function (resp, headers) {
-                    //success callback
-                    console.log(resp);
+
+            $scope.saveEvent = function (passedEvent) {
+                var eventToSave = passedEvent || $scope.currentEvent;
+
+                $ionicLoading.show({
+                    template: 'Loading...'
+                });
+
+                Task.fromEvent(eventToSave).$save(function (data, headers) {
+                    $scope.importFromTasks(data.tasks);
+                    $ionicLoading.hide();
                 },
                     function (err) {
+                        $ionicLoading.hide();
+
                         // error callback
                         console.log(err);
                     });
             };
+
+            $scope.deleteEvent = function (passedEvent) {
+                var eventToDelete = passedEvent || $scope.currentEvent;
+
+                $ionicLoading.show({
+                    template: 'Loading...'
+                });
+
+                Task.fromEvent(eventToDelete).$remove({taskId: eventToDelete._id}, function (data, headers) {
+                    $scope.importFromTasks(data.tasks);
+                    $ionicLoading.hide();
+                },
+                    function (err) {
+                        $ionicLoading.hide();
+
+                        // error callback
+                        console.log(err);
+                    });
+            };
+
+            $scope.deleteEventById = function (passedEventId) {
+                $scope.deleteEvent($scope.events.find(function (event) {
+                    return event._id === passedEventId;
+                }));
+            };
+
+            $scope.addDependency = function () {
+                $scope.currentEvent.deps.push(eventId);
+            };
+
+            $scope.removeDependency = function (event) {
+                for (var i = $scope.currentEvent.deps.length - 1; i >= 0; i--) {
+                    if ($scope.currentEvent.deps[i]._id === event._id) {
+                        $scope.currentEvent.deps.splice(i, 1);
+                    }
+                }
+            };
+
+            $scope.notDependencyOrMe = function (inspectedEvent) {
+                if ($scope.currentEvent && inspectedEvent._id === $scope.currentEvent._id)
+                    return false;
+                var retVal = true;
+                if ($scope.currentEvent && $scope.currentEvent.deps) {
+                    $scope.currentEvent.deps.forEach(function (dependency) {
+                        if (dependency._id === inspectedEvent._id)
+                            retVal = false;
+                    });
+                }
+                return retVal;
+            };
+
+            $scope.startValue = function (event) {
+                return event.start.unix();
+            };
+
+            // Date & time pickers
             var datesUsed = [{name: 'start'}, {name: 'due'}];
             datesUsed.forEach(function (d) {
                 d.dp = {
@@ -180,6 +283,9 @@ angular.module('Scheduler')
                         $scope.currentEvent[d.name] = DateUtils.pushDatePart(moment(val), $scope.currentEvent[d.name]);
                         $scope.currentEvent[d.name + 'DateText'] = $scope.currentEvent[d.name].format(settings.dateFormat);
                         $scope.currentEvent[d.name + 'TimeText'] = $scope.currentEvent[d.name].format(settings.timeFormat);
+
+                        if (d.name === 'start')
+                            $scope.updateEndDateTimeWithDuration();
                     }
                 };
                 d.tp = {
@@ -187,6 +293,9 @@ angular.module('Scheduler')
                         $scope.currentEvent[d.name] = DateUtils.pushTime(val, $scope.currentEvent[d.name]);
                         $scope.currentEvent[d.name + 'DateText'] = $scope.currentEvent[d.name].format(settings.dateFormat);
                         $scope.currentEvent[d.name + 'TimeText'] = $scope.currentEvent[d.name].format(settings.timeFormat);
+
+                        if (d.name === 'start')
+                            $scope.updateEndDateTimeWithDuration();
                     }
                 };
             });
@@ -200,4 +309,10 @@ angular.module('Scheduler')
                     return e.name === dateUsed;
                 }))[0].tp);
             };
+
+            // Cleanup when destroying.
+            $scope.$on('$destroy', function () {
+                $scope.comingSoonPopover.remove();
+                $scope.modal.remove();
+            });
         }]);

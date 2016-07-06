@@ -3,89 +3,174 @@
         <h1 class="title">{{$parent.currentEvent.title ? $parent.currentEvent.title : 'New Task'}}</h1>
     </ion-header-bar>
     <ion-content>
-        <div class="list">
-            <label class="item item-input item-select">
-                <div class="input-label">
-                    Type
-                </div>
-                <select ng-model="$parent.currentEvent.type" required>
-                    <option value="fixed">Fixed</option>
-                    <option value="floating">Floating</option>
-                </select>
-            </label>
-            <label class="item item-input">
-                <div class="input-label">
-                    Title
-                </div>
-                <input type="text" ng-model="$parent.currentEvent.title">
-            </label>
-            <label class="item item-input">
-                <div class="input-label" style="vertical-align: top">
-                    Description
-                </div>
-                <textarea ng-model="$parent.currentEvent.desc" rows="5"></textarea>
-            </label>
+        <form name="taskSaveForm" novalidate>
+            <div class="list customFormErrorList">
+                <div ng-show="taskSaveForm.title.$error.required && !taskSaveForm.title.$pristine" class="item help-block">Please provide a valid title.</div>
+                <div ng-show="taskSaveForm.fixedStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
+                <div ng-show="taskSaveForm.fixedStartTime.$error.required" class="item help-block">Please provide a valid time.</div>
+                <div ng-show="taskSaveForm.fixedDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
+                <div ng-show="taskSaveForm.fixedAllDayStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
+                <div ng-show="taskSaveForm.fixedAllDayDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
+                <div ng-show="taskSaveForm.floatingDueDate.$error.required" class="item help-block">Please provide a valid date.</div>
+                <div ng-show="taskSaveForm.floatingDueTime.$error.required" class="item help-block">Please provide a valid time.</div>
+                <div ng-show="taskSaveForm.floatingDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
+            </div>
+            <div class="list">
+                <label class="item item-input item-select">
+                    <div class="input-label">
+                        Type
+                    </div>
+                    <select ng-model="$parent.currentEvent.type" required ng-change="handleChangeOfEventType()">
+                        <option value="fixed">Fixed</option>
+                        <option value="fixedAllDay">Fixed (all-day)</option>
+                        <option value="floating">Floating</option>
+                    </select>
+                </label>
+                <label class="item item-input" ng-class="{ 'has-error' : taskSaveForm.title.$invalid && !taskSaveForm.title.$pristine }">
+                    <div class="input-label">
+                        Title
+                    </div>
+                    <input type="text" ng-model="$parent.currentEvent.title" id="eventTitleEdit" required name="title">
 
-            <label class="item item-input" ng-show="$parent.currentEvent.type === 'fixed'">
-                <div class="input-label">
-                    Start date
-                </div>
-                <input type="text" ng-model="$parent.currentEvent.startDateText" ng-click="$parent.openDatePicker('start');" />
-            </label>
+                </label>
+                <label class="item item-input">
+                    <div class="input-label" style="vertical-align: top">
+                        Description
+                    </div>
+                    <textarea ng-model="$parent.currentEvent.desc" rows="5"></textarea>
+                </label>
 
-            <label class="item item-input" ng-show="$parent.currentEvent.type === 'fixed'">
-                <div class="input-label">
-                    Start time
-                </div>
-                <input type="text" ng-model="$parent.currentEvent.startTimeText" ng-change="$parent.updateDurationWithStartTime()" ng-click="$parent.openTimePicker('start');" />
-            </label>
+                <label class="item item-input" ng-show="$parent.currentEvent.type === 'fixed'"
+                       ng-class="{ 'has-error' : taskSaveForm.fixedStartDate.$invalid && !taskSaveForm.fixedStartDate.$pristine }">
+                    <div class="input-label">
+                        Start date
+                    </div>
+                    <input type="text" ng-model="$parent.currentEvent.startDateText" ng-click="$parent.openDatePicker('start');"
+                           name="fixedStartDate" ng-required="$parent.currentEvent.type === 'fixed'"/>
 
-            <label class="item item-input range" ng-show="$parent.currentEvent.type === 'fixed'">
-                <div class="input-label">
-                    End time<br />[duration]
-                </div>
-                <input type="range" min="1" max="{{$parent.modalSettings.maxDuration}}" ng-model="$parent.currentEvent.duration" ng-change="$parent.updateEndTimeWithDuration()" step="1" required>
-                <div class="input-label">
-                    {{$parent.currentEvent.endDayText}} {{$parent.currentEvent.endTimeText}} - [ {{$parent.currentEvent.duration}} hrs ]
-                </div>
-            </label>
 
-            <label class="item item-input" ng-show="$parent.currentEvent.type === 'floating'">
-                <div class="input-label">
-                    Due date
-                </div>
-                <input type="text" ng-model="$parent.currentEvent.dueDateText" ng-click="$parent.openDatePicker('due');" />
-            </label>
+                </label>
 
-            <label class="item item-input" ng-show="$parent.currentEvent.type === 'floating'">
-                <div class="input-label">
-                    Due time
-                </div>
-                <input type="text" ng-model="$parent.currentEvent.dueTimeText" ng-click="$parent.openTimePicker('due');" />
-            </label>
+                <label class="item item-input" ng-show="$parent.currentEvent.type === 'fixed'"
+                       ng-class="{ 'has-error' : taskSaveForm.fixedStartTime.$invalid && !taskSaveForm.fixedStartTime.$pristine }">
+                    <div class="input-label">
+                        Start time
+                    </div>
+                    <input type="text" ng-model="$parent.currentEvent.startTimeText" ng-click="$parent.openTimePicker('start');" name="fixedStartTime"
+                           ng-required="$parent.currentEvent.type === 'fixed'"/>
 
-            <label class="item item-input range" ng-show="$parent.currentEvent.type === 'floating'">
-                <div class="input-label">
-                    Duration
+                </label>
+
+                <label class="item item-input range" ng-show="$parent.currentEvent.type === 'fixed'"
+                       ng-class="{ 'has-error' : taskSaveForm.fixedDuration.$invalid && !taskSaveForm.fixedDuration.$pristine }">
+                    <div class="input-label">
+                        End time<br />[duration]
+                    </div>
+                    <input type="range" min="1" max="{{$parent.modalSettings.maxDuration.fixed}}" ng-change="$parent.updateEndDateTimeWithDuration()"
+                           name="fixedDuration" ng-model="$parent.currentEvent.dur" step="1" ng-required="$parent.currentEvent.type === 'fixed'"/>
+
+
+                    <div class="rangeInfo">
+                        {{$parent.currentEvent.endTimeText}} ({{$parent.currentEvent.endDateText}}) &nbsp; [ {{$parent.currentEvent.dur}} hrs ]
+                    </div>
+                </label>
+
+
+                <label class="item item-input" ng-show="$parent.currentEvent.type === 'fixedAllDay'"
+                       ng-class="{ 'has-error' : taskSaveForm.fixedAllDayStartDate.$invalid && !taskSaveForm.fixedAllDayStartDate.$pristine }">
+                    <div class="input-label">
+                        Start date
+                    </div>
+                    <input type="text" ng-model="$parent.currentEvent.startDateText" ng-click="$parent.openDatePicker('start');" name="fixedAllDayStartDate"
+                           ng-required="$parent.currentEvent.type === 'fixedAllDay'"/>
+                </label>
+
+                <label class="item item-input range" ng-show="$parent.currentEvent.type === 'fixedAllDay'"
+                       ng-class="{ 'has-error' : taskSaveForm.fixedAllDayDuration.$invalid && !taskSaveForm.fixedAllDayDuration.$pristine }">
+                    <div class="input-label">
+                        End date<br />[duration]
+                    </div>
+                    <input type="range" min="1" max="{{$parent.modalSettings.maxDuration.fixedAllDay}}" ng-change="$parent.updateEndDateTimeWithDuration()"
+                           name="fixedAllDayDuration" ng-model="$parent.currentEvent.dur" step="1" ng-required="$parent.currentEvent.type === 'fixedAllDay'"/>
+
+
+                    <div class="rangeInfo">
+                        {{$parent.currentEvent.endDateText}} &nbsp; [ {{$parent.currentEvent.dur}} days ]
+                    </div>
+                </label>
+
+                <label class="item item-input" ng-show="$parent.currentEvent.type === 'floating'"
+                       ng-class="{ 'has-error' : taskSaveForm.floatingDueDate.$invalid && !taskSaveForm.floatingDueDate.$pristine }">
+                    <div class="input-label">
+                        Due date
+                    </div>
+                    <input type="text" ng-model="$parent.currentEvent.dueDateText" ng-click="$parent.openDatePicker('due');" name="floatingDueDate"
+                           ng-required="$parent.currentEvent.type === 'floating'"/>
+                </label>
+
+                <label class="item item-input" ng-show="$parent.currentEvent.type === 'floating'" 
+                       ng-class="{ 'has-error' : taskSaveForm.floatingDueTime.$invalid && !taskSaveForm.floatingDueTime.$pristine }">
+                    <div class="input-label">
+                        Due time
+                    </div>
+                    <input type="text" ng-model="$parent.currentEvent.dueTimeText" ng-click="$parent.openTimePicker('due');" name="floatingDueTime"
+                           ng-required="$parent.currentEvent.type === 'floating'"/>
+                </label>
+
+                <label class="item item-input range" ng-show="$parent.currentEvent.type === 'floating'"
+                       ng-class="{ 'has-error' : taskSaveForm.floatingDuration.$invalid && !taskSaveForm.floatingDuration.$pristine }">
+                    <div class="input-label">
+                        Duration<br />&nbsp;
+                    </div>
+                    <input type="range" min="1" max="{{$parent.modalSettings.maxDuration.floating}}" ng-model="$parent.currentEvent.dur"
+                           name="floatingDuration" step="1" ng-required="$parent.currentEvent.type === 'floating'"/>
+
+
+                    <div class="rangeInfoFloating rangeInfo">
+                        {{$parent.currentEvent.dur}} hrs
+                    </div>
+                </label>
+
+                <div class="item" ng-show="$parent.currentEvent.type === 'floating'">
+                    <div class="input-label">
+                        Dependencies
+                    </div>
+                    <div class="list">
+                        <div class="item item-button-right" ng-repeat="event in $parent.currentEvent.deps| filter : {_id: event._id} : true">
+                            {{event.title}}
+                            <button class="button button-assertive" on-tap="$parent.removeDependency(event)">
+                                <i class="icon ion-trash-a"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-90">
+                            <label class="item item-input item-select item-button-right">
+                                <custom-select ng-model="$parent.newDependency" options="$parent.events | filter : notDependencyOrMe : true | orderBy:startValue" value="_id" label="name" label2="startDateText" label3="startTimeText" null-value="Select task"></custom-select>
+                            </label>
+                        </div>
+                        <div class="col-10 text-right">
+                            <button class="button button-small button-balanced" ng-disabled="!$parent.newDependency" on-tap="$parent.addDependency(newDependency)">
+                                <i class="icon ion-plus"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <input type="range" min="1" max="{{$parent.modalSettings.maxDuration}}" ng-model="$parent.currentEvent.duration" step="1" required>
-                <div class="input-label">
-                    {{$parent.currentEvent.duration}} hrs
+            </div>
+
+            <div class="row">
+                <div class="col-50 padding-horizontal padding-top">
+                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.closeModal(); $parent.saveEvent();">
+                        Save
+                    </button>
+
                 </div>
-            </label>
-        </div>
+                <div class="col-50 padding-horizontal padding-top">
+                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeModal();">
+                        Cancel
+                    </button>   
+                </div>
+            </div>
+        </form>
     </ion-content>
-    <div class="row" style="position:absolute;bottom:0">
-        <div class="col-50 padding-horizontal padding-top">
-            <button class="button button-block button-positive" ng-click="$parent.saveCurrentTask();">
-                Save
-            </button>
-
-        </div>
-        <div class="col-50 padding-horizontal padding-top">
-            <button class="button button-block button-outline button-stable" ng-click="$parent.closeModal();">
-                Cancel
-            </button>
-        </div>
-    </div>
 </ion-modal-view>

@@ -9811,7 +9811,15 @@ function EventManager(options) { // assumed to be a calendar
 
 
 	function isSelectionRangeAllowed(range) {
-		return isRangeAllowed(range, options.selectConstraint, options.selectOverlap);
+        // TODO - Generalize
+		var toReturn = isRangeAllowed(range, options.selectConstraint, options.selectOverlap);
+        if(options.additionalSelectConstraint) {
+            if(options.additionalSelectConstraint.views.some(function(viewName) {
+                return (viewName === t.getView().name);
+            }))
+            toReturn &= isRangeAllowed(range, options.additionalSelectConstraint.constraint, options.selectOverlap);
+        }
+        return toReturn;
 	}
 
 
