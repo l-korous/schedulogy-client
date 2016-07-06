@@ -60,7 +60,10 @@ angular.module('Scheduler')
                     minTime: settings.startHour + ':00:00',
                     maxTime: settings.endHour + ':00:00',
                     selectable: true,
-                    eventConstraint: "businessHours",
+                    eventConstraint: {
+                        start: DateUtils.getBTime(),
+                        end: DateUtils.getBTime().clone().add(settings.weeks, 'weeks')
+                    },
                     businessHours: {
                         start: settings.startHour + ':00:00',
                         end: settings.endHour + ':00:00'
@@ -92,18 +95,12 @@ angular.module('Scheduler')
                             $scope.currentEvent.dur = end.diff(start, 'd');
                             $scope.currentEvent.type = 'fixedAllDay';
                         }
+                        $scope.updateEndDateTimeWithDuration();
 
                         $scope.openModal();
                     },
                     viewRender: function (view, element) {
-                        if (view.name === 'month')
-                            $timeout(function () {
-                                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'additionalSelectConstraint', '');
-                            });
-                        else
-                            $timeout(function () {
-                                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'additionalSelectConstraint', 'businessHours');
-                            });
+
                     },
                     eventMouseover: function (event, jsEvent, view) {
                         var newdiv1 = $('<i class="icon ion-close assertive eventDeleter">');
@@ -182,13 +179,30 @@ angular.module('Scheduler')
                 if (!$scope.currentEvent || clear) {
                     $scope.emptyCurrentEvent();
                 }
-                $scope.modal.show().then(document.getElementById('eventTitleEdit').focus());
+
+                if (angular.element($('#eventTitleEdit')).scope())
+                    angular.element($('#eventTitleEdit')).scope().taskSaveForm.$setPristine();
+
+                $scope.modal.show().then(function () {
+                    // This is ugly hack, should be fixed.
+                    $('#eventTitleEdit').focus();
+                    $('#eventTitleEdit').select();
+                });
             };
 
             $scope.updateEndDateTimeWithDuration = function () {
-                $scope.currentEvent.end = $scope.currentEvent.start.clone().add($scope.currentEvent.type === 'fixedAllDay' ? $scope.currentEvent.dur - 1 : $scope.currentEvent.dur, $scope.currentEvent.type === 'fixedAllDay' ? 'days' : 'hours');
-                $scope.currentEvent.endDateText = $scope.currentEvent.end.format(settings.dateFormat);
-                $scope.currentEvent.endTimeText = $scope.currentEvent.end.format(settings.timeFormat);
+                $scope.currentEvent.end = $scope.currentEvent.start.clone().add($scope.currentEvent.dur, $scope.currentEvent.type === 'fixedAllDay' ? 'days' : 'hours');
+
+                // For all-day events, we are displaying the end day the same as the current one.
+                if ($scope.currentEvent.type === 'fixedAllDay') {
+                    var custom_end = $scope.currentEvent.start.clone();
+                    $scope.currentEvent.endDateText = custom_end.format(settings.dateFormat);
+                    $scope.currentEvent.endTimeText = custom_end.format(settings.timeFormat);
+                }
+                else {
+                    $scope.currentEvent.endDateText = $scope.currentEvent.end.format(settings.dateFormat);
+                    $scope.currentEvent.endTimeText = $scope.currentEvent.end.format(settings.timeFormat);
+                }
             };
 
             $scope.handleChangeOfEventType = function () {
@@ -270,8 +284,17 @@ angular.module('Scheduler')
                 return retVal;
             };
 
-            $scope.startValue = function (event) {
+            $scope.startValueForOrderingOfDependencies = function (event) {
                 return event.start.unix();
+            };
+
+            $scope.keyUpHandler = function (keyCode, formInvalid) {
+                if (keyCode === 13 && !formInvalid) {
+                    $scope.closeModal();
+                    $scope.saveEvent();
+                }
+                if (keyCode === 27)
+                    $scope.closeModal();
             };
 
             // Date & time pickers

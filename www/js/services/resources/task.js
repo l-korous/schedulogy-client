@@ -28,7 +28,7 @@ angular.module('Scheduler')
                 var task = angular.extend(new Task, {
                     _id: event._id,
                     title: event.title,
-                    start: event.start,
+                    start: event.type === 'fixedAllDay' ? event.start.utc().startOf('day') : event.start.utc(),
                     dur: event.dur,
                     type: event.type,
                     due: event.due,
@@ -39,16 +39,17 @@ angular.module('Scheduler')
             };
 
             Task.toEvent = function (task) {
-                var start = moment(task.start);
-                var end = start.clone().add(task.type === 'fixedAllDay' ? task.dur - 1 : task.dur, task.type === 'fixedAllDay' ? 'days' : 'hours');
+                var start = moment(task.start).local();
+                var end = start.clone().add(task.dur, task.type === 'fixedAllDay' ? 'days' : 'hours');
+                var custom_end = start.clone();
                 var event = angular.extend(task, {
                     id: task._id,
-                    start: start,
+                    start: (task.type === 'fixedAllDay' ? start.startOf('day') : start),
                     startDateText: start.format(settings.dateFormat),
                     startTimeText: start.format(settings.timeFormat),
-                    end: end,
-                    endDateText: end.format(settings.dateFormat),
-                    endTimeText: end.format(settings.timeFormat),
+                    end: (task.type === 'fixedAllDay' ? end.startOf('day') : end),
+                    endDateText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.dateFormat),
+                    endTimeText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.timeFormat),
                     stick: true,
                     allDay: (task.type === 'fixedAllDay')
                 }, task);

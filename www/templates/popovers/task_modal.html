@@ -3,7 +3,7 @@
         <h1 class="title">{{$parent.currentEvent.title ? $parent.currentEvent.title : 'New Task'}}</h1>
     </ion-header-bar>
     <ion-content>
-        <form name="taskSaveForm" novalidate>
+        <form name="taskSaveForm" novalidate ng-keyup="$parent.keyUpHandler($event.keyCode, taskSaveForm.$invalid);">
             <div class="list customFormErrorList">
                 <div ng-show="taskSaveForm.title.$error.required && !taskSaveForm.title.$pristine" class="item help-block">Please provide a valid title.</div>
                 <div ng-show="taskSaveForm.fixedStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
@@ -31,7 +31,6 @@
                         Title
                     </div>
                     <input type="text" ng-model="$parent.currentEvent.title" id="eventTitleEdit" required name="title">
-
                 </label>
                 <label class="item item-input">
                     <div class="input-label" style="vertical-align: top">
@@ -146,7 +145,7 @@
                     <div class="row">
                         <div class="col-90">
                             <label class="item item-input item-select item-button-right">
-                                <custom-select ng-model="$parent.newDependency" options="$parent.events | filter : notDependencyOrMe : true | orderBy:startValue" value="_id" label="name" label2="startDateText" label3="startTimeText" null-value="Select task"></custom-select>
+                                <custom-select ng-model="$parent.newDependency" options="$parent.events | filter : notDependencyOrMe : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="name" label2="startDateText" label3="startTimeText" null-value="Select task"></custom-select>
                             </label>
                         </div>
                         <div class="col-10 text-right">
@@ -160,7 +159,8 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.closeModal(); $parent.saveEvent();">
+                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.closeModal();
+                        $parent.saveEvent();">
                         Save
                     </button>
 
