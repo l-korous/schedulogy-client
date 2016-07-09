@@ -135,8 +135,8 @@
                         Dependencies
                     </div>
                     <div class="list">
-                        <div class="item item-button-right" ng-repeat="event in $parent.currentEvent.deps| filter : {_id: event._id} : true">
-                            {{event.title}}
+                        <div class="item item-button-right" ng-repeat="event in $parent.currentEvent.depsForShow| filter : {_id: event._id} : true">
+                            {{event.title}} &nbsp; [{{event.startDateText}} ({{event.startTimeText}})]
                             <button class="button button-assertive" on-tap="$parent.removeDependency(event)">
                                 <i class="icon ion-trash-a"></i>
                             </button>
@@ -145,7 +145,7 @@
                     <div class="row">
                         <div class="col-90">
                             <label class="item item-input item-select item-button-right">
-                                <custom-select ng-model="$parent.newDependency" options="$parent.events | filter : notDependencyOrMe : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="name" label2="startDateText" label3="startTimeText" null-value="Select task"></custom-select>
+                                <custom-select ng-model="$parent.newDependency" options="$parent.eventSources[0] | filter : notDependencyOrMe : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Select task"></custom-select>
                             </label>
                         </div>
                         <div class="col-10 text-right">

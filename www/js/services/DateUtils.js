@@ -1,6 +1,6 @@
 angular.module('Scheduler')
-    .factory('DateUtils', function (moment, settings) {
-        var DateUtils = {
+    .factory('DateUtils', function (moment, settings, MyEvents) {
+        return {
             pushDatePart: function (src, dst) {
                 if (!dst) {
                     var now_ = moment(new Date());
@@ -27,11 +27,13 @@ angular.module('Scheduler')
                 return toReturn;
             },
             getBTime: function () {
-                if (settings.fixedBTime)
-                    return moment(settings.fixedBTime.date);
-                else
-                    return moment(new Date()).add('hours', 1).minutes(0).seconds(0);
+                var toReturn = settings.fixedBTime ? moment(settings.fixedBTime.date) : moment(new Date()).add('hours', 1).minutes(0).seconds(0);
+                
+                MyEvents.getCurrentEvents(toReturn).forEach(function(currentEvent) {
+                    toReturn = (currentEvent.end > toReturn ? currentEvent.end : toReturn);
+                });
+                
+                return toReturn;
             }
         };
-        return DateUtils;
     });

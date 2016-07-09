@@ -1,15 +1,14 @@
 angular.module('Scheduler')
-    .controller('CalendarCtrl', ['DateUtils', '$scope', '$ionicModal', 'uiCalendarConfig', 'settings', 'Event',
+    .controller('CalendarCtrl', ['DateUtils', '$scope', '$ionicModal', 'uiCalendarConfig', 'settings', 'MyEvents',
         '$window', '$ionicPopover', '$timeout', 'Task', 'moment', 'ionicDatePicker', 'ionicTimePicker', '$filter', '$ionicLoading',
-        function (DateUtils, $scope, $ionicModal, uiCalendarConfig, settings, Event, $window, $ionicPopover, $timeout, Task, moment, ionicDatePicker, ionicTimePicker, $filter, $ionicLoading) {
+        function (DateUtils, $scope, $ionicModal, uiCalendarConfig, settings, MyEvents, $window, $ionicPopover, $timeout, Task, moment, ionicDatePicker, ionicTimePicker, $filter, $ionicLoading) {
             /* event source that pulls from google.com */
             $scope.eventSource = {
                 url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
                 className: 'gcal-event', // an option!
                 currentTimezone: 'America/Chicago' // an option!
             };
-            $scope.events = [];
-            $scope.eventSources = [$scope.events];
+            $scope.eventSources = [MyEvents.events];
 
             $scope.emptyCurrentEvent = function () {
                 var btime = DateUtils.getBTime();
@@ -28,7 +27,8 @@ angular.module('Scheduler')
                     endTimeText: btimePlusDuration.format(settings.timeFormat),
                     due: btimePlusDuration,
                     dueDateText: btimePlusDuration.format(settings.dateFormat),
-                    dueTimeText: btimePlusDuration.format(settings.timeFormat)
+                    dueTimeText: btimePlusDuration.format(settings.timeFormat),
+                    deps: []
                 };
             };
 
@@ -49,6 +49,7 @@ angular.module('Scheduler')
                     },
                     slotDuration: '01:00:00',
                     defaultDate: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()),
+                    now: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()),
                     firstDay: 1,
                     nowIndicator: true,
                     editable: true,
@@ -69,6 +70,11 @@ angular.module('Scheduler')
                         end: settings.endHour + ':00:00'
                     },
                     eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
+                        if (event.type === 'fixed')
+                            event.dur += delta.hours();
+                        else if (event.type === 'fixedAllDay')
+                            event.dur += delta.days();
+
                         $scope.saveEvent(event);
                     },
                     eventClick: function (calEvent, jsEvent, view) {
@@ -88,7 +94,10 @@ angular.module('Scheduler')
                             end: end,
                             endDateText: end.format(settings.dateFormat),
                             endTimeText: end.format(settings.timeFormat),
-                            dur: end.diff(start, 'h')
+                            dur: end.diff(start, 'h'),
+                            due: end,
+                            dueDateText: end.format(settings.dateFormat),
+                            dueTimeText: end.format(settings.timeFormat),
                         });
 
                         if (view.name === 'month' || !(start.hasTime() || end.hasTime())) {
@@ -136,17 +145,8 @@ angular.module('Scheduler')
                 $scope.calculateCalendarRowHeight();
             });
 
-            // Events bulk operations.
-            $scope.importFromTasks = function (tasks) {
-                $scope.events.splice(0, $scope.events.length);
-
-                tasks.forEach(function (task) {
-                    $scope.events.push(Task.toEvent(task));
-                });
-            };
-
             Task.query(function (data) {
-                $scope.importFromTasks(data.tasks);
+                MyEvents.importFromTasks(data.tasks);
             });
 
             // Popover 'coming soon'.
@@ -223,7 +223,7 @@ angular.module('Scheduler')
                 });
 
                 Task.fromEvent(eventToSave).$save(function (data, headers) {
-                    $scope.importFromTasks(data.tasks);
+                    MyEvents.importFromTasks(data.tasks);
                     $ionicLoading.hide();
                 },
                     function (err) {
@@ -242,7 +242,7 @@ angular.module('Scheduler')
                 });
 
                 Task.fromEvent(eventToDelete).$remove({taskId: eventToDelete._id}, function (data, headers) {
-                    $scope.importFromTasks(data.tasks);
+                    MyEvents.importFromTasks(data.tasks);
                     $ionicLoading.hide();
                 },
                     function (err) {
@@ -254,19 +254,19 @@ angular.module('Scheduler')
             };
 
             $scope.deleteEventById = function (passedEventId) {
-                $scope.deleteEvent($scope.events.find(function (event) {
-                    return event._id === passedEventId;
-                }));
+                $scope.deleteEvent(MyEvents.findEventById(passedEventId));
             };
 
-            $scope.addDependency = function () {
+            $scope.addDependency = function (eventId) {
                 $scope.currentEvent.deps.push(eventId);
+                MyEvents.fillDepsForShow($scope.currentEvent);
             };
 
             $scope.removeDependency = function (event) {
                 for (var i = $scope.currentEvent.deps.length - 1; i >= 0; i--) {
-                    if ($scope.currentEvent.deps[i]._id === event._id) {
+                    if ($scope.currentEvent.deps[i] === event._id) {
                         $scope.currentEvent.deps.splice(i, 1);
+                        $scope.currentEvent.depsForShow.splice(i, 1);
                     }
                 }
             };
@@ -323,14 +323,14 @@ angular.module('Scheduler')
                 };
             });
             $scope.openDatePicker = function (dateUsed) {
-                ionicDatePicker.openDatePicker(($.grep(datesUsed, function (e) {
+                ionicDatePicker.openDatePicker((datesUsed.find(function (e) {
                     return e.name === dateUsed;
-                }))[0].dp);
+                })).dp);
             };
             $scope.openTimePicker = function (dateUsed) {
-                ionicTimePicker.openTimePicker(($.grep(datesUsed, function (e) {
+                ionicTimePicker.openTimePicker((datesUsed.find(function (e) {
                     return e.name === dateUsed;
-                }))[0].tp);
+                })).tp);
             };
 
             // Cleanup when destroying.
