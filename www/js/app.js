@@ -21,7 +21,12 @@ angular.module('Scheduler', ['ngCookies', 'ngResource', 'ui.router', 'ui.calenda
         minCalendarRowHeight: 45,
         checkNewVersion: false,
         dateFormat: 'YYYY-MM-DD',
-        timeFormat: 'HH:mm'
+        timeFormat: 'HH:mm',
+        eventColor: {
+            fixed: '#f00',
+            fixedAllDay: '#0f0',
+            floating: '#00f'
+        }
     })
     .config(['$stateProvider', '$urlRouterProvider', 'settings', function ($stateProvider, $urlRouterProvider, settings) {
             $stateProvider

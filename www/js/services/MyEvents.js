@@ -29,7 +29,7 @@ angular.module('Scheduler')
         };
 
         MyEvents.findEventById = function (passedEventId) {
-            MyEvents.events.find(function (event) {
+            return MyEvents.events.find(function (event) {
                 return event._id === passedEventId;
             });
         };

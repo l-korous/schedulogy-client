@@ -74,6 +74,11 @@ angular.module('Scheduler')
                             event.dur += delta.hours();
                         else if (event.type === 'fixedAllDay')
                             event.dur += delta.days();
+                        else if (event.type === 'floating') {
+                            event.type = 'fixed';
+                            event.dur += delta.hours();
+                            $scope.handleChangeOfEventType(event);
+                        }
 
                         $scope.saveEvent(event);
                     },
@@ -190,25 +195,29 @@ angular.module('Scheduler')
                 });
             };
 
-            $scope.updateEndDateTimeWithDuration = function () {
-                $scope.currentEvent.end = $scope.currentEvent.start.clone().add($scope.currentEvent.dur, $scope.currentEvent.type === 'fixedAllDay' ? 'days' : 'hours');
+            $scope.updateEndDateTimeWithDuration = function (eventPassed) {
+                var event = eventPassed || $scope.currentEvent;
+
+                event.end = event.start.clone().add(event.dur, event.type === 'fixedAllDay' ? 'days' : 'hours');
 
                 // For all-day events, we are displaying the end day the same as the current one.
-                if ($scope.currentEvent.type === 'fixedAllDay') {
-                    var custom_end = $scope.currentEvent.start.clone();
-                    $scope.currentEvent.endDateText = custom_end.format(settings.dateFormat);
-                    $scope.currentEvent.endTimeText = custom_end.format(settings.timeFormat);
+                if (event.type === 'fixedAllDay') {
+                    var custom_end = event.start.clone();
+                    event.endDateText = custom_end.format(settings.dateFormat);
+                    event.endTimeText = custom_end.format(settings.timeFormat);
                 }
-                else {
-                    $scope.currentEvent.endDateText = $scope.currentEvent.end.format(settings.dateFormat);
-                    $scope.currentEvent.endTimeText = $scope.currentEvent.end.format(settings.timeFormat);
+                else if (event.type === 'fixed') {
+                    event.endDateText = event.end.format(settings.dateFormat);
+                    event.endTimeText = event.end.format(settings.timeFormat);
                 }
             };
 
-            $scope.handleChangeOfEventType = function () {
-                if ($scope.currentEvent.dur > $scope.modalSettings.maxDuration[$scope.currentEvent.type])
-                    $scope.currentEvent.dur = $scope.modalSettings.maxDuration[$scope.currentEvent.type];
-                $scope.updateEndDateTimeWithDuration();
+            $scope.handleChangeOfEventType = function (eventPassed) {
+                var event = eventPassed || $scope.currentEvent;
+                if (event.dur > $scope.modalSettings.maxDuration[event.type])
+                    event.dur = $scope.modalSettings.maxDuration[event.type];
+                $scope.updateEndDateTimeWithDuration(event);
+                event.color = settings.eventColor[event.type];
             };
 
             $scope.closeModal = function () {

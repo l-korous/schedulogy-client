@@ -38,7 +38,8 @@ angular.module('Scheduler')
                     endTimeText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.timeFormat),
                     stick: true,
                     allDay: (task.type === 'fixedAllDay'),
-                    depsForShow: []
+                    depsForShow: [],
+                    color: settings.eventColor[task.type]
                 }, task);
 
                 if (task.type === 'floating') {
