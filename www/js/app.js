@@ -55,7 +55,6 @@ angular.module('Scheduler', ['ngCookies', 'ngResource', 'ui.router', 'ui.calenda
         }])
     .config(function (ionicDatePickerProvider) {
         var datePickerObj = {
-            inputDate: new Date(),
             setLabel: 'Set',
             todayLabel: 'Today',
             closeLabel: 'Close',
@@ -74,14 +73,10 @@ angular.module('Scheduler', ['ngCookies', 'ngResource', 'ui.router', 'ui.calenda
     })
     .config(function (ionicTimePickerProvider, settings) {
         var timePickerObj = {
-            // TODO - figure out how to insert getBTime here.
-            inputTime: settings.startHour * 3600,
             format: 24,
             step: 60,
             setLabel: 'Set',
-            closeLabel: 'Close',
-            minHour: settings.startHour,
-            maxHour: settings.endHour
+            closeLabel: 'Close'
         };
         ionicTimePickerProvider.configTimePicker(timePickerObj);
     })

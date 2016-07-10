@@ -28,7 +28,12 @@ angular.module('Scheduler')
                     due: btimePlusDuration,
                     dueDateText: btimePlusDuration.format(settings.dateFormat),
                     dueTimeText: btimePlusDuration.format(settings.timeFormat),
-                    deps: []
+                    deps: [],
+                    depsForShow: [],
+                    constraint: {
+                        start: null,
+                        end: null
+                    }
                 };
             };
 
@@ -310,7 +315,6 @@ angular.module('Scheduler')
             var datesUsed = [{name: 'start'}, {name: 'due'}];
             datesUsed.forEach(function (d) {
                 d.dp = {
-                    from: new Date(),
                     callback: function (val) {
                         $scope.currentEvent[d.name] = DateUtils.pushDatePart(moment(val), $scope.currentEvent[d.name]);
                         $scope.currentEvent[d.name + 'DateText'] = $scope.currentEvent[d.name].format(settings.dateFormat);
@@ -331,15 +335,32 @@ angular.module('Scheduler')
                     }
                 };
             });
+
+            $scope.reinitDatePicker = function (dateUsed) {
+                dateUsed.inputDate = $scope.currentEvent ? ($scope.currentEvent.due ? $scope.currentEvent.due.toDate() : $scope.currentEvent.start.toDate()) : DateUtils.getBTime();
+            };
+
+            $scope.reinitTimePicker = function (dateUsed) {
+                dateUsed.inputTime = $scope.currentEvent ? ($scope.currentEvent.due ? ($scope.currentEvent.due.hour() * 3600) : ($scope.currentEvent.start.hour() * 3600)) : DateUtils.getBTime();
+            };
+
             $scope.openDatePicker = function (dateUsed) {
-                ionicDatePicker.openDatePicker((datesUsed.find(function (e) {
+                var dateUsedConfig = datesUsed.find(function (e) {
                     return e.name === dateUsed;
-                })).dp);
+                });
+
+                $scope.reinitDatePicker(dateUsedConfig.dp);
+
+                ionicDatePicker.openDatePicker(dateUsedConfig.dp);
             };
             $scope.openTimePicker = function (dateUsed) {
-                ionicTimePicker.openTimePicker((datesUsed.find(function (e) {
+                var dateUsedConfig = datesUsed.find(function (e) {
                     return e.name === dateUsed;
-                })).tp);
+                });
+
+                $scope.reinitTimePicker(dateUsedConfig.tp);
+
+                ionicTimePicker.openTimePicker(dateUsedConfig.tp);
             };
 
             // Cleanup when destroying.

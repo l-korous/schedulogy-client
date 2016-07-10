@@ -25,7 +25,7 @@ angular.module('Scheduler')
                 from.desc = to.desc;
             },
             toEvent: function (task) {
-                var start = moment(task.start).local();
+                var start = moment.unix(task.start).local();
                 var end = start.clone().add(task.dur, task.type === 'fixedAllDay' ? 'days' : 'hours');
                 var custom_end = start.clone();
                 var event = angular.extend(task, {
@@ -39,11 +39,15 @@ angular.module('Scheduler')
                     stick: true,
                     allDay: (task.type === 'fixedAllDay'),
                     depsForShow: [],
+                    constraint: {
+                        start: moment(task.constraint.start).local(),
+                        end: moment(task.constraint.end).local()
+                    },
                     color: settings.eventColor[task.type]
                 }, task);
 
-                if (task.type === 'floating') {
-                    event.due = moment(task.due);
+                if (event.due) {
+                    event.due = moment.unix(task.due);
                     event.dueDateText = event.due.format(settings.dateFormat);
                     event.dueTimeText = event.due.format(settings.timeFormat);
                 }
