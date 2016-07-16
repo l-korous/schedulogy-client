@@ -1,4 +1,4 @@
-angular.module('Scheduler')
+angular.module('Schedulogy')
     .directive('customSelect', function ($ionicGesture, $ionicModal) {
         return {
             restrict: "E",

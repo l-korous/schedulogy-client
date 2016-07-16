@@ -1,8 +1,8 @@
-angular.module('Scheduler', ['ngCookies', 'ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker'])
+angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker'])
     .constant('settings', {
         serverUrl: 'http://localhost:8080',
-        appVersion: '2.3.0',
-        applicationName: 'Scheduler',
+        appVersion: '0.1.0',
+        applicationName: 'Schedulogy',
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
             on: true,
@@ -35,6 +35,12 @@ angular.module('Scheduler', ['ngCookies', 'ngResource', 'ui.router', 'ui.calenda
                     authenticate: false,
                     templateUrl: 'templates/login.html',
                     controller: 'LoginCtrl'
+                })
+                .state('registration', {
+                    url: '/registration',
+                    authenticate: false,
+                    templateUrl: 'templates/registration.html',
+                    controller: 'RegistrationCtrl'
                 })
                 .state('main', {
                     authenticate: false,
@@ -80,13 +86,38 @@ angular.module('Scheduler', ['ngCookies', 'ngResource', 'ui.router', 'ui.calenda
         };
         ionicTimePickerProvider.configTimePicker(timePickerObj);
     })
-    .run(['$rootScope', '$state', 'settings', function ($rootScope, $state, settings) {
+    .run(['$rootScope', '$state', 'settings', 'Auth', function ($rootScope, $state, settings, Auth) {
+
+            // Check stuff when changing state.
+            $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+                if (((fromState.name === 'login' && toState.name === 'registration') || (fromState.name === 'registration' && toState.name === 'login')) && !Auth.isAuthenticated()) {
+                    return;
+                } else if (((fromState.name === 'login' && toState.name === 'password_reset') || (fromState.name === 'password_reset' && toState.name === 'login')) && !Auth.isAuthenticated()) {
+                    return;
+                } else if (toState.name !== 'login' && toState.name !== 'registration' && !Auth.isAuthenticated()) {
+                    // User isn’t authenticated
+                    $rootScope.goToLogin();
+                    event.preventDefault();
+                } else if (toState.name === 'login' && Auth.isAuthenticated()) {
+                    if (fromState.name !== '')
+                        event.preventDefault();
+                }
+            });
+
+            $rootScope.autoAuth = Auth.init();
+            $rootScope.autoAuth.then(function () {
+                if ($rootScope.currentUser) {
+                    $state.go(settings.defaultStateAfterLogin);
+                    Auth.changePushToken();
+                }
+                else {
+                    $rootScope.goToLogin();
+                }
+            });
+
             // This must be defined here, when the $state is defined.
             $rootScope.goToLogin = function () {
+                Auth.logout();
                 $state.transitionTo("login");
             };
-
-            $rootScope.currentUser = {name: 'lukas.korous@gmail.com'};
-
-            $state.go(settings.defaultStateAfterLogin);
         }]);

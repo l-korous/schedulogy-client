@@ -1,4 +1,4 @@
-angular.module('Scheduler')
+angular.module('Schedulogy')
     .factory('DateUtils', function (moment, settings, MyEvents) {
         return {
             pushDatePart: function (src, dst) {

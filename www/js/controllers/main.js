@@ -1,4 +1,4 @@
-angular.module('Scheduler')
+angular.module('Schedulogy')
     .controller('MainCtrl', function ($scope, $window, $ionicPopover) {
         // Popover
         $ionicPopover.fromTemplateUrl('templates/popovers/user_menu.html', {

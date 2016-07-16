@@ -1,4 +1,4 @@
-angular.module('Scheduler')
+angular.module('Schedulogy')
     .factory('MyEvents', function (moment, settings, Event) {
         var MyEvents = {
             events: []

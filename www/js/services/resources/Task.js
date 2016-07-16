@@ -1,4 +1,4 @@
-angular.module('Scheduler')
+angular.module('Schedulogy')
     .factory('Task', ['$resource', '$http', 'settings', 'moment', 'DateUtils', function ($resource, $http, settings, moment, DateUtils) {
             var Task = $resource(settings.serverUrl + "/task", {}, {
                 query: {

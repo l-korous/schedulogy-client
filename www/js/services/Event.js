@@ -1,4 +1,4 @@
-angular.module('Scheduler')
+angular.module('Schedulogy')
     .factory('Event', function (moment, settings) {
         return {
             // This function assumes that the _id (and id) will not change.

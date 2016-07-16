@@ -1,4 +1,4 @@
-angular.module('Scheduler')
+angular.module('Schedulogy')
     .controller('CalendarCtrl', ['DateUtils', '$scope', '$ionicModal', 'uiCalendarConfig', 'settings', 'MyEvents',
         '$window', '$ionicPopover', '$timeout', 'Task', 'moment', 'ionicDatePicker', 'ionicTimePicker', '$filter', '$ionicLoading',
         function (DateUtils, $scope, $ionicModal, uiCalendarConfig, settings, MyEvents, $window, $ionicPopover, $timeout, Task, moment, ionicDatePicker, ionicTimePicker, $filter, $ionicLoading) {
