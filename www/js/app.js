@@ -23,12 +23,12 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
         dateFormat: 'YYYY-MM-DD',
         timeFormat: 'HH:mm',
         eventColor: {
-            fixed: '#f00',
-            fixedAllDay: '#0f0',
-            floating: '#00f'
+            fixed: '#387ef5',
+            fixedAllDay: '#387ef5',
+            floating: '#ffa400'
         },
-        passwordResetErrorInfo: function(message) {
-            switch(message) {
+        passwordResetErrorInfo: function (msg) {
+            switch (msg) {
                 case '!existing':
                     return 'We could not find the requested user. Please register first.';
                     break;
@@ -38,9 +38,10 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                 case 'used':
                     return 'The password has already been set. Please reset your password by following the link on the login screen in case you have forgotten it.';
             }
+            return 'General error';
         },
-        registrationErrorInfo: function(message) {
-            switch(message) {
+        registrationErrorInfo: function (msg) {
+            switch (msg) {
                 case 'existing':
                     return 'An account with this e-mail address already exists.';
                     break;
@@ -48,8 +49,19 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                     return 'Something is wrong. Please try again.';
                     break;
             }
+            return 'General error';
         },
-        registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address.'
+        loginErrorInfo: function (msg) {
+            switch (msg) {
+                case 'inactive':
+                    return 'This user account is inactive. Please follow the instructions you received via e-mail to activate it.';
+                case 'password':
+                    return 'Wrong e-mail / password combination';
+            }
+            return 'General error';
+        },
+        registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address.',
+        passwordResetSuccessInfo: 'Password successfully set.'
     })
     .config(['$stateProvider', '$urlRouterProvider', 'settings', function ($stateProvider, $urlRouterProvider, settings) {
             $stateProvider
@@ -115,8 +127,26 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
         };
         ionicTimePickerProvider.configTimePicker(timePickerObj);
     })
+    .config(function ($httpProvider) {
+        $httpProvider.interceptors.push(function ($rootScope, $q, $window) {
+            return {
+                request: function (config) {
+                    config.headers.Authorization = $window.localStorage.token ? $window.localStorage.token : '';
+                    config.headers.Xuser = $window.localStorage.currentUserId ? $window.localStorage.currentUserId : '';
+                    return config;
+                },
+                responseError: function (response) {
+                    if (response.status === 401 || response.status === 403) {
+                        delete $window.localStorage.token;
+                        delete $window.localStorage.currentUserId;
+                        $rootScope.goToLogin();
+                    }
+                    return $q.reject(response);
+                }
+            };
+        });
+    })
     .run(['$rootScope', '$state', 'settings', 'Auth', function ($rootScope, $state, settings, Auth) {
-
             // Check stuff when changing state.
             $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
                 if (((fromState.name === 'login' && toState.name === 'registration') || (fromState.name === 'registration' && toState.name === 'login')) && !Auth.isAuthenticated()) {
@@ -133,20 +163,18 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                 }
             });
 
-            $rootScope.autoAuth = Auth.init();
-            $rootScope.autoAuth.then(function () {
-                if ($rootScope.currentUser) {
-                    $state.go(settings.defaultStateAfterLogin);
-                    Auth.changePushToken();
-                }
-                else {
-                    $rootScope.goToLogin();
-                }
+            Auth.tryPreauthenticate().then(function () {
+                $state.go(settings.defaultStateAfterLogin);
+            }, function () {
+                $rootScope.goToLogin();
             });
 
             // This must be defined here, when the $state is defined.
             $rootScope.goToLogin = function () {
                 Auth.logout();
-                $state.transitionTo("login");
+
+                if ($state.current.name !== 'login') {
+                    $state.transitionTo("login");
+                }
             };
         }]);

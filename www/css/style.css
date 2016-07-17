@@ -112,7 +112,7 @@ h2 {
     background-color:#FFccCC;
 }
 
-.help-block ul,.help-block li  {
+.help-block ul,.help-block li, .bold ul, .bold li  {
     font-size:98%;
     margin-left:15px;
     list-style-type: square;
@@ -123,17 +123,44 @@ h2 {
     margin:auto;
 }
 
-.marginTop-5 {
-    margin-top:5%;
+.marginTop5 {
+    margin-top:4em ! important;
+}
+
+.marginTop3 {
+    margin-top:3em ! important;
+}
+
+.marginTop1 {
+    margin-top:1.5em ! important;
+}
+
+.marginTop5 {
+    margin-left:4em ! important;
+    margin-right:4em ! important;
+}
+
+.marginTop3 {
+    margin-left:3em ! important;
+    margin-right:3em ! important;
+}
+
+.marginTop1 {
+    margin-left:1em ! important;
+    margin-right:1em ! important;
 }
 
 .button-single {
-    width: auto;
-    margin: auto;
-    margin-top: 3em;
-    padding: 0em 2em;
+    width: auto ! important;
+    margin-left: auto ! important;
+    margin-right: auto ! important;
+    padding: 0em 2em ! important;
 }
 
+.bold {
+    font-weight: bold;
+    font-size:99%;
+}
 /* FullCalendar fixes */
 
 .fc-basic-view .fc-body .fc-row {
@@ -169,6 +196,19 @@ h2 {
     padding-bottom: 0em; /* give space underneath events for clicking/selecting days */
 }
 
+.fc-state-default {
+    background-image:none;
+    background:white;
+    box-shadow:none;
+    text-shadow:none;
+    border:1px solid #387ef5;
+    color: #387ef5;
+}
+
+.fc-state-active {
+    background: #ffa400;
+}
+
 /* Ionic fixes */
 
 .modal .range {
@@ -186,4 +226,8 @@ h2 {
 
 input[type=text], input[type=password], input[type=email] {
     padding:5px;
+}
+
+.button-hover-balanced:hover {
+    color: #ccc ! important;
 }

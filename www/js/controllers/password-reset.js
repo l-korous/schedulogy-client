@@ -18,9 +18,9 @@ angular.module('Schedulogy')
 
         Auth.checkPasswordResetLink($scope.userId, $scope.passwordResetHash).success(function () {
             $ionicLoading.hide();
-        }).error(function (response) {
+        }).error(function (errorResponse) {
             $ionicLoading.hide();
-            $scope.info = settings.passwordResetLinkInvalidString(response.data.message);
+            $scope.errorInfo = settings.passwordResetErrorInfo(errorResponse.msg);
         });
         
         $scope.setPassword = function () {
@@ -34,7 +34,7 @@ angular.module('Schedulogy')
                 $scope.successInfo = settings.passwordResetSuccessInfo;
             }).error(function (errorResponse) {
                 $ionicLoading.hide();
-                $scope.info = settings.passwordResetErrorInfo(errorResponse.data.message);
+                $scope.errorInfo = settings.passwordResetErrorInfo(errorResponse.msg);
             });
         };
     });

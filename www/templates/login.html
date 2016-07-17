@@ -1,26 +1,55 @@
-<ion-view>
-    <ion-header-bar class="bar-positive">
-        <h2 class="title">LOGIN</h2>
-    </ion-header-bar>
-    <ion-content padding="true" has-bouncing="false">
-        <form ng-submit="login()" class="login-form" name="data.form">
-            <div class="list narrow">
-                <label class="item item-input">
-                    <input type="text" name="email" ng-model="data.email" required>
-                </label>
-                <label class="item item-input">
-                    <input type="password" name="password" ng-model="data.password" required>
-                </label>
-                <div class="item item-button" class="item-positive">
-                    <button type="submit" class="button button-full button-positive">LOGIN</button>
-                </div>
-                <div ng-if="$settings.passwordResetEnabled" class="item item-button" class="item-assertive">
-                    <button type="button" ui-sref="password_reset" class="button button-full button-balanced">LOGIN.RESET_PASSWORD</button>
-                </div>
-                <div class="item item-button">
-                    <button type="button" ui-sref="registration" class="button button-full button-assertive">LOGIN.REGISTER</button>
-                </div>
+<ion-header-bar align-title="left" class="bar bar-header bar-dark">
+    <div class="h1 title padding-horizontal">
+        SCHEDULOGY
+    </div>
+</ion-header-bar>
+
+<ion-content class="has-header maxWidth-1000 marginTop5" has-bouncing="false" scroll="true">
+    <form name="loginForm" novalidate ng-keyup="keyUpHandler($event.keyCode);">
+        <div class="list customFormErrorList">
+            <div ng-show="beingSubmitted && (loginForm.email.$error.required || loginForm.email.$error.email) && !loginForm.email.$pristine" class="item help-block">
+                Please provide a valid password.
             </div>
-        </form>
-    </ion-content>
-</ion-view>
+            <div ng-show="beingSubmitted && loginForm.password.$error.required && !loginForm.password.$pristine" class="item help-block">
+                Please provide a valid password.
+            </div>
+            <div ng-show="errorInfo" class="item help-block help-block-error">
+                {{errorInfo}}
+            </div>
+        </div>
+
+        <div class="list">
+            <label class="item item-input">
+                <div class="input-label">
+                    E-mail
+                </div>
+                <input autofocus type="email" ng-model="data.email" id="emailEdit" required name="email"
+                       ng-class="{ 'has-error' : beingSubmitted && (loginForm.email.$error.required || loginForm.email.$error.email) && !loginForm.email.$pristine }">
+            </label>
+            
+            <label class="item item-input">
+                <div class="input-label">
+                    Password
+                </div>
+                <input type="password" ng-model="data.password" required name="password"
+                       ng-class="{ 'has-error' : beingSubmitted && loginForm.password.$error.required && !loginForm.password.$pristine }">
+            </label>
+        </div>
+
+        <button class="button button-block button-positive button-single" ng-disabled="loginForm.$invalid" ng-click="login()">
+            Login
+        </button>
+        <div class="marginTop3 center">Don't have an account yet?</div>
+        <button class="button button-block button-positive button-single marginTop1" ui-sref="registration">
+            Create an account
+        </button>
+        <div class="marginTop3 center">Forgot your password?</div>
+        <button class="button button-block button-assertive button-single marginTop1" ui-sref="forgotten-password">
+            Reset password
+        </button>
+    </form>
+</ion-content>
+
+<ion-footer-bar class="bar bar-footer bar-dark">
+    <div class="title">&copy; 2016 SCHEDULOGY</div>
+</ion-footer-bar>

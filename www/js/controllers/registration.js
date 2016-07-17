@@ -4,6 +4,7 @@ angular.module('Schedulogy')
         $scope.errorInfo = null;
         $scope.data = {};
         $scope.beingSubmitted = false;
+        $('#emailEdit').focus();
         
         $scope.keyUpHandler = function (keyCode, formInvalid) {
             if (keyCode === 13 && !formInvalid) {

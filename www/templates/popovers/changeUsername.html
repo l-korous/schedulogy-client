@@ -1,0 +1,32 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">Change Username</h1>
+    </ion-header-bar>
+    <ion-content has-bouncing="false" class="marginTop5 marginSides5">
+        <form name="form" novalidate ng-keyup="$parent.keyUpHandler($event.keyCode, form.$invalid, 'changeUsername');">
+            <div class="list customFormErrorList">
+                <div ng-show="$parent.beingSubmitted && (form.username.$error.required || form.username.$error.minlength) && !form.username.$pristine" class="item help-block">
+                    Please provide a valid username with at least 4 characters.
+                </div>
+
+                <div ng-show="$parent.errorInfo" class="item help-block help-block-error">
+                    {{$parent.errorInfo}}
+                </div>
+            </div>
+            <div class="list">
+                <label class="item item-input" ng-class="{ 'has-error' : $parent.beingSubmitted && (form.username.$error.required || form.username.$error.minlength) && !form.username.$pristine }">
+                    <div class="input-label">
+                        Username
+                    </div>
+                    <input type="text" ng-model="$parent.user.name" id="mainEdit" required name="username" autofocus minlength='4'>
+                </label>
+
+                <button class="button button-block button-positive button-single marginTop3" ng-disabled="form.$invalid" ng-click="$parent.save('changeUsername');">
+                    Save
+                </button>
+                <button class="button button-block button-outline button-dark button-single marginTop1" ng-click="$parent.closeModal('changeUsername');">
+                    Cancel
+                </button>
+        </form>
+    </ion-content>
+</ion-modal-view>

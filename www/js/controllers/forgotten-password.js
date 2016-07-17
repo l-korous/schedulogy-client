@@ -1,9 +1,9 @@
 angular.module('Schedulogy')
-    .controller('LoginCtrl', ['settings', '$scope', 'Auth', '$state', '$rootScope', '$window', '$ionicModal', function (settings, $scope, Auth, $state, $rootScope, $window, $ionicModal) {
+    .controller('ForgottenPasswordCtrl', ['settings', '$scope', 'Auth', '$state', '$rootScope', '$window', '$ionicModal', function (settings, $scope, Auth, $state, $rootScope, $window, $ionicModal) {
             $scope.data = {};
             $('#emailEdit').focus();
             $scope.login = function () {
-                Auth.tryLogin({email: $scope.data.email, password: $scope.data.password}).then(function () {
+                Auth.sendPasswordResetLink({email: $scope.data.email}).then(function () {
                     $state.go(settings.defaultStateAfterLogin);
                 }, function (msg) {
                     $scope.errorInfo = settings.loginErrorInfo(msg);
