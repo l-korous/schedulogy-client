@@ -1,41 +1,55 @@
-<ion-view>
-    <ion-header-bar class="bar-positive">
-        <h2 class="title">REGISTRATION</h2>
-    </ion-header-bar>
-    <ion-content padding="true" has-bouncing="false">
-        <form ng-submit="register()" class="registration-form" name="data.form">
-            <div class="list narrow">
-                <label class="item item-input item-stacked-label" ng-class="{'item-error': data.form.email.$invalid}">
-                    <span class="input-label">REGISTRATION.EMAIL</span>
-                    <input type="email" name="email" ng-model="data.email" required>
-                </label>
-                <div class="item-errors" ng-messages="data.form.email.$error">
-                    <ng-messages-include src="templates/form-errors.html"></ng-messages-include>
-                </div>
-                <label class="item item-input item-stacked-label" ng-class="{'item-error-top': data.form.confirmPassword.$invalid && !data.form.password.$invalid, 'item-error': data.form.password.$invalid}">
-                    <span class="input-label">REGISTRATION.PASSWORD</span>
-                    <input type="password" name="password" ng-model="data.password" complex-password minlength="8" required>
-                </label>
-                <div class="item-errors" ng-messages="data.form.password.$error">
-                    <ng-messages-include src="templates/form-errors.html"></ng-messages-include>
-                    <div ng-message="minlength"><i class="icon ion-android-arrow-up"></i> <span>FORM.ERROR.MIN_LENGTH_8</span></div>
-                    <div ng-message="complexity"><i class="icon ion-android-arrow-up"></i> <span> FORM.ERROR.PASSWORD_COMPLEXITY</span></div>
-                </div>
-                <label class="item item-input item-stacked-label" ng-class="{'item-error-bottom': data.form.confirmPassword.$invalid && !data.form.password.$invalid, 'item-error': data.form.password.$invalid && data.form.confirmPassword.$invalid}">
-                    <span class="input-label">REGISTRATION.REPEAT_PASSWORD</span>
-                    <input type="password" name="confirmPassword" ng-model="data.confirmPassword" repeat-password="password" required>
-                </label>
-                <div class="item-errors" ng-messages="data.form.confirmPassword.$error">
-                    <ng-messages-include src="templates/form-errors.html"></ng-messages-include>
-                </div>
-               
-                <div class="item item-button" class="item-positive">
-                    <button type="submit" class="button button-full button-positive" ng-disabled="data.form.$invalid || data.form.$pending">REGISTRATION.REGISTER</button>
-                </div>
-                <div class="item item-button" class="item-assertive">
-                    <button type="button" ui-sref="login" class="button button-full button-assertive">FORM.CANCEL</button>
-                </div>
+<ion-header-bar align-title="left" class="bar bar-header bar-dark">
+    <div class="h1 title padding-horizontal">
+        SCHEDULOGY
+    </div>
+</ion-header-bar>
+
+<ion-content class="has-header maxWidth-1000 marginTop-5" has-bouncing="false" scroll="true">
+    <div ng-show="successInfo">
+        {{successInfo}}
+        <br />
+        <button class="button button-block button-positive button-single" ng-click="$root.goToLogin();">
+            Go to Login
+        </button>
+    </div>
+    <form name="registrationForm" ng-submit="setPassword()" ng-show="!successInfo" novalidate ng-keyup="keyUpHandler($event.keyCode);">
+        <div class="list customFormErrorList">
+            <div ng-show="beingSubmitted && (registrationForm.email.$error.required || registrationForm.email.$error.email) && !registrationForm.email.$pristine" class="item help-block">
+                Please provide a valid email.
             </div>
-        </form>
-    </ion-content>
-</ion-view>
+
+            <div ng-show="errorInfo" class="item help-block help-block-error">
+                {{errorInfo}}
+            </div>
+        </div>
+
+        <div class="list">
+            <label class="item item-input">
+                <div class="input-label">
+                    E-mail
+                </div>
+                <input type="email" ng-model="data.email" id="emailEdit" required name="email"
+                       ng-class="{ 'has-error' : beingSubmitted && (registrationForm.email.$error.required || registrationForm.email.$error.email) && !registrationForm.email.$pristine }">
+            </label>
+        </div>
+
+
+        <div class="row responsive-sm">
+            <div class="col-50 padding-horizontal padding-top">
+                <button class="button button-block button-positive" ng-disabled="passwordResetForm.$invalid" ng-click="register()">
+                    Register
+                </button>
+
+            </div>
+            <div class="col-50 padding-horizontal padding-top">
+                <button class="button button-block button-outline button-stable" ui-sref="login">
+                    Cancel
+                </button>   
+            </div>
+        </div>
+    </form>
+</ion-content>
+
+<ion-footer-bar class="bar bar-footer bar-dark">
+    <div class="title">&copy; 2016 SCHEDULOGY</div>
+</ion-footer-bar>

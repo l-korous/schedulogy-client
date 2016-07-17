@@ -130,6 +130,12 @@ angular.module('Schedulogy')
             resetPassword: function (user) {
                 return $http.post(settings.serverUrl + "/reset-password", user);
             },
+            checkPasswordResetLink: function (userId, passwordResetHash) {
+                return $http.post(settings.serverUrl + "/password-reset-check", {userId: userId, passwordResetHash: passwordResetHash});
+            },
+            activate: function (password, userId, passwordResetHash) {
+                return $http.post(settings.serverUrl + "/activate", {password: password, userId: userId, passwordResetHash: passwordResetHash});
+            },
             init: function () {
                 var defer = $q.defer();
 

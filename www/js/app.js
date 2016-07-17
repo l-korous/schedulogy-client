@@ -26,7 +26,30 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             fixed: '#f00',
             fixedAllDay: '#0f0',
             floating: '#00f'
-        }
+        },
+        passwordResetErrorInfo: function(message) {
+            switch(message) {
+                case '!existing':
+                    return 'We could not find the requested user. Please register first.';
+                    break;
+                case 'password':
+                    return 'The link is broken. Please make sure you used the full link you got in your e-mail.';
+                    break;
+                case 'used':
+                    return 'The password has already been set. Please reset your password by following the link on the login screen in case you have forgotten it.';
+            }
+        },
+        registrationErrorInfo: function(message) {
+            switch(message) {
+                case 'existing':
+                    return 'An account with this e-mail address already exists.';
+                    break;
+                case 'error':
+                    return 'Something is wrong. Please try again.';
+                    break;
+            }
+        },
+        registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address.'
     })
     .config(['$stateProvider', '$urlRouterProvider', 'settings', function ($stateProvider, $urlRouterProvider, settings) {
             $stateProvider
@@ -41,6 +64,12 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                     authenticate: false,
                     templateUrl: 'templates/registration.html',
                     controller: 'RegistrationCtrl'
+                })
+                .state('password-reset', {
+                    url: '/password-reset',
+                    authenticate: false,
+                    templateUrl: 'templates/password-reset.html',
+                    controller: 'PasswordResetCtrl'
                 })
                 .state('main', {
                     authenticate: false,

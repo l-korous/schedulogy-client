@@ -98,16 +98,40 @@ h2 {
 }
 
 .has-error {
-    background-color:rgba(255,0,0,.15);
+    background-color:rgba(255,0,0,.10) ! important;
 }
 
 .help-block {
-    background-color:rgba(255,0,0,.15);
-    font-size:85%;
-    line-height:85%;
+    background-color:#FFFFCC;
+    font-size:95%;
     font-weight:bold;
     padding-top:5px;
     padding-bottom:5px;
+}
+.help-block-error {
+    background-color:#FFccCC;
+}
+
+.help-block ul,.help-block li  {
+    font-size:98%;
+    margin-left:15px;
+    list-style-type: square;
+}
+
+.maxWidth-1000 {
+    max-width: 1000px;
+    margin:auto;
+}
+
+.marginTop-5 {
+    margin-top:5%;
+}
+
+.button-single {
+    width: auto;
+    margin: auto;
+    margin-top: 3em;
+    padding: 0em 2em;
 }
 
 /* FullCalendar fixes */
@@ -160,7 +184,6 @@ h2 {
     min-height:30px ! important;
 }
 
-/* Angular  fixes */
-input.ng-invalid {
-    background:rgba(255,0,0,.15);
+input[type=text], input[type=password], input[type=email] {
+    padding:5px;
 }

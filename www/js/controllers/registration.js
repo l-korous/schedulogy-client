@@ -1,14 +1,24 @@
 angular.module('Schedulogy')
-    .controller("RegistrationCtrl", function ($scope, Auth, $state, settings) {
+    .controller("RegistrationCtrl", function ($scope, Auth, $rootScope, settings, $timeout, $state) {
+        $scope.successInfo = null;
+        $scope.errorInfo = null;
         $scope.data = {};
+        $scope.beingSubmitted = false;
+        
+        $scope.keyUpHandler = function (keyCode, formInvalid) {
+            if (keyCode === 13 && !formInvalid) {
+                $scope.register();
+            }
+        };
 
         $scope.register = function () {
-            var postData = {email: $scope.data.email, password: $scope.data.password};
-            Auth.register(postData).then(function () {
-                Auth.tryLogin(postData).then(function () {
-                    $state.go(settings.defaultStateAfterLogin);
-                    Auth.changePushToken();
-                });
+            $scope.errorInfo = null;
+            $scope.beingSubmitted = true;
+            var postData = {email: $scope.data.email};
+            Auth.register(postData).success(function () {
+                $scope.successInfo = settings.registrationSuccessInfo;
+            }).error(function (errorResponse) {
+                $scope.errorInfo = settings.registrationErrorInfo(errorResponse.message);
             });
         };
     });
