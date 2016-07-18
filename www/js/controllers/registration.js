@@ -15,8 +15,7 @@ angular.module('Schedulogy')
         $scope.register = function () {
             $scope.errorInfo = null;
             $scope.beingSubmitted = true;
-            var postData = {email: $scope.data.email};
-            Auth.register(postData).success(function () {
+            Auth.register({email: $scope.data.email}).success(function () {
                 $scope.successInfo = settings.registrationSuccessInfo;
             }).error(function (errorResponse) {
                 $scope.errorInfo = settings.registrationErrorInfo(errorResponse.message);

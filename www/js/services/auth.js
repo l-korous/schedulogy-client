@@ -2,6 +2,13 @@
 angular.module('Schedulogy')
     .factory('Auth', function ($http, settings, $rootScope, $window, $q, $rootScope, User, Cordova, $ionicModal, $filter) {
         var Auth = {
+            fromUtf: function (user) {
+                if (user.email)
+                    user.email = decodeURIComponent(escape(user.email));
+                if (user.username)
+                    user.username = decodeURIComponent(escape(user.username));
+                return user;
+            },
             isAuthenticated: function () {
                 if ($rootScope.currentUser) {
                     return true;
@@ -32,7 +39,7 @@ angular.module('Schedulogy')
             },
             processTokenStoreUser: function () {
                 var payload = JSON.parse($window.atob($window.localStorage.token.split('.')[1].replace(/-/g, "+").replace(/_/g, "/")));
-                $rootScope.currentUser = {_id: payload.uid, email: payload.uem, username: (payload.uname && payload.uname.length > 1) ? payload.uname : payload.uem};
+                $rootScope.currentUser = this.fromUtf({_id: payload.uid, email: payload.uem, username: (payload.uname && payload.uname.length > 1) ? payload.uname : payload.uem});
                 $window.localStorage.currentUserId = $rootScope.currentUser._id;
             },
             register: function (user) {
@@ -67,6 +74,9 @@ angular.module('Schedulogy')
             },
             activate: function (password, userId, passwordResetHash) {
                 return $http.post(settings.serverUrl + "/activate", {password: password, userId: userId, passwordResetHash: passwordResetHash});
+            },
+            sendPasswordResetLink: function (email) {
+                return $http.post(settings.serverUrl + "/reset-password", {email: email});
             },
             logout: function () {
                 $window.localStorage.token && delete $window.localStorage.token;

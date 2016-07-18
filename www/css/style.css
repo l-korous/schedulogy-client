@@ -231,3 +231,7 @@ input[type=text], input[type=password], input[type=email] {
 .button-hover-balanced:hover {
     color: #ccc ! important;
 }
+
+.button-orange {
+    background: #ffa400 ! important;
+}

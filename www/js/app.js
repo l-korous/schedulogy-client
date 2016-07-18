@@ -61,7 +61,16 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             return 'General error';
         },
         registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address.',
-        passwordResetSuccessInfo: 'Password successfully set.'
+        passwordResetSuccessInfo: 'Password successfully set.',
+        forgottenPasswordSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address.',
+        forgottenPasswordErrorInfo: function (msg) {
+            switch (msg) {
+                case '!existing':
+                    return 'We could not find the requested user. Please register first.';
+                    break;
+            }
+            return 'General error';
+        }
     })
     .config(['$stateProvider', '$urlRouterProvider', 'settings', function ($stateProvider, $urlRouterProvider, settings) {
             $stateProvider
@@ -77,10 +86,16 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                     templateUrl: 'templates/registration.html',
                     controller: 'RegistrationCtrl'
                 })
-                .state('password-reset', {
+                .state('forgottenPassword', {
+                    url: '/forgotten-password',
+                    authenticate: false,
+                    templateUrl: 'templates/forgottenPassword.html',
+                    controller: 'ForgottenPasswordCtrl'
+                })
+                .state('passwordReset', {
                     url: '/password-reset',
                     authenticate: false,
-                    templateUrl: 'templates/password-reset.html',
+                    templateUrl: 'templates/passwordReset.html',
                     controller: 'PasswordResetCtrl'
                 })
                 .state('main', {
