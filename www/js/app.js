@@ -121,7 +121,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             todayLabel: 'Today',
             closeLabel: 'Close',
             mondayFirst: true,
-            weeksList: ["S", "M", "T", "W", "T", "F", "S"],
+            weeksList: ["M", "T", "W", "T", "F", "S", "S"],
             monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
             templateType: 'popup',
             from: new Date(2012, 8, 1),
@@ -129,7 +129,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             showTodayButton: true,
             dateFormat: 'dd MMMM yyyy',
             closeOnSelect: true,
-            disableWeekdays: [6]
+            disableWeekdays: []
         };
         ionicDatePickerProvider.configDatePicker(datePickerObj);
     })

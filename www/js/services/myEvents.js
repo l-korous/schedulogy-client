@@ -12,18 +12,29 @@ angular.module('Schedulogy')
             });
 
             MyEvents.events.forEach(function (event) {
-                MyEvents.fillDepsForShow(event);
+                MyEvents.fillBlocksAndNeedsForShow(event);
             });
         };
-        MyEvents.fillDepsForShow = function (event) {
-            if (event.deps) {
-                event.depsForShow.splice(0, event.depsForShow.length);
-                event.deps.forEach(function (dep) {
+        MyEvents.fillBlocksAndNeedsForShow = function (event) {
+            if (event.blocks) {
+                event.blocksForShow.splice(0, event.blocksForShow.length);
+                event.blocks.forEach(function (dep) {
                     var depObject = MyEvents.events.find(function (event) {
                         if (event._id === dep)
                             return true;
                     });
-                    event.depsForShow.push({_id: depObject._id, title: depObject.title, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText});
+                    event.blocksForShow.push({_id: depObject._id, title: depObject.title, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText});
+                });
+            }
+            
+            if (event.needs) {
+                event.needsForShow.splice(0, event.needsForShow.length);
+                event.needs.forEach(function (dep) {
+                    var depObject = MyEvents.events.find(function (event) {
+                        if (event._id === dep)
+                            return true;
+                    });
+                    event.needsForShow.push({_id: depObject._id, title: depObject.title, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText});
                 });
             }
         };

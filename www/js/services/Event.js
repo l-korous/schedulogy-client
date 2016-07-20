@@ -20,8 +20,10 @@ angular.module('Schedulogy')
                 from.due = to.due;
                 from.due = to.due;
                 from.due = to.due;
-                from.deps = to.deps;
-                from.depsForShow = to.depsForShow;
+                from.blocks = to.blocks;
+                from.blocksForShow = to.blocksForShow;
+                from.needs = to.needs;
+                from.needsForShow = to.needsForShow;
                 from.desc = to.desc;
             },
             toEvent: function (task) {
@@ -38,7 +40,8 @@ angular.module('Schedulogy')
                     endTimeText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.timeFormat),
                     stick: true,
                     allDay: (task.type === 'fixedAllDay'),
-                    depsForShow: [],
+                    blocksForShow: [],
+                    needsForShow: [],
                     constraint: {
                         start: moment(task.constraint.start).local(),
                         end: moment(task.constraint.end).local()
@@ -53,6 +56,32 @@ angular.module('Schedulogy')
                 }
 
                 return event;
+            },
+            earliestPossibleFinish: function (event) {
+                if (event.type === 'floating')
+                    return event.constraint.start.clone().add(event.dur, 'h');
+                else if (event.type === 'fixed' || event.type === 'fixedAllDay') {
+                    var unit = (event.type === 'fixed' ? 'h' : 'd');
+                    if (event.start.diff(event.constraint.start, 'h') > 0)
+                        return event.start.clone().add(event.dur, unit);
+                    else {
+                        console.log('earliestPossibleFinish: Something weird, constraint start time is larger than current start time.');
+                        return event.constraint.start.clone().add(event.dur, unit);
+                    }
+                }
+            },
+            latestPossibleStart: function(event) {
+                if (event.type === 'floating')
+                    return event.due.clone().add(-event.dur, 'h');
+                else if (event.type === 'fixed' || event.type === 'fixedAllDay') {
+                    var unit = (event.type === 'fixed' ? 'h' : 'd');
+                    if (event.end.diff(event.constraint.end, 'h') <= 0)
+                        return event.end.clone().add(-event.dur, unit);
+                    else {
+                        console.log('latestPossibleStart: Something weird, constraint end time is smaller than current end time.');
+                        return event.constraint.end.clone().add(-event.dur, unit);
+                    }
+                }
             }
         };
     });

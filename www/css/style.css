@@ -161,6 +161,11 @@ h2 {
     font-weight: bold;
     font-size:99%;
 }
+
+.width-100 {
+    width:100%;
+}
+
 /* FullCalendar fixes */
 
 .fc-basic-view .fc-body .fc-row {

@@ -45,7 +45,8 @@ angular.module('Schedulogy')
                     },
                     desc: event.desc,
                     due: event.due ? event.due.unix() : null,
-                    deps: event.deps
+                    needs: event.needs,
+                    blocks: event.blocks
                 });
                 
                 return task;

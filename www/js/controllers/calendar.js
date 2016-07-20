@@ -1,7 +1,8 @@
 angular.module('Schedulogy')
-    .controller('CalendarCtrl', ['DateUtils', '$scope', '$ionicModal', 'uiCalendarConfig', 'settings', 'MyEvents',
+    .controller('CalendarCtrl', ['DateUtils', '$scope', '$ionicModal', 'uiCalendarConfig', 'settings', 'MyEvents', 'Event',
         '$window', '$ionicPopover', '$timeout', 'Task', 'moment', 'ionicDatePicker', 'ionicTimePicker', '$filter', '$ionicLoading',
-        function (DateUtils, $scope, $ionicModal, uiCalendarConfig, settings, MyEvents, $window, $ionicPopover, $timeout, Task, moment, ionicDatePicker, ionicTimePicker, $filter, $ionicLoading) {
+        function (DateUtils, $scope, $ionicModal, uiCalendarConfig, settings, MyEvents, Event, $window, $ionicPopover, $timeout,
+            Task, moment, ionicDatePicker, ionicTimePicker, $filter, $ionicLoading) {
             /* event source that pulls from google.com */
             $scope.eventSource = {
                 url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
@@ -28,8 +29,10 @@ angular.module('Schedulogy')
                     due: btimePlusDuration,
                     dueDateText: btimePlusDuration.format(settings.dateFormat),
                     dueTimeText: btimePlusDuration.format(settings.timeFormat),
-                    deps: [],
-                    depsForShow: [],
+                    blocks: [],
+                    blocksForShow: [],
+                    needs: [],
+                    needsForShow: [],
                     constraint: {
                         start: null,
                         end: null
@@ -136,6 +139,7 @@ angular.module('Schedulogy')
                     }
                 }
             };
+
             $scope.calculateCalendarRowHeight = function () {
                 var row_height = Math.max(settings.minCalendarRowHeight, ($window.innerHeight - settings.shiftAgendaRows) / (settings.endHour - settings.startHour));
                 var style = document.createElement('style');
@@ -272,30 +276,78 @@ angular.module('Schedulogy')
             };
 
             $scope.addDependency = function (eventId) {
-                $scope.currentEvent.deps.push(eventId);
-                MyEvents.fillDepsForShow($scope.currentEvent);
+                $scope.currentEvent.blocks.push(eventId);
+                MyEvents.fillBlocksAndNeedsForShow($scope.currentEvent);
+                eventId = null;
             };
 
             $scope.removeDependency = function (event) {
-                for (var i = $scope.currentEvent.deps.length - 1; i >= 0; i--) {
-                    if ($scope.currentEvent.deps[i] === event._id) {
-                        $scope.currentEvent.deps.splice(i, 1);
-                        $scope.currentEvent.depsForShow.splice(i, 1);
+                for (var i = $scope.currentEvent.blocks.length - 1; i >= 0; i--) {
+                    if ($scope.currentEvent.blocks[i] === event._id) {
+                        $scope.currentEvent.blocks.splice(i, 1);
+                        $scope.currentEvent.blocksForShow.splice(i, 1);
                     }
                 }
             };
 
-            $scope.notDependencyOrMe = function (inspectedEvent) {
+            $scope.addPrerequisite = function (eventId) {
+                $scope.currentEvent.needs.push(eventId);
+                MyEvents.fillBlocksAndNeedsForShow($scope.currentEvent);
+                eventId = null;
+            };
+
+            $scope.removePrerequisite = function (event) {
+                for (var i = $scope.currentEvent.needs.length - 1; i >= 0; i--) {
+                    if ($scope.currentEvent.needs[i] === event._id) {
+                        $scope.currentEvent.needs.splice(i, 1);
+                        $scope.currentEvent.needsForShow.splice(i, 1);
+                    }
+                }
+            };
+
+            $scope.commonFilter = function (inspectedEvent) {
                 if ($scope.currentEvent && inspectedEvent._id === $scope.currentEvent._id)
                     return false;
                 var retVal = true;
-                if ($scope.currentEvent && $scope.currentEvent.deps) {
-                    $scope.currentEvent.deps.forEach(function (dependency) {
-                        if (dependency._id === inspectedEvent._id)
+                if ($scope.currentEvent && ($scope.currentEvent.blocks || $scope.currentEvent.needs)) {
+                    $scope.currentEvent.blocks.forEach(function (other) {
+                        if (other === inspectedEvent._id)
+                            retVal = false;
+                    });
+
+                    $scope.currentEvent.needs.forEach(function (other) {
+                        if (other === inspectedEvent._id)
                             retVal = false;
                     });
                 }
                 return retVal;
+            };
+
+            $scope.blocksFilter = function (inspectedEvent) {
+                if (inspectedEvent.type !== 'floating')
+                    return false;
+                if (!$scope.commonFilter(inspectedEvent))
+                    return false;
+                if ($scope.currentEvent) {
+                    var latestPossibleStartOfInspectedEvent = Event.latestPossibleStart(inspectedEvent);
+                    var earliestPossibleFinishOfCurrentEvent = Event.earliestPossibleFinish($scope.currentEvent);
+                    if (earliestPossibleFinishOfCurrentEvent.diff(latestPossibleStartOfInspectedEvent, 'h') > 0)
+                        return false;
+                    
+                }
+                return true;
+            };
+
+            $scope.needsFilter = function (inspectedEvent) {
+                if (!$scope.commonFilter(inspectedEvent))
+                    return false;
+                if ($scope.currentEvent) {
+                    var latestPossibleStartOfCurrentEvent = Event.latestPossibleStart($scope.currentEvent);
+                    var earliestPossibleFinishOfInspectedEvent = Event.earliestPossibleFinish(inspectedEvent);
+                    if (latestPossibleStartOfCurrentEvent.diff(earliestPossibleFinishOfInspectedEvent, 'h') < 0)
+                        return false;
+                }
+                return true;
             };
 
             $scope.startValueForOrderingOfDependencies = function (event) {
@@ -337,11 +389,23 @@ angular.module('Schedulogy')
             });
 
             $scope.reinitDatePicker = function (dateUsed) {
-                dateUsed.inputDate = $scope.currentEvent ? ($scope.currentEvent.due ? $scope.currentEvent.due.toDate() : $scope.currentEvent.start.toDate()) : DateUtils.getBTime();
+                dateUsed.inputDate = $scope.currentEvent ? (dateUsed === 'due' ? $scope.currentEvent.due.toDate() : $scope.currentEvent.start.toDate()) : DateUtils.getBTime();
+                dateUsed.from = $scope.currentEvent.constraint.start.toDate();
+                dateUsed.to = $scope.currentEvent.constraint.end.toDate();
             };
 
             $scope.reinitTimePicker = function (dateUsed) {
-                dateUsed.inputTime = $scope.currentEvent ? ($scope.currentEvent.due ? ($scope.currentEvent.due.hour() * 3600) : ($scope.currentEvent.start.hour() * 3600)) : DateUtils.getBTime();
+                dateUsed.inputTime = $scope.currentEvent ? (dateUsed === 'due' ? ($scope.currentEvent.due.hour() * 3600) : ($scope.currentEvent.start.hour() * 3600)) : DateUtils.getBTime();
+                if (dateUsed === 'due')
+                    dateUsed.constraint = {
+                        from: ($scope.currentEvent.start.format("YYYY-MM-DD") === $scope.currentEvent.constraint.start.format("YYYY-MM-DD")) ? $scope.currentEvent.constraint.start.hour() + $scope.currentEvent.dur : 0,
+                        to: ($scope.currentEvent.end.format("YYYY-MM-DD") === $scope.currentEvent.constraint.end.format("YYYY-MM-DD")) ? $scope.currentEvent.constraint.end.hour() - $scope.currentEvent.dur : 24
+                    };
+                else
+                    dateUsed.constraint = {
+                        from: ($scope.currentEvent.start.format("YYYY-MM-DD") === $scope.currentEvent.constraint.start.format("YYYY-MM-DD")) ? $scope.currentEvent.constraint.start.hour() : 0,
+                        to: ($scope.currentEvent.end.format("YYYY-MM-DD") === $scope.currentEvent.constraint.end.format("YYYY-MM-DD")) ? $scope.currentEvent.constraint.end.hour() - $scope.currentEvent.dur : 24
+                    };
             };
 
             $scope.openDatePicker = function (dateUsed) {
