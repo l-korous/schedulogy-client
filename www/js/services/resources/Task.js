@@ -1,25 +1,25 @@
 angular.module('Schedulogy')
-    .factory('Task', ['$resource', '$http', 'settings', 'moment', 'DateUtils', function ($resource, $http, settings, moment, DateUtils) {
+    .factory('Task', ['$resource', '$http', 'settings', 'moment', function ($resource, $http, settings, moment) {
             var Task = $resource(settings.serverUrl + "/task", {}, {
                 query: {
                     method: "GET",
                     url: settings.serverUrl + "/task",
                     params: {
                         //userId: "@userId",
-                        btime: DateUtils.getBTime().unix()
+                        btime: '@btime'
                     }
                 },
                 get: {
                     method: "GET",
                     url: settings.serverUrl + "/task/:taskId",
                     params: {
-                        btime: DateUtils.getBTime().unix()
+                        btime: '@btime'
                     }
                 },
                 save: {
                     method: "POST",
                     params: {
-                        btime: DateUtils.getBTime().unix()
+                        btime: '@btime'
                     }
                 },
                 remove: {
@@ -27,7 +27,7 @@ angular.module('Schedulogy')
                     url: settings.serverUrl + "/task/:taskId",
                     params: {
                         taskId: "@taskId",
-                        btime: DateUtils.getBTime().unix()
+                        btime: '@btime'
                     }
                 }
             });
@@ -48,7 +48,7 @@ angular.module('Schedulogy')
                     needs: event.needs,
                     blocks: event.blocks
                 });
-                
+
                 return task;
             };
 

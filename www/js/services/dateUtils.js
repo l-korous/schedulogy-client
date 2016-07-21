@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .factory('DateUtils', function (moment, settings, MyEvents) {
+    .factory('DateUtils', function (moment) {
         return {
             pushDatePart: function (src, dst) {
                 if (!dst) {
@@ -24,15 +24,6 @@ angular.module('Schedulogy')
                 toReturn.minute(0);
                 toReturn.second(0);
 
-                return toReturn;
-            },
-            getBTime: function () {
-                var toReturn = settings.fixedBTime ? moment(settings.fixedBTime.date) : moment(new Date()).add('hours', 1).minutes(0).seconds(0);
-                
-                MyEvents.getCurrentEvents(toReturn).forEach(function(currentEvent) {
-                    toReturn = (currentEvent.end > toReturn ? currentEvent.end : toReturn);
-                });
-                
                 return toReturn;
             }
         };

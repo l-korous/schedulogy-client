@@ -1,14 +1,14 @@
 angular.module('Schedulogy')
-    .service('FullCalendar', function (moment, settings, Task, MyEvents, DateUtils, $ionicLoading, $window, $timeout, uiCalendarConfig) {
+    .service('FullCalendar', function (moment, settings, Task, MyEvents, DateUtils, $window, $timeout, uiCalendarConfig) {
         this.setCallbacks = function (toSet) {
             this.callbacks = toSet;
         };
 
         this.emptyCurrentEvent = function () {
-            var btime = DateUtils.getBTime();
+            var btime = MyEvents.getBTime();
             var btimePlusDuration = btime.clone().add(settings.defaultTaskDuration, 'hours');
 
-            this.currentEvent = {
+            MyEvents.currentEvent = {
                 new : true,
                 stick: true,
                 type: settings.defaultTaskType,
@@ -45,8 +45,8 @@ angular.module('Schedulogy')
                 eventColor: '#387ef5',
                 axisFormat: 'H:mm',
                 selectConstraint: {
-                    start: DateUtils.getBTime(),
-                    end: DateUtils.getBTime().clone().add(settings.weeks, 'weeks')
+                    start: MyEvents.getBTime(),
+                    end: MyEvents.getBTime().clone().add(settings.weeks, 'weeks')
                 },
                 slotDuration: '01:00:00',
                 defaultDate: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()),
@@ -63,8 +63,8 @@ angular.module('Schedulogy')
                 maxTime: settings.endHour + ':00:00',
                 selectable: true,
                 eventConstraint: {
-                    start: DateUtils.getBTime(),
-                    end: DateUtils.getBTime().clone().add(settings.weeks, 'weeks')
+                    start: MyEvents.getBTime(),
+                    end: MyEvents.getBTime().clone().add(settings.weeks, 'weeks')
                 },
                 businessHours: {
                     start: settings.startHour + ':00:00',
@@ -84,7 +84,7 @@ angular.module('Schedulogy')
                     this.callbacks.eventResize();
                 },
                 eventClick: function (calEvent, jsEvent, view) {
-                    this.currentEvent = calEvent;
+                    MyEvents.currentEvent = calEvent;
                     this.callbacks.eventClick();
                 },
                 eventDrop: function (event, delta, revertFunc) {
@@ -92,7 +92,7 @@ angular.module('Schedulogy')
                 },
                 select: function (start, end, jsEvent, view, resource) {
                     this.emptyCurrentEvent();
-                    this.currentEvent = angular.extend(this.currentEvent, {
+                    MyEvents.currentEvent = angular.extend(MyEvents.currentEvent, {
                         type: 'fixed',
                         start: start,
                         startDateText: start.format(settings.dateFormat),
@@ -107,8 +107,8 @@ angular.module('Schedulogy')
                     });
 
                     if (view.name === 'month' || !(start.hasTime() || end.hasTime())) {
-                        this.currentEvent.dur = end.diff(start, 'd');
-                        this.currentEvent.type = 'fixedAllDay';
+                        MyEvents.currentEvent.dur = end.diff(start, 'd');
+                        MyEvents.currentEvent.type = 'fixedAllDay';
                     }
 
                     this.callbacks.select();
@@ -123,17 +123,13 @@ angular.module('Schedulogy')
 
                     $('.eventDeleter').click(function (evt) {
                         evt.stopPropagation();
-                        this.deleteEventById(event._id);
+                        MyEvents.deleteEventById(event._id);
                     });
                 },
                 eventMouseout: function (event, jsEvent, view) {
                     $('i').remove(".eventDeleter");
                 }
             }
-        };
-
-        this.deleteEventById = function (passedEventId) {
-            this.deleteEvent(MyEvents.findEventById(passedEventId));
         };
 
         this.calculateCalendarRowHeight = function () {
@@ -148,42 +144,7 @@ angular.module('Schedulogy')
                 uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - settings.shiftCalendar);
             });
         };
-
-        this.updateEndDateTimeWithDuration = function (eventPassed) {
-            var event = eventPassed || this.currentEvent;
-
-            event.end = event.start.clone().add(event.dur, event.type === 'fixedAllDay' ? 'days' : 'hours');
-
-            // For all-day events, we are displaying the end day the same as the current one.
-            if (event.type === 'fixedAllDay') {
-                var custom_end = event.start.clone();
-                event.endDateText = custom_end.format(settings.dateFormat);
-                event.endTimeText = custom_end.format(settings.timeFormat);
-            }
-            else if (event.type === 'fixed') {
-                event.endDateText = event.end.format(settings.dateFormat);
-                event.endTimeText = event.end.format(settings.timeFormat);
-            }
-        };
-
-        this.deleteEvent = function (passedEvent) {
-            var eventToDelete = passedEvent || this.currentEvent;
-
-            $ionicLoading.show({
-                template: 'Loading...'
-            });
-
-            Task.fromEvent(eventToDelete).$remove({taskId: eventToDelete._id}, function (data, headers) {
-                MyEvents.importFromTasks(data.tasks);
-                $ionicLoading.hide();
-            }, function (err) {
-                $ionicLoading.hide();
-
-                // error callback
-                console.log(err);
-            });
-        };
-
+        
         //////// Done at start
         this.calculateCalendarRowHeight();
         angular.element($window).bind('resize', function () {
