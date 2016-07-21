@@ -26,7 +26,7 @@ angular.module('Schedulogy')
                     event.blocksForShow.push({_id: depObject._id, title: depObject.title, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText});
                 });
             }
-            
+
             if (event.needs) {
                 event.needsForShow.splice(0, event.needsForShow.length);
                 event.needs.forEach(function (dep) {
@@ -34,7 +34,10 @@ angular.module('Schedulogy')
                         if (event._id === dep)
                             return true;
                     });
-                    event.needsForShow.push({_id: depObject._id, title: depObject.title, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText});
+                    if (depObject)
+                        event.needsForShow.push({_id: depObject._id, title: depObject.title, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText});
+                    else
+                        console.log('Error: prerequisite not exists: ' + dep);
                 });
             }
         };
@@ -50,6 +53,6 @@ angular.module('Schedulogy')
                 return ((event.start < now) && (event.end > now));
             });
         };
-        
+
         return MyEvents;
     });
