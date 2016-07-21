@@ -1,36 +1,9 @@
 angular.module('Schedulogy')
     .service('FullCalendar', function (moment, settings, Task, MyEvents, DateUtils, $window, $timeout, uiCalendarConfig) {
+        var _this = this;
+
         this.setCallbacks = function (toSet) {
             this.callbacks = toSet;
-        };
-
-        this.emptyCurrentEvent = function () {
-            var btime = MyEvents.getBTime();
-            var btimePlusDuration = btime.clone().add(settings.defaultTaskDuration, 'hours');
-
-            MyEvents.currentEvent = {
-                new : true,
-                stick: true,
-                type: settings.defaultTaskType,
-                dur: settings.defaultTaskDuration,
-                start: btime,
-                startDateText: btime.format(settings.dateFormat),
-                startTimeText: btime.format(settings.timeFormat),
-                end: btimePlusDuration,
-                endDateText: btimePlusDuration.format(settings.dateFormat),
-                endTimeText: btimePlusDuration.format(settings.timeFormat),
-                due: btimePlusDuration,
-                dueDateText: btimePlusDuration.format(settings.dateFormat),
-                dueTimeText: btimePlusDuration.format(settings.timeFormat),
-                blocks: [],
-                blocksForShow: [],
-                needs: [],
-                needsForShow: [],
-                constraint: {
-                    start: null,
-                    end: null
-                }
-            };
         };
 
         this.uiConfig = {
@@ -41,7 +14,7 @@ angular.module('Schedulogy')
                 timeFormat: 'H:mm',
                 slotLabelFormat: 'H:mm',
                 eventBackgroundColor: '#387ef5',
-                eventBorderColor: '#aaa',
+                eventBorderColor: '#000',
                 eventColor: '#387ef5',
                 axisFormat: 'H:mm',
                 selectConstraint: {
@@ -78,20 +51,20 @@ angular.module('Schedulogy')
                     else if (event.type === 'floating') {
                         event.type = 'fixed';
                         event.dur += delta.hours();
-                        this.handleChangeOfEventType(event);
+                        MyEvents.handleChangeOfEventType(event);
                     }
 
-                    this.callbacks.eventResize();
+                    _this.saveEvent(event);
                 },
                 eventClick: function (calEvent, jsEvent, view) {
                     MyEvents.currentEvent = calEvent;
-                    this.callbacks.eventClick();
+                    _this.callbacks.eventClick(MyEvents.currentEvent);
                 },
                 eventDrop: function (event, delta, revertFunc) {
-                    this.callbacks.eventDrop();
+                    _this.saveEvent(event);
                 },
                 select: function (start, end, jsEvent, view, resource) {
-                    this.emptyCurrentEvent();
+                    MyEvents.emptyCurrentEvent();
                     MyEvents.currentEvent = angular.extend(MyEvents.currentEvent, {
                         type: 'fixed',
                         start: start,
@@ -111,7 +84,7 @@ angular.module('Schedulogy')
                         MyEvents.currentEvent.type = 'fixedAllDay';
                     }
 
-                    this.callbacks.select();
+                    _this.callbacks.select();
                 },
                 viewRender: function (view, element) {
 
@@ -144,10 +117,11 @@ angular.module('Schedulogy')
                 uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - settings.shiftCalendar);
             });
         };
-        
+
         //////// Done at start
         this.calculateCalendarRowHeight();
+        
         angular.element($window).bind('resize', function () {
-            this.calculateCalendarRowHeight();
+            _this.calculateCalendarRowHeight();
         });
     });

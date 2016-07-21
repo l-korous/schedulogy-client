@@ -90,11 +90,11 @@ h2 {
     top: 0;
     right: 5px;
     font-size: 20px;
-    color: white;
+    color: #111;
 }
 
 .eventDeleter:hover {
-    color: #aaa;
+    color: #555;
 }
 
 .has-error {
@@ -166,6 +166,33 @@ h2 {
     width:100%;
 }
 
+.select-needs .item, .select-blocks .item {
+    font-size:1.5em;
+    font-weight:bold;
+}
+
+.select-needs .item:first-of-type, .select-blocks .item:first-of-type {
+    font-size:1.1em;
+}
+.select-needs .select-option-label-2, .select-blocks .select-option-label-2 {
+    display:block;
+    margin-top:3px;
+    font-size:.75em;
+}
+
+.select-needs .select-option-label-2:before, .select-blocks .select-option-label-2:before {
+    content: 'On: ';
+}
+
+.select-needs .select-option-label-3, .select-blocks .select-option-label-3 {
+    display:block;  
+    font-size:.75em;
+}
+
+.select-needs .select-option-label-3:before, .select-blocks .select-option-label-3:before {
+    content: 'At: ';
+}
+
 /* FullCalendar fixes */
 
 .fc-basic-view .fc-body .fc-row {
@@ -184,13 +211,24 @@ h2 {
 .fc-event .fc-content .fc-time {
     margin:5px 0 10px 5px;
     text-align:left;
-    font-size: 12px;
+    font-family: "RobotoSlab-Light";
+    font-size: 1.2em;
 }
 .fc-event .fc-content .fc-title {
     margin:10px 5px 0 5px;
     text-align:center;
-    font-size: 15px;
+    font-size: 1.6em;
     overflow: hidden;
+    font-family: "RobotoSlab-Light";
+}
+.fc-event .fc-content .fc-due {
+    position:absolute;
+    bottom:15px;
+    left: 10px;
+    text-align:right;
+    font-size: 1.2em;
+    overflow: hidden;
+    font-family: "RobotoSlab-Light";
 }
 
 .fc-agenda-view .fc-day-grid .fc-row {

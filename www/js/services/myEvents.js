@@ -2,18 +2,53 @@ angular.module('Schedulogy')
     .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task) {
         this.events = [];
         this.curr = null;
+        var _this = this;
+
+        this.refreshEvents = function () {
+            Task.query({btime: this.getBTime().unix()}, function (data) {
+                _this.importFromTasks(data.tasks);
+            });
+        };
 
         this.importFromTasks = function (tasks) {
-            var _this = this;
-            this.events.splice(0, this.events.length);
+            _this.events.splice(0, this.events.length);
 
             tasks.forEach(function (task) {
                 _this.events.push(Event.toEvent(task));
             });
 
-            this.events.forEach(function (event) {
+            _this.events.forEach(function (event) {
                 _this.fillBlocksAndNeedsForShow(event);
             });
+        };
+
+        this.emptyCurrentEvent = function () {
+            var btime = this.getBTime();
+            var btimePlusDuration = btime.clone().add(settings.defaultTaskDuration, 'hours');
+
+            this.currentEvent = {
+                new : true,
+                stick: true,
+                type: settings.defaultTaskType,
+                dur: settings.defaultTaskDuration,
+                start: btime,
+                startDateText: btime.format(settings.dateFormat),
+                startTimeText: btime.format(settings.timeFormat),
+                end: btimePlusDuration,
+                endDateText: btimePlusDuration.format(settings.dateFormat),
+                endTimeText: btimePlusDuration.format(settings.timeFormat),
+                due: btimePlusDuration,
+                dueDateText: btimePlusDuration.format(settings.dateFormat),
+                dueTimeText: btimePlusDuration.format(settings.timeFormat),
+                blocks: [],
+                blocksForShow: [],
+                needs: [],
+                needsForShow: [],
+                constraint: {
+                    start: null,
+                    end: null
+                }
+            };
         };
 
         this.fillBlocksAndNeedsForShow = function (event) {
@@ -67,7 +102,7 @@ angular.module('Schedulogy')
             });
 
             Task.fromEvent(eventToDelete).$remove({btime: this.getBTime().unix(), taskId: eventToDelete._id}, function (data, headers) {
-                this.importFromTasks(data.tasks);
+                _this.importFromTasks(data.tasks);
                 $ionicLoading.hide();
             }, function (err) {
                 $ionicLoading.hide();
@@ -78,7 +113,15 @@ angular.module('Schedulogy')
         };
 
         this.deleteEventById = function (passedEventId) {
-            this.deleteEvent(MyEvents.findEventById(passedEventId));
+            this.deleteEvent(this.findEventById(passedEventId));
+        };
+
+        this.handleChangeOfEventType = function (eventPassed) {
+            var event = eventPassed || this.currentEvent;
+            if (event.dur > settings.maxEventDuration[event.type])
+                event.dur = settings.maxEventDuration[event.type];
+            this.updateEndDateTimeWithDuration(event);
+            event.color = settings.eventColor[event.type];
         };
 
         this.saveEvent = function (passedEvent) {
@@ -87,7 +130,7 @@ angular.module('Schedulogy')
                 template: 'Loading...'
             });
             Task.fromEvent(eventToSave).$save({btime: this.getBTime().unix()}, function (data, headers) {
-                this.importFromTasks(data.tasks);
+                _this.importFromTasks(data.tasks);
                 $ionicLoading.hide();
             },
                 function (err) {
@@ -113,22 +156,80 @@ angular.module('Schedulogy')
         };
 
         this.addPrerequisite = function (eventId) {
+            if (!eventId)
+                return;
             this.currentEvent.needs.push(eventId);
             this.fillBlocksAndNeedsForShow(this.currentEvent);
             eventId = null;
+
+            $ionicLoading.show({
+                template: 'Loading...'
+            });
+
+            Task.fromEvent(this.currentEvent).$checkConstraints({btime: this.getBTime().unix()}, function (data, headers) {
+                var constraintStart = moment(data.start).local();
+                var constraintEnd = moment(data.end).local();
+
+                _this.currentEvent.constraint = {
+                    start: constraintStart,
+                    startDateText: constraintStart.format(settings.dateFormat),
+                    startTimeText: constraintStart.format(settings.timeFormat),
+                    startDateDueText: constraintStart.clone().add(_this.currentEvent.dur, 'h').format(settings.dateFormat),
+                    startTimeDueText: constraintStart.clone().add(_this.currentEvent.dur, 'h').format(settings.timeFormat),
+                    end: constraintEnd,
+                    endDateText: constraintEnd.format(settings.dateFormat),
+                    endTimeText: constraintEnd.format(settings.timeFormat)
+                };
+
+                $ionicLoading.hide();
+            }, function (err) {
+                $ionicLoading.hide();
+
+                // error callback
+                console.log(err);
+            });
         };
 
         this.removePrerequisite = function (event) {
+            if (!event)
+                return;
             for (var i = this.currentEvent.needs.length - 1; i >= 0; i--) {
                 if (this.currentEvent.needs[i] === event._id) {
                     this.currentEvent.needs.splice(i, 1);
                     this.currentEvent.needsForShow.splice(i, 1);
                 }
             }
+
+            $ionicLoading.show({
+                template: 'Loading...'
+            });
+
+            Task.fromEvent(this.currentEvent).$checkConstraints({btime: this.getBTime().unix()}, function (data, headers) {
+                var constraintStart = moment(data.start).local();
+                var constraintEnd = moment(data.end).local();
+
+                _this.currentEvent.constraint = {
+                    start: constraintStart,
+                    startDateText: constraintStart.format(settings.dateFormat),
+                    startTimeText: constraintStart.format(settings.timeFormat),
+                    startDateDueText: constraintStart.clone().add(_this.currentEvent.dur, 'h').format(settings.dateFormat),
+                    startTimeDueText: constraintStart.clone().add(_this.currentEvent.dur, 'h').format(settings.timeFormat),
+                    end: constraintEnd,
+                    endDateText: constraintEnd.format(settings.dateFormat),
+                    endTimeText: constraintEnd.format(settings.timeFormat)
+                };
+
+                $ionicLoading.hide();
+            }, function (err) {
+                $ionicLoading.hide();
+
+                // error callback
+                console.log(err);
+            });
         };
 
         this.updateEndDateTimeWithDuration = function (eventPassed) {
-            var event = eventPassed || MyEvents.currentEvent;
+            var event = eventPassed || this.currentEvent;
 
             event.end = event.start.clone().add(event.dur, event.type === 'fixedAllDay' ? 'days' : 'hours');
 
@@ -153,4 +254,7 @@ angular.module('Schedulogy')
 
             return toReturn;
         };
+
+        //////// Done at start
+        this.refreshEvents();
     });

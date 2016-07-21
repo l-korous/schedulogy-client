@@ -12,15 +12,10 @@ angular.module('Schedulogy')
             $scope.eventSources = [MyEvents.events];
 
             $scope.fullCalendar = FullCalendar;
+            
             $scope.fullCalendar.setCallbacks({
-                eventResize: function () {
-                    $scope.saveEvent(event);
-                },
                 eventClick: function () {
                     $scope.openModal();
-                },
-                eventDrop: function () {
-                    $scope.saveEvent(event);
                 },
                 select: function () {
                     $scope.updateEndDateTimeWithDuration();
@@ -28,9 +23,6 @@ angular.module('Schedulogy')
                 }
             });
 
-            Task.query({btime: MyEvents.getBTime().unix()}, function (data) {
-                MyEvents.importFromTasks(data.tasks);
-            });
             // Popover 'coming soon'.
             $ionicPopover.fromTemplateUrl('templates/popovers/coming_soon.html', {
                 scope: $scope
@@ -71,7 +63,7 @@ angular.module('Schedulogy')
                 });
             };
             $scope.closeModal = function () {
-                $scope.modal.hide();
+                $scope.taskModal.hide();
             };
 
             // Cleanup when destroying.

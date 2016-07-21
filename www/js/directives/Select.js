@@ -12,6 +12,7 @@ angular.module('Schedulogy')
                 customSelect_label2: "@label2",
                 customSelect_label3: "@label3",
                 customSelect_nullValue: "@nullValue",
+                customSelect_cssClass: "@cssClass",
                 customSelect_icon: "@icon"
             },
             link: function ($scope, element, attrs, ngModel) {
@@ -68,7 +69,13 @@ angular.module('Schedulogy')
                 // on update handler
                 var onUpdate = function () {
                     var value = ngModel.$viewValue ? ngModel.$viewValue[$scope.customSelect_label] : $scope.customSelect_nullValue;
-                    value = value + ((ngModel.$viewValue && $scope.customSelect_label2 && $scope.customSelect_label3) ? ('&nbsp; [ ' + ngModel.$viewValue[$scope.customSelect_label2] + ' (' + ngModel.$viewValue[$scope.customSelect_label3] + ') ]') : (ngModel.$viewValue && $scope.customSelect_label2) ? ('&nbsp; [ ' + ngModel.$viewValue[$scope.customSelect_label2] + ' ]') : '');
+                    if (ngModel.$viewValue && $scope.customSelect_label2) {
+                        var whatToAdd = '<span class="select-option-label-2">' + ngModel.$viewValue[$scope.customSelect_label2] + '</span>';
+                        if ($scope.customSelect_label3)
+                            whatToAdd += '<span class="select-option-label-3">' + ngModel.$viewValue[$scope.customSelect_label3] + '</span>';
+
+                        value += whatToAdd;
+                    }
                     var icon = $scope.customSelect_icon && ngModel.$viewValue && ngModel.$viewValue[$scope.customSelect_icon] ? "<i class='icon " + ngModel.$viewValue[$scope.customSelect_icon] + "'></i> " : "";
                     element.html(icon + value);
                 };

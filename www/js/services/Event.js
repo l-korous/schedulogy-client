@@ -29,6 +29,8 @@ angular.module('Schedulogy')
             toEvent: function (task) {
                 var start = moment.unix(task.start).local();
                 var end = start.clone().add(task.dur, task.type === 'fixedAllDay' ? 'days' : 'hours');
+                var constraintStart = moment(task.constraint.start).local();
+                var constraintEnd = moment(task.constraint.end).local();
                 var custom_end = start.clone();
                 var event = angular.extend(task, {
                     id: task._id,
@@ -43,10 +45,17 @@ angular.module('Schedulogy')
                     blocksForShow: [],
                     needsForShow: [],
                     constraint: {
-                        start: moment(task.constraint.start).local(),
-                        end: moment(task.constraint.end).local()
+                        start: constraintStart,
+                        startDateText: constraintStart.format(settings.dateFormat),
+                        startTimeText: constraintStart.format(settings.timeFormat),
+                        startDateDueText: constraintStart.clone().add(task.dur, 'h').format(settings.dateFormat),
+                        startTimeDueText: constraintStart.clone().add(task.dur, 'h').format(settings.timeFormat),
+                        end: constraintEnd,
+                        endDateText: constraintEnd.format(settings.dateFormat),
+                        endTimeText: constraintEnd.format(settings.timeFormat)
                     },
-                    color: settings.eventColor[task.type]
+                    color: settings.eventColor[task.type],
+                    borderColor: settings.eventBorderColor
                 }, task);
 
                 if (event.due) {
@@ -70,7 +79,7 @@ angular.module('Schedulogy')
                     }
                 }
             },
-            latestPossibleStart: function(event) {
+            latestPossibleStart: function (event) {
                 if (event.type === 'floating')
                     return event.due.clone().add(-event.dur, 'h');
                 else if (event.type === 'fixed' || event.type === 'fixedAllDay') {

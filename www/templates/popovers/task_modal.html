@@ -3,7 +3,7 @@
         <h1 class="title">{{myEvents.currentEvent.title ? myEvents.currentEvent.title : 'New Task'}}</h1>
     </ion-header-bar>
     <ion-content>
-        <form name="taskSaveForm" novalidate ng-keyup="$parent.keyUpHandler($event.keyCode, taskSaveForm.$invalid);">
+        <form name="taskSaveForm" novalidate ng-keyup="keyUpHandler($event.keyCode, taskSaveForm.$invalid);">
             <div class="list customFormErrorList">
                 <div ng-show="taskSaveForm.title.$error.required && !taskSaveForm.title.$pristine" class="item help-block">Please provide a valid title.</div>
                 <div ng-show="taskSaveForm.fixedStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
@@ -65,7 +65,7 @@
                     <div class="input-label">
                         End Time<br />[duration]
                     </div>
-                    <input type="range" min="1" max="{{modalSettings.maxDuration.fixed}}" ng-change="myEvents.updateEndDateTimeWithDuration()"
+                    <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-change="myEvents.updateEndDateTimeWithDuration()"
                            name="fixedDuration" ng-model="myEvents.currentEvent.dur" step="1" ng-required="myEvents.currentEvent.type === 'fixed'"/>
 
 
@@ -89,13 +89,17 @@
                     <div class="input-label">
                         End Date<br />[duration]
                     </div>
-                    <input type="range" min="1" max="{{modalSettings.maxDuration.fixedAllDay}}" ng-change="myEvents.updateEndDateTimeWithDuration()"
+                    <input type="range" min="1" max="{{maxEventDuration.fixedAllDay}}" ng-change="myEvents.updateEndDateTimeWithDuration()"
                            name="fixedAllDayDuration" ng-model="myEvents.currentEvent.dur" step="1" ng-required="myEvents.currentEvent.type === 'fixedAllDay'"/>
 
 
                     <div class="rangeInfo">
                         {{myEvents.currentEvent.endDateText}} &nbsp; [ {{myEvents.currentEvent.dur}} days ]
                     </div>
+                </label>
+
+                <label class="item" ng-show="myEvents.currentEvent.type === 'floating'">
+                    This task is currently constrained, the earliest it can be due is on {{myEvents.currentEvent.constraint.startDateDueText}}, at {{myEvents.currentEvent.constraint.startTimeDueText}}.
                 </label>
 
                 <label class="item item-input" ng-show="myEvents.currentEvent.type === 'floating'"
@@ -121,7 +125,7 @@
                     <div class="input-label">
                         Duration<br />&nbsp;
                     </div>
-                    <input type="range" min="1" max="{{modalSettings.maxDuration.floating}}" ng-model="myEvents.currentEvent.dur"
+                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="myEvents.currentEvent.dur"
                            name="floatingDuration" step="1" ng-required="myEvents.currentEvent.type === 'floating'"/>
 
                     <div class="rangeInfoFloating rangeInfo">
@@ -135,14 +139,14 @@
                     </div>
                     <div class="list">
                         <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.needsForShow| filter : {_id: event._id} : true">
-                            {{event.title}} &nbsp; [{{event.startDateText}} ({{event.startTimeText}})]
-                            <button class="button button-assertive" on-tap="$parent.removePrerequisite(event)">
+                            {{event.title}} on {{event.startDateText}} at {{event.startTimeText}}
+                            <button class="button button-assertive" on-tap="myEvents.removePrerequisite(event)">
                                 <i class="icon ion-trash-a"></i>
                             </button>
                         </div>
                     </div>
                     <label class="item item-input item-select width-100">
-                        <custom-select ng-model="$parent.newPrerequisite" options="$parent.eventSources[0] | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a prerequisite" ng-change="$parent.addPrerequisite(newPrerequisite)"></custom-select>
+                        <custom-select css-class="select-needs" ng-model="myEvents.newPrerequisite" options="$parent.eventSources[0] | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a prerequisite" ng-change="myEvents.addPrerequisite(myEvents.newPrerequisite)"></custom-select>
                     </label>
                 </label>
             </div>
@@ -153,27 +157,26 @@
                 </div>
                 <div class="list">
                     <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.blocksForShow| filter : {_id: event._id} : true">
-                        {{event.title}} &nbsp; [{{event.startDateText}} ({{event.startTimeText}})]
-                        <button class="button button-assertive" on-tap="$parent.removeDependency(event)">
+                        {{event.title}} on {{event.startDateText}} at {{event.startTimeText}}
+                        <button class="button button-assertive" on-tap="myEvents.removeDependency(event)">
                             <i class="icon ion-trash-a"></i>
                         </button>
                     </div>
                 </div>
                 <label class="item item-input item-select width-100">
-                    <custom-select ng-model="$parent.newDependency" options="$parent.eventSources[0] | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a dependency" ng-change="$parent.addDependency(newDependency)"></custom-select>
+                    <custom-select css-class="select-blocks"  ng-model="myEvents.newDependency" options="$parent.eventSources[0] | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a dependency" ng-change="myEvents.addDependency(myEvents.newDependency)"></custom-select>
                 </label>
             </div>
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.closeModal();
-                        myEvents.saveEvent();">
+                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.closeModal(); myEvents.saveEvent();">
                         Save
                     </button>
 
                 </div>
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeModal();">
+                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeModal(); myEvents.refreshEvents();">
                         Cancel
                     </button>   
                 </div>

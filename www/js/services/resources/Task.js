@@ -22,6 +22,13 @@ angular.module('Schedulogy')
                         btime: '@btime'
                     }
                 },
+                checkConstraints: {
+                    method: "POST",
+                    url: settings.serverUrl + "/task/checkConstraints",
+                    params: {
+                        btime: '@btime'
+                    }
+                },
                 remove: {
                     method: "DELETE",
                     url: settings.serverUrl + "/task/:taskId",

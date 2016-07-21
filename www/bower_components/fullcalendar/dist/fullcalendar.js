@@ -7525,6 +7525,13 @@ TimeGrid.mixin({
 						'</div>' :
 						''
 						) +
+                    (event.type === 'floating' ?
+						'<div class="fc-due">' + 'Due at ' + 
+							htmlEscape(event.dueTimeText) + ' on ' + 
+                            htmlEscape(event.dueDateText) +
+						'</div>' :
+						''
+						) +
 				'</div>' +
 				'<div class="fc-bg"/>' +
 				/* TODO: write CSS for this

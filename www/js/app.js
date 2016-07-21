@@ -27,6 +27,13 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             fixedAllDay: '#387ef5',
             floating: '#ffa400'
         },
+        maxEventDuration: {
+                fixed: 24,
+                fixedAllDay: 14,
+                // This needs to correspond to startHour -> endHour
+                floating: 9
+            },
+        eventBorderColor: '#111',
         passwordResetErrorInfo: function (msg) {
             switch (msg) {
                 case '!existing':
