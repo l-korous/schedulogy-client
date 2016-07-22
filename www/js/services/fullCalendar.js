@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('FullCalendar', function (moment, settings, Task, MyEvents, DateUtils, $window, $timeout, uiCalendarConfig) {
+    .service('FullCalendar', function (moment, settings, MyEvents, $window, $timeout, uiCalendarConfig) {
         var _this = this;
 
         this.setCallbacks = function (toSet) {
@@ -44,24 +44,14 @@ angular.module('Schedulogy')
                     end: settings.endHour + ':00:00'
                 },
                 eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-                    if (event.type === 'fixed')
-                        event.dur += delta.hours();
-                    else if (event.type === 'fixedAllDay')
-                        event.dur += delta.days();
-                    else if (event.type === 'floating') {
-                        event.type = 'fixed';
-                        event.dur += delta.hours();
-                        MyEvents.handleChangeOfEventType(event);
-                    }
-
-                    _this.saveEvent(event);
+                    _this.callbacks.eventResize(event, delta, revertFunc, jsEvent);
                 },
-                eventClick: function (calEvent, jsEvent, view) {
+                eventClick: function (calEvent) {
                     MyEvents.currentEvent = calEvent;
-                    _this.callbacks.eventClick(MyEvents.currentEvent);
+                    _this.callbacks.eventClick();
                 },
-                eventDrop: function (event, delta, revertFunc) {
-                    _this.saveEvent(event);
+                eventDrop: function (event, delta, revertFunc, jsEvent) {
+                    _this.callbacks.eventDrop(event, delta, revertFunc, jsEvent);
                 },
                 select: function (start, end, jsEvent, view, resource) {
                     MyEvents.emptyCurrentEvent();

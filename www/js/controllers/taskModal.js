@@ -4,6 +4,12 @@ angular.module('Schedulogy')
 
         $scope.myEvents = MyEvents;
 
+        $scope.saveEvent = function () {
+            MyEvents.saveEvent(MyEvents.currentEvent, function () {
+                $scope.$parent.closeTaskModal();
+            });
+        };
+
         $scope.commonFilter = function (inspectedEvent) {
             if (MyEvents.currentEvent && inspectedEvent._id === MyEvents.currentEvent._id)
                 return false;
@@ -25,7 +31,7 @@ angular.module('Schedulogy')
                 return false;
             if (!$scope.commonFilter(inspectedEvent))
                 return false;
-            if (MyEvents.currentEvent && MyEvents.currentEvent.constraint.start && MyEvents.currentEvent.constraint.end) {
+            if (MyEvents.currentEvent && MyEvents.currentEvent.constraint.start && inspectedEvent.constraint.end) {
                 var latestPossibleStartOfInspectedEvent = Event.latestPossibleStart(inspectedEvent);
                 var earliestPossibleFinishOfCurrentEvent = Event.earliestPossibleFinish(MyEvents.currentEvent);
                 if (earliestPossibleFinishOfCurrentEvent.diff(latestPossibleStartOfInspectedEvent, 'h') > 0)
@@ -36,7 +42,7 @@ angular.module('Schedulogy')
         $scope.needsFilter = function (inspectedEvent) {
             if (!$scope.commonFilter(inspectedEvent))
                 return false;
-            if (MyEvents.currentEvent && MyEvents.currentEvent.constraint.start && MyEvents.currentEvent.constraint.end) {
+            if (MyEvents.currentEvent && inspectedEvent.constraint.start && MyEvents.currentEvent.constraint.end) {
                 var latestPossibleStartOfCurrentEvent = Event.latestPossibleStart(MyEvents.currentEvent);
                 var earliestPossibleFinishOfInspectedEvent = Event.earliestPossibleFinish(inspectedEvent);
                 if (latestPossibleStartOfCurrentEvent.diff(earliestPossibleFinishOfInspectedEvent, 'h') < 0)
@@ -50,7 +56,6 @@ angular.module('Schedulogy')
 
         $scope.keyUpHandler = function (keyCode, formInvalid) {
             if (keyCode === 13 && !formInvalid) {
-                $scope.closeModal();
                 $scope.saveEvent();
             }
             if (keyCode === 27)
@@ -87,13 +92,13 @@ angular.module('Schedulogy')
             dateUsed.inputTime = MyEvents.currentEvent ? (MyEvents.currentEvent.type === 'floating' ? (MyEvents.currentEvent.due.hour() * 3600) : (MyEvents.currentEvent.start.hour() * 3600)) : MyEvents.getBTime();
             if (MyEvents.currentEvent.type === 'floating')
                 dateUsed.constraint = {
-                    from: (MyEvents.currentEvent.start.format("YYYY-MM-DD") === MyEvents.currentEvent.constraint.start.format("YYYY-MM-DD")) ? MyEvents.currentEvent.constraint.start.hour() + MyEvents.currentEvent.dur : 0,
-                    to: (MyEvents.currentEvent.end.format("YYYY-MM-DD") === MyEvents.currentEvent.constraint.end.format("YYYY-MM-DD")) ? MyEvents.currentEvent.constraint.end.hour() - MyEvents.currentEvent.dur : 24
+                    from: (MyEvents.currentEvent.start.format("YYYY-MM-DD") === (MyEvents.currentEvent.constraint.start && MyEvents.currentEvent.constraint.start.format("YYYY-MM-DD"))) ? MyEvents.currentEvent.constraint.start.hour() + MyEvents.currentEvent.dur : 0,
+                    to: (MyEvents.currentEvent.end.format("YYYY-MM-DD") === (MyEvents.currentEvent.constraint.end && MyEvents.currentEvent.constraint.end.format("YYYY-MM-DD"))) ? MyEvents.currentEvent.constraint.end.hour() - MyEvents.currentEvent.dur : 24
                 };
             else
                 dateUsed.constraint = {
-                    from: (MyEvents.currentEvent.start.format("YYYY-MM-DD") === MyEvents.currentEvent.constraint.start.format("YYYY-MM-DD")) ? MyEvents.currentEvent.constraint.start.hour() : 0,
-                    to: (MyEvents.currentEvent.end.format("YYYY-MM-DD") === MyEvents.currentEvent.constraint.end.format("YYYY-MM-DD")) ? MyEvents.currentEvent.constraint.end.hour() - MyEvents.currentEvent.dur : 24
+                    from: (MyEvents.currentEvent.start.format("YYYY-MM-DD") === (MyEvents.currentEvent.constraint.start && MyEvents.currentEvent.constraint.start.format("YYYY-MM-DD"))) ? MyEvents.currentEvent.constraint.start.hour() : 0,
+                    to: (MyEvents.currentEvent.end.format("YYYY-MM-DD") === (MyEvents.currentEvent.constraint.end && MyEvents.currentEvent.constraint.end.format("YYYY-MM-DD"))) ? MyEvents.currentEvent.constraint.end.hour() - MyEvents.currentEvent.dur : 24
                 };
         };
         $scope.openDatePicker = function (dateUsed) {

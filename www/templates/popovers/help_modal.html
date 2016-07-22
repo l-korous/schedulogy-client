@@ -1,0 +1,19 @@
+<ion-modal-view ng-controller="HelpModalCtrl">
+    <ion-header-bar>
+        <h1 class="title">Help</h1>
+    </ion-header-bar>
+    <ion-content style="margin-bottom:1em;">
+        <ion-list>
+            <div ng-repeat="group in groups">
+                <ion-item class="item-stable help-item"
+                          ng-click="toggleGroup(group)"
+                          ng-class="{active: isGroupShown(group)}">
+                    <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : group.icon"></i>
+                    &nbsp;
+                    {{group.name}}
+                    <div ng-bind-html="group.content" ng-show="group.shown"></div>
+                </ion-item>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-modal-view>

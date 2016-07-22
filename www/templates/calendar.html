@@ -1,13 +1,16 @@
 <div class="calendarControls padding">
-    <button class="icon-left ion-ios-plus-outline button button-outline button-small button-positive padding-horizontal" ng-click="$(this).blur(); openModal(true);">
+    <button class="icon-left ion-ios-plus-outline button button-outline button-small button-positive padding-horizontal" ng-click="$(this).blur(); openTaskModal(true);">
         &nbsp;New Task
     </button>
-    <button class="icon-left ion-ios-upload-outline button button-outline button-small button-stable padding-horizontal" ng-click="openPopover($event)">
+    <button class="icon-left ion-ios-upload-outline button button-outline button-small button-stable padding-horizontal" ng-click="openComingSoonPopover($event)">
         &nbsp;Import from Outlook
     </button>
-    <button class="icon-left ion-ios-upload-outline button button-outline button-small button-stable padding-horizontal" ng-click="openPopover($event)">
+    <button class="icon-left ion-ios-upload-outline button button-outline button-small button-stable padding-horizontal" ng-click="openComingSoonPopover($event)">
         &nbsp;Import from Google Calendar
     </button>
     
+    <button class="icon-left button-float-right ion-help-buoy button button-outline button-small button-dark padding-horizontal" ng-click="openHelpModal()">
+        &nbsp;Help
+    </button>
 </div>
 <div calendar="theOnlyCalendar" ui-calendar="fullCalendar.uiConfig.calendar" class="span8 calendar padding" ng-model="eventSources"></div> 

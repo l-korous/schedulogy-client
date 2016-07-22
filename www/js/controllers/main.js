@@ -4,16 +4,16 @@ angular.module('Schedulogy')
         $ionicPopover.fromTemplateUrl('templates/popovers/user_menu.html', {
             scope: $scope
         }).then(function (popover) {
-            $scope.popover = popover;
+            $scope.userMenuPopover = popover;
         });
-        $scope.openPopover = function ($event) {
-            $scope.popover.show($event);
+        $scope.openUserMenuPopover = function ($event) {
+            $scope.userMenuPopover.show($event);
         };
-        $scope.closePopover = function () {
-            $scope.popover.hide();
+        $scope.closeUserMenuPopover = function () {
+            $scope.userMenuPopover.hide();
         };
         $scope.$on('$destroy', function () {
-            $scope.popover.remove();
+            $scope.userMenuPopover.remove();
         });
         $scope.modal = {};
         ['changeUsername', 'changePassword', 'sendFeedback', 'share'].forEach(function (modalName) {
@@ -61,7 +61,7 @@ angular.module('Schedulogy')
         };
 
         $scope.openModal = function (modalName) {
-            $scope.closePopover();
+            $scope.closeUserMenuPopover();
 
             if (angular.element($('#mainEdit')).scope())
                 angular.element($('#mainEdit')).scope().form.$setPristine();

@@ -1,25 +1,40 @@
 angular.module('Schedulogy')
-    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task) {
+    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal) {
         this.events = [];
         this.curr = null;
         var _this = this;
 
         this.refreshEvents = function () {
+            $ionicLoading.show({
+                template: 'Loading...'
+            });
+
             Task.query({btime: this.getBTime().unix()}, function (data) {
                 _this.importFromTasks(data.tasks);
+                $ionicLoading.hide();
+            }, function (err) {
+                console.log('Task.query - error');
+                _this.importFromTasks(err.data.tasks);
+                $ionicLoading.hide();
             });
         };
 
         this.importFromTasks = function (tasks) {
-            _this.events.splice(0, this.events.length);
+            _this.events.splice(0, _this.events.length);
 
             tasks.forEach(function (task) {
-                _this.events.push(Event.toEvent(task));
+                _this.events.push(Event.toEvent(task, _this.getBTime()));
             });
 
             _this.events.forEach(function (event) {
                 _this.fillBlocksAndNeedsForShow(event);
             });
+
+            if (_this.currentEvent && _this.currentEvent._id) {
+                Event.updateEvent(_this.currentEvent, _this.events.find(function (event) {
+                    return event._id === _this.currentEvent._id;
+                }));
+            }
         };
 
         this.emptyCurrentEvent = function () {
@@ -61,7 +76,7 @@ angular.module('Schedulogy')
                             return true;
                     });
                     if (depObject)
-                        event.blocksForShow.push({_id: depObject._id, title: depObject.title, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText});
+                        event.blocksForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
                     else
                         console.log('Error: dependent task not exists: ' + dep);
                 });
@@ -75,7 +90,7 @@ angular.module('Schedulogy')
                             return true;
                     });
                     if (depObject)
-                        event.needsForShow.push({_id: depObject._id, title: depObject.title, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText});
+                        event.needsForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
                     else
                         console.log('Error: prerequisite not exists: ' + dep);
                 });
@@ -124,26 +139,62 @@ angular.module('Schedulogy')
             event.color = settings.eventColor[event.type];
         };
 
-        this.saveEvent = function (passedEvent) {
-            var eventToSave = passedEvent || this.currentEvent;
+        this.saveEvent = function (passedEvent, successCallback, errorCallback) {
+            var eventToSave = passedEvent || _this.currentEvent;
             $ionicLoading.show({
                 template: 'Loading...'
             });
             Task.fromEvent(eventToSave).$save({btime: this.getBTime().unix()}, function (data, headers) {
                 _this.importFromTasks(data.tasks);
                 $ionicLoading.hide();
+                successCallback && successCallback();
             },
                 function (err) {
                     $ionicLoading.hide();
+                    if (err.data.tasks)
+                        _this.importFromTasks(err.data.tasks);
                     // error callback
                     console.log(err);
+                    _this.openErrorModal();
+                    errorCallback && errorCallback();
                 });
+        };
+        
+        // Task edit modal.
+        $ionicModal.fromTemplateUrl('templates/popovers/error_modal.html', {
+            animation: 'animated zoomIn'
+        }).then(function (modal) {
+            _this.errorModal = modal;
+        });
+        _this.openErrorModal = function () {
+            _this.errorModal.show();
+        };
+        _this.closeErrorModal = function () {
+            _this.errorModal.hide();
+        };
+
+        this.recalcConstraints = function () {
+            $ionicLoading.show({
+                template: 'Loading...'
+            });
+
+            Task.fromEvent(this.currentEvent).$checkConstraints({btime: _this.getBTime().unix()}, function (data, headers) {
+                Event.processConstraint(_this.currentEvent, data, _this.getBTime());
+                $ionicLoading.hide();
+            }, function (err) {
+                $ionicLoading.hide();
+
+                // error callback
+                console.log(err);
+            });
         };
 
         this.addDependency = function (eventId) {
             this.currentEvent.blocks.push(eventId);
             this.fillBlocksAndNeedsForShow(this.currentEvent);
             eventId = null;
+
+            this.recalcConstraints();
         };
 
         this.removeDependency = function (event) {
@@ -153,6 +204,7 @@ angular.module('Schedulogy')
                     this.currentEvent.blocksForShow.splice(i, 1);
                 }
             }
+            this.recalcConstraints();
         };
 
         this.addPrerequisite = function (eventId) {
@@ -162,32 +214,7 @@ angular.module('Schedulogy')
             this.fillBlocksAndNeedsForShow(this.currentEvent);
             eventId = null;
 
-            $ionicLoading.show({
-                template: 'Loading...'
-            });
-
-            Task.fromEvent(this.currentEvent).$checkConstraints({btime: this.getBTime().unix()}, function (data, headers) {
-                var constraintStart = moment(data.start).local();
-                var constraintEnd = moment(data.end).local();
-
-                _this.currentEvent.constraint = {
-                    start: constraintStart,
-                    startDateText: constraintStart.format(settings.dateFormat),
-                    startTimeText: constraintStart.format(settings.timeFormat),
-                    startDateDueText: constraintStart.clone().add(_this.currentEvent.dur, 'h').format(settings.dateFormat),
-                    startTimeDueText: constraintStart.clone().add(_this.currentEvent.dur, 'h').format(settings.timeFormat),
-                    end: constraintEnd,
-                    endDateText: constraintEnd.format(settings.dateFormat),
-                    endTimeText: constraintEnd.format(settings.timeFormat)
-                };
-
-                $ionicLoading.hide();
-            }, function (err) {
-                $ionicLoading.hide();
-
-                // error callback
-                console.log(err);
-            });
+            this.recalcConstraints();
         };
 
         this.removePrerequisite = function (event) {
@@ -200,32 +227,7 @@ angular.module('Schedulogy')
                 }
             }
 
-            $ionicLoading.show({
-                template: 'Loading...'
-            });
-
-            Task.fromEvent(this.currentEvent).$checkConstraints({btime: this.getBTime().unix()}, function (data, headers) {
-                var constraintStart = moment(data.start).local();
-                var constraintEnd = moment(data.end).local();
-
-                _this.currentEvent.constraint = {
-                    start: constraintStart,
-                    startDateText: constraintStart.format(settings.dateFormat),
-                    startTimeText: constraintStart.format(settings.timeFormat),
-                    startDateDueText: constraintStart.clone().add(_this.currentEvent.dur, 'h').format(settings.dateFormat),
-                    startTimeDueText: constraintStart.clone().add(_this.currentEvent.dur, 'h').format(settings.timeFormat),
-                    end: constraintEnd,
-                    endDateText: constraintEnd.format(settings.dateFormat),
-                    endTimeText: constraintEnd.format(settings.timeFormat)
-                };
-
-                $ionicLoading.hide();
-            }, function (err) {
-                $ionicLoading.hide();
-
-                // error callback
-                console.log(err);
-            });
+            this.recalcConstraints();
         };
 
         this.updateEndDateTimeWithDuration = function (eventPassed) {
@@ -246,7 +248,7 @@ angular.module('Schedulogy')
         };
 
         this.getBTime = function () {
-            var toReturn = settings.fixedBTime ? moment(settings.fixedBTime.date) : moment(new Date()).add('hours', 1).minutes(0).seconds(0);
+            var toReturn = settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()).add('hours', 1).minutes(0).seconds(0);
 
             this.getCurrentEvents(toReturn).forEach(function (currentEvent) {
                 toReturn = (currentEvent.end > toReturn ? currentEvent.end : toReturn);

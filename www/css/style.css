@@ -193,6 +193,37 @@ h2 {
     content: 'At: ';
 }
 
+.button-float-right {
+    float:right;
+}
+
+.help-item > div {
+    margin:1em 0 0 0;
+}
+
+.help-item, .help-item h2, .help-item p {
+    white-space:normal ! important;
+}
+
+.help-item h2 {
+    font-weight:bold;
+    padding:.5em;
+}
+
+.help-item h3 {
+    padding:.5em .75em;
+}
+
+.help-item p {
+    padding:.5em 1em;
+}
+
+.help-item a.center {
+    text-align:center;
+    font-size:120%;
+    display:block;
+}
+
 /* FullCalendar fixes */
 
 .fc-basic-view .fc-body .fc-row {
@@ -277,4 +308,25 @@ input[type=text], input[type=password], input[type=email] {
 
 .button-orange {
     background: #ffa400 ! important;
+}
+
+.smallerPopover {
+    padding:1em;
+    border:1px solid black;
+}
+
+.smallerPopover h2 {
+    margin:1em;
+}
+
+.smallerPopover .scroll-content {
+    display: table !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.smallerPopover .scroll {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
 }

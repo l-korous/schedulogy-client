@@ -5,7 +5,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
         applicationName: 'Schedulogy',
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
-            on: true,
+            on: false,
             date: 'Fri Jul 01 2016 08:00:00 GMT+0200'
         },
         weeks: 6,

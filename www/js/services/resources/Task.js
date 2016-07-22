@@ -52,7 +52,7 @@ angular.module('Schedulogy')
                     },
                     desc: event.desc,
                     due: event.due ? event.due.unix() : null,
-                    needs: event.needs,
+                    needs: event.type === 'floating' ? event.needs : [],
                     blocks: event.blocks
                 });
 

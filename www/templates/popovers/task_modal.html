@@ -39,6 +39,13 @@
                     <textarea ng-model="myEvents.currentEvent.desc" rows="5"></textarea>
                 </label>
 
+                <label class="item" ng-show="myEvents.currentEvent.type === 'fixed' && myEvents.currentEvent.constraint.startDateText">
+                    The earliest this task can start is on {{myEvents.currentEvent.constraint.startDateText}}, at {{myEvents.currentEvent.constraint.startTimeText}}.
+                </label>
+                <label class="item" ng-show="myEvents.currentEvent.type === 'fixed' && myEvents.currentEvent.constraint.endDateText">
+                    The latest this task can end is on {{myEvents.currentEvent.constraint.endDateText}}, at {{myEvents.currentEvent.constraint.endTimeText}}.
+                </label>
+
                 <label class="item item-input" ng-show="myEvents.currentEvent.type === 'fixed'"
                        ng-class="{ 'has-error' : taskSaveForm.fixedStartDate.$invalid && !taskSaveForm.fixedStartDate.$pristine }">
                     <div class="input-label">
@@ -73,7 +80,13 @@
                         {{myEvents.currentEvent.endTimeText}} ({{myEvents.currentEvent.endDateText}}) &nbsp; [ {{myEvents.currentEvent.dur}} hrs ]
                     </div>
                 </label>
-
+                
+                <label class="item" ng-show="myEvents.currentEvent.type === 'fixedAllDay' && myEvents.currentEvent.constraint.startDateText">
+                    The earliest this task can start is on {{myEvents.currentEvent.constraint.startDateText}}, at {{myEvents.currentEvent.constraint.startTimeText}}.
+                </label>
+                <label class="item" ng-show="myEvents.currentEvent.type === 'fixedAllDay' && myEvents.currentEvent.constraint.endDateText">
+                    The latest this task can end is on {{myEvents.currentEvent.constraint.endDateText}}, at {{myEvents.currentEvent.constraint.endTimeText}}.
+                </label>
 
                 <label class="item item-input" ng-show="myEvents.currentEvent.type === 'fixedAllDay'"
                        ng-class="{ 'has-error' : taskSaveForm.fixedAllDayStartDate.$invalid && !taskSaveForm.fixedAllDayStartDate.$pristine }">
@@ -98,8 +111,11 @@
                     </div>
                 </label>
 
-                <label class="item" ng-show="myEvents.currentEvent.type === 'floating'">
-                    This task is currently constrained, the earliest it can be due is on {{myEvents.currentEvent.constraint.startDateDueText}}, at {{myEvents.currentEvent.constraint.startTimeDueText}}.
+                <label class="item" ng-show="myEvents.currentEvent.type === 'floating' && myEvents.currentEvent.constraint.startDateText">
+                    The earliest this task can be due is on {{myEvents.currentEvent.constraint.startDateDueText}}, at {{myEvents.currentEvent.constraint.startTimeDueText}}.
+                </label>
+                <label class="item" ng-show="myEvents.currentEvent.type === 'floating' && myEvents.currentEvent.constraint.endDateText">
+                    The latest this task can be due is on {{myEvents.currentEvent.constraint.endDateText}}, at {{myEvents.currentEvent.constraint.endTimeText}}.
                 </label>
 
                 <label class="item item-input" ng-show="myEvents.currentEvent.type === 'floating'"
@@ -139,7 +155,9 @@
                     </div>
                     <div class="list">
                         <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.needsForShow| filter : {_id: event._id} : true">
-                            {{event.title}} on {{event.startDateText}} at {{event.startTimeText}}
+                            {{event.title}} {{event.type == 'floating' ? 'due ' : ''}} on 
+                            {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
+                            {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
                             <button class="button button-assertive" on-tap="myEvents.removePrerequisite(event)">
                                 <i class="icon ion-trash-a"></i>
                             </button>
@@ -151,13 +169,15 @@
                 </label>
             </div>
 
-            <div class="item" ng-show="myEvents.currentEvent.type === 'floating'">
+            <div class="item">
                 <div class="input-label">
                     Dependent Tasks
                 </div>
                 <div class="list">
                     <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.blocksForShow| filter : {_id: event._id} : true">
-                        {{event.title}} on {{event.startDateText}} at {{event.startTimeText}}
+                        {{event.title}} {{event.type == 'floating' ? 'due ' : ''}} on 
+                        {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
+                        {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
                         <button class="button button-assertive" on-tap="myEvents.removeDependency(event)">
                             <i class="icon ion-trash-a"></i>
                         </button>
@@ -170,13 +190,14 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.closeModal(); myEvents.saveEvent();">
+                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="saveEvent()">
                         Save
                     </button>
 
                 </div>
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeModal(); myEvents.refreshEvents();">
+                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeTaskModal();
+                                myEvents.refreshEvents();">
                         Cancel
                     </button>   
                 </div>
