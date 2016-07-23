@@ -23,7 +23,7 @@ angular.module('Schedulogy')
                 },
                 slotDuration: '01:00:00',
                 defaultDate: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()),
-                now: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()),
+                now: MyEvents.getBTime(),
                 firstDay: 1,
                 nowIndicator: true,
                 editable: true,

@@ -143,6 +143,20 @@ angular.module('Schedulogy')
             $scope.helpModal.hide();
         };
 
+        // iCal modal.
+        $ionicModal.fromTemplateUrl('templates/popovers/upload_ical_modal.html', {
+            scope: $scope,
+            animation: 'animated zoomIn'
+        }).then(function (modal) {
+            $scope.uploadIcalModal = modal;
+        });
+        $scope.openUploadIcalModal = function () {
+            $scope.uploadIcalModal.show();
+        };
+        $scope.closeUploadIcalModal = function () {
+            $scope.uploadIcalModal.hide();
+        };
+
         // Cleanup when destroying.
         $scope.$on('$destroy', function () {
             $scope.comingSoonPopover.remove();

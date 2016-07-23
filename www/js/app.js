@@ -1,6 +1,7 @@
 angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker'])
     .constant('settings', {
         serverUrl: 'http://localhost:8080',
+        loadingTemplate: 'Loading,<br />please wait...',
         appVersion: '0.1.0',
         applicationName: 'Schedulogy',
         // Fix datetime - has to correspond to the server !!!
@@ -8,7 +9,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             on: false,
             date: 'Fri Jul 01 2016 08:00:00 GMT+0200'
         },
-        weeks: 6,
+        weeks: 52,
         startHour: 8,
         endHour: 17,
         defaultTaskDuration: 1,
@@ -28,11 +29,11 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             floating: '#ffa400'
         },
         maxEventDuration: {
-                fixed: 24,
-                fixedAllDay: 14,
-                // This needs to correspond to startHour -> endHour
-                floating: 9
-            },
+            fixed: 24,
+            fixedAllDay: 14,
+            // This needs to correspond to startHour -> endHour
+            floating: 9
+        },
         eventBorderColor: '#111',
         passwordResetErrorInfo: function (msg) {
             switch (msg) {

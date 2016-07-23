@@ -5,9 +5,7 @@ angular.module('Schedulogy')
         var _this = this;
 
         this.refreshEvents = function () {
-            $ionicLoading.show({
-                template: 'Loading...'
-            });
+            $ionicLoading.show({template: settings.loadingTemplate});
 
             Task.query({btime: this.getBTime().unix()}, function (data) {
                 _this.importFromTasks(data.tasks);
@@ -113,7 +111,7 @@ angular.module('Schedulogy')
             var eventToDelete = passedEvent || this.currentEvent;
 
             $ionicLoading.show({
-                template: 'Loading...'
+                template: settings.loadingTemplate
             });
 
             Task.fromEvent(eventToDelete).$remove({btime: this.getBTime().unix(), taskId: eventToDelete._id}, function (data, headers) {
@@ -139,27 +137,32 @@ angular.module('Schedulogy')
             event.color = settings.eventColor[event.type];
         };
 
+        this.tasksInResponseSuccessHandler = function (data, successCallback) {
+            _this.importFromTasks(data.tasks);
+            successCallback && successCallback();
+            $ionicLoading.hide();
+        };
+
+        this.tasksInResponseErrorHandler = function (err, errorCallback) {
+            $ionicLoading.hide();
+            if (err.data.tasks)
+                _this.importFromTasks(err.data.tasks);
+
+            _this.openErrorModal();
+            errorCallback && errorCallback();
+        };
+
         this.saveEvent = function (passedEvent, successCallback, errorCallback) {
             var eventToSave = passedEvent || _this.currentEvent;
-            $ionicLoading.show({
-                template: 'Loading...'
-            });
-            Task.fromEvent(eventToSave).$save({btime: this.getBTime().unix()}, function (data, headers) {
-                _this.importFromTasks(data.tasks);
-                $ionicLoading.hide();
-                successCallback && successCallback();
+            $ionicLoading.show({template: settings.loadingTemplate});
+            Task.fromEvent(eventToSave).$save({btime: this.getBTime().unix()}, function (data) {
+                _this.tasksInResponseSuccessHandler(data, successCallback);
             },
                 function (err) {
-                    $ionicLoading.hide();
-                    if (err.data.tasks)
-                        _this.importFromTasks(err.data.tasks);
-                    // error callback
-                    console.log(err);
-                    _this.openErrorModal();
-                    errorCallback && errorCallback();
+                    _this.tasksInResponseErrorHandler(err, errorCallback);
                 });
         };
-        
+
         // Task edit modal.
         $ionicModal.fromTemplateUrl('templates/popovers/error_modal.html', {
             animation: 'animated zoomIn'
@@ -175,7 +178,7 @@ angular.module('Schedulogy')
 
         this.recalcConstraints = function () {
             $ionicLoading.show({
-                template: 'Loading...'
+                template: settings.loadingTemplate
             });
 
             Task.fromEvent(this.currentEvent).$checkConstraints({btime: _this.getBTime().unix()}, function (data, headers) {
@@ -249,6 +252,13 @@ angular.module('Schedulogy')
 
         this.getBTime = function () {
             var toReturn = settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()).add('hours', 1).minutes(0).seconds(0);
+            
+            if(toReturn.hours() > settings.endHour) {
+                // Move Sat + Sun to Mon
+                if(toReturn.day() === 0 || toReturn.day() === 6)
+                    toReturn.day(8);
+                toReturn.hours(settings.startHour);
+            }
 
             this.getCurrentEvents(toReturn).forEach(function (currentEvent) {
                 toReturn = (currentEvent.end > toReturn ? currentEvent.end : toReturn);

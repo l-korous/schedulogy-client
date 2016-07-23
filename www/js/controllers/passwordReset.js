@@ -8,7 +8,7 @@ angular.module('Schedulogy')
         $scope.userId = $location.search().user;
         $scope.passwordResetHash = $location.search().id;
         $ionicLoading.show({
-            template: 'Loading...'
+            template: settings.loadingTemplate
         });
         $scope.keyUpHandler = function (keyCode, formInvalid) {
             if (keyCode === 13 && !formInvalid) {
@@ -27,7 +27,7 @@ angular.module('Schedulogy')
             $scope.errorInfo = null;
             $scope.beingSubmitted = true;
             $ionicLoading.show({
-                template: 'Loading...'
+                template: settings.loadingTemplate
             });
             Auth.activate($scope.data.password, $scope.userId, $scope.passwordResetHash).success(function (response) {
                 $ionicLoading.hide();

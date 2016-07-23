@@ -2,11 +2,8 @@
     <button class="icon-left ion-ios-plus-outline button button-outline button-small button-positive padding-horizontal" ng-click="$(this).blur(); openTaskModal(true);">
         &nbsp;New Task
     </button>
-    <button class="icon-left ion-ios-upload-outline button button-outline button-small button-stable padding-horizontal" ng-click="openComingSoonPopover($event)">
-        &nbsp;Import from Outlook
-    </button>
-    <button class="icon-left ion-ios-upload-outline button button-outline button-small button-stable padding-horizontal" ng-click="openComingSoonPopover($event)">
-        &nbsp;Import from Google Calendar
+    <button class="icon-left ion-ios-upload-outline button button-outline button-small button-positive padding-horizontal" ng-click="openUploadIcalModal()">
+        &nbsp;Import from iCal
     </button>
     
     <button class="icon-left button-float-right ion-help-buoy button button-outline button-small button-dark padding-horizontal" ng-click="openHelpModal()">
