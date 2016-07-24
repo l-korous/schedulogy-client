@@ -288,6 +288,7 @@ h2 {
     font-size: 1.2em;
     overflow: hidden;
     font-family: "RobotoSlab-Light";
+    background:#ffa400;
 }
 
 .fc-agenda-view .fc-day-grid .fc-row {

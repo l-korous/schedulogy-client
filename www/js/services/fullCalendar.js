@@ -18,7 +18,7 @@ angular.module('Schedulogy')
                 eventColor: '#387ef5',
                 axisFormat: 'H:mm',
                 selectConstraint: {
-                    start: MyEvents.getBTime(),
+                    start: MyEvents.getBTime().clone().subtract(1, 'second'),
                     end: MyEvents.getBTime().clone().add(settings.weeks, 'weeks')
                 },
                 slotDuration: '00:30:00',
@@ -96,7 +96,7 @@ angular.module('Schedulogy')
         };
 
         this.calculateCalendarRowHeight = function () {
-            var row_height = Math.max(settings.minCalendarRowHeight, ($window.innerHeight - settings.shiftAgendaRows) / (settings.endHour - settings.startHour));
+            var row_height = Math.max(settings.minCalendarRowHeight, ($window.innerHeight - settings.shiftAgendaRows) / (settings.slotsPerHour * (settings.endHour - settings.startHour)));
             var style = document.createElement('style');
             style.type = 'text/css';
             style.innerHTML = '.fc-time-grid .fc-slats td { height: ' + row_height.toString() + 'px; }';

@@ -15,11 +15,11 @@ angular.module('Schedulogy')
                 return false;
             var retVal = true;
             if (MyEvents.currentEvent && (MyEvents.currentEvent.blocks || MyEvents.currentEvent.needs)) {
-                MyEvents.currentEvent.blocks.forEach(function (other) {
+                MyEvents.currentEvent.blocks && MyEvents.currentEvent.blocks.forEach(function (other) {
                     if (other === inspectedEvent._id)
                         retVal = false;
                 });
-                MyEvents.currentEvent.needs.forEach(function (other) {
+                MyEvents.currentEvent.needs && MyEvents.currentEvent.needs.forEach(function (other) {
                     if (other === inspectedEvent._id)
                         retVal = false;
                 });
@@ -89,31 +89,31 @@ angular.module('Schedulogy')
             dateUsed.to = MyEvents.currentEvent.constraint.end.toDate();
         };
         $scope.reinitTimePicker = function (dateUsed) {
-            dateUsed.inputTime = MyEvents.currentEvent ? (MyEvents.currentEvent.type === 'floating' ? (DateUtils.ToMinutes(MyEvents.currentEvent.due) * 60) : (DateUtils.ToMinutes(MyEvents.currentEvent.start) * 60)) : MyEvents.getBTime();
+            dateUsed.inputTime = MyEvents.currentEvent ? (MyEvents.currentEvent.type === 'floating' ? (DateUtils.toMinutes(MyEvents.currentEvent.due) * 60) : (DateUtils.toMinutes(MyEvents.currentEvent.start) * 60)) : MyEvents.getBTime();
             if (MyEvents.currentEvent.type === 'floating') {
                 // This is for the 'due' time picker.
-                var dueDateEqualsStartConstraint = 
+                var dueDateEqualsStartConstraint =
                     MyEvents.currentEvent.constraint.start ? DateUtils.equalDays(MyEvents.currentEvent.due, MyEvents.currentEvent.constraint.start) : false;
-                
-                var dueDateEqualsEndConstraint = 
+
+                var dueDateEqualsEndConstraint =
                     MyEvents.currentEvent.constraint.end ? DateUtils.equalDays(MyEvents.currentEvent.due, MyEvents.currentEvent.constraint.end) : false;
-                
+
                 dateUsed.constraint = {
-                    from: dueDateEqualsStartConstraint ? (DateUtils.ToMinutesPlusDuration(MyEvents.currentEvent.constraint.start, MyEvents.currentEvent.dur)) : 0,
-                    to: dueDateEqualsEndConstraint ? DateUtils.ToMinutes(MyEvents.currentEvent.constraint.end) : 24
+                    from: dueDateEqualsStartConstraint ? (DateUtils.toMinutesPlusDuration(MyEvents.currentEvent.constraint.start, MyEvents.currentEvent.dur)) : 0,
+                    to: dueDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : 24
                 };
             }
             else {// here the event type is fixed, because allDay events do not have timePicker shown.
                 // This is for the 'start' time picker.
-                var startDateEqualsStartConstraint = 
+                var startDateEqualsStartConstraint =
                     MyEvents.currentEvent.constraint.start ? DateUtils.equalDays(MyEvents.currentEvent.start, MyEvents.currentEvent.constraint.start) : false;
-                
-                var startDateEqualsEndConstraint = 
+
+                var startDateEqualsEndConstraint =
                     MyEvents.currentEvent.constraint.end ? DateUtils.equalDays(MyEvents.currentEvent.start, MyEvents.currentEvent.constraint.end) : false;
-                
+
                 dateUsed.constraint = {
-                    from: startDateEqualsStartConstraint ? (DateUtils.ToMinutes(MyEvents.currentEvent.constraint.start)) : 0,
-                    to: startDateEqualsEndConstraint ? DateUtils.ToMinutes(MyEvents.currentEvent.constraint.end) : 24
+                    from: startDateEqualsStartConstraint ? (DateUtils.toMinutes(MyEvents.currentEvent.constraint.start)) : 0,
+                    to: startDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : 24
                 };
             }
         };

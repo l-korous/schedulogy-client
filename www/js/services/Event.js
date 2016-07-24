@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('Event', function (moment, settings) {
+    .service('Event', function (moment, settings, DateUtils) {
         // This function assumes that the _id (and id) will not change.
         this.updateEvent = function (from, to) {
             from.title = to.title;
@@ -66,7 +66,8 @@ angular.module('Schedulogy')
         };
         this.toEvent = function (task, btime) {
             var start = moment.unix(task.start).local();
-            var end = start.clone().add(task.dur, task.type === 'fixedAllDay' ? 'days' : 'hours');
+            var toAddMinutes = (task.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * task.dur;
+            var end = start.clone().add(toAddMinutes, 'm');
             var custom_end = start.clone();
             var event = angular.extend(task, {
                 id: task._id,
@@ -89,6 +90,8 @@ angular.module('Schedulogy')
                 event.dueDateText = event.due.format(settings.dateFormat);
                 event.dueTimeText = event.due.format(settings.timeFormat);
             }
+            
+            DateUtils.saveDurText(event);
 
             this.processConstraint(event, event.constraint, btime);
 

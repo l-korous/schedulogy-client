@@ -15,6 +15,8 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
         startHour: 8,
         endHour: 17,
         minuteGranularity: 30,
+        // This has to be exactly calculated using minGranularity
+        slotsPerHour: 2, // === (60 / minGranularity)
         defaultTaskDuration: 2,
         defaultTaskType: 'fixed',
         defaultStateAfterLogin: 'main.calendar',

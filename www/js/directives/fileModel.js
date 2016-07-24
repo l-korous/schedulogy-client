@@ -11,6 +11,12 @@ angular.module("Schedulogy")
                             modelSetter(scope, element[0].files[0]);
                         });
                     });
+
+                    element.bind('click', function () {
+                        scope.$apply(function () {
+                            modelSetter(scope, null);
+                        });
+                    });
                 }
             };
         }]);

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal) {
+    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils) {
         this.events = [];
         this.curr = null;
         var _this = this;
@@ -29,9 +29,10 @@ angular.module('Schedulogy')
             });
 
             if (_this.currentEvent && _this.currentEvent._id) {
-                Event.updateEvent(_this.currentEvent, _this.events.find(function (event) {
+                var eventToSet = _this.events.find(function (event) {
                     return event._id === _this.currentEvent._id;
-                }));
+                });
+                eventToSet && Event.updateEvent(_this.currentEvent, eventToSet);
             }
         };
 
@@ -236,6 +237,8 @@ angular.module('Schedulogy')
         this.updateEndDateTimeWithDuration = function (eventPassed) {
             var event = eventPassed || this.currentEvent;
 
+            DateUtils.saveDurText(event);
+
             var toAddMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;
             event.end = event.start.clone().add(toAddMinutes, 'minutes');
 
@@ -254,33 +257,39 @@ angular.module('Schedulogy')
         this.getBTime = function () {
             if (settings.fixedBTime.on)
                 return moment(settings.fixedBTime.date);
-            
+
             var toReturn = moment(new Date());
-            for(var i = 0; i < (60 / settings.minuteGranularity); i++) {
+            for (var i = 0; i < (60 / settings.minuteGranularity); i++) {
                 var thisPart = (settings.minuteGranularity * (i + 1));
-                if(toReturn.minute() < thisPart) {
+                if (toReturn.minute() < thisPart) {
                     toReturn.minute(thisPart);
                     break;
                 }
             }
-            if(toReturn.minute() === 0)
+            if (toReturn.minute() === 0)
                 toReturn.add(1, 'hour');
 
             // Move to next day.
             if (toReturn.hours() > settings.endHour) {
                 toReturn.hours(settings.startHour);
+                toReturn.minutes(0);
                 toReturn.day(toReturn.day + 1);
             }
             // Move Sat + Sun to Mon.
             if (toReturn.day() === 0 || toReturn.day() > 6) {
                 toReturn.hours(settings.startHour);
-                toReturn.day(8);
+                toReturn.minutes(0);
+                if (toReturn.day() === 0)
+                    toReturn.day(1);
+                else
+                    toReturn.day(8);
             }
 
             this.getCurrentEvents(toReturn).forEach(function (currentEvent) {
                 toReturn = (currentEvent.end > toReturn ? currentEvent.end : toReturn);
             });
 
+            toReturn.second(0);
             return toReturn;
         };
 

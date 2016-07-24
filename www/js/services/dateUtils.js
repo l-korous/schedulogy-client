@@ -25,14 +25,23 @@ angular.module('Schedulogy')
 
                 return toReturn;
             },
-            ToMinutes: function (momentTime) {
+            toMinutes: function (momentTime) {
                 return ((momentTime.hour() * 60) + momentTime.minute());
             },
-            ToMinutesPlusDuration: function (momentTime, addedDuration) {
+            toMinutesPlusDuration: function (momentTime, addedDuration) {
                 return ((momentTime.hour() * 60) + momentTime.minute() + (addedDuration * settings.minuteGranularity));
             },
             equalDays: function (momentTime1, momentTime2) {
                 return (momentTime1.format("YYYY-MM-DD") === momentTime2.format("YYYY-MM-DD"));
+            },
+            saveDurText: function (event) {
+                if (event.type === 'fixedAllDay')
+                    event.durText = event.dur + ' days';
+                else {
+                    var hours = Math.floor(event.dur / settings.slotsPerHour);
+                    var minutes = (event.dur % settings.slotsPerHour) * settings.minuteGranularity;
+                    event.durText = (hours.toString().length > 1 ? '' : '0') + hours + ':' + (minutes.toString().length > 1 ? '' : '0') + minutes + ' hrs';
+                }
             }
         };
     });
