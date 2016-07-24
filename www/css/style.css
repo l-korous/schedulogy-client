@@ -238,6 +238,20 @@ h2 {
     overflow: hidden;
 }
 
+.item-text h2 {
+    margin:1em .2em;
+    font-size:120%;
+}
+
+.item-text li{
+    margin:.5em 0 .5em 2em;
+    list-style-type: square;
+}
+.item-text li span{
+    position:relative;
+    left:-.5em;
+}
+
 /* FullCalendar fixes */
 
 .fc-basic-view .fc-body .fc-row {

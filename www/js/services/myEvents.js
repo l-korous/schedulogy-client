@@ -252,12 +252,16 @@ angular.module('Schedulogy')
 
         this.getBTime = function () {
             var toReturn = settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()).add('hours', 1).minutes(0).seconds(0);
-            
-            if(toReturn.hours() > settings.endHour) {
-                // Move Sat + Sun to Mon
-                if(toReturn.day() === 0 || toReturn.day() === 6)
-                    toReturn.day(8);
+
+            // Move to next day.
+            if (toReturn.hours() > settings.endHour) {
                 toReturn.hours(settings.startHour);
+                toReturn.day(toReturn.day + 1);
+            }
+            // Move Sat + Sun to Mon.
+            if (toReturn.day() === 0 || toReturn.day() > 6) {
+                toReturn.hours(settings.startHour);
+                toReturn.day(8);
             }
 
             this.getCurrentEvents(toReturn).forEach(function (currentEvent) {
