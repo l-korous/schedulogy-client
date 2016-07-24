@@ -34,7 +34,7 @@ angular.module('Schedulogy')
             if (MyEvents.currentEvent && MyEvents.currentEvent.constraint.start && inspectedEvent.constraint.end) {
                 var latestPossibleStartOfInspectedEvent = Event.latestPossibleStart(inspectedEvent);
                 var earliestPossibleFinishOfCurrentEvent = Event.earliestPossibleFinish(MyEvents.currentEvent);
-                if (earliestPossibleFinishOfCurrentEvent.diff(latestPossibleStartOfInspectedEvent, 'h') > 0)
+                if (earliestPossibleFinishOfCurrentEvent.diff(latestPossibleStartOfInspectedEvent, 'm') > 0)
                     return false;
             }
             return true;
@@ -45,7 +45,7 @@ angular.module('Schedulogy')
             if (MyEvents.currentEvent && inspectedEvent.constraint.start && MyEvents.currentEvent.constraint.end) {
                 var latestPossibleStartOfCurrentEvent = Event.latestPossibleStart(MyEvents.currentEvent);
                 var earliestPossibleFinishOfInspectedEvent = Event.earliestPossibleFinish(inspectedEvent);
-                if (latestPossibleStartOfCurrentEvent.diff(earliestPossibleFinishOfInspectedEvent, 'h') < 0)
+                if (latestPossibleStartOfCurrentEvent.diff(earliestPossibleFinishOfInspectedEvent, 'm') < 0)
                     return false;
             }
             return true;
@@ -89,17 +89,33 @@ angular.module('Schedulogy')
             dateUsed.to = MyEvents.currentEvent.constraint.end.toDate();
         };
         $scope.reinitTimePicker = function (dateUsed) {
-            dateUsed.inputTime = MyEvents.currentEvent ? (MyEvents.currentEvent.type === 'floating' ? (MyEvents.currentEvent.due.hour() * 3600) : (MyEvents.currentEvent.start.hour() * 3600)) : MyEvents.getBTime();
-            if (MyEvents.currentEvent.type === 'floating')
+            dateUsed.inputTime = MyEvents.currentEvent ? (MyEvents.currentEvent.type === 'floating' ? (DateUtils.ToMinutes(MyEvents.currentEvent.due) * 60) : (DateUtils.ToMinutes(MyEvents.currentEvent.start) * 60)) : MyEvents.getBTime();
+            if (MyEvents.currentEvent.type === 'floating') {
+                // This is for the 'due' time picker.
+                var dueDateEqualsStartConstraint = 
+                    MyEvents.currentEvent.constraint.start ? DateUtils.equalDays(MyEvents.currentEvent.due, MyEvents.currentEvent.constraint.start) : false;
+                
+                var dueDateEqualsEndConstraint = 
+                    MyEvents.currentEvent.constraint.end ? DateUtils.equalDays(MyEvents.currentEvent.due, MyEvents.currentEvent.constraint.end) : false;
+                
                 dateUsed.constraint = {
-                    from: (MyEvents.currentEvent.start.format("YYYY-MM-DD") === (MyEvents.currentEvent.constraint.start && MyEvents.currentEvent.constraint.start.format("YYYY-MM-DD"))) ? MyEvents.currentEvent.constraint.start.hour() + MyEvents.currentEvent.dur : 0,
-                    to: (MyEvents.currentEvent.end.format("YYYY-MM-DD") === (MyEvents.currentEvent.constraint.end && MyEvents.currentEvent.constraint.end.format("YYYY-MM-DD"))) ? MyEvents.currentEvent.constraint.end.hour() - MyEvents.currentEvent.dur : 24
+                    from: dueDateEqualsStartConstraint ? (DateUtils.ToMinutesPlusDuration(MyEvents.currentEvent.constraint.start, MyEvents.currentEvent.dur)) : 0,
+                    to: dueDateEqualsEndConstraint ? DateUtils.ToMinutes(MyEvents.currentEvent.constraint.end) : 24
                 };
-            else
+            }
+            else {// here the event type is fixed, because allDay events do not have timePicker shown.
+                // This is for the 'start' time picker.
+                var startDateEqualsStartConstraint = 
+                    MyEvents.currentEvent.constraint.start ? DateUtils.equalDays(MyEvents.currentEvent.start, MyEvents.currentEvent.constraint.start) : false;
+                
+                var startDateEqualsEndConstraint = 
+                    MyEvents.currentEvent.constraint.end ? DateUtils.equalDays(MyEvents.currentEvent.start, MyEvents.currentEvent.constraint.end) : false;
+                
                 dateUsed.constraint = {
-                    from: (MyEvents.currentEvent.start.format("YYYY-MM-DD") === (MyEvents.currentEvent.constraint.start && MyEvents.currentEvent.constraint.start.format("YYYY-MM-DD"))) ? MyEvents.currentEvent.constraint.start.hour() : 0,
-                    to: (MyEvents.currentEvent.end.format("YYYY-MM-DD") === (MyEvents.currentEvent.constraint.end && MyEvents.currentEvent.constraint.end.format("YYYY-MM-DD"))) ? MyEvents.currentEvent.constraint.end.hour() - MyEvents.currentEvent.dur : 24
+                    from: startDateEqualsStartConstraint ? (DateUtils.ToMinutes(MyEvents.currentEvent.constraint.start)) : 0,
+                    to: startDateEqualsEndConstraint ? DateUtils.ToMinutes(MyEvents.currentEvent.constraint.end) : 24
                 };
+            }
         };
         $scope.openDatePicker = function (dateUsed) {
             var dateUsedConfig = datesUsed.find(function (e) {

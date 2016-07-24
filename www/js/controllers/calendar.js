@@ -27,7 +27,7 @@ angular.module('Schedulogy')
                 $scope.floatToFixedEvent.type = 'fixed';
 
                 if ($scope.floatToFixedMethod === 'resize') {
-                    $scope.floatToFixedEvent.dur += $scope.floatToFixedDelta.hours();
+                    $scope.floatToFixedEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
                     MyEvents.handleChangeOfEventType($scope.floatToFixedEvent);
                 }
                 else if ($scope.floatToFixedMethod === 'drop') {
@@ -67,7 +67,7 @@ angular.module('Schedulogy')
             },
             eventResize: function (event, delta, revertFunc, jsEvent) {
                 if (event.type === 'fixed') {
-                    event.dur += delta.hours();
+                    event.dur += (delta.minutes() / settings.minuteGranularity);
                     MyEvents.handleChangeOfEventType(event);
                     MyEvents.saveEvent(event);
                 }

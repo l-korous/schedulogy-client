@@ -21,7 +21,7 @@ angular.module('Schedulogy')
                     start: MyEvents.getBTime(),
                     end: MyEvents.getBTime().clone().add(settings.weeks, 'weeks')
                 },
-                slotDuration: '01:00:00',
+                slotDuration: '00:30:00',
                 defaultDate: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()),
                 now: MyEvents.getBTime(),
                 firstDay: 1,
@@ -63,7 +63,7 @@ angular.module('Schedulogy')
                         end: end,
                         endDateText: end.format(settings.dateFormat),
                         endTimeText: end.format(settings.timeFormat),
-                        dur: end.diff(start, 'h'),
+                        dur: Math.ceil(end.diff(start, 'm') / settings.minuteGranularity),
                         due: end,
                         dueDateText: end.format(settings.dateFormat),
                         dueTimeText: end.format(settings.timeFormat),

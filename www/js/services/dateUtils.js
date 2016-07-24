@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .factory('DateUtils', function (moment) {
+    .factory('DateUtils', function (moment, settings) {
         return {
             pushDatePart: function (src, dst) {
                 if (!dst) {
@@ -20,11 +20,19 @@ angular.module('Schedulogy')
                 var toReturn = dst || moment(new Date());
 
                 toReturn.hour(src / 3600);
-                // TODO - if we change the step, this has to be changed.
-                toReturn.minute(0);
+                toReturn.minute((src % 3600) / 60);
                 toReturn.second(0);
 
                 return toReturn;
+            },
+            ToMinutes: function (momentTime) {
+                return ((momentTime.hour() * 60) + momentTime.minute());
+            },
+            ToMinutesPlusDuration: function (momentTime, addedDuration) {
+                return ((momentTime.hour() * 60) + momentTime.minute() + (addedDuration * settings.minuteGranularity));
+            },
+            equalDays: function (momentTime1, momentTime2) {
+                return (momentTime1.format("YYYY-MM-DD") === momentTime2.format("YYYY-MM-DD"));
             }
         };
     });

@@ -236,7 +236,8 @@ angular.module('Schedulogy')
         this.updateEndDateTimeWithDuration = function (eventPassed) {
             var event = eventPassed || this.currentEvent;
 
-            event.end = event.start.clone().add(event.dur, event.type === 'fixedAllDay' ? 'days' : 'hours');
+            var toAddMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;
+            event.end = event.start.clone().add(toAddMinutes, 'minutes');
 
             // For all-day events, we are displaying the end day the same as the current one.
             if (event.type === 'fixedAllDay') {
@@ -251,7 +252,19 @@ angular.module('Schedulogy')
         };
 
         this.getBTime = function () {
-            var toReturn = settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()).add('hours', 1).minutes(0).seconds(0);
+            if (settings.fixedBTime.on)
+                return moment(settings.fixedBTime.date);
+            
+            var toReturn = moment(new Date());
+            for(var i = 0; i < (60 / settings.minuteGranularity); i++) {
+                var thisPart = (settings.minuteGranularity * (i + 1));
+                if(toReturn.minute() < thisPart) {
+                    toReturn.minute(thisPart);
+                    break;
+                }
+            }
+            if(toReturn.minute() === 0)
+                toReturn.add(1, 'hour');
 
             // Move to next day.
             if (toReturn.hours() > settings.endHour) {

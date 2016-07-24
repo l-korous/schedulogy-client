@@ -33,8 +33,8 @@ angular.module('Schedulogy')
                     start: constraintStart,
                     startDateText: constraintStart.format(settings.dateFormat),
                     startTimeText: constraintStart.format(settings.timeFormat),
-                    startDateDueText: constraintStart.clone().add(event.dur, 'h').format(settings.dateFormat),
-                    startTimeDueText: constraintStart.clone().add(event.dur, 'h').format(settings.timeFormat)
+                    startDateDueText: constraintStart.clone().add(event.dur * settings.minuteGranularity, 'm').format(settings.dateFormat),
+                    startTimeDueText: constraintStart.clone().add(event.dur * settings.minuteGranularity, 'm').format(settings.timeFormat)
                 });
             }
             else {
@@ -95,28 +95,30 @@ angular.module('Schedulogy')
             return event;
         };
         this.earliestPossibleFinish = function (event) {
+            var toAddMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;
+
             if (event.type === 'floating')
-                return event.constraint.start.clone().add(event.dur, 'h');
+                return event.constraint.start.clone().add(toAddMinutes, 'm');
             else if (event.type === 'fixed' || event.type === 'fixedAllDay') {
-                var unit = (event.type === 'fixed' ? 'h' : 'd');
-                if (event.start.diff(event.constraint.start, 'h') >= 0)
-                    return event.start.clone().add(event.dur, unit);
+                if (event.start.diff(event.constraint.start, 'm') >= 0)
+                    return event.start.clone().add(toAddMinutes, 'm');
                 else {
                     console.log('earliestPossibleFinish: Something weird, constraint start time is larger than current start time.');
-                    return event.constraint.start.clone().add(event.dur, unit);
+                    return event.constraint.start.clone().add(toAddMinutes, 'm');
                 }
             }
         };
         this.latestPossibleStart = function (event) {
+            var toSubtractMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;
+
             if (event.type === 'floating')
-                return event.due.clone().add(-event.dur, 'h');
+                return event.due.clone().add(-toSubtractMinutes, 'm');
             else if (event.type === 'fixed' || event.type === 'fixedAllDay') {
-                var unit = (event.type === 'fixed' ? 'h' : 'd');
-                if (event.end.diff(event.constraint.end, 'h') <= 0)
-                    return event.end.clone().add(-event.dur, unit);
+                if (event.end.diff(event.constraint.end, 'm') <= 0)
+                    return event.end.clone().add(-toSubtractMinutes, 'm');
                 else {
                     console.log('latestPossibleStart: Something weird, constraint end time is smaller than current end time.');
-                    return event.constraint.end.clone().add(-event.dur, unit);
+                    return event.constraint.end.clone().add(-toSubtractMinutes, 'm');
                 }
             }
         };

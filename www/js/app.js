@@ -4,6 +4,8 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
         loadingTemplate: 'Loading,<br />please wait...',
         appVersion: '0.1.0',
         applicationName: 'Schedulogy',
+        minPasswordGroups: 1,
+        minPasswordLength: 1,
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
             on: false,
@@ -12,7 +14,8 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
         weeks: 52,
         startHour: 8,
         endHour: 17,
-        defaultTaskDuration: 1,
+        minuteGranularity: 30,
+        defaultTaskDuration: 2,
         defaultTaskType: 'fixed',
         defaultStateAfterLogin: 'main.calendar',
         dateTimeFormatEdit: 'YYYY-MM-DDTHH:mm',
@@ -144,7 +147,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
     .config(function (ionicTimePickerProvider, settings) {
         var timePickerObj = {
             format: 24,
-            step: 60,
+            step: settings.minuteGranularity,
             setLabel: 'Set',
             closeLabel: 'Close'
         };
@@ -174,7 +177,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
                 if (((fromState.name === 'login' && toState.name === 'registration') || (fromState.name === 'registration' && toState.name === 'login')) && !Auth.isAuthenticated()) {
                     return;
-                } else if (((fromState.name === 'login' && toState.name === 'password_reset') || (fromState.name === 'password_reset' && toState.name === 'login')) && !Auth.isAuthenticated()) {
+                } else if (((fromState.name === 'login' && toState.name === 'passwordReset') || (fromState.name === 'passwordReset' && toState.name === 'login')) && !Auth.isAuthenticated()) {
                     return;
                 } else if (toState.name !== 'login' && toState.name !== 'registration' && !Auth.isAuthenticated()) {
                     // User isn’t authenticated

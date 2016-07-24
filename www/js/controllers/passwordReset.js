@@ -1,6 +1,8 @@
 angular.module('Schedulogy')
     .controller("PasswordResetCtrl", function ($scope, Auth, $location, settings, $ionicLoading, $rootScope, $timeout) {
-        $scope.successInfo = null;
+        $scope.passwordRules
+            
+            $scope.successInfo = null;
         $scope.errorInfo = null;
         $scope.data = {};
         $scope.beingSubmitted = false;
