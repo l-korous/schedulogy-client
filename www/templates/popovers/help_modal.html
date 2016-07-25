@@ -7,8 +7,8 @@
             <div ng-repeat="group in groups">
                 <ion-item class="item-stable help-item"
                           ng-click="toggleGroup(group)"
-                          ng-class="{active: isGroupShown(group)}">
-                    <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : group.icon"></i>
+                          ng-class="{active: group.shown}">
+                    <i class="icon" ng-class="group.shown ? 'ion-minus' : group.icon"></i>
                     &nbsp;
                     {{group.name}}
                     <div ng-bind-html="group.content" ng-show="group.shown"></div>

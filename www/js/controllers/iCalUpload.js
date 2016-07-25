@@ -1,10 +1,15 @@
 angular.module('Schedulogy')
     .controller('ICalUploadCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading) {
-        $scope.uploadFile = function () {
+        // For display purposes only.
+        $scope.weeksFromSettings = settings.weeks;
+            
+            $scope.uploadFile = function () {
             $ionicLoading.show({template: settings.loadingTemplate});
+
+            // This is done through rootScope, because otherwise it would not work. Not a big deal, but may be fixed.
             var file = $rootScope.icalFile;
-            var uploadUrl = settings.serverUrl + '/ical';
-            fileUpload.uploadFileToUrl(file, uploadUrl, {btime: MyEvents.getBTime().unix()}, function (data) {
+
+            fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {btime: MyEvents.getBTime().unix()}, function (data) {
                 MyEvents.tasksInResponseSuccessHandler(data, function () {
                     $scope.$parent.closeUploadIcalModal();
                     $rootScope.icalFile = null;

@@ -18,10 +18,11 @@
                     <input type="file" file-model="$root.icalFile" id="uploadedFileEdit" required name="uploadedFile" accept=".ical,.ics" class="inputfile">
                     <span class="inputfile-label">{{$root.icalFile ? $root.icalFile.name : 'Choose an iCalendar file'}}</span>
                 </label>
-                <ion-item class="item item-text">
+                <ion-item class="item item-text item-no-wrap">
                     <h2>How will your file be processed?</h2>
                     <ul>
                         <li><span>Only events in future will be imported.</span></li>
+                        <li><span>Only events that occur no later than {{weeksFromSettings}} weeks in the future will be imported.</span></li>
                         <li><span>Events will be imported respecting their time zone.</span></li>
                         <li><span>Only events that have not been previously imported will be imported.</span></li>
                     </ul>

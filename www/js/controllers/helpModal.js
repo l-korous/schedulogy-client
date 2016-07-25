@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('HelpModalCtrl', function ($scope) {
+    .controller('HelpModalCtrl', function ($scope, settings, $sce) {
         $scope.groups = [
             {
                 name: 'Introduction',
@@ -13,20 +13,21 @@ angular.module('Schedulogy')
             },
             {
                 name: 'Task types',
-                icon: 'ion-plus',
-                content:
-                    '<h2>Fixed</h2>' +
+                icon: 'ion-calendar',
+                content: $sce.trustAsHtml(
+                    '<h2 style="border-left:5px solid ' + settings.eventColor.fixed + '">Fixed</h2>' +
                     '<p>Standard tasks, that have a fixed start (date &amp; time), and a fixed end (date &amp; time). The end is set up with help of task duration.</p>' +
-                    '<h2>Fixed (all-day)</h2>' +
+                    '<h2 style="border-left:5px solid ' + settings.eventColor.fixedAllDay + '">Fixed (all-day)</h2>' +
                     '<p>Convenience type, similar to fixed tasks, with start, end and duration containing date part only (no specific time).</p>' +
                     '<p>All fixed tasks can be concurrently in the calendar. There is no limit on the number of concurrent fixed tasks.</p>' +
-                    '<h2>Floating</h2>' +
+                    '<h2 style="border-left:5px solid ' + settings.eventColor.floating + '">Floating</h2>' +
                     '<p class="bold">This task type does NOT have a fixed start and end, but has a fixed due date. SCHEDULOGY schedules these tasks so that these due dates (as well as dependencies - see later sections) are satisfied.</p>' +
-                    '<p>SCHEDULOGY makes sure that there is only one concurrent floating task in the calendar. There can be no fixed task concurrent with any floating task either.</p>' 
+                    '<p>SCHEDULOGY makes sure that there is only one concurrent floating task in the calendar. There can be no fixed task concurrent with any floating task either.</p>'
+                    )
             },
             {
                 name: 'Task attributes',
-                icon: 'ion-plus',
+                icon: 'ion-clipboard',
                 content:
                     '<h2>Type</h2><p>See the section on task types.</p>' +
                     '<h2>Title</h2><p>A (short) identifier of the task.</p>' +
@@ -38,7 +39,7 @@ angular.module('Schedulogy')
             },
             {
                 name: 'Task dependencies',
-                icon: 'ion-plus',
+                icon: 'ion-link',
                 content:
                     '<p>Tasks in SCHEDULOGY may depend on one another. A task A being dependent on task B means that any work on task A may be started only as soon as all work on task B is finished.</p>' +
                     '<h2>Notation</h2>' +

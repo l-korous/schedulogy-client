@@ -236,6 +236,8 @@ h2 {
 .inputfile-label {
     text-overflow: ellipsis;
     overflow: hidden;
+    color:#387ef5;
+    cursor: pointer;
 }
 
 .item-text h2 {
@@ -358,4 +360,8 @@ input[type=text], input[type=password], input[type=email] {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
+}
+
+.item-no-wrap {
+    white-space:normal;
 }
