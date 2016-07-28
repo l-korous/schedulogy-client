@@ -1,0 +1,12 @@
+<ion-modal-view class="smallerPopover" ng-keyup="keyUpHandler($event.keyCode);">
+    <ion-content>
+        <h2 class="title">This will delete all tasks. Proceed?</h2>
+        <br />
+        <button class="button button-block button-positive button-single" ng-click="closeRemoveAllModal(true);">
+            Yes
+        </button>
+        <button class="button button-block button-dark button-outline button-single" ng-click="closeRemoveAllModal(false);">
+            No
+        </button>
+    </ion-content>
+</ion-modal-view>

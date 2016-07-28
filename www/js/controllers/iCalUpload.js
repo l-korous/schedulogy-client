@@ -2,8 +2,8 @@ angular.module('Schedulogy')
     .controller('ICalUploadCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading) {
         // For display purposes only.
         $scope.weeksFromSettings = settings.weeks;
-            
-            $scope.uploadFile = function () {
+
+        $scope.uploadFile = function () {
             $ionicLoading.show({template: settings.loadingTemplate});
 
             // This is done through rootScope, because otherwise it would not work. Not a big deal, but may be fixed.

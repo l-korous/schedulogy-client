@@ -20,7 +20,7 @@
                     <div class="input-label">
                         Type
                     </div>
-                    <select ng-model="myEvents.currentEvent.type" required ng-change="handleChangeOfEventType()">
+                    <select ng-model="myEvents.currentEvent.type" required ng-change="myEvents.handleChangeOfEventType()">
                         <option value="fixed">Fixed</option>
                         <option value="fixedAllDay">Fixed (all-day)</option>
                         <option value="floating">Floating</option>
@@ -80,7 +80,7 @@
                         {{myEvents.currentEvent.endTimeText}} ({{myEvents.currentEvent.endDateText}}) &nbsp; [ {{myEvents.currentEvent.durText}} ]
                     </div>
                 </label>
-                
+
                 <label class="item" ng-show="myEvents.currentEvent.type === 'fixedAllDay' && myEvents.currentEvent.constraint.startDateText">
                     The earliest this task can start is on {{myEvents.currentEvent.constraint.startDateText}}, at {{myEvents.currentEvent.constraint.startTimeText}}.
                 </label>
@@ -141,11 +141,11 @@
                     <div class="input-label">
                         Duration<br />&nbsp;
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="myEvents.currentEvent.dur"
+                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="myEvents.currentEvent.dur" ng-change="myEvents.updateEndDateTimeWithDuration()"
                            name="floatingDuration" step="1" ng-required="myEvents.currentEvent.type === 'floating'"/>
 
                     <div class="rangeInfoFloating rangeInfo">
-                        {{myEvents.currentEvent.dur}} hrs
+                        {{myEvents.currentEvent.durText}}
                     </div>
                 </label>
 

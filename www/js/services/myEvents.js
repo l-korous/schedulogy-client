@@ -126,6 +126,20 @@ angular.module('Schedulogy')
             });
         };
 
+        this.deleteAll = function (passedEvent) {
+            $ionicLoading.show({template: settings.loadingTemplate});
+
+            Task.deleteAll({}, function (data, headers) {
+                _this.importFromTasks(data.tasks);
+                $ionicLoading.hide();
+            }, function (err) {
+                $ionicLoading.hide();
+
+                // error callback
+                console.log(err);
+            });
+        };
+
         this.deleteEventById = function (passedEventId) {
             this.deleteEvent(this.findEventById(passedEventId));
         };
@@ -214,6 +228,10 @@ angular.module('Schedulogy')
         this.addPrerequisite = function (eventId) {
             if (!eventId)
                 return;
+
+            if (!this.currentEvent.needs)
+                this.currentEvent.needs = [];
+
             this.currentEvent.needs.push(eventId);
             this.fillBlocksAndNeedsForShow(this.currentEvent);
             eventId = null;
@@ -273,7 +291,7 @@ angular.module('Schedulogy')
             if (toReturn.hours() > settings.endHour) {
                 toReturn.hours(settings.startHour);
                 toReturn.minutes(0);
-                toReturn.day(toReturn.day + 1);
+                toReturn.day(toReturn.day() + 1);
             }
             // Move Sat + Sun to Mon.
             if (toReturn.day() === 0 || toReturn.day() > 6) {

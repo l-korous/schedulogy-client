@@ -36,6 +36,10 @@ angular.module('Schedulogy')
                         taskId: "@taskId",
                         btime: '@btime'
                     }
+                },
+                deleteAll: {
+                    method: "DELETE",
+                    url: settings.serverUrl + "/task"
                 }
             });
 
@@ -53,7 +57,7 @@ angular.module('Schedulogy')
                     desc: event.desc,
                     due: event.due ? event.due.unix() : null,
                     needs: event.type === 'floating' ? event.needs : [],
-                    blocks: event.blocks
+                    blocks: event.blocks || []
                 });
 
                 return task;

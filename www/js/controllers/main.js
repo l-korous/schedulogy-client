@@ -1,6 +1,5 @@
 angular.module('Schedulogy')
     .controller('MainCtrl', function ($scope, $rootScope, $ionicPopover, $ionicModal, Auth, settings) {
-        // Popover
         $ionicPopover.fromTemplateUrl('templates/popovers/user_menu.html', {
             scope: $scope
         }).then(function (popover) {
@@ -41,7 +40,7 @@ angular.module('Schedulogy')
             $scope.modal[modalName].hide();
         };
 
-        $scope.user = {name: $rootScope.currentUser.username};
+        $scope.user = {name: $rootScope.currentUser ? $rootScope.currentUser.username : ''};
         $scope.save = function (modalName) {
             $scope.beingSubmitted = true;
             if (modalName === 'changeUsername') {

@@ -1,10 +1,4 @@
-<ion-header-bar align-title="left" class="bar bar-header bar-dark">
-    <div class="h1 title padding-horizontal">
-        SCHEDULOGY
-    </div>
-</ion-header-bar>
-
-<ion-content class="has-header maxWidth-1000 marginTop5" has-bouncing="false" scroll="true">
+<div class="has-header maxWidth-1000 marginTop5" has-bouncing="false" scroll="true">
     <form name="loginForm" novalidate ng-keyup="keyUpHandler($event.keyCode);">
         <div class="list customFormErrorList">
             <div ng-show="beingSubmitted && (loginForm.email.$error.required || loginForm.email.$error.email) && !loginForm.email.$pristine" class="item help-block">
@@ -40,16 +34,12 @@
             Login
         </button>
         <div class="marginTop3 center">Don't have an account yet?</div>
-        <button class="button button-block button-positive button-single marginTop1" ui-sref="registration">
+        <button class="button button-block button-positive button-single marginTop1" ui-sref="main.registration">
             Create an account
         </button>
         <div class="marginTop3 center">Forgot your password?</div>
-        <button class="button button-block button-assertive button-single marginTop1" ui-sref="forgottenPassword">
+        <button class="button button-block button-assertive button-single marginTop1" ui-sref="main.forgottenPassword">
             Reset password
         </button>
     </form>
-</ion-content>
-
-<ion-footer-bar class="bar bar-footer bar-dark">
-    <div class="title">&copy; 2016 SCHEDULOGY</div>
-</ion-footer-bar>
+</div>

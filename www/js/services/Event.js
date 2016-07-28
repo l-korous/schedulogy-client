@@ -19,6 +19,8 @@ angular.module('Schedulogy')
             from.due = to.due;
             from.due = to.due;
             from.due = to.due;
+            from.color = to.color;
+            from.constraint = to.constraint;
             from.blocks = to.blocks;
             from.blocksForShow = to.blocksForShow;
             from.needs = to.needs;
@@ -47,7 +49,7 @@ angular.module('Schedulogy')
                 });
             }
 
-            if (event.constraint.end) {
+            if (resConstraint.end) {
                 var constraintEnd = moment(resConstraint.end).local();
 
                 event.constraint = angular.extend(event.constraint, {

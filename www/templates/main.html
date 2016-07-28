@@ -1,11 +1,11 @@
 <ion-header-bar align-title="left" class="bar bar-header bar-dark">
     <div class="h1 title padding-horizontal">
-        SCHEDULOGY
+        SCHEDULOGY <span>BETA</span>
     </div>
-    <button class="button button-clear ion-person button-icon icon-right button-light button-hover-balanced" ng-click="openUserMenuPopover($event)">{{$root.currentUser.username}}&nbsp;&nbsp;</button>
+    <button class="button button-clear ion-person button-icon icon-right button-light button-hover-balanced" ng-if="$root.currentUser" ng-click="openUserMenuPopover($event)">{{$root.currentUser.username}}&nbsp;&nbsp;</button>
 </ion-header-bar>
 
-<ion-content class="has-header" has-bouncing="false" scroll="true" >
+<ion-content class="has-header" has-bouncing="false" scroll="true" ng-show="$root.allSet">
     <div ui-view>
 
     </div>

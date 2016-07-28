@@ -14,7 +14,8 @@ angular.module("Schedulogy")
 
                     element.bind('click', function () {
                         scope.$apply(function () {
-                            modelSetter(scope, null);
+                            modelSetter(scope, '');
+                            element[0].value = '';
                         });
                     });
                 }

@@ -85,19 +85,6 @@ angular.module('Schedulogy')
                 }
             }
         });
-
-        // Popover 'coming soon'.
-        $ionicPopover.fromTemplateUrl('templates/popovers/coming_soon.html', {
-            scope: $scope
-        }).then(function (popover) {
-            $scope.comingSoonPopover = popover;
-        });
-        $scope.openComingSoonPopover = function ($event) {
-            $scope.comingSoonPopover.show($event);
-        };
-        $scope.closeComingSoonPopover = function () {
-            $scope.comingSoonPopover.hide();
-        };
         // Task edit modal.
         $ionicModal.fromTemplateUrl('templates/popovers/task_modal.html', {
             scope: $scope,
@@ -157,9 +144,28 @@ angular.module('Schedulogy')
             $scope.uploadIcalModal.hide();
         };
 
+        // remove All modal.
+        $ionicModal.fromTemplateUrl('templates/popovers/remove_all_modal.html', {
+            scope: $scope,
+            animation: 'animated zoomIn'
+        }).then(function (modal) {
+            $scope.removeAllModal = modal;
+        });
+        $scope.openRemoveAllModal = function () {
+            $scope.removeAllModal.show();
+        };
+        $scope.closeRemoveAllModal = function (result) {
+            $scope.removeAllModal.hide();
+            if (result)
+                MyEvents.deleteAll();
+        };
+
         // Cleanup when destroying.
         $scope.$on('$destroy', function () {
-            $scope.comingSoonPopover.remove();
+            $scope.uploadIcalModal.remove();
+            $scope.uploadIcalModal.remove();
+            $scope.removeAllModal.remove();
+            $scope.helpModal.remove();
             $scope.taskModal.remove();
         });
     });
