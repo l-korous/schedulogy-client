@@ -6,7 +6,7 @@
             Go to Login
         </button>
     </div>
-    <form name="registrationForm" ng-show="!successInfo" novalidate ng-keyup="keyUpHandler($event.keyCode);">
+    <form name="registrationForm" ng-show="!successInfo" novalidate ng-keyup="$root.keyUpHandler($event.keyCode);">
         <div class="list customFormErrorList">
             <div ng-show="beingSubmitted && (registrationForm.email.$error.required || registrationForm.email.$error.email) && !registrationForm.email.$pristine" class="item help-block">
                 Please provide a valid email.

@@ -13,7 +13,8 @@ angular.module('Schedulogy')
                 customSelect_label3: "@label3",
                 customSelect_nullValue: "@nullValue",
                 customSelect_cssClass: "@cssClass",
-                customSelect_icon: "@icon"
+                customSelect_icon: "@icon",
+                customSelect_emptyMessage: "@emptyMessage"
             },
             link: function ($scope, element, attrs, ngModel) {
                 // init modal

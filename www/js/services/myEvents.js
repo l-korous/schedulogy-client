@@ -38,7 +38,7 @@ angular.module('Schedulogy')
 
         this.emptyCurrentEvent = function () {
             var btime = this.getBTime();
-            var btimePlusDuration = btime.clone().add(settings.defaultTaskDuration, 'hours');
+            var btimePlusDuration = btime.clone().add(settings.defaultTaskDuration / settings.minuteGranularity, 'm');
 
             this.currentEvent = {
                 new : true,
@@ -63,6 +63,8 @@ angular.module('Schedulogy')
                     end: null
                 }
             };
+
+            DateUtils.saveDurText(this.currentEvent);
         };
 
         this.fillBlocksAndNeedsForShow = function (event) {

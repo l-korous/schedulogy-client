@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $ionicPopover, FullCalendar) {
+    .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $timeout, FullCalendar) {
         /* event source that pulls from google.com */
         $scope.eventSource = {
             url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
@@ -9,50 +9,98 @@ angular.module('Schedulogy')
         $scope.eventSources = [MyEvents.events];
 
         $scope.fullCalendar = FullCalendar;
+        $scope.modals =
+            {
+                floatToFixed: {
+                    closeCallback: function () {
+                        $scope.floatToFixedRevertFunc && $scope.floatToFixedRevertFunc();
+                    },
+                    confirmCallback: function () {
+                        $scope.floatToFixedEvent.type = 'fixed';
+                        if ($scope.floatToFixedMethod === 'resize') {
+                            $scope.floatToFixedEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
+                            MyEvents.handleChangeOfEventType($scope.floatToFixedEvent);
+                        }
+                        else if ($scope.floatToFixedMethod === 'drop') {
+                        }
+                        MyEvents.saveEvent($scope.floatToFixedEvent);
+                    }
+                },
+                task: {
+                    openCallback: function (params) {
+                        if (!MyEvents.currentEvent || params) {
+                            MyEvents.emptyCurrentEvent();
+                        }
 
-        // Popover 'confirm float -> fixed'.
-        $ionicModal.fromTemplateUrl('templates/popovers/float_to_fixed.html', {
-            scope: $scope,
-            animation: 'animated zoomIn'
-        }).then(function (popover) {
-            $scope.floatToFixedPopover = popover;
+                        if (angular.element($($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput')).scope())
+                            angular.element($($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput')).scope().taskSaveForm.$setPristine();
+                    },
+                    closeCallback: function () {
+                        MyEvents.refreshEvents();
+                    }
+                },
+                help: {
+                },
+                removeAll: {
+                    confirmCallback: function () {
+                        MyEvents.deleteAll();
+                    }
+                },
+                uploadIcal: {
+                }
+            };
+
+        for (var modalData in $scope.modals) {
+            $ionicModal.fromTemplateUrl('templates/popovers/' + modalData + '.html', {
+                scope: $scope,
+                animation: 'animated zoomIn'
+            }).then(function (modal) {
+                // This is a trick - we need to know which modalData we just finished creating the modal for.
+                var modalName = $(modal.el).find('.modalNamingSearch').attr('name');
+                $scope[modalName + 'Modal'] = modal;
+            });
+        }
+
+        $scope.openModal = function (modalName, params) {
+            // This is ugly hack, should be fixed.
+            var focusPrimaryInput = function () {
+                $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput').focus();
+                $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput').select();
+            };
+
+            $scope.currentModal = modalName;
+            $scope[modalName + 'Modal'].show().then(focusPrimaryInput);
+            $scope.modals[modalName].openCallback && $scope.modals[modalName].openCallback(params);
+        };
+
+        $scope.closeModal = function (modalName, callback) {
+            $scope[modalName + 'Modal'].hide();
+            $scope.modals[modalName].closeCallback && $scope.modals[modalName].closeCallback();
+            callback && callback();
+        };
+
+        $scope.confirmModal = function (modalName, callback) {
+            $scope[modalName + 'Modal'].hide();
+            $scope.modals[modalName].confirmCallback && $scope.modals[modalName].confirmCallback();
+            callback && callback();
+        };
+
+        $scope.$on('Esc', function () {
+            for (var modalData in $scope.modals)
+                $scope.closeModal(modalData);
         });
-        $scope.openFloatToFixedPopover = function ($event) {
-            $scope.floatToFixedPopover.show($event);
-        };
-        $scope.closeFloatToFixedPopover = function (result) {
-            $scope.floatToFixedPopover.hide();
-
-            if (result) {
-                $scope.floatToFixedEvent.type = 'fixed';
-
-                if ($scope.floatToFixedMethod === 'resize') {
-                    $scope.floatToFixedEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
-                    MyEvents.handleChangeOfEventType($scope.floatToFixedEvent);
-                }
-                else if ($scope.floatToFixedMethod === 'drop') {
-                }
-                MyEvents.saveEvent($scope.floatToFixedEvent);
-            }
-            else {
-                $scope.floatToFixedRevertFunc();
-            }
-        };
-        $scope.keyUpHandler = function (keyCode) {
-            if (keyCode === 13) {
-                $scope.closeFloatToFixedPopover(true);
-            }
-            if (keyCode === 27)
-                $scope.closeFloatToFixedPopover(false);
-        };
-
+        $scope.$on('Enter', function () {
+            for (var modalData in $scope.modals)
+                if (modalData === $scope.currentModal)
+                    $scope.confirmModal(modalData);
+        });
         $scope.fullCalendar.setCallbacks({
             eventClick: function () {
-                $scope.openTaskModal();
+                $scope.openModal('task');
             },
             select: function () {
                 MyEvents.updateEndDateTimeWithDuration();
-                $scope.openTaskModal();
+                $scope.openModal('task');
             },
             eventDrop: function (event, delta, revertFunc, jsEvent) {
                 if (event.type === 'floating') {
@@ -85,87 +133,10 @@ angular.module('Schedulogy')
                 }
             }
         });
-        // Task edit modal.
-        $ionicModal.fromTemplateUrl('templates/popovers/task_modal.html', {
-            scope: $scope,
-            animation: 'animated zoomIn'
-        }).then(function (modal) {
-            $scope.taskModal = modal;
-        });
-        $scope.modalSettings = {
-            maxDuration: {
-                fixed: 24,
-                fixedAllDay: 14,
-                floating: settings.endHour - settings.startHour
-            }
-        };
-        $scope.openTaskModal = function (clear) {
-            if (!MyEvents.currentEvent || clear) {
-                MyEvents.emptyCurrentEvent();
-            }
-
-            if (angular.element($('#eventTitleEdit')).scope())
-                angular.element($('#eventTitleEdit')).scope().taskSaveForm.$setPristine();
-            $scope.taskModal.show().then(function () {
-                // This is ugly hack, should be fixed.
-                $('#eventTitleEdit').focus();
-                $('#eventTitleEdit').select();
-            });
-        };
-        $scope.closeTaskModal = function () {
-            $scope.taskModal.hide();
-        };
-
-        // Help modal.
-        $ionicModal.fromTemplateUrl('templates/popovers/help_modal.html', {
-            scope: $scope,
-            animation: 'animated zoomIn'
-        }).then(function (modal) {
-            $scope.helpModal = modal;
-        });
-        $scope.openHelpModal = function (clear) {
-            $scope.helpModal.show();
-        };
-        $scope.closeHelpModal = function () {
-            $scope.helpModal.hide();
-        };
-
-        // iCal modal.
-        $ionicModal.fromTemplateUrl('templates/popovers/upload_ical_modal.html', {
-            scope: $scope,
-            animation: 'animated zoomIn'
-        }).then(function (modal) {
-            $scope.uploadIcalModal = modal;
-        });
-        $scope.openUploadIcalModal = function () {
-            $scope.uploadIcalModal.show();
-        };
-        $scope.closeUploadIcalModal = function () {
-            $scope.uploadIcalModal.hide();
-        };
-
-        // remove All modal.
-        $ionicModal.fromTemplateUrl('templates/popovers/remove_all_modal.html', {
-            scope: $scope,
-            animation: 'animated zoomIn'
-        }).then(function (modal) {
-            $scope.removeAllModal = modal;
-        });
-        $scope.openRemoveAllModal = function () {
-            $scope.removeAllModal.show();
-        };
-        $scope.closeRemoveAllModal = function (result) {
-            $scope.removeAllModal.hide();
-            if (result)
-                MyEvents.deleteAll();
-        };
 
         // Cleanup when destroying.
         $scope.$on('$destroy', function () {
-            $scope.uploadIcalModal.remove();
-            $scope.uploadIcalModal.remove();
-            $scope.removeAllModal.remove();
-            $scope.helpModal.remove();
-            $scope.taskModal.remove();
+            for (var modalData in $scope.modals)
+                $scope[modalData + 'Modal'].remove();
         });
     });

@@ -171,6 +171,10 @@ h2 {
     font-weight:bold;
 }
 
+.select-needs .item-no-wrap, .select-blocks .item-no-wrap {
+    font-size:1.0em;
+}
+
 .select-needs .item:first-of-type, .select-blocks .item:first-of-type {
     font-size:1.1em;
 }
@@ -252,6 +256,16 @@ h2 {
 .item-text li span{
     position:relative;
     left:-.5em;
+}
+
+.taskTypeSelect {
+    font-size:130% ! important;
+    position:relative ! important;
+    margin:0 ! important;
+    padding:5px ! important;
+    text-align:left ! important;
+    direction: inherit ! important;
+    width:14em;
 }
 
 /* FullCalendar fixes */

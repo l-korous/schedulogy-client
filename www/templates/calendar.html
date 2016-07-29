@@ -1,18 +1,17 @@
 <div class="calendarControls padding">
-    <button class="icon-left ion-ios-plus-outline button button-outline button-small button-positive padding-horizontal" ng-click="$(this).blur();
-        openTaskModal(true);">
+    <button class="icon-left ion-ios-plus-outline button button-outline button-small button-positive padding-horizontal" ng-click="$(this).blur(); openModal('task', true);">
         &nbsp;New Task
     </button>
-    <button class="icon-left ion-ios-upload-outline button button-outline button-small button-positive padding-horizontal" ng-click="openUploadIcalModal()">
+    <button class="icon-left ion-ios-upload-outline button button-outline button-small button-positive padding-horizontal" ng-click="openModal('uploadIcal');">
         &nbsp;Import from iCal
     </button>
 
-    <button class="icon-left ion-trash-a button button-outline button-small button-assertive padding-horizontal" ng-click="openRemoveAllModal()">
+    <button class="icon-left ion-trash-a button button-outline button-small button-assertive padding-horizontal" ng-click="openModal('removeAll')">
         &nbsp;Delete all tasks
     </button>
 
 
-    <button class="icon-left button-float-right ion-help-buoy button button-outline button-small button-dark padding-horizontal" ng-click="openHelpModal()">
+    <button class="icon-left button-float-right ion-help-buoy button button-outline button-small button-dark padding-horizontal" ng-click="openModal('help')">
         &nbsp;Help
     </button>
 </div>

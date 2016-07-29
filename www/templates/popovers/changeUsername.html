@@ -3,7 +3,7 @@
         <h1 class="title">Change Username</h1>
     </ion-header-bar>
     <ion-content has-bouncing="false" class="marginTop5 marginSides5">
-        <form name="form" novalidate ng-keyup="$parent.keyUpHandler($event.keyCode, form.$invalid, 'changeUsername');">
+        <form name="form" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, form.$invalid);">
             <div class="list customFormErrorList">
                 <div ng-show="$parent.beingSubmitted && (form.username.$error.required || form.username.$error.minlength) && !form.username.$pristine" class="item help-block">
                     Please provide a valid username with at least 4 characters.

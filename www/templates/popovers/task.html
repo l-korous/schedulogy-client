@@ -2,8 +2,9 @@
     <ion-header-bar>
         <h1 class="title">{{myEvents.currentEvent.title ? myEvents.currentEvent.title : 'New Task'}}</h1>
     </ion-header-bar>
-    <ion-content>
-        <form name="taskSaveForm" novalidate ng-keyup="keyUpHandler($event.keyCode, taskSaveForm.$invalid);">
+    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
+    <ion-content class="modalNamingSearch" name="task">
+        <form name="taskSaveForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, taskSaveForm.$invalid);">
             <div class="list customFormErrorList">
                 <div ng-show="taskSaveForm.title.$error.required && !taskSaveForm.title.$pristine" class="item help-block">Please provide a valid title.</div>
                 <div ng-show="taskSaveForm.fixedStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
@@ -20,17 +21,17 @@
                     <div class="input-label">
                         Type
                     </div>
-                    <select ng-model="myEvents.currentEvent.type" required ng-change="myEvents.handleChangeOfEventType()">
-                        <option value="fixed">Fixed</option>
-                        <option value="fixedAllDay">Fixed (all-day)</option>
-                        <option value="floating">Floating</option>
+                    <select ng-model="myEvents.currentEvent.type" class="taskTypeSelect" required ng-change="myEvents.handleChangeOfEventType()">
+                        <option value="fixed" class="option-fixed">Fixed</option>
+                        <option value="fixedAllDay" class="option-fixedAllDay">Fixed (all-day)</option>
+                        <option value="floating" class="option-floating">Floating</option>
                     </select>
                 </label>
                 <label class="item item-input" ng-class="{ 'has-error' : taskSaveForm.title.$invalid && !taskSaveForm.title.$pristine }">
                     <div class="input-label">
                         Title
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.title" id="eventTitleEdit" required name="title">
+                    <input type="text" ng-model="myEvents.currentEvent.title" id="primaryInput" required name="title">
                 </label>
                 <label class="item item-input">
                     <div class="input-label" style="vertical-align: top">
@@ -164,7 +165,7 @@
                         </div>
                     </div>
                     <label class="item item-input item-select width-100">
-                        <custom-select css-class="select-needs" ng-model="myEvents.newPrerequisite" options="$parent.eventSources[0] | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a prerequisite" ng-change="myEvents.addPrerequisite(myEvents.newPrerequisite)"></custom-select>
+                        <custom-select empty-message="{{noPrerequisitesToListMsg}}" css-class="select-needs" ng-model="myEvents.newPrerequisite" options="$parent.eventSources[0] | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a prerequisite" ng-change="myEvents.addPrerequisite(myEvents.newPrerequisite)"></custom-select>
                     </label>
                 </label>
             </div>
@@ -184,20 +185,19 @@
                     </div>
                 </div>
                 <label class="item item-input item-select width-100">
-                    <custom-select css-class="select-blocks"  ng-model="myEvents.newDependency" options="$parent.eventSources[0] | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a dependency" ng-change="myEvents.addDependency(myEvents.newDependency)"></custom-select>
+                    <custom-select empty-message="{{noDependenciesToListMsg}}" css-class="select-blocks"  ng-model="myEvents.newDependency" options="$parent.eventSources[0] | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a dependency" ng-change="myEvents.addDependency(myEvents.newDependency)"></custom-select>
                 </label>
             </div>
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="saveEvent()">
+                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.confirmModal('task')">
                         Save
                     </button>
 
                 </div>
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeTaskModal();
-                                myEvents.refreshEvents();">
+                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeModal('task');">
                         Cancel
                     </button>   
                 </div>

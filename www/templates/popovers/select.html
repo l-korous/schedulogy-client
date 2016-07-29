@@ -9,6 +9,9 @@
                     <span ng-if="(customSelect_label2)" class="select-option-label-2">{{customSelect_option[customSelect_label2]}}</span>
                     <span ng-if="(customSelect_label2 && customSelect_label3)" class="select-option-label-3">{{customSelect_option[customSelect_label3]}}</span>
                 </div>
+                <div class="item item-no-wrap" ng-if="customSelect_options.length === 0">
+                    {{customSelect_emptyMessage}}
+                </div>
             </div>
         </div>
     </ion-content>

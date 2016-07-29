@@ -2,14 +2,18 @@
     <ion-header-bar>
         <h1 class="title">Upload iCal file</h1>
     </ion-header-bar>
-    <ion-content>
-        <form name="icalUploadForm" novalidate ng-keyup="keyUpHandler($event.keyCode, icalUploadForm.$invalid);">
+    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
+    <ion-content class="modalNamingSearch" name="uploadIcal">
+        <form name="icalUploadForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, !$root.icalFile);">
             <div class="list customFormErrorList">
                 <div ng-show="icalUploadForm.file.$error.required && !icalUploadForm.file.$pristine" class="item help-block">Please provide a valid file.</div>
                 <div ng-show="errorInfo" class="item help-block help-block-error">
                     {{errorInfo}}
                 </div>
             </div>
+            <!-- This is a horrible hack, but without this, keyup event won't fire -->
+            <input type="text" style="position:absolute;top:-10000px;" id="primaryInput"/>
+
             <div class="list">
                 <label class="item item-input" ng-class="{ 'has-error' : icalUploadForm.file.$invalid && !icalUploadForm.file.$pristine }">
                     <div class="input-label">
@@ -31,13 +35,13 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="!$root.icalFile" ng-click="uploadFile()">
+                    <button class="button button-block button-positive" ng-disabled="!$root.icalFile" ng-click="confirmModal('uploadIcal');">
                         Save
                     </button>
 
                 </div>
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeUploadIcalModal();">
+                    <button class="button button-block button-outline button-stable" ng-click="closeModal('uploadIcal');">
                         Cancel
                     </button>   
                 </div>

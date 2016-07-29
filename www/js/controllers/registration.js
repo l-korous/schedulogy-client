@@ -6,11 +6,9 @@ angular.module('Schedulogy')
         $scope.beingSubmitted = false;
         $('#emailEdit').focus();
 
-        $scope.keyUpHandler = function (keyCode, formInvalid) {
-            if (keyCode === 13 && !formInvalid) {
-                $scope.register();
-            }
-        };
+        $scope.$on('Enter', function () {
+            $scope.register();
+        });
 
         $scope.register = function () {
             $ionicLoading.show({template: settings.loadingTemplate});

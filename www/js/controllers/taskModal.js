@@ -1,13 +1,19 @@
 angular.module('Schedulogy')
     .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker) {
+        // Register confirm callback in parent.
+        $scope.$parent.modals.task.confirmCallback = function () {
+            $scope.saveEvent();
+        };
+
         $scope.maxEventDuration = settings.maxEventDuration;
+        // TODO - can we do this in the view directly from settings?
+        $scope.noPrerequisitesToListMsg = settings.noPrerequisitesToListMsg;
+        $scope.noDependenciesToListMsg = settings.noDependenciesToListMsg;
 
         $scope.myEvents = MyEvents;
 
         $scope.saveEvent = function () {
-            MyEvents.saveEvent(MyEvents.currentEvent, function () {
-                $scope.$parent.closeTaskModal();
-            });
+            MyEvents.saveEvent(MyEvents.currentEvent);
         };
 
         $scope.commonFilter = function (inspectedEvent) {
@@ -54,13 +60,6 @@ angular.module('Schedulogy')
             return event.start.unix();
         };
 
-        $scope.keyUpHandler = function (keyCode, formInvalid) {
-            if (keyCode === 13 && !formInvalid) {
-                $scope.saveEvent();
-            }
-            if (keyCode === 27)
-                $scope.closeModal();
-        };
         // Date & time pickers
         var datesUsed = [{name: 'start'}, {name: 'due'}];
         datesUsed.forEach(function (d) {
@@ -100,7 +99,7 @@ angular.module('Schedulogy')
 
                 dateUsed.constraint = {
                     from: dueDateEqualsStartConstraint ? (DateUtils.toMinutesPlusDuration(MyEvents.currentEvent.constraint.start, MyEvents.currentEvent.dur)) : 0,
-                    to: dueDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : 24
+                    to: dueDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : 24 * 60
                 };
             }
             else {// here the event type is fixed, because allDay events do not have timePicker shown.
@@ -113,7 +112,7 @@ angular.module('Schedulogy')
 
                 dateUsed.constraint = {
                     from: startDateEqualsStartConstraint ? (DateUtils.toMinutes(MyEvents.currentEvent.constraint.start)) : 0,
-                    to: startDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : 24
+                    to: startDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : 24 * 60
                 };
             }
         };

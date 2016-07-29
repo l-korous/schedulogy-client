@@ -27,15 +27,6 @@ angular.module('Schedulogy')
             });
         });
 
-        $scope.keyUpHandler = function (keyCode, formInvalid, modalName) {
-            if (keyCode === 13 && !formInvalid) {
-                $scope.closeModal(modalName);
-                $scope.save(modalName);
-            }
-            if (keyCode === 27)
-                $scope.closeModal(modalName);
-        };
-
         $scope.closeModal = function (modalName) {
             $scope.modal[modalName].hide();
         };

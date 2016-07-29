@@ -1,5 +1,10 @@
 angular.module('Schedulogy')
     .controller('ICalUploadCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading) {
+        // Register confirm callback in parent.
+        $scope.$parent.modals.uploadIcal.confirmCallback = function () {
+            $scope.uploadFile();
+        };
+
         // For display purposes only.
         $scope.weeksFromSettings = settings.weeks;
 
@@ -11,13 +16,13 @@ angular.module('Schedulogy')
 
             fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {btime: MyEvents.getBTime().unix()}, function (data) {
                 MyEvents.tasksInResponseSuccessHandler(data, function () {
-                    $scope.$parent.closeUploadIcalModal();
+                    $scope.$parent.closeModal('uploadIcal');
                     $rootScope.icalFile = null;
                 });
             },
                 function (err) {
                     MyEvents.tasksInResponseErrorHandler(err, function () {
-                        $scope.$parent.closeUploadIcalModal();
+                        $scope.$parent.closeModal('uploadIcal');
                         $rootScope.icalFile = null;
                     });
                 });

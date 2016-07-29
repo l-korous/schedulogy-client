@@ -20,6 +20,8 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
         defaultTaskDuration: 2,
         defaultTaskType: 'fixed',
         defaultStateAfterLogin: 'main.calendar',
+        noPrerequisitesToListMsg: 'No possible prerequisites to list. Possible prerequisites are any tasks that can end before the due date of this one.',
+        noDependenciesToListMsg:  'No possible dependent tasks to list. Only floating tasks, that are due after this task can be completed, are possible dependent tasks.',
         dateTimeFormatEdit: 'YYYY-MM-DDTHH:mm',
         dateTimeFormatDisplay: 'YYYY-MM-DD HH:mm',
         shiftAgendaRows: 293,
@@ -206,5 +208,13 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             if ($state.current.name !== 'main.login') {
                 $state.transitionTo("main.login");
             }
+        };
+        
+        $rootScope.keyUpHandler = function (keyCode, enterBlockPredicate) {
+            if (keyCode === 13 && !enterBlockPredicate) {
+                $rootScope.$broadcast('Enter');
+            }
+            if (keyCode === 27)
+                $rootScope.$broadcast('Esc');
         };
     });
