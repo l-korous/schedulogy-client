@@ -50,6 +50,7 @@ angular.module('Schedulogy')
                     start: (event.type === 'fixedAllDay' ? event.start.clone().utc().startOf('day') : event.start.clone().utc()).unix(),
                     dur: event.dur,
                     type: event.type,
+                    iCalUid: event.iCalUid,
                     constraint: {
                         start: event.constraint.start ? event.constraint.start.toISOString() : null,
                         end: event.constraint.end ? event.constraint.end.toISOString() : null

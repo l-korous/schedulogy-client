@@ -110,8 +110,14 @@ angular.module('Schedulogy')
                     $scope.floatToFixedMethod = 'drop';
                     $scope.floatToFixedRevertFunc = revertFunc;
                 }
-                else
+                else if (event.type === 'fixed')
                     MyEvents.saveEvent(event);
+                else if (event.type === 'fixedAllDay') {
+                    if (delta._days === 0)
+                        revertFunc();
+                    else
+                        MyEvents.saveEvent(event);
+                }
             },
             eventResize: function (event, delta, revertFunc, jsEvent) {
                 if (event.type === 'fixed') {
