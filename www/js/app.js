@@ -1,6 +1,6 @@
 angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker'])
     .constant('settings', {
-        serverUrl: 'http://localhost:8080',
+        serverUrl: 'http://localhost:8080/api',
         loadingTemplate: 'Loading,<br />please wait...',
         appVersion: '0.1.0',
         applicationName: 'Schedulogy',
