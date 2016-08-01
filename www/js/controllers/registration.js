@@ -19,7 +19,7 @@ angular.module('Schedulogy')
                 $scope.successInfo = settings.registrationSuccessInfo;
             }).error(function (errorResponse) {
                 $ionicLoading.hide();
-                $scope.errorInfo = settings.registrationErrorInfo(errorResponse.message);
+                $scope.errorInfo = settings.registrationErrorInfo(errorResponse.msg);
             });
         };
     });
