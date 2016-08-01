@@ -88,6 +88,11 @@ angular.module('Schedulogy')
         $scope.$on('Esc', function () {
             for (var modalData in $scope.modals)
                 $scope.closeModal(modalData);
+
+            // Also close all popups:
+            $timeout(function () {
+                $('.button_close').click();
+            });
         });
         $scope.$on('Enter', function () {
             for (var modalData in $scope.modals)
@@ -102,9 +107,9 @@ angular.module('Schedulogy')
                 MyEvents.updateEndDateTimeWithDuration();
                 $scope.openModal('task');
             },
-            eventDrop: function (event, delta, revertFunc, jsEvent) {
+            eventDrop: function (event, delta, revertFunc) {
                 if (event.type === 'floating') {
-                    $scope.openFloatToFixedPopover(jsEvent);
+                    $scope.openModal('floatToFixed');
                     $scope.floatToFixedDelta = delta;
                     $scope.floatToFixedEvent = event;
                     $scope.floatToFixedMethod = 'drop';
@@ -119,7 +124,7 @@ angular.module('Schedulogy')
                         MyEvents.saveEvent(event);
                 }
             },
-            eventResize: function (event, delta, revertFunc, jsEvent) {
+            eventResize: function (event, delta, revertFunc) {
                 if (event.type === 'fixed') {
                     event.dur += (delta.minutes() / settings.minuteGranularity);
                     MyEvents.handleChangeOfEventType(event);
@@ -131,7 +136,7 @@ angular.module('Schedulogy')
                     MyEvents.saveEvent(event);
                 }
                 else if (event.type === 'floating') {
-                    $scope.openFloatToFixedPopover(jsEvent);
+                    $scope.openModal('floatToFixed');
                     $scope.floatToFixedDelta = delta;
                     $scope.floatToFixedEvent = event;
                     $scope.floatToFixedMethod = 'resize';

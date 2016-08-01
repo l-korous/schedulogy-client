@@ -84,8 +84,10 @@ angular.module('Schedulogy')
         });
         $scope.reinitDatePicker = function (dateUsed) {
             dateUsed.inputDate = MyEvents.currentEvent ? (MyEvents.currentEvent.type === 'floating' ? MyEvents.currentEvent.due.toDate() : MyEvents.currentEvent.start.toDate()) : MyEvents.getBTime();
-            dateUsed.from = MyEvents.currentEvent.constraint.start.toDate();
-            dateUsed.to = MyEvents.currentEvent.constraint.end.toDate();
+            if (MyEvents.currentEvent.constraint.start)
+                dateUsed.from = MyEvents.currentEvent.constraint.start.toDate();
+            if (MyEvents.currentEvent.constraint.end)
+                dateUsed.to = MyEvents.currentEvent.constraint.end.toDate();
         };
         $scope.reinitTimePicker = function (dateUsed) {
             dateUsed.inputTime = MyEvents.currentEvent ? (MyEvents.currentEvent.type === 'floating' ? (DateUtils.toMinutes(MyEvents.currentEvent.due) * 60) : (DateUtils.toMinutes(MyEvents.currentEvent.start) * 60)) : MyEvents.getBTime();

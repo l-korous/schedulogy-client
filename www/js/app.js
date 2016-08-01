@@ -128,17 +128,16 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             // if none of the above states are matched, use this as the fallback
             $urlRouterProvider.otherwise(settings.defaultStateAfterLogin);
         }])
-    .config(function (ionicDatePickerProvider) {
+    .config(function (ionicDatePickerProvider, settings, moment) {
         var datePickerObj = {
             setLabel: 'Set',
             todayLabel: 'Today',
             closeLabel: 'Close',
             mondayFirst: true,
-            weeksList: ["M", "T", "W", "T", "F", "S", "S"],
             monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
             templateType: 'popup',
             from: new Date(2012, 8, 1),
-            to: new Date(2018, 8, 1),
+            to: moment(new Date()).add(settings.weeks, 'w').toDate(),
             showTodayButton: true,
             dateFormat: 'dd MMMM yyyy',
             closeOnSelect: true,
