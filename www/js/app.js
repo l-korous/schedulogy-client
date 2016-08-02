@@ -75,9 +75,9 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
             }
             return 'General error';
         },
-        registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address.',
+        registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address. You may close this tab.',
         passwordResetSuccessInfo: 'Password successfully set.',
-        forgottenPasswordSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address.',
+        forgottenPasswordSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address. You may close this tab.',
         forgottenPasswordErrorInfo: function (msg) {
             switch (msg) {
                 case '!existing':
