@@ -5,19 +5,14 @@
             Change Username
         </a>
 
-        <a class="item item-icon-left"  ng-click="openModal('changePassword');">
+        <a class="item item-icon-left" ng-click="openModal('changePassword');">
             <i class="icon ion-locked assertive"></i>
             Change Password
         </a>
 
-        <a class="item item-icon-left" href="#">
-            <i class="icon ion-happy-outline balanced"></i>
-            Send Feedback
-        </a>
-
-        <a class="item item-icon-left" href="#">
+        <a class="item item-icon-left" ng-click="openModal('feedback');">
             <i class="icon ion-mic-a positive"></i>
-            Share with Friends
+            Send Feedback
         </a>
 
         <a class="item item-icon-left" ng-click="closeUserMenuPopover(); $root.goToLogin()">

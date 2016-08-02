@@ -21,7 +21,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
         defaultTaskType: 'fixed',
         defaultStateAfterLogin: 'main.calendar',
         noPrerequisitesToListMsg: 'No possible prerequisites to list. Possible prerequisites are any tasks that can end before the due date of this one.',
-        noDependenciesToListMsg:  'No possible dependent tasks to list. Only floating tasks, that are due after this task can be completed, are possible dependent tasks.',
+        noDependenciesToListMsg: 'No possible dependent tasks to list. Only floating tasks, that are due after this task can be completed, are possible dependent tasks.',
         dateTimeFormatEdit: 'YYYY-MM-DDTHH:mm',
         dateTimeFormatDisplay: 'YYYY-MM-DD HH:mm',
         shiftAgendaRows: 293,
@@ -53,7 +53,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                 case 'used':
                     return 'The password has already been set. Please reset your password by following the link on the login screen in case you have forgotten it.';
             }
-            return 'General error';
+            return 'General error.';
         },
         registrationErrorInfo: function (msg) {
             switch (msg) {
@@ -64,27 +64,31 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                     return 'Something is wrong. Please try again.';
                     break;
             }
-            return 'General error';
+            return 'General error.';
         },
         loginErrorInfo: function (msg) {
             switch (msg) {
                 case 'inactive':
                     return 'This user account is inactive. Please follow the instructions you received via e-mail to activate it.';
                 case 'password':
-                    return 'Wrong e-mail / password combination';
+                    return 'Wrong e-mail / password combination.';
             }
-            return 'General error';
+            return 'General error.';
         },
         registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address. You may close this tab.',
         passwordResetSuccessInfo: 'Password successfully set.',
-        forgottenPasswordSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address. You may close this tab.',
+        forgottenPasswordSuccessInfo: 'An e-mail with password reset instructions has been sent to your e-mail address. You may close this tab.',
+        feedbackSuccessInfo: 'Feedback sent and greatly appreciated.',
+        feedbackErrorInfo: function (msg) {
+            return 'Something went wrong.';
+        },
         forgottenPasswordErrorInfo: function (msg) {
             switch (msg) {
                 case '!existing':
                     return 'We could not find the requested user. Please register first.';
                     break;
             }
-            return 'General error';
+            return 'General error.';
         }
     })
     .config(['$stateProvider', '$urlRouterProvider', 'settings', function ($stateProvider, $urlRouterProvider, settings) {
@@ -102,25 +106,21 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                     })
                 .state('main.login', {
                     url: '/login',
-                    authenticate: false,
                     templateUrl: 'templates/login.html',
                     controller: 'LoginCtrl'
                 })
                 .state('main.registration', {
                     url: '/registration',
-                    authenticate: false,
                     templateUrl: 'templates/registration.html',
                     controller: 'RegistrationCtrl'
                 })
                 .state('main.forgottenPassword', {
                     url: '/forgotten-password',
-                    authenticate: false,
                     templateUrl: 'templates/forgottenPassword.html',
                     controller: 'ForgottenPasswordCtrl'
                 })
                 .state('main.passwordReset', {
                     url: '/password-reset',
-                    authenticate: false,
                     templateUrl: 'templates/passwordReset.html',
                     controller: 'PasswordResetCtrl'
                 });
@@ -155,7 +155,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
         ionicTimePickerProvider.configTimePicker(timePickerObj);
     })
     .config(function ($httpProvider) {
-        $httpProvider.interceptors.push(function ($rootScope, $q, $window) {
+        $httpProvider.interceptors.push(function ($rootScope, $q, $window, $timeout, $state) {
             return {
                 request: function (config) {
                     config.headers.Authorization = $window.localStorage.token ? $window.localStorage.token : '';
@@ -166,7 +166,10 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                     if (response.status === 401 || response.status === 403) {
                         delete $window.localStorage.token;
                         delete $window.localStorage.currentUserId;
-                        $rootScope.goToLogin();
+                        $timeout(function () {
+                            if (['main.login', 'main.registration', 'main.passwordReset'].indexOf($state.current.name) === -1)
+                                $rootScope.goToLogin();
+                        });
                     }
                     return $q.reject(response);
                 }
@@ -178,11 +181,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
 
         // Check stuff when changing state.
         $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-            if (((fromState.name === 'main.login' && toState.name === 'main.registration') || (fromState.name === 'main.registration' && toState.name === 'main.login')) && !Auth.isAuthenticated()) {
-                return;
-            } else if (((fromState.name === 'main.login' && toState.name === 'main.passwordReset') || (fromState.name === 'main.passwordReset' && toState.name === 'main.login')) && !Auth.isAuthenticated()) {
-                return;
-            } else if (toState.name !== 'login' && toState.name !== 'registration' && !Auth.isAuthenticated()) {
+            if ((['main.login', 'main.registration', 'main.passwordReset'].indexOf(toState.name) === -1) && !Auth.isAuthenticated()) {
                 // User isn’t authenticated
                 $rootScope.goToLogin();
                 event.preventDefault();
@@ -194,10 +193,13 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
 
         Auth.tryPreauthenticate().then(function () {
             $state.go(settings.defaultStateAfterLogin);
-            $timeout(function(){$rootScope.allSet = true;});
+            $timeout(function () {
+                $rootScope.allSet = true;
+            });
         }, function () {
-            $rootScope.goToLogin();
-            $timeout(function(){$rootScope.allSet = true;});
+            $timeout(function () {
+                $rootScope.allSet = true;
+            });
         });
 
         // This must be defined here, when the $state is defined.
@@ -208,7 +210,7 @@ angular.module('Schedulogy', ['ngCookies', 'ngResource', 'ui.router', 'ui.calend
                 $state.transitionTo("main.login");
             }
         };
-        
+
         $rootScope.keyUpHandler = function (keyCode, enterBlockPredicate) {
             if (keyCode === 13 && !enterBlockPredicate) {
                 $rootScope.$broadcast('Enter');

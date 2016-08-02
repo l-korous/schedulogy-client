@@ -295,6 +295,11 @@ angular.module('Schedulogy')
                 toReturn.minutes(0);
                 toReturn.day(toReturn.day() + 1);
             }
+            // Move to startHour (the same day).
+            if (toReturn.hours() < settings.startHour) {
+                toReturn.hours(settings.startHour);
+                toReturn.minutes(0);
+            }
             // Move Sat + Sun to Mon.
             if (toReturn.day() === 0 || toReturn.day() >= 6) {
                 toReturn.hours(settings.startHour);

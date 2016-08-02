@@ -7,7 +7,7 @@
         <form name="icalUploadForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, !$root.icalFile);">
             <div class="list customFormErrorList">
                 <div ng-show="icalUploadForm.file.$error.required && !icalUploadForm.file.$pristine" class="item help-block">Please provide a valid file.</div>
-                <div ng-show="errorInfo" class="item help-block help-block-error">
+                <div ng-show="errorInfo" class="item help-block help-block-error item-no-wrap">
                     {{errorInfo}}
                 </div>
             </div>

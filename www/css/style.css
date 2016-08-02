@@ -255,7 +255,6 @@ h2 {
 }
 .item-text li span{
     position:relative;
-    left:-.5em;
 }
 
 .taskTypeSelect {

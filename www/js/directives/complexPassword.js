@@ -8,7 +8,7 @@ angular.module("Schedulogy")
                     /[a-z]/.test(password) && groups++;
                     /[A-Z]/.test(password) && groups++;
                     /[0-9]/.test(password) && groups++;
-                    return ((groups >= settings.minPasswordGroups) && (password && (password.length > settings.minPasswordLength)));
+                    return ((groups >= settings.minPasswordGroups) && (password && (password.length >= settings.minPasswordLength)));
                 };
             }
         };

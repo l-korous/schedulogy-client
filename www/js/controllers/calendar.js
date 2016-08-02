@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $timeout, FullCalendar) {
+    .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $timeout, FullCalendar, $ionicScrollDelegate) {
         /* event source that pulls from google.com */
         $scope.eventSource = {
             url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
@@ -66,6 +66,7 @@ angular.module('Schedulogy')
             var focusPrimaryInput = function () {
                 $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput').focus();
                 $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput').select();
+                $ionicScrollDelegate.scrollTop();
             };
 
             $scope.currentModal = modalName;
