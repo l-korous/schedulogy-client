@@ -181,7 +181,7 @@ angular.module('Schedulogy')
         };
 
         // Task edit modal.
-        $ionicModal.fromTemplateUrl('templates/popovers/error_modal.html', {
+        $ionicModal.fromTemplateUrl('templates/error_modal.html', {
             animation: 'animated zoomIn'
         }).then(function (modal) {
             _this.errorModal = modal;

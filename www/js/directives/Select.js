@@ -18,7 +18,7 @@ angular.module('Schedulogy')
             },
             link: function ($scope, element, attrs, ngModel) {
                 // init modal
-                $ionicModal.fromTemplateUrl("templates/popovers/select.html", {
+                $ionicModal.fromTemplateUrl("templates/select.html", {
                     scope: $scope,
                     animation: 'animated zoomIn'
                 }).then(function (modal) {

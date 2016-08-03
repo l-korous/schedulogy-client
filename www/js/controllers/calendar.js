@@ -8,7 +8,7 @@ angular.module('Schedulogy')
         };
         $scope.eventSources = [MyEvents.events];
 
-        $scope.fullCalendar = FullCalendar;
+        $scope.myCalendar = FullCalendar;
         $scope.modals =
             {
                 floatToFixed: {
@@ -51,7 +51,7 @@ angular.module('Schedulogy')
             };
 
         for (var modalData in $scope.modals) {
-            $ionicModal.fromTemplateUrl('templates/popovers/' + modalData + '.html', {
+            $ionicModal.fromTemplateUrl('templates/' + modalData + '.html', {
                 scope: $scope,
                 animation: 'animated zoomIn'
             }).then(function (modal) {
@@ -100,7 +100,7 @@ angular.module('Schedulogy')
                 if (modalData === $scope.currentModal)
                     $scope.confirmModal(modalData);
         });
-        $scope.fullCalendar.setCallbacks({
+        $scope.myCalendar.setCallbacks({
             eventClick: function () {
                 $scope.openModal('task');
             },

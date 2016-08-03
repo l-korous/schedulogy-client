@@ -6,7 +6,7 @@ angular.module('Schedulogy')
             minLength: settings.minPasswordLength
         };
 
-        $ionicPopover.fromTemplateUrl('templates/popovers/user_menu.html', {
+        $ionicPopover.fromTemplateUrl('templates/user_menu.html', {
             scope: $scope
         }).then(function (popover) {
             $scope.userMenuPopover = popover;
@@ -21,8 +21,8 @@ angular.module('Schedulogy')
             $scope.userMenuPopover.remove();
         });
         $scope.modal = {};
-        ['changeUsername', 'changePassword', 'sendFeedback', 'share', 'feedback'].forEach(function (modalName) {
-            $ionicModal.fromTemplateUrl('templates/popovers/' + modalName + '.html', {
+        ['changeUsername', 'changePassword', 'feedback'].forEach(function (modalName) {
+            $ionicModal.fromTemplateUrl('templates/' + modalName + '.html', {
                 scope: $scope,
                 animation: 'animated zoomIn'
             }).then(function (modal) {
