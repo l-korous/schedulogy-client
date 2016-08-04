@@ -3,7 +3,6 @@ var gulp = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
 var bytediff = require('gulp-bytediff');
 var wiredep = require('wiredep');
-var obfuscate = require('gulp-obfuscate');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var cleanCss = require('gulp-clean-css');
@@ -13,7 +12,7 @@ var del = require('del');
 var rename = require('gulp-rename');
 var templateCache = require('gulp-angular-templatecache');
 
-gulp.task('concat', function () {
+gulp.task('concat-js', function () {
     gulp.src([
         "www/bower_components/ionic/release/js/ionic.bundle.min.js",
         "www/bower_components/jquery/dist/jquery.min.js",
@@ -26,7 +25,6 @@ gulp.task('concat', function () {
         "www/bower_components/ionic-timepicker/dist/ionic-timepicker.bundle.min.js",
         "www/bower_components/fullcalendar/dist/fullcalendar.js",
         "www/bower_components/fullcalendar/dist/gcal.js",
-        "www/templates-min/templateCache.js",
         "www/js/app.js",
         "www/js/directives/select.js",
         "www/js/directives/complexPassword.js",
@@ -51,24 +49,23 @@ gulp.task('concat', function () {
         "www/js/controllers/passwordReset.js",
         "www/js/controllers/forgottenPassword.js"
     ])
-        .pipe(sourcemaps.init())
-        // This is badly named on purpose
         .pipe(concat('app.min.js'))
+        .pipe(bytediff.start())
         .pipe(ngAnnotate({
             add: true
         }))
-        .pipe(replace("templateUrl: 'templates/", "templateUrl: '"))
-        .pipe(replace("fromTemplateUrl('templates/", "fromTemplateUrl('"))
+        .pipe(replace("templateUrl: 'templates/", "templateUrl: 'templates-min/"))
+        .pipe(replace("fromTemplateUrl('templates/", "fromTemplateUrl('templates-min/"))
         .pipe(replace('currentEvent', 'axe'))
         .pipe(replace('getBTime', 'qaz'))
         .pipe(replace('fillBlocksAndNeedsForShow', 'clockId'))
         .pipe(replace('openUserMenuPopover', 'whatever'))
-        .pipe(replace('currentUser.username', 'utya'))
         .pipe(replace('currentUser', 'uty'))
         .pipe(replace('floatToFixedEvent', 'woopra'))
         .pipe(replace('updateEndDateTimeWithDuration', 'gfa'))
         .pipe(replace('registrationSuccessInfo', 'bcya'))
         .pipe(replace('passwordResetSuccessInfo', 'bxya'))
+        .pipe(replace('myEvents', 'axuie'))
         .pipe(replace('successInfo', 'aaq'))
         .pipe(replace('errorInfo', 'aaw'))
         .pipe(replace('reinitDatePicker', 'fgra'))
@@ -80,7 +77,6 @@ gulp.task('concat', function () {
         .pipe(replace('fullCalendar', 'bootstrapCalendar'))
         .pipe(replace('tryPreauthenticate', 'sendNow'))
         .pipe(replace('TaskType', 'uuida'))
-        .pipe(bytediff.start())
         .pipe(uglify({mangle: true, compress: {
                 sequences: true,
                 dead_code: true,
@@ -103,24 +99,23 @@ gulp.task('concat', function () {
                 negate_iife: true
             }}))
         .pipe(bytediff.stop())
-        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('www/js-min'));
 });
 gulp.task('clean', function () {
     del(['index.html']);
+    del(['www/js-min/app.min.js']);
 });
 gulp.task('html', function () {
     gulp.src('www/index-min.html').pipe(rename('index.html')).pipe(gulp.dest('www'));
 });
 gulp.task('template-bundle', function () {
     return gulp.src(['www/templates/*.html', 'www/templates/**/*.html'])
-        .pipe(templateCache('templateCache.js', { module:'templateCache', standalone:true }))
         .pipe(replace('currentEvent', 'axe'))
         .pipe(replace('getBTime', 'qaz'))
         .pipe(replace('fillBlocksAndNeedsForShow', 'clockId'))
         .pipe(replace('openUserMenuPopover', 'whatever'))
-        .pipe(replace('currentUser.username', 'utya'))
         .pipe(replace('currentUser', 'uty'))
+        .pipe(replace('myEvents', 'axuie'))
         .pipe(replace('floatToFixedEvent', 'woopra'))
         .pipe(replace('updateEndDateTimeWithDuration', 'gfa'))
         .pipe(replace('registrationSuccessInfo', 'bcya'))
@@ -136,6 +131,14 @@ gulp.task('template-bundle', function () {
         .pipe(replace('fullCalendar', 'bootstrapCalendar'))
         .pipe(replace('tryPreauthenticate', 'sendNow'))
         .pipe(replace('TaskType', 'uuida'))
+        .pipe(replace('FullCalendar', 'BootstrapCalendar'))
+        .pipe(replace('fullCalendar', 'bootstrapCalendar'))
+        .pipe(replace('\\r\\n', ''))
+        .pipe(replace('\\r', ''))
+        .pipe(replace('\\n', ''))
+        .pipe(replace('  ', ' '))
+        .pipe(replace('  ', ' '))
+        .pipe(replace('  ', ' '))
         .pipe(gulp.dest('www/templates-min'));
 });
 gulp.task('minify-css', function () {
@@ -146,11 +149,13 @@ gulp.task('minify-css', function () {
         "www/css/style.css"
     ])
         .pipe(concat('style.min.css'))
+        .pipe(replace('FullCalendar', 'BootstrapCalendar'))
+        .pipe(replace('fullCalendar', 'bootstrapCalendar'))
         .pipe(cleanCss())
         .pipe(gulp.dest('www/css-min'));
 });
 
 // start here
 gulp.task('default', function () {
-    gulp.start('minify-css', 'template-bundle', 'concat', 'clean', 'html');
+    gulp.start('clean', 'minify-css', 'template-bundle', 'concat-js', 'html');
 });
