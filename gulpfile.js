@@ -10,7 +10,6 @@ var replace = require('gulp-replace');
 var ngAnnotate = require('gulp-ng-annotate');
 var del = require('del');
 var rename = require('gulp-rename');
-var templateCache = require('gulp-angular-templatecache');
 
 gulp.task('concat-js', function () {
     gulp.src([
