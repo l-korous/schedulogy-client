@@ -18,7 +18,7 @@
                     <div class="input-label">
                         Username
                     </div>
-                    <input type="text" ng-model="user.name" id="primaryInput" required name="username" autofocus minlength='4'>
+                    <input type="text" ng-model="$root.currentUser.username" id="primaryInput" required name="username" autofocus minlength='4'>
                 </label>
 
                 <button class="button button-block button-positive button-single marginTop3" ng-disabled="form.$invalid || form.$pristine" ng-click="save('changeUsername');">

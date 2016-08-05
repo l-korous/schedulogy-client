@@ -124,9 +124,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     templateUrl: 'templates/passwordReset.html',
                     controller: 'PasswordResetCtrl'
                 });
-
-            // if none of the above states are matched, use this as the fallback
-            $urlRouterProvider.otherwise(settings.defaultStateAfterLogin);
         }])
     .config(function (ionicDatePickerProvider, settings, moment) {
         var datePickerObj = {
@@ -164,7 +161,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 },
                 responseError: function (response) {
                     if (response.status === 401 || response.status === 403) {
-                        console.log('403');
                         delete $window.localStorage.token;
                         delete $window.localStorage.currentUserId;
                         $timeout(function () {
@@ -177,9 +173,9 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $timeout, Hopscotch) {
+    .run(function ($rootScope, $state, settings, Auth, $timeout) {
         $rootScope.allSet = false;
-        
+
         // Check stuff when changing state.
         $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
             $rootScope.allSet = false;
@@ -194,19 +190,14 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         });
 
         Auth.tryPreauthenticate().then(function () {
-            $timeout(function () {
-                $state.go(settings.defaultStateAfterLogin);
-            });
-        }, function () {
-            $timeout(function () {
-            });
+            $state.go(settings.defaultStateAfterLogin, {}, { location: false } );
         });
 
         // This must be defined here, when the $state is defined.
         $rootScope.goToLogin = function () {
             Auth.logout();
             if ($state.current.name !== 'main.login') {
-                $state.transitionTo("main.login");
+                $state.go("main.login", {}, { location: false } );
             }
         };
         $rootScope.keyUpHandler = function (keyCode, enterBlockPredicate) {

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ForgottenPasswordCtrl', function (settings, $scope, Auth, $ionicLoading) {
+    .controller('ForgottenPasswordCtrl', function (settings, $scope, Auth, $ionicLoading, $state) {
         $scope.data = {};
         $('#emailEdit').focus();
         $scope.sendPasswordResetLink = function () {
