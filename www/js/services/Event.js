@@ -1,5 +1,20 @@
 angular.module('Schedulogy')
     .service('Event', function (moment, settings, DateUtils) {
+        this.changeType = function(event, toType) {
+            if(toType === 'floating') {
+                event.type = 'floating';
+                event.allDay = false;
+            }
+            else if (toType === 'fixed') {
+                event.type = 'fixed';
+                event.allDay = false;
+            }
+            else if (toType === 'fixedAllDay') {
+                event.type = 'fixedAllDay';
+                event.allDay = true;
+            }
+        };
+        
         // This function assumes that the _id (and id) will not change.
         this.updateEvent = function (from, to) {
             from.title = to.title;
@@ -77,7 +92,7 @@ angular.module('Schedulogy')
                 id: task._id,
                 start: (task.type === 'fixedAllDay' ? start.startOf('day') : start),
                 startDateText: start.format(settings.dateFormat),
-                startTimeText: start.format(settings.timeFormat),
+                startTimeText: task.type === 'fixedAllDay' ? null : start.format(settings.timeFormat),
                 end: (task.type === 'fixedAllDay' ? end.startOf('day') : end),
                 endDateText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.dateFormat),
                 endTimeText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.timeFormat),

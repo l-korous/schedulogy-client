@@ -12,8 +12,19 @@ angular.module('Schedulogy')
 
             },
             {
-                name: 'Task types',
+                name: 'Calendar usage',
                 icon: 'ion-calendar',
+                content: $sce.trustAsHtml(
+                    '<p>The main advantage of SCHEDULOGY over usual tools is employing planning &amp; scheduling algorithms to optimize your calendar for you.</p>' +
+                    '<p>This is done using the task type "floating" (see "Task types" section).</p>' +
+                    '<p>SCHEDULOGY aims to be the most efficient and smooth task &amp; time management tool there is.</p>' +
+                    '<p>We are working hard to achieve that goal. For the time being, however, there are some limitations that you should be aware of.</p>' +
+                    '<p>First - although fixed tasks may be scheduled to any time, any day, only working week is displayed, 8:00 to 17:00, which is exactly where floating tasks are automatically scheduled.</p>'
+                    )
+            },
+            {
+                name: 'Task types',
+                icon: 'ion-paper-airplane',
                 content: $sce.trustAsHtml(
                     '<h2 style="border-left:5px solid ' + settings.eventColor.fixed + '">Fixed</h2>' +
                     '<p>Standard tasks, that have a fixed start (date &amp; time), and a fixed end (date &amp; time). The end is set up with help of task duration.</p>' +

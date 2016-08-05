@@ -1,4 +1,4 @@
-angular.module("MyLift")
+angular.module("Schedulogy")
     .run(function(Push, $settings, Auth) {
         Push.init().then(function(token) {
             $settings.pushToken = token;

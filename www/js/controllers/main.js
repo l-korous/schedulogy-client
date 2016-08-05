@@ -1,6 +1,6 @@
 angular.module('Schedulogy')
-    .controller('MainCtrl', function ($scope, $rootScope, $ionicPopover, $ionicModal, Auth, settings, $http, $ionicLoading) {
-
+    .controller('MainCtrl', function ($scope, $rootScope, $ionicPopover, $ionicModal, Auth, settings, $http, $ionicLoading, $timeout) {
+        // Some loading time to be sure we are all set.
         $scope.passwordRules = {
             minGroups: settings.minPasswordGroups,
             minLength: settings.minPasswordLength

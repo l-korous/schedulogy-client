@@ -27,7 +27,8 @@
     "angular-moment": "^0.10.3",
     "ionic-datepicker": "^1.1.0",
     "ionic-timepicker": "^0.5.1",
-    "fullcalendar": "^2.6.0"
+    "fullcalendar": "^2.6.0",
+    "hopscotch": "linkedin/hopscotch#^0.2.6"
   },
   "resolutions": {
     "jquery": "2.x",

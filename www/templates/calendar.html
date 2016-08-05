@@ -1,5 +1,5 @@
 <div class="calendarControls padding">
-    <button class="icon-left ion-ios-plus-outline button button-outline button-small button-positive padding-horizontal" ng-click="$(this).blur(); openModal('task', true);">
+    <button class="icon-left ion-ios-plus-outline button button-outline button-small button-positive padding-horizontal" id="newtask" ng-click="$(this).blur(); openModal('task', true);">
         &nbsp;New Task
     </button>
     <button class="icon-left ion-ios-upload-outline button button-outline button-small button-positive padding-horizontal" ng-click="openModal('uploadIcal');">
@@ -11,8 +11,18 @@
     </button>
 
 
-    <button class="icon-left button-float-right ion-help-buoy button button-outline button-small button-dark padding-horizontal" ng-click="openModal('help')">
+    <button class="icon-left ion-university button button-outline button-small button-dark padding-horizontal" ng-click="runTour()">
+        &nbsp;Tour
+    </button>
+
+    <button class="icon-left ion-help-buoy button button-outline button-small button-dark padding-horizontal" id="helplink" ng-click="openModal('help')">
         &nbsp;Help
     </button>
 </div>
 <div calendar="theOnlyCalendar" ui-calendar="myCalendar.uiConfig.calendar" class="span8 calendar padding" ng-model="eventSources"></div> 
+
+
+<ion-content has-bouncing="false" scroll="true" ng-show="!$root.allSet" style="z-index:20;width:100%;background:url('../img/squares.gif') no-repeat center center white;">
+</ion-content>
+
+

@@ -164,6 +164,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 },
                 responseError: function (response) {
                     if (response.status === 401 || response.status === 403) {
+                        console.log('403');
                         delete $window.localStorage.token;
                         delete $window.localStorage.currentUserId;
                         $timeout(function () {
@@ -176,11 +177,12 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $timeout) {
+    .run(function ($rootScope, $state, settings, Auth, $timeout, Hopscotch) {
         $rootScope.allSet = false;
-
+        
         // Check stuff when changing state.
         $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+            $rootScope.allSet = false;
             if ((['main.login', 'main.registration', 'main.passwordReset'].indexOf(toState.name) === -1) && !Auth.isAuthenticated()) {
                 // User isn’t authenticated
                 $rootScope.goToLogin();
@@ -192,25 +194,21 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         });
 
         Auth.tryPreauthenticate().then(function () {
-            $state.go(settings.defaultStateAfterLogin);
             $timeout(function () {
-                $rootScope.allSet = true;
+                $state.go(settings.defaultStateAfterLogin);
             });
         }, function () {
             $timeout(function () {
-                $rootScope.allSet = true;
             });
         });
 
         // This must be defined here, when the $state is defined.
         $rootScope.goToLogin = function () {
             Auth.logout();
-
             if ($state.current.name !== 'main.login') {
                 $state.transitionTo("main.login");
             }
         };
-
         $rootScope.keyUpHandler = function (keyCode, enterBlockPredicate) {
             if (keyCode === 13 && !enterBlockPredicate) {
                 $rootScope.$broadcast('Enter');

@@ -7591,7 +7591,7 @@
                             update();
                             delay = +moment.duration(1, unit);
                             delay = Math.max(100, delay); // prevent too frequent
-                            _this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
+                            //_this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
                         }, delay);
                     }
                 }
@@ -9559,7 +9559,7 @@
                                     ];
 
                                     button = $(// type="button" so that it doesn't submit a form
-                                        '<button type="button" class="' + classes.join(' ') + '">' +
+                                        '<button type="button" id="button-customId-' + buttonName + '" class="' + classes.join(' ') + '">' +
                                         innerHtml +
                                         '</button>'
                                         )
@@ -11410,7 +11410,7 @@
 
                 this.scroller.render();
                 var timeGridWrapEl = this.scroller.el.addClass('fc-time-grid-container');
-                var timeGridEl = $('<div class="fc-time-grid" />').appendTo(timeGridWrapEl);
+                var timeGridEl = $('<div class="fc-time-grid" id="fc-time-grid" />').appendTo(timeGridWrapEl);
                 this.el.find('.fc-body > tr > td').append(timeGridWrapEl);
 
                 this.timeGrid.setElement(timeGridEl);

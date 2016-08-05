@@ -27,7 +27,7 @@ angular.module('Schedulogy')
                         $window.localStorage.token = data.token;
                         _this.processTokenStoreUser();
                         if ($rootScope.currentUser)
-                            defer.resolve();
+                            defer.resolve(data);
                         else
                             defer.reject('malformedToken');
                     })

@@ -168,6 +168,46 @@ angular.module('Schedulogy')
             _this.openErrorModal();
             errorCallback && errorCallback();
         };
+        
+        this.processEventDrop = function(event, delta, revertFunc) {
+            if(event.type === 'fixed') {
+                var fixedToAllDay = false;
+                if(delta._data.hours === 0 && delta._data.minutes === 0)
+                    fixedToAllDay = true;
+                
+                if(fixedToAllDay) {
+                    Event.changeType(event, 'fixedAllDay');
+                    event.start.add(delta._data.days, 'd');
+                    event.start = event.start.startOf('day');
+                    event.dur = 1;
+                    _this.handleChangeOfEventType(event);
+                    return true;
+                }
+                else {
+                    _this.handleChangeOfEventType(event);
+                    return true;
+                }
+            }
+            
+            else if(event.type === 'fixedAllDay') {
+                var allDayToFixed = false;
+                if(delta._data.hours !== 0 || delta._data.minutes !== 0)
+                    allDayToFixed = true;
+                
+                if(allDayToFixed) {
+                    Event.changeType(event, 'fixed');
+                    event.start = event.start.startOf('day');
+                    event.start.add(delta._milliseconds, 'ms');
+                    event.dur = 4;
+                    _this.handleChangeOfEventType(event);
+                    return true;
+                }
+                else {
+                    _this.handleChangeOfEventType(event);
+                    return true;
+                }
+            }
+        };
 
         this.saveEvent = function (passedEvent, successCallback, errorCallback) {
             var eventToSave = passedEvent || _this.currentEvent;

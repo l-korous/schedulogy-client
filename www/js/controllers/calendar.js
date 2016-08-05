@@ -1,5 +1,11 @@
 angular.module('Schedulogy')
-    .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $timeout, FullCalendar, $ionicScrollDelegate) {
+    .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $timeout, FullCalendar, $ionicScrollDelegate, Hopscotch, $rootScope) {
+        $rootScope.allSet = false;
+        FullCalendar.calculateCalendarRowHeight();
+        $timeout(function () {
+            $rootScope.allSet = true;
+        }, 1000);
+
         /* event source that pulls from google.com */
         $scope.eventSource = {
             url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
@@ -7,6 +13,11 @@ angular.module('Schedulogy')
             currentTimezone: 'America/Chicago' // an option!
         };
         $scope.eventSources = [MyEvents.events];
+
+        $scope.runTour = function () {
+            $scope.$emit('Esc');
+            Hopscotch.runTour(0);
+        };
 
         $scope.myCalendar = FullCalendar;
         $scope.modals =
@@ -22,6 +33,8 @@ angular.module('Schedulogy')
                             MyEvents.handleChangeOfEventType($scope.floatToFixedEvent);
                         }
                         else if ($scope.floatToFixedMethod === 'drop') {
+                            if (!MyEvents.processEventDrop($scope.floatToFixedEvent, $scope.floatToFixedDelta, $scope.floatToFixedRevertFunc))
+                                return;
                         }
                         MyEvents.saveEvent($scope.floatToFixedEvent);
                     }
@@ -116,18 +129,15 @@ angular.module('Schedulogy')
                     $scope.floatToFixedMethod = 'drop';
                     $scope.floatToFixedRevertFunc = revertFunc;
                 }
-                else if (event.type === 'fixed')
-                    MyEvents.saveEvent(event);
-                else if (event.type === 'fixedAllDay') {
-                    if (delta._days === 0)
-                        revertFunc();
-                    else
+                else {
+                    if (MyEvents.processEventDrop(event, delta, revertFunc))
                         MyEvents.saveEvent(event);
                 }
             },
             eventResize: function (event, delta, revertFunc) {
                 if (event.type === 'fixed') {
-                    event.dur += (delta.minutes() / settings.minuteGranularity);
+                    event.dur += (delta._data.hours * settings.slotsPerHour);
+                    event.dur += (delta._data.minutes / settings.minuteGranularity);
                     MyEvents.handleChangeOfEventType(event);
                     MyEvents.saveEvent(event);
                 }

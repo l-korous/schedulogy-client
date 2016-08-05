@@ -13,15 +13,7 @@ var rename = require('gulp-rename');
 
 gulp.task('concat-js', function () {
     gulp.src([
-        "www/bower_components/ionic/release/js/ionic.bundle.min.js",
-        "www/bower_components/jquery/dist/jquery.min.js",
-        "www/bower_components/moment/min/moment-with-locales.min.js",
-        "www/bower_components/angular-moment/angular-moment.min.js",
-        "www/bower_components/angular-resource/angular-resource.min.js",
-        "www/bower_components/angular-ui-router/release/angular-ui-router.min.js",
         "www/bower_components/angular-ui-calendar/src/calendar.js",
-        "www/bower_components/ionic-datepicker/dist/ionic-datepicker.bundle.min.js",
-        "www/bower_components/ionic-timepicker/dist/ionic-timepicker.bundle.min.js",
         "www/bower_components/fullcalendar/dist/fullcalendar.js",
         "www/bower_components/fullcalendar/dist/gcal.js",
         "www/js/app.js",
@@ -36,6 +28,7 @@ gulp.task('concat-js', function () {
         "www/js/services/cord.js",
         "www/js/services/myEvents.js",
         "www/js/services/fullCalendar.js",
+        "www/js/services/hopscotchTour.js",
         "www/js/services/resources/task.js",
         "www/js/services/resources/user.js",
         "www/js/controllers/main.js",
@@ -72,8 +65,8 @@ gulp.task('concat-js', function () {
         .pipe(replace('defaultTaskDuration', 'oop'))
         .pipe(replace('startHour', '_limit'))
         .pipe(replace('endHour', '_skip'))
-        .pipe(replace('FullCalendar', 'BootstrapCalendar'))
-        .pipe(replace('fullCalendar', 'bootstrapCalendar'))
+        .pipe(replace('FullCalendar', 'TheCalendar'))
+        .pipe(replace('fullCalendar', 'theCalendar'))
         .pipe(replace('tryPreauthenticate', 'sendNow'))
         .pipe(replace('TaskType', 'uuida'))
         .pipe(uglify({mangle: true, compress: {
@@ -126,12 +119,10 @@ gulp.task('template-bundle', function () {
         .pipe(replace('defaultTaskDuration', 'oop'))
         .pipe(replace('startHour', '_limit'))
         .pipe(replace('endHour', '_skip'))
-        .pipe(replace('FullCalendar', 'BootstrapCalendar'))
-        .pipe(replace('fullCalendar', 'bootstrapCalendar'))
+        .pipe(replace('FullCalendar', 'TheCalendar'))
+        .pipe(replace('fullCalendar', 'theCalendar'))
         .pipe(replace('tryPreauthenticate', 'sendNow'))
         .pipe(replace('TaskType', 'uuida'))
-        .pipe(replace('FullCalendar', 'BootstrapCalendar'))
-        .pipe(replace('fullCalendar', 'bootstrapCalendar'))
         .pipe(replace('\\r\\n', ''))
         .pipe(replace('\\r', ''))
         .pipe(replace('\\n', ''))
@@ -148,8 +139,8 @@ gulp.task('minify-css', function () {
         "www/css/style.css"
     ])
         .pipe(concat('style.min.css'))
-        .pipe(replace('FullCalendar', 'BootstrapCalendar'))
-        .pipe(replace('fullCalendar', 'bootstrapCalendar'))
+        .pipe(replace('FullCalendar', 'TheCalendar'))
+        .pipe(replace('fullCalendar', 'theCalendar'))
         .pipe(cleanCss())
         .pipe(gulp.dest('www/css-min'));
 });

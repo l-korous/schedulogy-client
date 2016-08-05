@@ -4,7 +4,7 @@
     </ion-header-bar>
     <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
     <ion-content class="modalNamingSearch" name="task">
-        <form name="taskSaveForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, taskSaveForm.$invalid);">
+        <form class="taskSaveForm" name="taskSaveForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, (taskSaveForm.$invalid || $('#taskModalTextarea')[0] == document.activeElement));">
             <div class="list customFormErrorList">
                 <div ng-show="taskSaveForm.title.$error.required && !taskSaveForm.title.$pristine" class="item help-block">Please provide a valid title.</div>
                 <div ng-show="taskSaveForm.fixedStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
@@ -21,7 +21,7 @@
                     <div class="input-label">
                         Type
                     </div>
-                    <select ng-model="myEvents.currentEvent.type" class="taskTypeSelect" required ng-change="myEvents.handleChangeOfEventType()">
+                    <select ng-model="myEvents.currentEvent.type" class="taskTypeSelect" required ng-change="myEvents.handleChangeOfEventType()" id="tasktypeselector">
                         <option value="fixed" class="option-fixed">Fixed</option>
                         <option value="fixedAllDay" class="option-fixedAllDay">Fixed (all-day)</option>
                         <option value="floating" class="option-floating">Floating</option>
@@ -34,10 +34,7 @@
                     <input type="text" ng-model="myEvents.currentEvent.title" id="primaryInput" required name="title">
                 </label>
                 <label class="item item-input">
-                    <div class="input-label" style="vertical-align: top">
-                        Description
-                    </div>
-                    <textarea ng-model="myEvents.currentEvent.desc" rows="5"></textarea>
+                    <textarea placeholder="Description" ng-model="myEvents.currentEvent.desc" rows="5" id="taskModalTextarea"></textarea>
                 </label>
 
                 <label class="item" ng-show="myEvents.currentEvent.type === 'fixed' && myEvents.currentEvent.constraint.startDateText">
@@ -53,7 +50,7 @@
                         Start Date
                     </div>
                     <input type="text" ng-model="myEvents.currentEvent.startDateText" ng-click="openDatePicker('start');"
-                           name="fixedStartDate" ng-required="myEvents.currentEvent.type === 'fixed'"/>
+                           name="fixedStartDate" ng-required="myEvents.currentEvent.type === 'fixed'" id="fixedStartDate"/>
 
 
                 </label>
@@ -63,7 +60,7 @@
                     <div class="input-label">
                         Start Time
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.startTimeText" ng-click="openTimePicker('start');" name="fixedStartTime"
+                    <input type="text" ng-model="myEvents.currentEvent.startTimeText" ng-click="openTimePicker('start');" name="fixedStartTime" id="fixedStartTime"
                            ng-required="myEvents.currentEvent.type === 'fixed'"/>
 
                 </label>
@@ -74,7 +71,7 @@
                         End Time<br />[duration]
                     </div>
                     <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-change="myEvents.updateEndDateTimeWithDuration()"
-                           name="fixedDuration" ng-model="myEvents.currentEvent.dur" step="1" ng-required="myEvents.currentEvent.type === 'fixed'"/>
+                           name="fixedDuration" ng-model="myEvents.currentEvent.dur" step="1" ng-required="myEvents.currentEvent.type === 'fixed'" id="fixedDuration"/>
 
 
                     <div class="rangeInfo">
@@ -124,7 +121,7 @@
                     <div class="input-label">
                         Due Date
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.dueDateText" ng-click="openDatePicker('due');" name="floatingDueDate"
+                    <input type="text" ng-model="myEvents.currentEvent.dueDateText" ng-click="openDatePicker('due');" name="floatingDueDate" id="floatingDueDate"
                            ng-required="myEvents.currentEvent.type === 'floating'"/>
                 </label>
 
@@ -133,7 +130,7 @@
                     <div class="input-label">
                         Due Time
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.dueTimeText" ng-click="openTimePicker('due');" name="floatingDueTime"
+                    <input type="text" ng-model="myEvents.currentEvent.dueTimeText" ng-click="openTimePicker('due');" name="floatingDueTime" id="floatingDueTime"
                            ng-required="myEvents.currentEvent.type === 'floating'"/>
                 </label>
 
@@ -143,18 +140,18 @@
                         Duration<br />&nbsp;
                     </div>
                     <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="myEvents.currentEvent.dur" ng-change="myEvents.updateEndDateTimeWithDuration()"
-                           name="floatingDuration" step="1" ng-required="myEvents.currentEvent.type === 'floating'"/>
+                           name="floatingDuration" step="1" ng-required="myEvents.currentEvent.type === 'floating'" id="floatingDuration"/>
 
                     <div class="rangeInfoFloating rangeInfo">
                         {{myEvents.currentEvent.durText}}
                     </div>
                 </label>
 
-                <label class="item" ng-show="myEvents.currentEvent.type === 'floating'">
+                <label class="item item-nested-list" ng-show="myEvents.currentEvent.type === 'floating'">
                     <div class="input-label">
                         Prerequisites
                     </div>
-                    <div class="list">
+                    <div class="list nested-list">
                         <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.needsForShow| filter : {_id: event._id} : true">
                             {{event.title}} {{event.type == 'floating' ? 'due ' : ''}} on 
                             {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
@@ -165,33 +162,33 @@
                         </div>
                     </div>
                     <label class="item item-input item-select width-100">
-                        <custom-select empty-message="{{noPrerequisitesToListMsg}}" css-class="select-needs" ng-model="myEvents.newPrerequisite" options="$parent.eventSources[0] | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a prerequisite" ng-change="myEvents.addPrerequisite(myEvents.newPrerequisite)"></custom-select>
+                        <custom-select id="prerequisiteSelect" empty-message="{{noPrerequisitesToListMsg}}" css-class="select-needs" ng-model="myEvents.newPrerequisite" options="$parent.eventSources[0] | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a prerequisite" ng-change="myEvents.addPrerequisite(myEvents.newPrerequisite)"></custom-select>
                     </label>
                 </label>
-            </div>
 
-            <div class="item">
-                <div class="input-label">
-                    Dependent Tasks
-                </div>
-                <div class="list">
-                    <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.blocksForShow| filter : {_id: event._id} : true">
-                        {{event.title}} {{event.type == 'floating' ? 'due ' : ''}} on 
-                        {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
-                        {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
-                        <button class="button button-assertive" on-tap="myEvents.removeDependency(event)">
-                            <i class="icon ion-trash-a"></i>
-                        </button>
+                <label class="item item-nested-list">
+                    <div class="input-label">
+                        Dependent Tasks
                     </div>
-                </div>
-                <label class="item item-input item-select width-100">
-                    <custom-select empty-message="{{noDependenciesToListMsg}}" css-class="select-blocks"  ng-model="myEvents.newDependency" options="$parent.eventSources[0] | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a dependency" ng-change="myEvents.addDependency(myEvents.newDependency)"></custom-select>
+                    <div class="list nested-list">
+                        <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.blocksForShow| filter : {_id: event._id} : true">
+                            {{event.title}} {{event.type == 'floating' ? 'due ' : ''}} on 
+                            {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
+                            {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
+                            <button class="button button-assertive" on-tap="myEvents.removeDependency(event)">
+                                <i class="icon ion-trash-a"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <label class="item item-input item-select width-100">
+                        <custom-select empty-message="{{noDependenciesToListMsg}}" css-class="select-blocks"  ng-model="myEvents.newDependency" options="$parent.eventSources[0] | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a dependency" ng-change="myEvents.addDependency(myEvents.newDependency)"></custom-select>
+                    </label>
                 </label>
             </div>
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.confirmModal('task')">
+                    <button id="taskSave" class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.confirmModal('task')">
                         Save
                     </button>
 

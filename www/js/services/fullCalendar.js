@@ -108,9 +108,6 @@ angular.module('Schedulogy')
             });
         };
 
-        //////// Done at start
-        this.calculateCalendarRowHeight();
-        
         angular.element($window).bind('resize', function () {
             _this.calculateCalendarRowHeight();
         });
