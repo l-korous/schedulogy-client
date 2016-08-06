@@ -17,9 +17,23 @@ angular.module('Schedulogy')
         $scope.closeUserMenuPopover = function () {
             $scope.userMenuPopover.hide();
         };
-        $scope.$on('$destroy', function () {
-            $scope.userMenuPopover.remove();
+
+        // For the calendar menu, we have to find the calendar scope.
+        $timeout(function () {
+            $scope.calendarScope = angular.element($('#theOnlyCalendar')).scope();
         });
+        $ionicPopover.fromTemplateUrl('templates/calendar_menu.html', {
+            scope: $scope
+        }).then(function (popover) {
+            $scope.calendarMenuPopover = popover;
+        });
+        $scope.openCalendarMenuPopover = function ($event) {
+            $scope.calendarMenuPopover.show($event);
+        };
+        $scope.closeCalendarMenuPopover = function () {
+            $scope.calendarMenuPopover.hide();
+        };
+
         $scope.modal = {};
         ['changeUsername', 'changePassword', 'feedback'].forEach(function (modalName) {
             $ionicModal.fromTemplateUrl('templates/' + modalName + '.html', {
@@ -86,4 +100,10 @@ angular.module('Schedulogy')
                 }
             });
         };
+
+        $scope.$on('$destroy', function () {
+            $scope.userMenuPopover.remove();
+            for (var modalData in ['changeUsername', 'changePassword', 'feedback'])
+                $scope[modalData + 'Modal'].remove();
+        });
     });

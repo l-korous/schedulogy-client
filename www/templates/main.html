@@ -1,8 +1,9 @@
 <ion-header-bar align-title="left" class="bar bar-header bar-dark" id="mainHeader">
-    <div class="h1 title padding-horizontal">
+    <button ng-if="$root.isMobileNarrow || $root.isMobileLow" class="button button-clear ion-navicon button-icon button-light button-hover-balanced" ng-if="$root.currentUser" ng-click="openCalendarMenuPopover($event)"></button>
+    <div class="h1 title padding-horizontal" ng-class="{'margin-left-menu' : $root.isMobileNarrow || $root.isMobileLow}">
         SCHEDULOGY <span>BETA</span>
     </div>
-    <button class="button button-clear ion-person button-icon icon-right button-light button-hover-balanced" ng-if="$root.currentUser" ng-click="openUserMenuPopover($event)">{{$root.currentUser.username}}&nbsp;&nbsp;</button>
+    <button class="button button-clear ion-person button-icon icon-right button-light button-hover-balanced" ng-if="$root.currentUser" ng-click="openUserMenuPopover($event)">{{$root.isMobileNarrow ? '' : $root.currentUser.username + '&nbsp;&nbsp;'}}&nbsp;&nbsp;</button>
 </ion-header-bar>
 
 <ion-content class="has-header" has-bouncing="false" scroll="true">
@@ -11,6 +12,6 @@
     </div>
 </ion-content>
 
-<ion-footer-bar class="bar bar-footer bar-dark">
-    <div class="title">&copy; 2016 SCHEDULOGY</div>
-</ion-footer-bar>
+<div class="footer">
+    <div class="footer-title">&copy; 2016 SCHEDULOGY</div>
+</div>

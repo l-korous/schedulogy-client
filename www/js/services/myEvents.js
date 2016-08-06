@@ -1,19 +1,16 @@
 angular.module('Schedulogy')
-    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils) {
+    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils, $rootScope) {
         this.events = [];
         this.curr = null;
         var _this = this;
 
         this.refreshEvents = function () {
-            $ionicLoading.show({template: settings.loadingTemplate});
-
             Task.query({btime: this.getBTime().unix()}, function (data) {
                 _this.importFromTasks(data.tasks);
-                $ionicLoading.hide();
+                $rootScope.$broadcast('TasksLoaded');
             }, function (err) {
                 console.log('Task.query - error');
                 _this.importFromTasks(err.data.tasks);
-                $ionicLoading.hide();
             });
         };
 
@@ -150,6 +147,19 @@ angular.module('Schedulogy')
             var event = eventPassed || this.currentEvent;
             if (event.dur > settings.maxEventDuration[event.type])
                 event.dur = settings.maxEventDuration[event.type];
+            if(event.type === 'floating') {
+                // This is a magic number, but not that important anyway.
+                event.dur = 4;
+                var startHourOffset = (DateUtils.toMinutes(event.due) - event.dur * settings.minuteGranularity) - (settings.startHour * 60);
+                if(startHourOffset < 0)
+                    event.due.add(-startHourOffset, 'm');
+                var endHourOffset = (settings.endHour * 60) - (DateUtils.toMinutes(event.due) - event.dur * settings.minuteGranularity);
+                if(endHourOffset < 0)
+                    event.due.add(endHourOffset, 'm');
+                
+                event.dueDateText = event.due.format(settings.dateFormat);
+                event.dueTimeText = event.due.format(settings.timeFormat);
+            }
             this.updateEndDateTimeWithDuration(event);
             event.color = settings.eventColor[event.type];
         };

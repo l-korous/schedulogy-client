@@ -2,9 +2,9 @@ angular.module('Schedulogy')
     .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $timeout, FullCalendar, $ionicScrollDelegate, Hopscotch, $rootScope) {
         $rootScope.allSet = false;
         FullCalendar.calculateCalendarRowHeight();
-        $timeout(function () {
+        $scope.$on('TasksLoaded', function() {
             $rootScope.allSet = true;
-        }, 1000);
+        });
 
         /* event source that pulls from google.com */
         $scope.eventSource = {

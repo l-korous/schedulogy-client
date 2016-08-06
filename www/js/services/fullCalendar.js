@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('FullCalendar', function (moment, settings, MyEvents, $window, $timeout, uiCalendarConfig) {
+    .service('FullCalendar', function (moment, settings, MyEvents, $window, $timeout, uiCalendarConfig, $rootScope) {
         var _this = this;
 
         this.setCallbacks = function (toSet) {
@@ -96,15 +96,18 @@ angular.module('Schedulogy')
         };
 
         this.calculateCalendarRowHeight = function () {
-            var row_height = Math.max(settings.minCalendarRowHeight, ($window.innerHeight - settings.shiftAgendaRows) / (settings.slotsPerHour * (settings.endHour - settings.startHour)));
+            var row_height = Math.max(settings.minCalendarRowHeight, ($window.innerHeight - settings.shiftAgendaRows[($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 'mobile' : 'normal']) / (settings.slotsPerHour * (settings.endHour - settings.startHour)));
             var style = document.createElement('style');
             style.type = 'text/css';
             style.innerHTML = '.fc-time-grid .fc-slats td { height: ' + row_height.toString() + 'px; }';
+            // Hiding the title on narrow mobile.
+            if($rootScope.isMobileNarrow)
+                style.innerHTML += '.fc-center { display:none ! important; }';
             var list = document.getElementsByTagName('head')[0], item = document.getElementsByTagName('head')[0].lastElementChild;
             list.removeChild(item);
             list.appendChild(style);
             $timeout(function () {
-                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - settings.shiftCalendar);
+                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - settings.shiftCalendar[($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 'mobile' : 'normal']);
             });
         };
 

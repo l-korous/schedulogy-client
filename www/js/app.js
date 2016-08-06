@@ -12,6 +12,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             date: 'Fri Jul 01 2016 08:00:00 GMT+0200'
         },
         weeks: 26,
+        mobileWidth: 500,
+        mobileHeight: 500,
         startHour: 8,
         endHour: 17,
         minuteGranularity: 30,
@@ -24,8 +26,15 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         noDependenciesToListMsg: 'No possible dependent tasks to list. Only floating tasks, that are due after this task can be completed, are possible dependent tasks.',
         dateTimeFormatEdit: 'YYYY-MM-DDTHH:mm',
         dateTimeFormatDisplay: 'YYYY-MM-DD HH:mm',
-        shiftAgendaRows: 293,
-        shiftCalendar: 220,
+        shiftAgendaRows: {
+            normal: 245,
+            // Minimum height will apply here.
+            mobile: 0
+        },
+        shiftCalendar: {
+            normal: 185,
+            mobile: 122
+        },
         minCalendarRowHeight: 45,
         checkNewVersion: false,
         dateFormat: 'YYYY-MM-DD',
@@ -173,12 +182,14 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $timeout) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window) {
         $rootScope.allSet = false;
 
         // Check stuff when changing state.
         $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
             $rootScope.allSet = false;
+            $location.path('');
+            $location.search('');
             if ((['main.login', 'main.registration', 'main.passwordReset'].indexOf(toState.name) === -1) && !Auth.isAuthenticated()) {
                 // User isn’t authenticated
                 $rootScope.goToLogin();
@@ -190,14 +201,18 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         });
 
         Auth.tryPreauthenticate().then(function () {
-            $state.go(settings.defaultStateAfterLogin, {}, { location: false } );
+            $location.path('');
+            $location.search('');
+            $state.go(settings.defaultStateAfterLogin, {}, {location: false});
         });
 
         // This must be defined here, when the $state is defined.
         $rootScope.goToLogin = function () {
             Auth.logout();
+            $location.path('');
+            $location.search('');
             if ($state.current.name !== 'main.login') {
-                $state.go("main.login", {}, { location: false } );
+                $state.go("main.login", {}, {location: false});
             }
         };
         $rootScope.keyUpHandler = function (keyCode, enterBlockPredicate) {
@@ -207,4 +222,12 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             if (keyCode === 27)
                 $rootScope.$broadcast('Esc');
         };
+
+        // Handle isMobile
+        $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
+        $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
+        angular.element($window).bind('resize', function () {
+            $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
+            $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
+        });
     });

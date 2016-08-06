@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('LoginCtrl', function (settings, $scope, Auth, $state, Hopscotch) {
+    .controller('LoginCtrl', function (settings, $scope, Auth, $state, Hopscotch, $rootScope) {
         $scope.data = {};
         $scope.goToRegistration = function () {
             $state.go("main.registration", {}, {location: false});
@@ -11,7 +11,7 @@ angular.module('Schedulogy')
         $scope.login = function () {
             Auth.tryLogin({email: $scope.data.email, password: $scope.data.password}).then(function (data) {
                 $state.go(settings.defaultStateAfterLogin, {}, {location: false});
-                if (data.runIntro)
+                if (data.runIntro && !$rootScope.isMobileNarrow && !$rootScope.isMobileLow)
                     Hopscotch.runTour(750);
             }, function (msg) {
                 $scope.errorInfo = settings.loginErrorInfo(msg);

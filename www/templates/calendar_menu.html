@@ -1,0 +1,23 @@
+<ion-popover-view class="regularPopover">
+    <div class="list">
+        <a id="newtask" class="item item-icon-left" ng-click="closeCalendarMenuPopover();calendarScope.openModal('task', true);">
+            <i class="icon ion-plus-round positive"></i>
+            New Task
+        </a>
+
+        <a class="item item-icon-left" ng-click="closeCalendarMenuPopover();calendarScope.openModal('uploadIcal');">
+            <i class="icon ion-upload positive"></i>
+            Import from iCal
+        </a>
+
+        <a class="item item-icon-left" ng-click="closeCalendarMenuPopover();calendarScope.openModal('removeAll');">
+            <i class="icon ion-trash-a assertive"></i>  
+            Delete all tasks
+        </a>
+
+        <a class="item item-icon-left" ng-click="closeCalendarMenuPopover();calendarScope.openModal('help');">
+            <i class="icon ion-help-buoy dark"></i>
+            Help
+        </a>
+    </div>
+</ion-popover-view>

@@ -69,7 +69,7 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'DateText'] = MyEvents.currentEvent[d.name].format(settings.dateFormat);
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
-                        $scope.updateEndDateTimeWithDuration();
+                        MyEvents.updateEndDateTimeWithDuration();
                 }
             };
             d.tp = {
@@ -78,7 +78,7 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'DateText'] = MyEvents.currentEvent[d.name].format(settings.dateFormat);
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
-                        $scope.updateEndDateTimeWithDuration();
+                        MyEvents.updateEndDateTimeWithDuration();
                 }
             };
         });
@@ -100,8 +100,8 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent.constraint.end ? DateUtils.equalDays(MyEvents.currentEvent.due, MyEvents.currentEvent.constraint.end) : false;
 
                 dateUsed.constraint = {
-                    from: dueDateEqualsStartConstraint ? (DateUtils.toMinutesPlusDuration(MyEvents.currentEvent.constraint.start, MyEvents.currentEvent.dur)) : 0,
-                    to: dueDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : 24 * 60
+                    from: dueDateEqualsStartConstraint ? (DateUtils.toMinutesPlusDuration(MyEvents.currentEvent.constraint.start, MyEvents.currentEvent.dur)) : settings.startHour * 60,
+                    to: dueDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : settings.endHour * 60
                 };
             }
             else {// here the event type is fixed, because allDay events do not have timePicker shown.

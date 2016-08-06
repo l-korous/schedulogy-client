@@ -7585,14 +7585,16 @@
                         this.isNowIndicatorRendered = true;
 
                         // wait until the beginning of the next interval
+                        /*
                         delay = this.initialNowDate.clone().startOf(unit).add(1, unit) - this.initialNowDate;
                         this.nowIndicatorTimeoutID = setTimeout(function () {
                             _this.nowIndicatorTimeoutID = null;
                             update();
                             delay = +moment.duration(1, unit);
                             delay = Math.max(100, delay); // prevent too frequent
-                            //_this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
+                            _this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
                         }, delay);
+                        */
                     }
                 }
             },
@@ -11417,8 +11419,7 @@
                 this.timeGrid.renderDates();
 
                 // the <hr> that sometimes displays under the time-grid
-                this.bottomRuleEl = $('<hr class="fc-divider ' + this.widgetHeaderClass + '"/>')
-                    .appendTo(this.timeGrid.el); // inject it into the time-grid
+                //this.bottomRuleEl = $('<hr class="fc-divider ' + this.widgetHeaderClass + '"/>').appendTo(this.timeGrid.el); // inject it into the time-grid
 
                 if (this.dayGrid) {
                     this.dayGrid.setElement(this.el.find('.fc-day-grid'));
@@ -11531,7 +11532,7 @@
                 var scrollbarWidths;
 
                 // reset all dimensions back to the original state
-                this.bottomRuleEl.hide(); // .show() will be called later if this <hr> is necessary
+                //this.bottomRuleEl.hide(); // .show() will be called later if this <hr> is necessary
                 this.scroller.clear(); // sets height to 'auto' and clears overflow
                 uncompensateScroll(this.noScrollRowEls);
 
@@ -11570,9 +11571,8 @@
 
                     // if there's any space below the slats, show the horizontal rule.
                     // this won't cause any new overflow, because lockOverflow already called.
-                    if (this.timeGrid.getTotalSlatHeight() < scrollerHeight) {
-                        this.bottomRuleEl.show();
-                    }
+                    //if (this.timeGrid.getTotalSlatHeight() < scrollerHeight)
+                    //    this.bottomRuleEl.show();
                 }
             },
             // given a desired total height of the view, returns what the height of the scroller should be
