@@ -30,7 +30,7 @@ angular.module('Schedulogy')
                             $window.cordova.InAppBrowser.open("geo:0,0?q=" + encodeURIComponent(address), "_system", "");
                             defer.resolve();
                         } catch (e) {
-                            $window.open("http://maps.google.com/?q=" + encodeURIComponent(address), "_blank", "");
+                            $window.open("https://maps.google.com/?q=" + encodeURIComponent(address), "_blank", "");
                             defer.resolve();
                         }
                         return defer.promise;
