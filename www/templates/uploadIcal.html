@@ -2,8 +2,13 @@
     <ion-header-bar>
         <h1 class="title">Upload iCal file</h1>
     </ion-header-bar>
+    <div class="list marginSides3" ng-show="successInfo">
+        <div class="item help-block">
+            {{successInfo}}
+        </div>
+    </div>
     <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
-    <ion-content class="modalNamingSearch" name="uploadIcal">
+    <ion-content ng-show="!successInfo" class="modalNamingSearch" name="uploadIcal">
         <form name="icalUploadForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, !$root.icalFile);">
             <div class="list customFormErrorList">
                 <div ng-show="icalUploadForm.file.$error.required && !icalUploadForm.file.$pristine" class="item help-block">Please provide a valid file.</div>

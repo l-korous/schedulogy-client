@@ -37,6 +37,7 @@ angular.module('Schedulogy')
                                 return;
                         }
                         MyEvents.saveEvent($scope.floatToFixedEvent);
+                        $scope.floatToFixedModal.hide();
                     }
                 },
                 task: {
@@ -59,6 +60,9 @@ angular.module('Schedulogy')
                     },
                     closeCallback: function () {
                         MyEvents.refreshEvents();
+                    },
+                    confirmCallback: function() {
+                        $scope.taskModal.hide();
                     }
                 },
                 help: {
@@ -66,6 +70,7 @@ angular.module('Schedulogy')
                 removeAll: {
                     confirmCallback: function () {
                         MyEvents.deleteAll();
+                        $scope.removeModal.hide();
                     }
                 },
                 uploadIcal: {
@@ -109,7 +114,6 @@ angular.module('Schedulogy')
 
         $scope.confirmModal = function (modalName, callback) {
             $scope.currentModal = null;
-            $scope[modalName + 'Modal'].hide();
             $scope.modals[modalName].confirmCallback && $scope.modals[modalName].confirmCallback();
             callback && callback();
         };

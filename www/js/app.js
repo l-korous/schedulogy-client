@@ -99,7 +99,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             }
             return 'General error.';
         },
-        iCalUploadError: 'File upload failed.'
+        iCalUploadError: 'File upload failed.',
+        iCalUploadSuccess: 'File uploaded successfully.'
     })
     .config(['$stateProvider', '$urlRouterProvider', 'settings', function ($stateProvider, $urlRouterProvider, settings) {
             $stateProvider

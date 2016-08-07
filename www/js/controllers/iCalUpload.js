@@ -4,6 +4,10 @@ angular.module('Schedulogy')
         $scope.$parent.modals.uploadIcal.confirmCallback = function () {
             $scope.uploadFile();
         };
+        $scope.$parent.modals.uploadIcal.closeCallback = function () {
+            $scope.successInfo = null;
+            $scope.errorInfo = null;
+        };
 
         // For display purposes only.
         $scope.weeksFromSettings = settings.weeks;
@@ -16,7 +20,12 @@ angular.module('Schedulogy')
 
             fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {btime: MyEvents.getBTime().unix()}, function (data) {
                 MyEvents.tasksInResponseSuccessHandler(data, function () {
-                    $scope.$parent.closeModal('uploadIcal');
+                    $scope.successInfo = settings.iCalUploadSuccess;
+                    $timeout(function () {
+                        $scope.$parent.closeModal('uploadIcal');
+                        $scope.successInfo = null;
+                        $scope.errorInfo = null;
+                    }, 2000);
                     $rootScope.icalFile = null;
                 });
             },
@@ -25,6 +34,8 @@ angular.module('Schedulogy')
                     try {
                         MyEvents.tasksInResponseErrorHandler(err, function () {
                             $scope.$parent.closeModal('uploadIcal');
+                            $scope.successInfo = null;
+                            $scope.errorInfo = null;
                             $rootScope.icalFile = null;
                         });
                     }
