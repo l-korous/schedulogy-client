@@ -1,9 +1,13 @@
 <ion-modal-view class="smallerPopover" ng-keyup="$root.keyUpHandler($event.keyCode);">
-        <!-- This is a horrible hack, but without this, keyup event won't fire -->
-        <input autofocus type="text" style="position:absolute;top:-10000px;" id="primaryInput"/>
+    <!-- This is a horrible hack, but without this, keyup event won't fire -->
+    <input autofocus type="text" style="position:absolute;top:-10000px;" id="primaryInput"/>
     <ion-content>
         <h2 class="title">Unfortunately, some tasks were impossible to be scheduled.</h2>
         <br />
         <p>The latest changes which caused this have been reverted.</p>
+        <br />
+        <button class="button button-block button-dark button-outline button-single" ng-click="closeErrorModal();">
+            Close
+        </button>
     </ion-content>
 </ion-modal-view>

@@ -52,6 +52,10 @@ angular.module('Schedulogy')
                             primaryInput.focus();
                             primaryInput.select();
                         }
+
+                        $(function () {
+                            $('#taskModalTextarea').autogrow();
+                        });
                     },
                     closeCallback: function () {
                         MyEvents.refreshEvents();

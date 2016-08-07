@@ -1,10 +1,10 @@
 angular.module('Schedulogy')
-    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker) {
+    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, $timeout) {
         // Register confirm callback in parent.
         $scope.$parent.modals.task.confirmCallback = function () {
             $scope.saveEvent();
         };
-
+        
         $scope.maxEventDuration = settings.maxEventDuration;
         // TODO - can we do this in the view directly from settings?
         $scope.noPrerequisitesToListMsg = settings.noPrerequisitesToListMsg;

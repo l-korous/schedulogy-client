@@ -103,7 +103,7 @@ angular.module('Schedulogy')
 
         this.getCurrentEvents = function (now) {
             return $.grep(this.events, function (event) {
-                return ((event.start < now) && (event.end > now));
+                return (event.type !== 'floating' && ((event.start < now) && (event.end > now)));
             });
         };
 

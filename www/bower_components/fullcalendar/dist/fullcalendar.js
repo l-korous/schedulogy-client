@@ -6565,7 +6565,7 @@
 
 
         getNowIndicatorUnit: function () {
-            return 'minute'; // will refresh on the minute
+            return 'month'; // will refresh on the minute
         },
         renderNowIndicator: function (date) {
             // seg system might be overkill, but it handles scenario where line needs to be rendered
