@@ -21,10 +21,16 @@ angular.module('Schedulogy')
                 });
             },
                 function (err) {
-                    MyEvents.tasksInResponseErrorHandler(err, function () {
-                        $scope.$parent.closeModal('uploadIcal');
-                        $rootScope.icalFile = null;
-                    });
+                    console.log(err);
+                    try {
+                        MyEvents.tasksInResponseErrorHandler(err, function () {
+                            $scope.$parent.closeModal('uploadIcal');
+                            $rootScope.icalFile = null;
+                        });
+                    }
+                    catch (e) {
+                        $scope.errorInfo = settings.iCalUploadError;
+                    }
                 });
         };
     });
