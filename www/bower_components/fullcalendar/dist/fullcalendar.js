@@ -5060,9 +5060,7 @@
         renderHeadTrHtml: function () {
             return '' +
                 '<tr>' +
-                (this.isRTL ? '' : this.renderHeadIntroHtml()) +
                 this.renderHeadDateCellsHtml() +
-                (this.isRTL ? this.renderHeadIntroHtml() : '') +
                 '</tr>';
         },
         renderHeadDateCellsHtml: function () {
@@ -5302,7 +5300,7 @@
 
             return '' +
                 '<td class="' + classes.join(' ') + '" data-date="' + date.format() + '">' +
-                date.date() +
+                date.date() + '/' + date.format('MMM') + 
                 '</td>';
         },
         /* Options
@@ -6262,24 +6260,22 @@
             while (slotTime < this.maxTime) {
                 slotDate = this.start.clone().time(slotTime);
                 isLabeled = isInt(divideDurationByDuration(slotTime, this.labelInterval));
-
-                axisHtml =
-                    '<td class="fc-axis fc-time ' + view.widgetContentClass + '" ' + view.axisStyleAttr() + '>' +
-                    (isLabeled ?
-                        '<span>' + // for matchCellWidths
-                        htmlEscape(slotDate.format(this.labelFormat)) +
-                        '</span>' :
-                        ''
-                        ) +
-                    '</td>';
-
+                /*
+                 axisHtml =
+                 '<td class="fc-axis fc-time ' + view.widgetContentClass + '" ' + view.axisStyleAttr() + '>' +
+                 (isLabeled ?
+                 '<span>' + // for matchCellWidths
+                 htmlEscape(slotDate.format(this.labelFormat)) +
+                 '</span>' :
+                 ''
+                 ) +
+                 '</td>';
+                 */
                 html +=
                     '<tr data-time="' + slotDate.format('HH:mm:ss') + '"' +
                     (isLabeled ? '' : ' class="fc-minor"') +
                     '>' +
-                    (!isRTL ? axisHtml : '') +
-                    '<td class="' + view.widgetContentClass + '"/>' +
-                    (isRTL ? axisHtml : '') +
+                    '<td class="' + view.widgetContentClass + '"><span class="custom-slot-display">' + htmlEscape(slotDate.format(this.labelFormat)) + '</span></td>' +
                     "</tr>";
 
                 slotTime.add(this.slotDuration);
@@ -7586,15 +7582,15 @@
 
                         // wait until the beginning of the next interval
                         /*
-                        delay = this.initialNowDate.clone().startOf(unit).add(1, unit) - this.initialNowDate;
-                        this.nowIndicatorTimeoutID = setTimeout(function () {
-                            _this.nowIndicatorTimeoutID = null;
-                            update();
-                            delay = +moment.duration(1, unit);
-                            delay = Math.max(100, delay); // prevent too frequent
-                            _this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
-                        }, delay);
-                        */
+                         delay = this.initialNowDate.clone().startOf(unit).add(1, unit) - this.initialNowDate;
+                         this.nowIndicatorTimeoutID = setTimeout(function () {
+                         _this.nowIndicatorTimeoutID = null;
+                         update();
+                         delay = +moment.duration(1, unit);
+                         delay = Math.max(100, delay); // prevent too frequent
+                         _this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
+                         }, delay);
+                         */
                     }
                 }
             },
@@ -11756,15 +11752,15 @@
             // Generates the HTML that goes before the bg of the TimeGrid slot area. Long vertical column.
             renderBgIntroHtml: function () {
                 var view = this.view;
-
-                return '<td class="fc-axis ' + view.widgetContentClass + '" ' + view.axisStyleAttr() + '></td>';
+                return '';
+                //return '<td class="fc-axis ' + view.widgetContentClass + '" ' + view.axisStyleAttr() + '></td>';
             },
             // Generates the HTML that goes before all other types of cells.
             // Affects content-skeleton, helper-skeleton, highlight-skeleton for both the time-grid and day-grid.
             renderIntroHtml: function () {
                 var view = this.view;
-
-                return '<td class="fc-axis" ' + view.axisStyleAttr() + '></td>';
+                return '';
+                //return '<td class="fc-axis" ' + view.axisStyleAttr() + '></td>';
             }
 
         };
@@ -11776,19 +11772,24 @@
             renderBgIntroHtml: function () {
                 var view = this.view;
 
-                return '' +
-                    '<td class="fc-axis ' + view.widgetContentClass + '" ' + view.axisStyleAttr() + '>' +
-                    '<span>' + // needed for matchCellWidths
-                    (view.opt('allDayHtml') || htmlEscape(view.opt('allDayText'))) +
-                    '</span>' +
-                    '</td>';
+                return '';
+                /*
+                 return '' +
+                 '<td class="fc-axis ' + view.widgetContentClass + '" ' + view.axisStyleAttr() + '>' +
+                 '<span>' + // needed for matchCellWidths
+                 (view.opt('allDayHtml') || htmlEscape(view.opt('allDayText'))) +
+                 '</span>' +
+                 '</td>';
+                 */
             },
             // Generates the HTML that goes before all other types of cells.
             // Affects content-skeleton, helper-skeleton, highlight-skeleton for both the time-grid and day-grid.
             renderIntroHtml: function () {
                 var view = this.view;
-
-                return '<td class="fc-axis" ' + view.axisStyleAttr() + '></td>';
+                return '';
+                /*
+                 return '<td class="fc-axis" ' + view.axisStyleAttr() + '></td>';
+                 */
             }
 
         };

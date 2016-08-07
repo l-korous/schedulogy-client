@@ -52,8 +52,12 @@ h2 {
 
 .rangeInfo {
     position: absolute;
+    text-align:center;
+    width:100%;
     bottom: 7px;
-    right: 15%;
+    right: 0px;
+    padding-left:35%;
+    font-size:90%;
 }
 
 .rangeInfoFloating {
@@ -148,6 +152,13 @@ h2 {
 .marginSides1 {
     margin-left:1em ! important;
     margin-right:1em ! important;
+}
+
+@media(max-width:500px) {
+    .marginSides3, .marginSides5 {
+        margin-left:0 ! important;
+        margin-right:0 ! important;
+    }
 }
 
 .button-single {
@@ -356,6 +367,32 @@ h2 {
     color:white;
 }
 
+.custom-slot-display {
+    margin:5px;
+    font-size:9px;
+    color:#888;
+}
+
+.fc-ltr .fc-time-grid .fc-event-container { /* space on the sides of events for LTR (default) */
+	margin: 2px;
+}
+
+.fc-rtl .fc-time-grid .fc-event-container { /* space on the sides of events for RTL */
+	margin: 2px;
+}
+
+.no-side-padding {
+    padding-left:0;
+    padding-right:0;
+    border-left:0;
+    border-right:0;
+}
+
+.no-side-padding > .fc-toolbar {
+    padding-left:3px ! important;
+    padding-right:3px ! important;
+}
+
 .title span {
     padding:1px 6px;
     border-radius:3px;
@@ -426,4 +463,8 @@ input[type=text], input[type=password], input[type=email] {
 
 .overflow-scroll {
     overflow-y: auto ! important;
+}
+
+.maxWidth-1000 .input-label {
+    width:20%;
 }

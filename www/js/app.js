@@ -87,7 +87,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address. You may close this tab.',
         passwordResetSuccessInfo: 'Password successfully set.',
         forgottenPasswordSuccessInfo: 'An e-mail with password reset instructions has been sent to your e-mail address. You may close this tab.',
-        feedbackSuccessInfo: 'Feedback sent and greatly appreciated.',
+        feedbackSuccessInfo: 'Feedback received and greatly appreciated.',
         feedbackErrorInfo: function (msg) {
             return 'Something went wrong.';
         },
@@ -134,6 +134,22 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     controller: 'PasswordResetCtrl'
                 });
         }])
+
+    // ionic configuration
+    .config(function ($ionicConfigProvider, $compileProvider) {
+        $ionicConfigProvider.views.maxCache(25);
+        $ionicConfigProvider.views.forwardCache(true);
+        $ionicConfigProvider.form.checkbox("square");
+        $ionicConfigProvider.backButton.text("");
+        if (!ionic.Platform.isAndroid()) {
+            $ionicConfigProvider.backButton.previousTitleText(true);
+            $ionicConfigProvider.scrolling.jsScrolling(false);
+            $ionicConfigProvider.views.transition("none");
+        }
+        $compileProvider.debugInfoEnabled(false);
+        // Ionic gesture workaround
+        ionic.Gestures.gestures.Hold.defaults.hold_threshold = 1;
+    })
     .config(function (ionicDatePickerProvider, settings, moment) {
         var datePickerObj = {
             setLabel: 'Set',

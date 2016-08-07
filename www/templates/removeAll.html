@@ -1,15 +1,24 @@
 <ion-modal-view class="smallerPopover" ng-keyup="$root.keyUpHandler($event.keyCode);">
-<!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
+    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
     <ion-content class="modalNamingSearch" name="removeAll">
         <!-- This is a horrible hack, but without this, keyup event won't fire -->
         <input type="text" style="position:absolute;top:-10000px;" id="primaryInput"/>
         <h2 class="title">This will delete all tasks. Proceed?</h2>
+        
         <br />
-        <button class="button button-block button-positive button-single" ng-click="confirmModal('removeAll');">
-            Yes
-        </button>
-        <button class="button button-block button-dark button-outline button-single" ng-click="closeModal('removeAll');">
-            No
-        </button>
+
+        <div class="row">
+            <div class="col-50 padding-horizontal padding-top">
+                <button class="button button-block button-positive" ng-click="confirmModal('removeAll');">
+                    Yes
+                </button>
+
+            </div>
+            <div class="col-50 padding-horizontal padding-top">
+                <button class="button button-block button-dark button-outline" ng-click="closeModal('removeAll');">
+                    Cancel
+                </button>   
+            </div>
+        </div>
     </ion-content>
 </ion-modal-view>

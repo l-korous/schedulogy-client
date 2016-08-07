@@ -92,6 +92,8 @@ angular.module('Schedulogy')
                 password: '',
                 confirmPassword: ''
             };
+            $scope.successInfo = '';
+            $scope.errorInfo = '';
 
             $scope.closeUserMenuPopover();
             $scope.modal[modalName].show().then(function () {

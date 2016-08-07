@@ -179,15 +179,10 @@ angular.module('Schedulogy')
             errorCallback && errorCallback();
         };
         
-        this.processEventDrop = function(event, delta, revertFunc) {
+        this.processEventDrop = function(event, delta) {
             if(event.type === 'fixed') {
-                var fixedToAllDay = false;
-                if(delta._data.hours === 0 && delta._data.minutes === 0)
-                    fixedToAllDay = true;
-                
-                if(fixedToAllDay) {
+                if(event.allDay) {
                     Event.changeType(event, 'fixedAllDay');
-                    event.start.add(delta._data.days, 'd');
                     event.start = event.start.startOf('day');
                     event.dur = 1;
                     _this.handleChangeOfEventType(event);
@@ -200,11 +195,7 @@ angular.module('Schedulogy')
             }
             
             else if(event.type === 'fixedAllDay') {
-                var allDayToFixed = false;
-                if(delta._data.hours !== 0 || delta._data.minutes !== 0)
-                    allDayToFixed = true;
-                
-                if(allDayToFixed) {
+                if(!event.allDay) {
                     Event.changeType(event, 'fixed');
                     event.start = event.start.startOf('day');
                     event.start.add(delta._milliseconds, 'ms');

@@ -88,12 +88,14 @@ angular.module('Schedulogy')
         };
 
         $scope.closeModal = function (modalName, callback) {
+            $scope.currentModal = null;
             $scope[modalName + 'Modal'].hide();
             $scope.modals[modalName].closeCallback && $scope.modals[modalName].closeCallback();
             callback && callback();
         };
 
         $scope.confirmModal = function (modalName, callback) {
+            $scope.currentModal = null;
             $scope[modalName + 'Modal'].hide();
             $scope.modals[modalName].confirmCallback && $scope.modals[modalName].confirmCallback();
             callback && callback();
@@ -121,7 +123,7 @@ angular.module('Schedulogy')
                 MyEvents.updateEndDateTimeWithDuration();
                 $scope.openModal('task');
             },
-            eventDrop: function (event, delta, revertFunc) {
+            eventDrop: function (event, delta, revertFunc, jsEvent) {
                 if (event.type === 'floating') {
                     $scope.openModal('floatToFixed');
                     $scope.floatToFixedDelta = delta;
@@ -130,7 +132,7 @@ angular.module('Schedulogy')
                     $scope.floatToFixedRevertFunc = revertFunc;
                 }
                 else {
-                    if (MyEvents.processEventDrop(event, delta, revertFunc))
+                    if (MyEvents.processEventDrop(event, delta))
                         MyEvents.saveEvent(event);
                 }
             },
