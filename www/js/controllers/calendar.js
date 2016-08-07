@@ -48,6 +48,10 @@ angular.module('Schedulogy')
                         // This is ugly hack, should be fixed.
                         var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
                         angular.element(primaryInput).scope().taskSaveForm.$setPristine();
+                        if ($rootScope.isMobileLow || $rootScope.isMobileNarrow) {
+                            primaryInput.focus();
+                            primaryInput.select();
+                        }
                     },
                     closeCallback: function () {
                         MyEvents.refreshEvents();
