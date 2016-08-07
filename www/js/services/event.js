@@ -101,7 +101,6 @@ angular.module('Schedulogy')
                 blocksForShow: [],
                 needsForShow: [],
                 color: settings.eventColor[task.type],
-                // WTF
                 borderColor: settings.eventBorderColor
             }, task);
 
