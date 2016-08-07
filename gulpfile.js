@@ -13,6 +13,7 @@ var rename = require('gulp-rename');
 
 gulp.task('concat-js', function () {
     gulp.src([
+        "www/js/common/textareaAutogrow.js",
         "www/bower_components/angular-ui-calendar/src/calendar.js",
         "www/bower_components/fullcalendar/dist/fullcalendar.js",
         "www/bower_components/fullcalendar/dist/gcal.js",
