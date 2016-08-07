@@ -12,7 +12,7 @@
                 </div>
             </div>
             <!-- This is a horrible hack, but without this, keyup event won't fire -->
-            <input type="text" style="position:absolute;top:-10000px;" id="primaryInput"/>
+            <input type="text" ng-if="!$root.isMobileNarrow && !$root.isMobileLow" style="position:absolute;top:-10000px;" id="primaryInput"/>
 
             <div class="list">
                 <label class="item item-input" ng-class="{ 'has-error' : icalUploadForm.file.$invalid && !icalUploadForm.file.$pristine }">

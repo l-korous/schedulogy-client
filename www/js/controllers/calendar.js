@@ -2,7 +2,7 @@ angular.module('Schedulogy')
     .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $timeout, FullCalendar, $ionicScrollDelegate, Hopscotch, $rootScope) {
         $rootScope.allSet = false;
         FullCalendar.calculateCalendarRowHeight();
-        $scope.$on('TasksLoaded', function() {
+        $scope.$on('TasksLoaded', function () {
             $rootScope.allSet = true;
         });
 
@@ -45,8 +45,9 @@ angular.module('Schedulogy')
                             MyEvents.emptyCurrentEvent();
                         }
 
-                        if (angular.element($($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput')).scope())
-                            angular.element($($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput')).scope().taskSaveForm.$setPristine();
+                        // This is ugly hack, should be fixed.
+                        var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
+                        angular.element(primaryInput).scope().taskSaveForm.$setPristine();
                     },
                     closeCallback: function () {
                         MyEvents.refreshEvents();
@@ -77,8 +78,12 @@ angular.module('Schedulogy')
         $scope.openModal = function (modalName, params) {
             // This is ugly hack, should be fixed.
             var focusPrimaryInput = function () {
-                $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput').focus();
-                $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput').select();
+                if (!$rootScope.isMobileLow && !$rootScope.isMobileNarrow) {
+                    var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
+                    primaryInput.focus();
+                    primaryInput.select();
+                }
+
                 $ionicScrollDelegate.scrollTop();
             };
 

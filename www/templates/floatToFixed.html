@@ -2,7 +2,7 @@
     <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
     <ion-content class="modalNamingSearch" name="floatToFixed">
         <!-- This is a horrible hack, but without this, keyup event won't fire -->
-        <input type="text" style="position:absolute;top:-10000px;" id="primaryInput"/>
+        <input type="text" ng-if="!$root.isMobileNarrow && !$root.isMobileLow" style="position:absolute;top:-10000px;" id="primaryInput"/>
         <h2 class="title">This will change task type to fixed. Proceed?</h2>
         <br />
         <button class="button button-block button-positive button-single" ng-click="confirmModal('floatToFixed');">

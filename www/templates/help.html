@@ -5,7 +5,7 @@
     <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
     <ion-content class="modalNamingSearch" name="help" style="margin-bottom:1em;" ng-keyup="$root.keyUpHandler($event.keyCode);">
         <!-- This is a horrible hack, but without this, keyup event won't fire -->
-        <input type="text" style="position:absolute;top:-10000px;" id="primaryInput"/>
+        <input type="text" ng-if="!$root.isMobileNarrow && !$root.isMobileLow" style="position:absolute;top:-10000px;" id="primaryInput"/>
 
         <ion-list>
             <div ng-repeat="group in groups">
