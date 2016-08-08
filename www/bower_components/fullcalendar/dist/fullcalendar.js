@@ -6937,7 +6937,7 @@
                 for (i = 0; i < segs.length; i++) {
                     seg = segs[i];
                     seg.top = this.computeDateTop(seg.start, seg.start);
-                    seg.bottom = this.computeDateTop(seg.end, seg.start);
+                    seg.bottom = this.computeDateTop(seg.end, seg.start) - 2;
                 }
             },
             // Given segments that already have their top/bottom properties computed, applies those values to

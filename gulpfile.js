@@ -26,7 +26,7 @@ gulp.task('concat-js', function () {
         "www/js/services/event.js",
         "www/js/services/auth.js",
         "www/js/services/fileUpload.js",
-        "www/js/services/cord.js",
+        "www/js/services/cordova.js",
         "www/js/services/myEvents.js",
         "www/js/services/fullCalendar.js",
         "www/js/services/hopscotchTour.js",

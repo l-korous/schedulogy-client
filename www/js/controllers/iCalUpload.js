@@ -18,7 +18,7 @@ angular.module('Schedulogy')
             // This is done through rootScope, because otherwise it would not work. Not a big deal, but may be fixed.
             var file = $rootScope.icalFile;
 
-            fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {btime: MyEvents.getBTime().unix()}, function (data) {
+            fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', function (data) {
                 MyEvents.tasksInResponseSuccessHandler(data, function () {
                     $scope.successInfo = settings.iCalUploadSuccess;
                     $timeout(function () {

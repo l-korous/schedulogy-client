@@ -3,8 +3,9 @@ angular.module('Schedulogy')
         // Register confirm callback in parent.
         $scope.$parent.modals.task.confirmCallback = function () {
             $scope.saveEvent();
+            $scope.$parent.closeModal('task');
         };
-        
+
         $scope.maxEventDuration = settings.maxEventDuration;
         // TODO - can we do this in the view directly from settings?
         $scope.noPrerequisitesToListMsg = settings.noPrerequisitesToListMsg;

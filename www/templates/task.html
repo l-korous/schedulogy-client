@@ -49,7 +49,7 @@
                     <div class="input-label">
                         Start Date
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.startDateText" ng-click="openDatePicker('start');"
+                    <input readonly="true" type="text" ng-model="myEvents.currentEvent.startDateText" ng-click="openDatePicker('start');"
                            name="fixedStartDate" ng-required="myEvents.currentEvent.type === 'fixed'" id="fixedStartDate"/>
 
 
@@ -60,7 +60,7 @@
                     <div class="input-label">
                         Start Time
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.startTimeText" ng-click="openTimePicker('start');" name="fixedStartTime" id="fixedStartTime"
+                    <input readonly="true" type="text" ng-model="myEvents.currentEvent.startTimeText" ng-click="openTimePicker('start');" name="fixedStartTime" id="fixedStartTime"
                            ng-required="myEvents.currentEvent.type === 'fixed'"/>
 
                 </label>
@@ -91,7 +91,7 @@
                     <div class="input-label">
                         Start Date
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.startDateText" ng-click="openDatePicker('start');" name="fixedAllDayStartDate"
+                    <input readonly="true" type="text" ng-model="myEvents.currentEvent.startDateText" ng-click="openDatePicker('start');" name="fixedAllDayStartDate"
                            ng-required="myEvents.currentEvent.type === 'fixedAllDay'"/>
                 </label>
 
@@ -121,7 +121,7 @@
                     <div class="input-label">
                         Due Date
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.dueDateText" ng-click="openDatePicker('due');" name="floatingDueDate" id="floatingDueDate"
+                    <input readonly="true" type="text" ng-model="myEvents.currentEvent.dueDateText" ng-click="openDatePicker('due');" name="floatingDueDate" id="floatingDueDate"
                            ng-required="myEvents.currentEvent.type === 'floating'"/>
                 </label>
 
@@ -130,7 +130,7 @@
                     <div class="input-label">
                         Due Time
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.dueTimeText" ng-click="openTimePicker('due');" name="floatingDueTime" id="floatingDueTime"
+                    <input readonly="true" type="text" ng-model="myEvents.currentEvent.dueTimeText" ng-click="openTimePicker('due');" name="floatingDueTime" id="floatingDueTime"
                            ng-required="myEvents.currentEvent.type === 'floating'"/>
                 </label>
 

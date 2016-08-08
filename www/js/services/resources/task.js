@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .factory('Task', ['$resource', '$http', 'settings', 'moment', function ($resource, $http, settings, moment) {
+    .factory('Task', function ($resource, settings) {
             var Task = $resource(settings.serverUrl + "/task", {}, {
                 query: {
                     method: "GET",
@@ -65,4 +65,4 @@ angular.module('Schedulogy')
             };
 
             return Task;
-        }]);
+        });

@@ -321,11 +321,6 @@ h2 {
     opacity:0;
 }
 
-.fc-event .fc-content {
-    padding:5px;
-    height:100%;
-}
-
 .fc-event .fc-content .fc-time {
     text-align:left;
     font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
@@ -373,12 +368,13 @@ h2 {
     color:#888;
 }
 
-.fc-ltr .fc-time-grid .fc-event-container { /* space on the sides of events for LTR (default) */
-	margin: 2px;
+.fc-ltr .fc-time-grid .fc-event-container, .fc-rtl .fc-time-grid .fc-event-container {
+	margin: 1px 1px 1px 2px;
 }
 
-.fc-rtl .fc-time-grid .fc-event-container { /* space on the sides of events for RTL */
-	margin: 2px;
+.fc-event .fc-content {
+    padding:5px;
+    height:100%;
 }
 
 .no-side-padding {
@@ -467,4 +463,8 @@ input[type=text], input[type=password], input[type=email] {
 
 .maxWidth-1000 .input-label {
     width:23%;
+}
+
+input[readonly=true] {
+    cursor:pointer ! important;
 }

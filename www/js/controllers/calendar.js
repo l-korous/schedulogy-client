@@ -60,9 +60,6 @@ angular.module('Schedulogy')
                     },
                     closeCallback: function () {
                         MyEvents.refreshEvents();
-                    },
-                    confirmCallback: function() {
-                        $scope.taskModal.hide();
                     }
                 },
                 help: {

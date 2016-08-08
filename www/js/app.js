@@ -179,11 +179,12 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         ionicTimePickerProvider.configTimePicker(timePickerObj);
     })
     .config(function ($httpProvider) {
-        $httpProvider.interceptors.push(function ($rootScope, $q, $window, $timeout, $state) {
+        $httpProvider.interceptors.push(function ($rootScope, $q, $window, $timeout, $state, moment) {
             return {
                 request: function (config) {
                     config.headers.Authorization = $window.localStorage.token ? $window.localStorage.token : '';
                     config.headers.Xuser = $window.localStorage.currentUserId ? $window.localStorage.currentUserId : '';
+                    config.headers.utcOffset = moment().utcOffset();
                     return config;
                 },
                 responseError: function (response) {
@@ -222,6 +223,10 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             $location.path('');
             $location.search('');
             $state.go(settings.defaultStateAfterLogin, {}, {location: false});
+        }, function() {
+            $location.path('');
+            $location.search('');
+            $state.go('main.login', {}, {location: false});
         });
 
         // This must be defined here, when the $state is defined.
