@@ -67,7 +67,7 @@ angular.module('Schedulogy')
                 removeAll: {
                     confirmCallback: function () {
                         MyEvents.deleteAll();
-                        $scope.removeModal.hide();
+                        $scope.removeAllModal.hide();
                     }
                 },
                 uploadIcal: {
@@ -98,8 +98,10 @@ angular.module('Schedulogy')
             };
 
             $scope.currentModal = modalName;
-            $scope[modalName + 'Modal'].show().then(focusPrimaryInput);
-            $scope.modals[modalName].openCallback && $scope.modals[modalName].openCallback(params);
+            $scope[modalName + 'Modal'].show().then(function () {
+                focusPrimaryInput();
+                $scope.modals[modalName].openCallback && $scope.modals[modalName].openCallback(params);
+            });
         };
 
         $scope.closeModal = function (modalName, callback) {

@@ -7573,7 +7573,7 @@
                 if (this.opt('nowIndicator')) {
                     unit = this.getNowIndicatorUnit();
                     if (unit) {
-                        update = proxy(this, 'updateNowIndicator'); // bind to `this`
+                        //update = proxy(this, 'updateNowIndicator'); // bind to `this`
 
                         this.initialNowDate = this.calendar.getNow();
                         this.initialNowQueriedMs = +new Date();
@@ -7649,7 +7649,7 @@
 
                 this.updateHeight(isResize);
                 this.updateWidth(isResize);
-                this.updateNowIndicator();
+                //this.updateNowIndicator();
 
                 if (isResize) {
                     this.setScroll(scrollState);

@@ -369,12 +369,25 @@ h2 {
 }
 
 .fc-ltr .fc-time-grid .fc-event-container, .fc-rtl .fc-time-grid .fc-event-container {
-	margin: 1px 1px 1px 2px;
+    margin: 1px 1px 1px 2px;
 }
 
 .fc-event .fc-content {
     padding:5px;
     height:100%;
+    text-align: center;
+}
+
+
+.fc-time-grid-event .fc-time {
+    font-size: .8em;
+    white-space: normal;
+}
+
+@media(max-width:500px) {
+    .fc-event .fc-content {
+        padding:3px;
+    }   
 }
 
 .no-side-padding {
