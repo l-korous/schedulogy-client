@@ -1,44 +1,26 @@
 angular.module('Schedulogy')
-    .controller('MainCtrl', function ($scope, $rootScope, $ionicPopover, $ionicModal, Auth, settings, $http, $ionicLoading, $timeout) {
+    .controller('MainCtrl', function ($scope, $rootScope, $ionicModal, Auth, settings, $http, $ionicLoading, $timeout) {
         // Some loading time to be sure we are all set.
         $scope.passwordRules = {
             minGroups: settings.minPasswordGroups,
             minLength: settings.minPasswordLength
         };
 
-        $ionicPopover.fromTemplateUrl('templates/user_menu.html', {
-            scope: $scope
-        }).then(function (popover) {
-            $scope.userMenuPopover = popover;
-        });
-        $scope.openUserMenuPopover = function ($event) {
-            $scope.userMenuPopover.show($event);
-        };
-        $scope.closeUserMenuPopover = function () {
-            $scope.userMenuPopover.hide();
-        };
+        $scope.user = {name: $rootScope.currentUser ? $rootScope.currentUser.username : ''};
 
         // For the calendar menu, we have to find the calendar scope.
         $timeout(function () {
             $scope.calendarScope = angular.element($('#theOnlyCalendar')).scope();
         });
-        $ionicPopover.fromTemplateUrl('templates/calendar_menu.html', {
-            scope: $scope
-        }).then(function (popover) {
-            $scope.calendarMenuPopover = popover;
-        });
-        $scope.openCalendarMenuPopover = function ($event) {
-            $scope.calendarMenuPopover.show($event);
-        };
-        $scope.closeCalendarMenuPopover = function () {
-            $scope.calendarMenuPopover.hide();
-        };
+        
+        // Could this be removed?
+        $scope.appVersion = settings.appVersion;
 
         $scope.modal = {};
-        ['changeUsername', 'changePassword', 'feedback'].forEach(function (modalName) {
-            $ionicModal.fromTemplateUrl('templates/' + modalName + '.html', {
+        ['resources', 'leftMenu', 'changeUsername', 'changePassword', 'feedback'].forEach(function (modalName) {
+            $ionicModal.fromTemplateUrl('templates/' + modalName + 'Modal.html', {
                 scope: $scope,
-                animation: 'animated zoomIn'
+                animation: modalName === 'leftMenu' ? 'animated fadeInLeft' : 'animated zoomIn'
             }).then(function (modal) {
                 $scope.modal[modalName] = modal;
                 // This is ugly hack, should be fixed.
@@ -51,7 +33,6 @@ angular.module('Schedulogy')
             $scope.modal[modalName].hide();
         };
 
-        $scope.user = {name: $rootScope.currentUser ? $rootScope.currentUser.username : ''};
         $scope.save = function (modalName) {
             $scope.beingSubmitted = true;
             if (modalName === 'changeUsername') {
@@ -95,16 +76,18 @@ angular.module('Schedulogy')
             $scope.successInfo = '';
             $scope.errorInfo = '';
 
-            $scope.closeUserMenuPopover();
-            $scope.modal[modalName].show().then(function () {
-                if (angular.element($('#primaryInput')).scope()) {
-                    angular.element($('#primaryInput')).scope().form.$setPristine();
-                }
-            });
+            var show = $scope.modal[modalName].show();
+            if (modalName !== 'leftMenu') {
+                $scope.closeModal('leftMenu');
+                show.then(function () {
+                    if (angular.element($('#primaryInput')).scope()) {
+                        angular.element($('#primaryInput')).scope().form.$setPristine();
+                    }
+                });
+            }
         };
 
         $scope.$on('$destroy', function () {
-            $scope.userMenuPopover.remove();
             for (var modalData in ['changeUsername', 'changePassword', 'feedback'])
                 $scope[modalData + 'Modal'].remove();
         });

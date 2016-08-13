@@ -60,6 +60,8 @@ angular.module('Schedulogy')
                     },
                     closeCallback: function () {
                         MyEvents.refreshEvents();
+                        var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
+                        angular.element(primaryInput).scope().taskSaveForm.$setPristine();
                     }
                 },
                 help: {
@@ -75,7 +77,7 @@ angular.module('Schedulogy')
             };
 
         for (var modalData in $scope.modals) {
-            $ionicModal.fromTemplateUrl('templates/' + modalData + '.html', {
+            $ionicModal.fromTemplateUrl('templates/' + modalData + 'Modal.html', {
                 scope: $scope,
                 animation: 'animated zoomIn'
             }).then(function (modal) {
@@ -105,16 +107,16 @@ angular.module('Schedulogy')
         };
 
         $scope.closeModal = function (modalName, callback) {
-            $scope.currentModal = null;
             $scope[modalName + 'Modal'].hide();
             $scope.modals[modalName].closeCallback && $scope.modals[modalName].closeCallback();
             callback && callback();
+            $scope.currentModal = null;
         };
 
         $scope.confirmModal = function (modalName, callback) {
-            $scope.currentModal = null;
             $scope.modals[modalName].confirmCallback && $scope.modals[modalName].confirmCallback();
             callback && callback();
+            $scope.currentModal = null;
         };
 
         $scope.$on('Esc', function () {

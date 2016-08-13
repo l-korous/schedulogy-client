@@ -10,7 +10,10 @@ angular.module('Schedulogy')
                 $rootScope.$broadcast('TasksLoaded');
             }, function (err) {
                 console.log('Task.query - error');
-                _this.importFromTasks(err.data.tasks);
+                if (err.data && err.data.tasks) {
+                    _this.importFromTasks(err.data.tasks);
+                    $rootScope.$broadcast('TasksLoaded');
+                }
             });
         };
 
@@ -147,16 +150,14 @@ angular.module('Schedulogy')
             var event = eventPassed || this.currentEvent;
             if (event.dur > settings.maxEventDuration[event.type])
                 event.dur = settings.maxEventDuration[event.type];
-            if(event.type === 'floating') {
-                // This is a magic number, but not that important anyway.
-                event.dur = 4;
+            if (event.type === 'floating') {
                 var startHourOffset = (DateUtils.toMinutes(event.due) - event.dur * settings.minuteGranularity) - (settings.startHour * 60);
-                if(startHourOffset < 0)
+                if (startHourOffset < 0)
                     event.due.add(-startHourOffset, 'm');
                 var endHourOffset = (settings.endHour * 60) - (DateUtils.toMinutes(event.due) - event.dur * settings.minuteGranularity);
-                if(endHourOffset < 0)
+                if (endHourOffset < 0)
                     event.due.add(endHourOffset, 'm');
-                
+
                 event.dueDateText = event.due.format(settings.dateFormat);
                 event.dueTimeText = event.due.format(settings.timeFormat);
             }
@@ -178,10 +179,10 @@ angular.module('Schedulogy')
             _this.openErrorModal();
             errorCallback && errorCallback();
         };
-        
-        this.processEventDrop = function(event, delta) {
-            if(event.type === 'fixed') {
-                if(event.allDay) {
+
+        this.processEventDrop = function (event, delta) {
+            if (event.type === 'fixed') {
+                if (event.allDay) {
                     Event.changeType(event, 'fixedAllDay');
                     event.start = event.start.startOf('day');
                     event.dur = 1;
@@ -193,9 +194,9 @@ angular.module('Schedulogy')
                     return true;
                 }
             }
-            
-            else if(event.type === 'fixedAllDay') {
-                if(!event.allDay) {
+
+            else if (event.type === 'fixedAllDay') {
+                if (!event.allDay) {
                     Event.changeType(event, 'fixed');
                     event.start = event.start.startOf('day');
                     event.start.add(delta._milliseconds, 'ms');
@@ -222,7 +223,7 @@ angular.module('Schedulogy')
         };
 
         // Task edit modal.
-        $ionicModal.fromTemplateUrl('templates/error_modal.html', {
+        $ionicModal.fromTemplateUrl('templates/errorModal.html', {
             animation: 'animated zoomIn'
         }).then(function (modal) {
             _this.errorModal = modal;
@@ -331,7 +332,7 @@ angular.module('Schedulogy')
                 toReturn.add(1, 'hour');
 
             // Move to next day.
-            if (toReturn.hours() > settings.endHour) {
+            if ((toReturn.hours() * 60 + toReturn.minute()) > settings.endHour * 60) {
                 toReturn.hours(settings.startHour);
                 toReturn.minutes(0);
                 toReturn.day(toReturn.day() + 1);

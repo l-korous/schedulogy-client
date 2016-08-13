@@ -153,11 +153,11 @@
                     </div>
                     <div class="list nested-list">
                         <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.needsForShow| filter : {_id: event._id} : true">
-                            {{event.title}} {{event.type == 'floating' ? 'due ' : ''}} on 
+                            <span class="bold">{{event.title}}</span> {{event.type == 'floating' ? 'due ' : ''}} on 
                             {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
                             {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
-                            <button class="button button-assertive" on-tap="myEvents.removePrerequisite(event)">
-                                <i class="icon ion-trash-a"></i>
+                            <button class="button button-clear" on-tap="myEvents.removePrerequisite(event)">
+                                <i class="icon ion-trash-a assertive"></i>
                             </button>
                         </div>
                     </div>
@@ -172,11 +172,11 @@
                     </div>
                     <div class="list nested-list">
                         <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.blocksForShow| filter : {_id: event._id} : true">
-                            {{event.title}} {{event.type == 'floating' ? 'due ' : ''}} on 
+                            <span class="bold">{{event.title}}</span> {{event.type == 'floating' ? 'due ' : ''}} on 
                             {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
                             {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
-                            <button class="button button-assertive" on-tap="myEvents.removeDependency(event)">
-                                <i class="icon ion-trash-a"></i>
+                            <button class="button button-clear" on-tap="myEvents.removeDependency(event)">
+                                <i class="icon ion-trash-a assertive"></i>
                             </button>
                         </div>
                     </div>
@@ -188,7 +188,7 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button id="taskSave" class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid" ng-click="$parent.confirmModal('task')">
+                    <button id="taskSave" class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid || taskSaveForm.$pristine" ng-click="$parent.confirmModal('task')">
                         Save
                     </button>
 

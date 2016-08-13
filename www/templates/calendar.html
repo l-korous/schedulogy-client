@@ -1,24 +1,3 @@
-<div class="calendarControls padding" ng-if="!$root.isMobileNarrow && !$root.isMobileLow">
-    <button class="icon-left ion-plus-round button button-outline button-small button-positive padding-horizontal" id="newtask" ng-click="$(this).blur(); openModal('task', true);">
-        &nbsp;New Task
-    </button>
-    <button class="icon-left ion-upload button button-outline button-small button-positive padding-horizontal" ng-click="openModal('uploadIcal');">
-        &nbsp;Import from iCal
-    </button>
-
-    <button class="icon-left ion-trash-a button button-outline button-small button-assertive padding-horizontal" ng-click="openModal('removeAll')">
-        &nbsp;Delete all tasks
-    </button>
-
-
-    <button class="icon-left ion-university button button-outline button-small button-dark padding-horizontal" ng-click="runTour()">
-        &nbsp;Tour
-    </button>
-
-    <button class="icon-left ion-help-buoy button button-outline button-small button-dark padding-horizontal" id="helplink" ng-click="openModal('help')">
-        &nbsp;Help
-    </button>
-</div>
 <div id="theOnlyCalendar" calendar="theOnlyCalendar" ui-calendar="myCalendar.uiConfig.calendar" class="span8 calendar padding" ng-class="{'no-side-padding' : $root.isMobileNarrow}" ng-model="eventSources"></div> 
 
 

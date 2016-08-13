@@ -6,10 +6,6 @@ angular.module('Schedulogy')
         $scope.beingSubmitted = false;
         $('#emailEdit').focus();
 
-        $scope.$on('Enter', function () {
-            $scope.register();
-        });
-
         $scope.register = function () {
             $ionicLoading.show({template: settings.loadingTemplate});
             $scope.errorInfo = null;

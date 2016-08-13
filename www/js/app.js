@@ -2,7 +2,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
     .constant('settings', {
         serverUrl: 'http://localhost:8080/api',
         loadingTemplate: 'Loading,<br />please wait...',
-        appVersion: '0.1.0',
+        appVersion: 'beta-2.0.0',
         applicationName: 'Schedulogy',
         minPasswordGroups: 1,
         minPasswordLength: 1,
@@ -27,12 +27,12 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         dateTimeFormatEdit: 'YYYY-MM-DDTHH:mm',
         dateTimeFormatDisplay: 'YYYY-MM-DD HH:mm',
         shiftAgendaRows: {
-            normal: 245,
+            normal: 191,
             // Minimum height will apply here.
             mobile: 0
         },
         shiftCalendar: {
-            normal: 185,
+            normal: 125,
             mobile: 115
         },
         minCalendarRowHeight: 45,
@@ -100,7 +100,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             return 'General error.';
         },
         iCalUploadError: 'File upload failed.',
-        iCalUploadSuccess: 'File uploaded successfully.'
+        iCalUploadSuccess: 'File uploaded successfully.',
+        resourceSaveSuccessInfo: 'Resource saved successfully.'
     })
     .config(['$stateProvider', '$urlRouterProvider', 'settings', function ($stateProvider, $urlRouterProvider, settings) {
             $stateProvider
@@ -226,7 +227,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         }, function() {
             $location.path('');
             $location.search('');
-            $state.go('main.login', {}, {location: false});
+            $state.go("main.login", {}, {location: false, reload:true});
         });
 
         // This must be defined here, when the $state is defined.
@@ -235,7 +236,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             $location.path('');
             $location.search('');
             if ($state.current.name !== 'main.login') {
-                $state.go("main.login", {}, {location: false});
+                $state.go("main.login", {}, {location: false, reload:true});
             }
         };
         $rootScope.keyUpHandler = function (keyCode, enterBlockPredicate) {

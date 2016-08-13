@@ -25,6 +25,12 @@ angular.module('Schedulogy')
 
                 return toReturn;
             },
+            // TODO This is hard-coded (regardless of locale), will have to be fine-tuned if locale is taken into consideration.
+            getDayName: function (dayNumber) {
+                var utilMoment = moment(new Date());
+                utilMoment.day(dayNumber);
+                return utilMoment.format('dddd');
+            },
             toMinutes: function (momentTime) {
                 return ((momentTime.hour() * 60) + momentTime.minute());
             },
@@ -34,14 +40,16 @@ angular.module('Schedulogy')
             equalDays: function (momentTime1, momentTime2) {
                 return (momentTime1.format("YYYY-MM-DD") === momentTime2.format("YYYY-MM-DD"));
             },
+            getTimeFromSlotCount: function (slotCount) {
+                var hours = Math.floor(slotCount / settings.slotsPerHour);
+                var minutes = (slotCount % settings.slotsPerHour) * settings.minuteGranularity;
+                return (hours.toString().length > 1 ? '' : '0') + hours + ':' + (minutes.toString().length > 1 ? '' : '0') + minutes;
+            },
             saveDurText: function (event) {
                 if (event.type === 'fixedAllDay')
                     event.durText = event.dur + ' days';
-                else {
-                    var hours = Math.floor(event.dur / settings.slotsPerHour);
-                    var minutes = (event.dur % settings.slotsPerHour) * settings.minuteGranularity;
-                    event.durText = (hours.toString().length > 1 ? '' : '0') + hours + ':' + (minutes.toString().length > 1 ? '' : '0') + minutes + ' hrs';
-                }
+                else
+                    event.durText = this.getTimeFromSlotCount(event.dur) + ' hrs';
             }
         };
     });

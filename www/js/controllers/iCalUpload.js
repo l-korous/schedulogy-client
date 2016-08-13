@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ICalUploadCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading) {
+    .controller('ICalUploadCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading, $timeout) {
         // Register confirm callback in parent.
         $scope.$parent.modals.uploadIcal.confirmCallback = function () {
             $scope.uploadFile();
@@ -18,7 +18,7 @@ angular.module('Schedulogy')
             // This is done through rootScope, because otherwise it would not work. Not a big deal, but may be fixed.
             var file = $rootScope.icalFile;
 
-            fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', function (data) {
+            fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {}, function (data) {
                 MyEvents.tasksInResponseSuccessHandler(data, function () {
                     $scope.successInfo = settings.iCalUploadSuccess;
                     $timeout(function () {
@@ -30,7 +30,6 @@ angular.module('Schedulogy')
                 });
             },
                 function (err) {
-                    console.log(err);
                     try {
                         MyEvents.tasksInResponseErrorHandler(err, function () {
                             $scope.$parent.closeModal('uploadIcal');

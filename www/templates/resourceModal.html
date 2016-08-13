@@ -1,0 +1,75 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">{{$parent.currentResource.type === 'user' ? $parent.currentResource.username : $parent.currentResource.name}}</h1>
+    </ion-header-bar>
+
+    <ion-content has-bouncing="false">
+        <form class="resourceSaveForm" name="resourceSaveForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, resourceSaveForm.$invalid);">
+            <div class="list">
+                <label class="item item-input" ng-if="$parent.currentResource.type === 'artificial'">
+                    <div class="input-label">
+                        Name
+                    </div>
+                    <input type="text" ng-model="$parent.currentResource.name" id="primaryInput" required name="name">
+                </label>
+               
+                <label class="item item-input range">
+                    <div class="input-label">
+                        Start day of the week
+                    </div>
+                    <input type="range" min="1" max="7" name="sinceDay" ng-model="$parent.currentResource.sinceDay" step="1" required/>
+
+                    <div class="rangeInfo">
+                        {{$parent.currentResource.sinceDayText}}
+                    </div>
+                </label>
+               
+                <label class="item item-input range">
+                    <div class="input-label">
+                        End day of the week
+                    </div>
+                    <input type="range" min="1" max="7" name="untilDay" ng-model="$parent.currentResource.untilDay" step="1" required/>
+
+                    <div class="rangeInfo">
+                        {{$parent.currentResource.untilDayText}}
+                    </div>
+                </label>
+                
+                 <label class="item item-input range">
+                    <div class="input-label">
+                        Start hour of the day
+                    </div>
+                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="sinceTime" ng-model="$parent.currentResource.sinceTime" step="1" required/>
+
+                    <div class="rangeInfo">
+                        {{$parent.currentResource.sinceTimeText}}
+                    </div>
+                </label>
+               
+                <label class="item item-input range">
+                    <div class="input-label">
+                        End hour of the day
+                    </div>
+                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="untilTime" ng-model="$parent.currentResource.untilTime" step="1" required/>
+
+                    <div class="rangeInfo">
+                        {{$parent.currentResource.untilTimeText}}
+                    </div>
+                </label>
+
+            <div class="row">
+                <div class="col-50 padding-horizontal padding-top">
+                    <button id="taskSave" class="button button-block button-positive" ng-disabled="resourceSaveForm.$invalid || resourceSaveForm.$pristine" ng-click="$parent.saveResource()">
+                        Save
+                    </button>
+
+                </div>
+                <div class="col-50 padding-horizontal padding-top">
+                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeDetailModal()">
+                        Cancel
+                    </button>   
+                </div>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

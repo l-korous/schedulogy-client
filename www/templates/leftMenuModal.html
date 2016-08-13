@@ -1,0 +1,73 @@
+<ion-modal-view class="leftMenu" ng-click="closeModal('leftMenu');">
+    <div class="list">
+        <span class="list-divider">Tasks</span>
+        <a id="newtask" class="item item-icon-left" ng-click="closeModal('leftMenu');
+            calendarScope.openModal('task', true);">
+            <i class="icon ion-plus-round positive"></i>
+            New Task
+        </a>
+
+        <a class="item item-icon-left" ng-click="closeModal('leftMenu');
+            calendarScope.openModal('uploadIcal');">
+            <i class="icon ion-upload positive"></i>
+            Import from iCal
+        </a>
+
+        <a class="item item-icon-left" ng-click="closeModal('leftMenu');
+            calendarScope.openModal('removeAll');">
+            <i class="icon ion-trash-a assertive"></i>  
+            Delete all tasks
+        </a>
+    </div>
+
+    <div class="list">
+        <span class="list-divider">Resources</span>
+        <a id="newtask" class="item item-icon-left" ng-click="closeModal('leftMenu');
+            openModal('resources');">
+            <i class="icon ion-levels positive"></i>
+            Manage Resources
+        </a>
+    </div>
+    
+    <div class="list">
+
+        <span class="list-divider">Help</span>
+        <a class="item item-icon-left" ng-click="closeModal('leftMenu');
+            calendarScope.runTour();">
+            <i class="icon ion-university balanced"></i>  
+            Tour
+        </a>
+
+        <a class="item item-icon-left" ng-click="closeModal('leftMenu');
+            calendarScope.openModal('help');">
+            <i class="icon ion-help-buoy dark"></i>
+            Help
+        </a>
+
+        <a class="item item-icon-left" ng-click="openModal('feedback');">
+            <i class="icon ion-mic-a positive"></i>
+            Send Feedback
+        </a>
+    </div>
+
+    <div class="list">
+        <span class="list-divider">Settings</span>
+        <a class="item item-icon-left" ng-click="openModal('changeUsername');">
+            <i class="icon ion-person"></i>
+            Change Username
+        </a>
+
+        <a class="item item-icon-left" ng-click="openModal('changePassword');">
+            <i class="icon ion-locked assertive"></i>
+            Change Password
+        </a>
+    </div>
+
+    <div class="list">
+        <a class="item item-icon-left" ng-click="closeModal('leftMenu');
+            $root.goToLogin()">
+            <i class="icon ion-log-out dark"></i>
+            Logout
+        </a>
+    </div>
+</ion-modal-view>

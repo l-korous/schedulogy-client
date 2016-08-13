@@ -5,7 +5,7 @@ angular.module('Schedulogy')
             $scope.saveEvent();
             $scope.$parent.closeModal('task');
         };
-
+        
         $scope.maxEventDuration = settings.maxEventDuration;
         // TODO - can we do this in the view directly from settings?
         $scope.noPrerequisitesToListMsg = settings.noPrerequisitesToListMsg;
@@ -71,6 +71,9 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
                         MyEvents.updateEndDateTimeWithDuration();
+                    
+                    var primaryInput = $('.taskSaveForm').find('#primaryInput');
+                    angular.element(primaryInput).scope().taskSaveForm.$setDirty();
                 }
             };
             d.tp = {
@@ -80,6 +83,9 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
                         MyEvents.updateEndDateTimeWithDuration();
+                    
+                    var primaryInput = $('.taskSaveForm').find('#primaryInput');
+                    angular.element(primaryInput).scope().taskSaveForm.$setDirty();
                 }
             };
         });

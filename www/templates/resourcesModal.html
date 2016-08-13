@@ -1,0 +1,37 @@
+<ion-modal-view ng-controller="ResourcesModalCtrl">
+    <ion-header-bar>
+        <h1 class="title">Resources</h1>
+    </ion-header-bar>
+    <ion-content has-bouncing="false">
+        <div class="list">
+            <div class="item item-no-wrap">
+                You can create as many 'artificial' resources as you want, set their time constraints and schedule tasks into these.
+                <br />
+                Only existing users under your tenant account represent the 'user' resources. These resources may not be deleted, they exist if and only if the respective user does.
+            </div>
+            <div class="item item-icon-left item-button-right" ng-repeat="resource in resources" ng-click="openDetailModal(resource)">
+                <i class="icon ion-person" ng-if="resource.type === 'user'"></i>
+                <i class="icon ion-wrench" ng-if="resource.type === 'artificial'"></i>
+
+                {{resource.type === 'user' ? resource.username : resource.name}}
+                <button class="button button-clear" ng-click="removeResource(resource); $event.stopPropagation();" ng-if="resource.type === 'artificial'">
+                    <i class="icon ion-trash-a assertive"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-50 padding-horizontal padding-top">
+                <button class="button button-block button-positive" ng-click="openDetailModal()">
+                    Create New
+                </button>
+
+            </div>
+            <div class="col-50 padding-horizontal padding-top">
+                <button class="button button-block button-dark button-outline" ng-click="closeModal('resources');">
+                    Close
+                </button>   
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>
