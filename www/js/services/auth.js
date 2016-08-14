@@ -1,6 +1,6 @@
 // This factory is project-independent. Has to have corresponding socket/http based server part.
 angular.module('Schedulogy')
-    .factory('Auth', function ($http, settings, $rootScope, $window, $q, $rootScope, User, Cordova, $ionicModal, $filter) {
+    .factory('Auth', function ($http, settings, $rootScope, $window, $q, $rootScope, User) {
         var Auth = {
             fromUtf: function (user) {
                 if (user.email)
@@ -47,17 +47,23 @@ angular.module('Schedulogy')
             },
             changeUsername: function (username) {
                 var _this = this, defer = $q.defer();
-                $http.post(settings.serverUrl + "/set-username", {username: username}).success(function (data) {
+                User.saveUsername({username: username}, function (data) {
                     $window.localStorage.token = data.token;
                     _this.processTokenStoreUser();
                     defer.resolve();
-                }).error(function () {
+                }, function () {
                     defer.reject();
                 });
                 return defer.promise;
             },
             changePassword: function (password) {
-                return $http.post(settings.serverUrl + "/set-password", {password: password});
+                var defer = $q.defer();
+                User.savePassword({password: password}, function (data) {
+                    defer.resolve();
+                }, function () {
+                    defer.reject();
+                });
+                return defer.promise;
             },
             tryPreauthenticate: function () {
                 var _this = this, defer = $q.defer();

@@ -84,7 +84,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             }
             return 'General error.';
         },
-        registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to your e-mail address. You may close this tab.',
+        registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to the e-mail address. You may close this tab.',
         passwordResetSuccessInfo: 'Password successfully set.',
         forgottenPasswordSuccessInfo: 'An e-mail with password reset instructions has been sent to your e-mail address. You may close this tab.',
         feedbackSuccessInfo: 'Feedback received and greatly appreciated.',
@@ -202,7 +202,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $location, $window) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, MyUsers) {
         $rootScope.allSet = false;
 
         // Check stuff when changing state.
@@ -223,11 +223,10 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         Auth.tryPreauthenticate().then(function () {
             $location.path('');
             $location.search('');
+            MyEvents.refresh();
+            MyResources.refresh();
+            MyUsers.refresh();
             $state.go(settings.defaultStateAfterLogin, {}, {location: false});
-        }, function() {
-            $location.path('');
-            $location.search('');
-            $state.go("main.login", {}, {location: false, reload:true});
         });
 
         // This must be defined here, when the $state is defined.
@@ -236,7 +235,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             $location.path('');
             $location.search('');
             if ($state.current.name !== 'main.login') {
-                $state.go("main.login", {}, {location: false, reload:true});
+                $state.go("main.login", {}, {location: false, reload: true});
             }
         };
         $rootScope.keyUpHandler = function (keyCode, enterBlockPredicate) {

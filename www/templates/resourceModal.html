@@ -1,26 +1,26 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">{{$parent.currentResource.type === 'user' ? $parent.currentResource.username : $parent.currentResource.name}}</h1>
+        <h1 class="title">{{$parent.myResources.currentResource.type === 'user' ? $parent.myResources.currentResource.username : $parent.myResources.currentResource.name}}</h1>
     </ion-header-bar>
 
     <ion-content has-bouncing="false">
         <form class="resourceSaveForm" name="resourceSaveForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, resourceSaveForm.$invalid);">
             <div class="list">
-                <label class="item item-input" ng-if="$parent.currentResource.type === 'artificial'">
+                <label class="item item-input" ng-if="$parent.myResources.currentResource.type === 'artificial'">
                     <div class="input-label">
                         Name
                     </div>
-                    <input type="text" ng-model="$parent.currentResource.name" id="primaryInput" required name="name">
+                    <input type="text" ng-model="$parent.myResources.currentResource.name" id="primaryInput" required name="name">
                 </label>
                
                 <label class="item item-input range">
                     <div class="input-label">
                         Start day of the week
                     </div>
-                    <input type="range" min="1" max="7" name="sinceDay" ng-model="$parent.currentResource.sinceDay" step="1" required/>
+                    <input type="range" min="1" max="7" name="sinceDay" ng-model="$parent.myResources.currentResource.sinceDay" step="1" required/>
 
                     <div class="rangeInfo">
-                        {{$parent.currentResource.sinceDayText}}
+                        {{$parent.myResources.currentResource.sinceDayText}}
                     </div>
                 </label>
                
@@ -28,10 +28,10 @@
                     <div class="input-label">
                         End day of the week
                     </div>
-                    <input type="range" min="1" max="7" name="untilDay" ng-model="$parent.currentResource.untilDay" step="1" required/>
+                    <input type="range" min="1" max="7" name="untilDay" ng-model="$parent.myResources.currentResource.untilDay" step="1" required/>
 
                     <div class="rangeInfo">
-                        {{$parent.currentResource.untilDayText}}
+                        {{$parent.myResources.currentResource.untilDayText}}
                     </div>
                 </label>
                 
@@ -39,10 +39,10 @@
                     <div class="input-label">
                         Start hour of the day
                     </div>
-                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="sinceTime" ng-model="$parent.currentResource.sinceTime" step="1" required/>
+                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="sinceTime" ng-model="$parent.myResources.currentResource.sinceTime" step="1" required/>
 
                     <div class="rangeInfo">
-                        {{$parent.currentResource.sinceTimeText}}
+                        {{$parent.myResources.currentResource.sinceTimeText}}
                     </div>
                 </label>
                
@@ -50,16 +50,16 @@
                     <div class="input-label">
                         End hour of the day
                     </div>
-                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="untilTime" ng-model="$parent.currentResource.untilTime" step="1" required/>
+                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="untilTime" ng-model="$parent.myResources.currentResource.untilTime" step="1" required/>
 
                     <div class="rangeInfo">
-                        {{$parent.currentResource.untilTimeText}}
+                        {{$parent.myResources.currentResource.untilTimeText}}
                     </div>
                 </label>
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button id="taskSave" class="button button-block button-positive" ng-disabled="resourceSaveForm.$invalid || resourceSaveForm.$pristine" ng-click="$parent.saveResource()">
+                    <button id="taskSave" class="button button-block button-positive" ng-disabled="resourceSaveForm.$invalid || resourceSaveForm.$pristine" ng-click="$parent.myResources.saveResource()">
                         Save
                     </button>
 

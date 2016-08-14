@@ -9,12 +9,12 @@
                 <br />
                 Only existing users under your tenant account represent the 'user' resources. These resources may not be deleted, they exist if and only if the respective user does.
             </div>
-            <div class="item item-icon-left item-button-right" ng-repeat="resource in resources" ng-click="openDetailModal(resource)">
+            <div class="item item-icon-left item-button-right" ng-repeat="resource in myResources.resources" ng-click="openDetailModal(resource)">
                 <i class="icon ion-person" ng-if="resource.type === 'user'"></i>
                 <i class="icon ion-wrench" ng-if="resource.type === 'artificial'"></i>
 
                 {{resource.type === 'user' ? resource.username : resource.name}}
-                <button class="button button-clear" ng-click="removeResource(resource); $event.stopPropagation();" ng-if="resource.type === 'artificial'">
+                <button class="button button-clear" ng-click="myResources.removeResource(resource); $event.stopPropagation();" ng-if="resource.type === 'artificial'">
                     <i class="icon ion-trash-a assertive"></i>
                 </button>
             </div>
@@ -28,7 +28,7 @@
 
             </div>
             <div class="col-50 padding-horizontal padding-top">
-                <button class="button button-block button-dark button-outline" ng-click="closeModal('resources');">
+                <button class="button button-block button-dark button-outline" ng-click="closeSelf();">
                     Close
                 </button>   
             </div>

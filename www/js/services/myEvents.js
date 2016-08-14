@@ -1,23 +1,22 @@
 angular.module('Schedulogy')
     .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils, $rootScope) {
-        this.events = [];
-        this.curr = null;
         var _this = this;
+        _this.events = [];
 
-        this.refreshEvents = function () {
-            Task.query({btime: this.getBTime().unix()}, function (data) {
+        _this.refresh = function () {
+            Task.query({btime: _this.getBTime().unix()}, function (data) {
                 _this.importFromTasks(data.tasks);
-                $rootScope.$broadcast('TasksLoaded');
+                $rootScope.$broadcast('MyEventsLoaded');
             }, function (err) {
                 console.log('Task.query - error');
                 if (err.data && err.data.tasks) {
                     _this.importFromTasks(err.data.tasks);
-                    $rootScope.$broadcast('TasksLoaded');
+                    $rootScope.$broadcast('MyEventsLoaded');
                 }
             });
         };
 
-        this.importFromTasks = function (tasks) {
+        _this.importFromTasks = function (tasks) {
             _this.events.splice(0, _this.events.length);
 
             tasks.forEach(function (task) {
@@ -36,11 +35,11 @@ angular.module('Schedulogy')
             }
         };
 
-        this.emptyCurrentEvent = function () {
-            var btime = this.getBTime();
+        _this.emptyCurrentEvent = function () {
+            var btime = _this.getBTime();
             var btimePlusDuration = btime.clone().add(settings.defaultTaskDuration / settings.minuteGranularity, 'm');
 
-            this.currentEvent = {
+            _this.currentEvent = {
                 new : true,
                 stick: true,
                 type: settings.defaultTaskType,
@@ -67,7 +66,7 @@ angular.module('Schedulogy')
             DateUtils.saveDurText(this.currentEvent);
         };
 
-        this.fillBlocksAndNeedsForShow = function (event) {
+        _this.fillBlocksAndNeedsForShow = function (event) {
             var _this = this;
             if (event.blocks) {
                 event.blocksForShow.splice(0, event.blocksForShow.length);
@@ -98,26 +97,26 @@ angular.module('Schedulogy')
             }
         };
 
-        this.findEventById = function (passedEventId) {
-            return this.events.find(function (event) {
+        _this.findEventById = function (passedEventId) {
+            return _this.events.find(function (event) {
                 return event._id === passedEventId;
             });
         };
 
-        this.getCurrentEvents = function (now) {
+        _this.getCurrentEvents = function (now) {
             return $.grep(this.events, function (event) {
                 return (event.type !== 'floating' && ((event.start < now) && (event.end > now)));
             });
         };
 
-        this.deleteEvent = function (passedEvent) {
-            var eventToDelete = passedEvent || this.currentEvent;
+        _this.deleteEvent = function (passedEvent) {
+            var eventToDelete = passedEvent || _this.currentEvent;
 
             $ionicLoading.show({
                 template: settings.loadingTemplate
             });
 
-            Task.fromEvent(eventToDelete).$remove({btime: this.getBTime().unix(), taskId: eventToDelete._id}, function (data, headers) {
+            Task.fromEvent(eventToDelete).$remove({btime: _this.getBTime().unix(), taskId: eventToDelete._id}, function (data, headers) {
                 _this.importFromTasks(data.tasks);
                 $ionicLoading.hide();
             }, function (err) {
@@ -128,7 +127,7 @@ angular.module('Schedulogy')
             });
         };
 
-        this.deleteAll = function (passedEvent) {
+        _this.deleteAll = function (passedEvent) {
             $ionicLoading.show({template: settings.loadingTemplate});
 
             Task.deleteAll({}, function (data, headers) {
@@ -142,12 +141,12 @@ angular.module('Schedulogy')
             });
         };
 
-        this.deleteEventById = function (passedEventId) {
-            this.deleteEvent(this.findEventById(passedEventId));
+        _this.deleteEventById = function (passedEventId) {
+            _this.deleteEvent(this.findEventById(passedEventId));
         };
 
-        this.handleChangeOfEventType = function (eventPassed) {
-            var event = eventPassed || this.currentEvent;
+        _this.handleChangeOfEventType = function (eventPassed) {
+            var event = eventPassed || _this.currentEvent;
             if (event.dur > settings.maxEventDuration[event.type])
                 event.dur = settings.maxEventDuration[event.type];
             if (event.type === 'floating') {
@@ -161,17 +160,17 @@ angular.module('Schedulogy')
                 event.dueDateText = event.due.format(settings.dateFormat);
                 event.dueTimeText = event.due.format(settings.timeFormat);
             }
-            this.updateEndDateTimeWithDuration(event);
+            _this.updateEndDateTimeWithDuration(event);
             event.color = settings.eventColor[event.type];
         };
 
-        this.tasksInResponseSuccessHandler = function (data, successCallback) {
+        _this.tasksInResponseSuccessHandler = function (data, successCallback) {
             _this.importFromTasks(data.tasks);
             successCallback && successCallback();
             $ionicLoading.hide();
         };
 
-        this.tasksInResponseErrorHandler = function (err, errorCallback) {
+        _this.tasksInResponseErrorHandler = function (err, errorCallback) {
             $ionicLoading.hide();
             if (err.data.tasks)
                 _this.importFromTasks(err.data.tasks);
@@ -180,7 +179,7 @@ angular.module('Schedulogy')
             errorCallback && errorCallback();
         };
 
-        this.processEventDrop = function (event, delta) {
+        _this.processEventDrop = function (event, delta) {
             if (event.type === 'fixed') {
                 if (event.allDay) {
                     Event.changeType(event, 'fixedAllDay');
@@ -211,10 +210,10 @@ angular.module('Schedulogy')
             }
         };
 
-        this.saveEvent = function (passedEvent, successCallback, errorCallback) {
+        _this.saveEvent = function (passedEvent, successCallback, errorCallback) {
             var eventToSave = passedEvent || _this.currentEvent;
             $ionicLoading.show({template: settings.loadingTemplate});
-            Task.fromEvent(eventToSave).$save({btime: this.getBTime().unix()}, function (data) {
+            Task.fromEvent(eventToSave).$save({btime: _this.getBTime().unix()}, function (data) {
                 _this.tasksInResponseSuccessHandler(data, successCallback);
             },
                 function (err) {
@@ -235,7 +234,7 @@ angular.module('Schedulogy')
             _this.errorModal.hide();
         };
 
-        this.recalcConstraints = function () {
+        _this.recalcConstraints = function () {
             $ionicLoading.show({
                 template: settings.loadingTemplate
             });
@@ -251,53 +250,53 @@ angular.module('Schedulogy')
             });
         };
 
-        this.addDependency = function (eventId) {
-            this.currentEvent.blocks.push(eventId);
-            this.fillBlocksAndNeedsForShow(this.currentEvent);
+        _this.addDependency = function (eventId) {
+            _this.currentEvent.blocks.push(eventId);
+            _this.fillBlocksAndNeedsForShow(this.currentEvent);
             eventId = null;
 
-            this.recalcConstraints();
+            _this.recalcConstraints();
         };
 
-        this.removeDependency = function (event) {
-            for (var i = this.currentEvent.blocks.length - 1; i >= 0; i--) {
+        _this.removeDependency = function (event) {
+            for (var i = _this.currentEvent.blocks.length - 1; i >= 0; i--) {
                 if (this.currentEvent.blocks[i] === event._id) {
-                    this.currentEvent.blocks.splice(i, 1);
-                    this.currentEvent.blocksForShow.splice(i, 1);
+                    _this.currentEvent.blocks.splice(i, 1);
+                    _this.currentEvent.blocksForShow.splice(i, 1);
                 }
             }
-            this.recalcConstraints();
+            _this.recalcConstraints();
         };
 
-        this.addPrerequisite = function (eventId) {
+        _this.addPrerequisite = function (eventId) {
             if (!eventId)
                 return;
 
             if (!this.currentEvent.needs)
-                this.currentEvent.needs = [];
+                _this.currentEvent.needs = [];
 
-            this.currentEvent.needs.push(eventId);
-            this.fillBlocksAndNeedsForShow(this.currentEvent);
+            _this.currentEvent.needs.push(eventId);
+            _this.fillBlocksAndNeedsForShow(this.currentEvent);
             eventId = null;
 
-            this.recalcConstraints();
+            _this.recalcConstraints();
         };
 
-        this.removePrerequisite = function (event) {
+        _this.removePrerequisite = function (event) {
             if (!event)
                 return;
-            for (var i = this.currentEvent.needs.length - 1; i >= 0; i--) {
+            for (var i = _this.currentEvent.needs.length - 1; i >= 0; i--) {
                 if (this.currentEvent.needs[i] === event._id) {
-                    this.currentEvent.needs.splice(i, 1);
-                    this.currentEvent.needsForShow.splice(i, 1);
+                    _this.currentEvent.needs.splice(i, 1);
+                    _this.currentEvent.needsForShow.splice(i, 1);
                 }
             }
 
-            this.recalcConstraints();
+            _this.recalcConstraints();
         };
 
-        this.updateEndDateTimeWithDuration = function (eventPassed) {
-            var event = eventPassed || this.currentEvent;
+        _this.updateEndDateTimeWithDuration = function (eventPassed) {
+            var event = eventPassed || _this.currentEvent;
 
             DateUtils.saveDurText(event);
 
@@ -316,7 +315,7 @@ angular.module('Schedulogy')
             }
         };
 
-        this.getBTime = function () {
+        _this.getBTime = function () {
             if (settings.fixedBTime.on)
                 return moment(settings.fixedBTime.date);
 
@@ -352,14 +351,11 @@ angular.module('Schedulogy')
                     toReturn.day(8);
             }
 
-            this.getCurrentEvents(toReturn).forEach(function (currentEvent) {
+            _this.getCurrentEvents(toReturn).forEach(function (currentEvent) {
                 toReturn = (currentEvent.end > toReturn ? currentEvent.end : toReturn);
             });
 
             toReturn.second(0);
             return toReturn;
         };
-
-        //////// Done at start
-        this.refreshEvents();
     });

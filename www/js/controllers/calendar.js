@@ -2,7 +2,7 @@ angular.module('Schedulogy')
     .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $timeout, FullCalendar, $ionicScrollDelegate, Hopscotch, $rootScope) {
         $rootScope.allSet = false;
         FullCalendar.calculateCalendarRowHeight();
-        $scope.$on('TasksLoaded', function () {
+        $scope.$on('MyEventsLoaded', function () {
             $rootScope.allSet = true;
         });
 
@@ -59,7 +59,7 @@ angular.module('Schedulogy')
                         });
                     },
                     closeCallback: function () {
-                        MyEvents.refreshEvents();
+                        MyEvents.refresh();
                         var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
                         angular.element(primaryInput).scope().taskSaveForm.$setPristine();
                     }

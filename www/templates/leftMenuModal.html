@@ -21,8 +21,13 @@
     </div>
 
     <div class="list">
-        <span class="list-divider">Resources</span>
-        <a id="newtask" class="item item-icon-left" ng-click="closeModal('leftMenu');
+        <span class="list-divider">Users &amp; Resources</span>
+        <a class="item item-icon-left" ng-click="closeModal('leftMenu');
+            openModal('users');">
+            <i class="icon ion-person-stalker positive"></i>
+            Manage Users
+        </a>
+        <a class="item item-icon-left" ng-click="closeModal('leftMenu');
             openModal('resources');">
             <i class="icon ion-levels positive"></i>
             Manage Resources

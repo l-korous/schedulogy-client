@@ -12,12 +12,12 @@ angular.module('Schedulogy')
         $timeout(function () {
             $scope.calendarScope = angular.element($('#theOnlyCalendar')).scope();
         });
-        
+
         // Could this be removed?
         $scope.appVersion = settings.appVersion;
 
         $scope.modal = {};
-        ['resources', 'leftMenu', 'changeUsername', 'changePassword', 'feedback'].forEach(function (modalName) {
+        ['users', 'resources', 'leftMenu', 'changeUsername', 'changePassword', 'feedback'].forEach(function (modalName) {
             $ionicModal.fromTemplateUrl('templates/' + modalName + 'Modal.html', {
                 scope: $scope,
                 animation: modalName === 'leftMenu' ? 'animated fadeInLeft' : 'animated zoomIn'
@@ -77,7 +77,7 @@ angular.module('Schedulogy')
             $scope.errorInfo = '';
 
             var show = $scope.modal[modalName].show();
-            if (modalName !== 'leftMenu') {
+            if (modalName !== 'leftMenu' && modalName !== 'resources' && modalName !== 'users') {
                 $scope.closeModal('leftMenu');
                 show.then(function () {
                     if (angular.element($('#primaryInput')).scope()) {
@@ -88,7 +88,8 @@ angular.module('Schedulogy')
         };
 
         $scope.$on('$destroy', function () {
-            for (var modalData in ['changeUsername', 'changePassword', 'feedback'])
-                $scope[modalData + 'Modal'].remove();
+            ['users', 'resources', 'leftMenu', 'changeUsername', 'changePassword', 'feedback'].forEach(function (modalName) {
+                $scope.modal[modalName].remove();
+            });
         });
     });

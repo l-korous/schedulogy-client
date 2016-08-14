@@ -505,3 +505,7 @@ input[readonly=true] {
     padding:5px 5px 5px 10px;
     font-size:.99em ! important;
 }
+
+.inactive {
+    opacity:.5;
+}

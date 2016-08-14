@@ -1,105 +1,48 @@
 angular.module('Schedulogy')
-    .controller('ResourcesModalCtrl', function (Resource, $scope, MyEvents, $ionicModal, DateUtils, settings) {
-        $scope.resources = [];
+    .controller('ResourcesModalCtrl', function (MyResources, $scope, $ionicModal, settings) {
+        $scope.myResources = MyResources;
         $scope.settings = settings;
-
-        $scope.refreshResources = function () {
-            Resource.query({btime: MyEvents.getBTime().unix()}, function (data) {
-                $scope.resources = data.resourcesLocal;
-            }, function (err) {
-                console.log('Resource.query - error');
-            });
-        };
-
-        $scope.saveResource = function () {
-            $scope.currentResource.$save({btime: MyEvents.getBTime().unix()}, function (data) {
-                $scope.closeDetailModal();
-                $scope.resources = data.resourcesLocal;
-            });
-        };
-
-        $scope.removeResource = function (resource) {
-            resource.$remove({btime: MyEvents.getBTime().unix(), resourceId: resource._id}, function (data) {
-                $scope.closeDetailModal();
-                $scope.resources = data.resourcesLocal;
-            });
-        };
 
         $scope.closeSelf = function () {
             $scope.$parent.closeModal('resources');
         };
 
-        $scope.emptyCurrentResource = function () {
-            $scope.currentResource = angular.extend(new Resource(), {
-                type: 'artificial',
-                sinceDay: 1,
-                untilDay: 7,
-                sinceTime: 0,
-                untilTime: 24 * settings.slotsPerHour
-            });
-            $scope.updateAllTexts();
-        };
-
-        $scope.$watch('currentResource.sinceDay', function (newValue, oldValue) {
+        $scope.$watch('myResources.currentResource.sinceDay', function (newValue, oldValue) {
             if (oldValue) {
-                if (newValue > $scope.currentResource.untilDay)
-                    $scope.currentResource.sinceDay = oldValue;
+                if (newValue > $scope.myResources.currentResource.untilDay)
+                    $scope.myResources.currentResource.sinceDay = oldValue;
                 else
-                    $scope.updateText('sinceDay');
+                    $scope.myResources.updateText('sinceDay');
             }
         });
 
-        $scope.$watch('currentResource.untilDay', function (newValue, oldValue) {
+        $scope.$watch('myResources.currentResource.untilDay', function (newValue, oldValue) {
             if (oldValue) {
-                if ($scope.currentResource.sinceDay > newValue)
-                    $scope.currentResource.untilDay = oldValue;
+                if ($scope.myResources.currentResource.sinceDay > newValue)
+                    $scope.myResources.currentResource.untilDay = oldValue;
                 else
-                    $scope.updateText('untilDay');
+                    $scope.myResources.updateText('untilDay');
             }
         });
 
-        $scope.$watch('currentResource.sinceTime', function (newValue, oldValue) {
+        $scope.$watch('myResources.currentResource.sinceTime', function (newValue, oldValue) {
             if (oldValue) {
-                if (newValue > $scope.currentResource.untilTime)
-                    $scope.currentResource.sinceTime = oldValue;
+                if (newValue > $scope.myResources.currentResource.untilTime)
+                    $scope.myResources.currentResource.sinceTime = oldValue;
                 else
-                    $scope.updateText('sinceTime');
+                    $scope.myResources.updateText('sinceTime');
             }
         });
 
-        $scope.$watch('currentResource.untilTime', function (newValue, oldValue) {
+        $scope.$watch('myResources.currentResource.untilTime', function (newValue, oldValue) {
             if (oldValue) {
-                if ($scope.currentResource.sinceTime > newValue)
-                    $scope.currentResource.untilTime = oldValue;
+                if ($scope.myResources.currentResource.sinceTime > newValue)
+                    $scope.myResources.currentResource.untilTime = oldValue;
 
                 else
-                    $scope.updateText('untilTime');
+                    $scope.myResources.updateText('untilTime');
             }
         });
-
-        $scope.updateText = function (identifier) {
-            switch (identifier) {
-                case 'sinceDay':
-                    $scope.currentResource.sinceDayText = DateUtils.getDayName($scope.currentResource.sinceDay);
-                    break;
-                case 'untilDay':
-                    $scope.currentResource.untilDayText = DateUtils.getDayName($scope.currentResource.untilDay);
-                    break;
-                case 'sinceTime':
-                    $scope.currentResource.sinceTimeText = DateUtils.getTimeFromSlotCount($scope.currentResource.sinceTime);
-                    break;
-                case 'untilTime':
-                    $scope.currentResource.untilTimeText = DateUtils.getTimeFromSlotCount($scope.currentResource.untilTime);
-                    break;
-            }
-        };
-
-        $scope.updateAllTexts = function () {
-            $scope.updateText('sinceDay');
-            $scope.updateText('untilDay');
-            $scope.updateText('sinceTime');
-            $scope.updateText('untilTime');
-        };
 
         $ionicModal.fromTemplateUrl('templates/resourceModal.html', {
             scope: $scope,
@@ -110,18 +53,17 @@ angular.module('Schedulogy')
 
         $scope.openDetailModal = function (resource) {
             if (resource) {
-                $scope.currentResource = resource;
-                $scope.updateAllTexts();
+                $scope.myResources.currentResource = resource;
+                $scope.myResources.updateAllTexts();
             }
             else
-                $scope.emptyCurrentResource();
+                $scope.myResources.emptyCurrentResource();
 
             var focusPrimaryInput = function () {
                 var primaryInput = $($scope.detailModal.modalEl).find('#primaryInput');
                 primaryInput.focus();
                 primaryInput.select();
             };
-
 
             $scope.detailModal.show().then(function () {
                 focusPrimaryInput();
@@ -131,11 +73,10 @@ angular.module('Schedulogy')
         $scope.closeDetailModal = function () {
             $scope.detailModal.hide();
         };
-
-        $scope.refreshResources();
-
+        
+        $scope.myResources.registerSaveCallback($scope.closeDetailModal);
+        
         $scope.$on('$destroy', function () {
             $scope.detailModal.remove();
         });
-
     });
