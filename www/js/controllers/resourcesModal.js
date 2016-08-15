@@ -2,6 +2,16 @@ angular.module('Schedulogy')
     .controller('ResourcesModalCtrl', function (MyResources, $scope, $ionicModal, settings) {
         $scope.myResources = MyResources;
         $scope.settings = settings;
+        $scope.loading = true;
+
+        // Register self in parent (leftMenu).
+        $scope.$parent.modalScope.resources = $scope;
+        $scope.init = function () {
+            $scope.loading = true;
+            $scope.myResources.refresh(function () {
+                $scope.loading = false;
+            });
+        };
 
         $scope.closeSelf = function () {
             $scope.$parent.closeModal('resources');
@@ -67,15 +77,17 @@ angular.module('Schedulogy')
 
             $scope.detailModal.show().then(function () {
                 focusPrimaryInput();
+                $scope.myResources.registerSaveCallback($scope.closeDetailModal);
             });
         };
 
         $scope.closeDetailModal = function () {
             $scope.detailModal.hide();
+            $scope.myResources.registerSaveCallback(null);
         };
-        
+
         $scope.myResources.registerSaveCallback($scope.closeDetailModal);
-        
+
         $scope.$on('$destroy', function () {
             $scope.detailModal.remove();
         });

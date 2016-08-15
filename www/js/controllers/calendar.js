@@ -20,6 +20,10 @@ angular.module('Schedulogy')
         };
 
         $scope.myCalendar = FullCalendar;
+
+        // This is filled by the children.
+        $scope.modalScope = {};
+
         $scope.modals =
             {
                 floatToFixed: {
@@ -88,6 +92,9 @@ angular.module('Schedulogy')
         }
 
         $scope.openModal = function (modalName, params) {
+            if ($scope.modalScope[modalName] && $scope.modalScope[modalName].init)
+                $scope.modalScope[modalName].init();
+
             // This is ugly hack, should be fixed.
             var focusPrimaryInput = function () {
                 if (!$rootScope.isMobileLow && !$rootScope.isMobileNarrow) {

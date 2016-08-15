@@ -10,7 +10,15 @@
                     <div class="input-label">
                         E-mail
                     </div>
-                    <input type="email" ng-model="$parent.myUsers.currentUser.email" id="primaryInput" required name="email">
+                    <input type="email" ng-model="$parent.myUsers.currentUser.email" id="primaryInput" ng-disabled="(!$parent.newUser) || (!$root.currentUser.role !== 'admin')" required name="email">
+                </label>
+
+                <ion-checkbox ng-disabled="($root.currentUser.role !== 'admin') || ($parent.myUsers.currentUser._id === $root.currentUser._id)" ng-model="$parent.myUsers.currentUser.admin" name="admin">
+                    Administrator
+                </ion-checkbox>
+                <label class="item item-no-wrap" ng-if="($root.currentUser.role !== 'admin') || ($parent.myUsers.currentUser._id === $root.currentUser._id)">
+                    Note - Administrator:<br />
+                    <ul style='list-style-type: square;margin-left:25px;'><li>You cannot change this attribute for yourself.</li><li>You cannot change this attribute if you are not an admin.</li></ul>
                 </label>
             </div>
             <div class="row">

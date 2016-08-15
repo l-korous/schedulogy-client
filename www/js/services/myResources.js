@@ -1,19 +1,30 @@
 angular.module('Schedulogy')
-    .service('MyResources', function (settings, DateUtils, Resource) {
+    .service('MyResources', function (settings, DateUtils, Resource, $rootScope) {
         var _this = this;
         _this.resources = [];
-        
+
         _this.saveCallback = null;
-        _this.registerSaveCallback = function(callback) {
+        _this.registerSaveCallback = function (callback) {
             _this.saveCallback = callback;
         };
 
-        _this.refresh = function () {
+        _this.refresh = function (callback) {
             Resource.query({}, function (data) {
                 _this.resources = data.resourcesLocal;
+                callback && callback();
             }, function (err) {
                 console.log('Resource.query - error');
             });
+        };
+
+        _this.getMyResourceId = function () {
+            if (!$rootScope.currentUser.resourceId) {
+                var theResources = _this.resources.filter(function (res) {
+                    return (res.type === 'user') && (res.user = $rootScope.currentUser._id);
+                });
+                $rootScope.currentUser.resourceId = theResources[0]._id;
+            }
+            return $rootScope.currentUser.resourceId;
         };
 
         _this.saveResource = function () {

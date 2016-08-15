@@ -15,6 +15,8 @@
                 <div ng-show="taskSaveForm.floatingDueDate.$error.required" class="item help-block">Please provide a valid date.</div>
                 <div ng-show="taskSaveForm.floatingDueTime.$error.required" class="item help-block">Please provide a valid time.</div>
                 <div ng-show="taskSaveForm.floatingDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
+                <div ng-show="taskSaveForm.resource.$error.required" class="item help-block">Please provide a valid resource.</div>
+                <div ng-show="taskSaveForm.resources.$error.required" class="item help-block">Please provide valid resources.</div>
             </div>
             <div class="list">
                 <label class="item item-input item-select">
@@ -183,6 +185,24 @@
                     <label class="item item-input item-select width-100">
                         <custom-select empty-message="{{noDependenciesToListMsg}}" css-class="select-blocks"  ng-model="myEvents.newDependency" options="$parent.eventSources[0] | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a dependency" ng-change="myEvents.addDependency(myEvents.newDependency)"></custom-select>
                     </label>
+                </label>
+                
+                <label class="item" ng-if="myEvents.currentEvent.type !== 'floating'">
+                    <div class="input-label">
+                        Resource
+                    </div>
+                    <select ng-model="myEvents.currentEvent.resource" style="width:100%;" data-ng-attr-size="{{myResources.resources.length}}" required name="resource"
+                        ng-options="resource._id as (resource.type === 'user' ? resource.username : resource.name) for resource in myResources.resources" class="select-no-scrollbar">
+                    </select>
+                </label>
+
+                <label class="item" ng-if="myEvents.currentEvent.type === 'floating'">
+                    <div class="input-label">
+                        Admissible Resources
+                    </div>
+                    <select multiple ng-model="myEvents.currentEvent.admissibleResources" style="width:100%;" data-ng-attr-size="{{myResources.resources.length}}" required name="resources"
+                        ng-options="resource._id as (resource.type === 'user' ? resource.username : resource.name) for resource in myResources.resources" class="select-no-scrollbar">
+                    </select>
                 </label>
             </div>
 

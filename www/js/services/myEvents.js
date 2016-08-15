@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils, $rootScope) {
+    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils, $rootScope, MyResources, $timeout) {
         var _this = this;
         _this.events = [];
 
@@ -44,6 +44,8 @@ angular.module('Schedulogy')
                 stick: true,
                 type: settings.defaultTaskType,
                 dur: settings.defaultTaskDuration,
+                resource: MyResources.getMyResourceId(),
+                admissibleResources: [MyResources.getMyResourceId()],
                 start: btime,
                 startDateText: btime.format(settings.dateFormat),
                 startTimeText: btime.format(settings.timeFormat),
@@ -112,14 +114,15 @@ angular.module('Schedulogy')
         _this.deleteEvent = function (passedEvent) {
             var eventToDelete = passedEvent || _this.currentEvent;
 
-            $ionicLoading.show({
-                template: settings.loadingTemplate
-            });
+            _this.shouldShowLoading = true;
+            $timeout(function() {if(_this.shouldShowLoading) $ionicLoading.show({template: settings.loadingTemplate});}, 500);
 
             Task.fromEvent(eventToDelete).$remove({btime: _this.getBTime().unix(), taskId: eventToDelete._id}, function (data, headers) {
                 _this.importFromTasks(data.tasks);
+                _this.shouldShowLoading = false;
                 $ionicLoading.hide();
             }, function (err) {
+                _this.shouldShowLoading = false;
                 $ionicLoading.hide();
 
                 // error callback
@@ -128,12 +131,15 @@ angular.module('Schedulogy')
         };
 
         _this.deleteAll = function (passedEvent) {
-            $ionicLoading.show({template: settings.loadingTemplate});
+            _this.shouldShowLoading = true;
+            $timeout(function() {if(_this.shouldShowLoading) $ionicLoading.show({template: settings.loadingTemplate});}, 500);
 
             Task.deleteAll({}, function (data, headers) {
                 _this.importFromTasks(data.tasks);
+                _this.shouldShowLoading = false;
                 $ionicLoading.hide();
             }, function (err) {
+                _this.shouldShowLoading = false;
                 $ionicLoading.hide();
 
                 // error callback
@@ -167,16 +173,18 @@ angular.module('Schedulogy')
         _this.tasksInResponseSuccessHandler = function (data, successCallback) {
             _this.importFromTasks(data.tasks);
             successCallback && successCallback();
+            _this.shouldShowLoading = false;
             $ionicLoading.hide();
         };
 
         _this.tasksInResponseErrorHandler = function (err, errorCallback) {
-            $ionicLoading.hide();
             if (err.data.tasks)
                 _this.importFromTasks(err.data.tasks);
 
             _this.openErrorModal();
             errorCallback && errorCallback();
+            _this.shouldShowLoading = false;
+            $ionicLoading.hide();
         };
 
         _this.processEventDrop = function (event, delta) {
@@ -212,7 +220,8 @@ angular.module('Schedulogy')
 
         _this.saveEvent = function (passedEvent, successCallback, errorCallback) {
             var eventToSave = passedEvent || _this.currentEvent;
-            $ionicLoading.show({template: settings.loadingTemplate});
+            _this.shouldShowLoading = true;
+            $timeout(function() {if(_this.shouldShowLoading) $ionicLoading.show({template: settings.loadingTemplate});}, 500);
             Task.fromEvent(eventToSave).$save({btime: _this.getBTime().unix()}, function (data) {
                 _this.tasksInResponseSuccessHandler(data, successCallback);
             },

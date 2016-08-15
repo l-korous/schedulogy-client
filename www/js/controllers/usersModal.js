@@ -3,6 +3,16 @@ angular.module('Schedulogy')
         $scope.myUsers = MyUsers;
         $scope.successInfo = null;
         $scope.settings = settings;
+        $scope.loading = true;
+
+        // Register self in parent (leftMenu).
+        $scope.$parent.modalScope.users = $scope;
+        $scope.init = function () {
+            $scope.loading = true;
+            $scope.myUsers.refresh(function () {
+                $scope.loading = false;
+            });
+        };
 
         $scope.closeSelf = function () {
             $scope.$parent.closeModal('users');
@@ -17,7 +27,14 @@ angular.module('Schedulogy')
         });
 
         $scope.openDetailModal = function (user) {
-            $scope.myUsers.emptyCurrentUser();
+            if(!user) {
+                $scope.newUser = true;
+                $scope.myUsers.emptyCurrentUser();
+            }
+            else {
+                $scope.myUsers.currentUser = user;
+                $scope.newUser = false;
+            }
 
             var focusPrimaryInput = function () {
                 var primaryInput = $($scope.detailModal.modalEl).find('#primaryInput');
@@ -36,7 +53,8 @@ angular.module('Schedulogy')
 
         $scope.myUsers.registerSaveCallback(function () {
             $scope.closeDetailModal();
-            $scope.successInfo = settings.registrationSuccessInfo;
+            if($scope.newUser)
+                $scope.successInfo = settings.registrationSuccessInfo;
         });
 
         $scope.$on('$destroy', function () {

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('MainCtrl', function ($scope, $rootScope, $ionicModal, Auth, settings, $http, $ionicLoading, $timeout) {
+    .controller('MainCtrl', function ($scope, $rootScope, $ionicModal, Auth, settings, $http, $ionicLoading, $timeout, MyResources, MyUsers) {
         // Some loading time to be sure we are all set.
         $scope.passwordRules = {
             minGroups: settings.minPasswordGroups,
@@ -16,6 +16,9 @@ angular.module('Schedulogy')
         // Could this be removed?
         $scope.appVersion = settings.appVersion;
 
+        // This is filled by the children.
+        $scope.modalScope = {};
+        
         $scope.modal = {};
         ['users', 'resources', 'leftMenu', 'changeUsername', 'changePassword', 'feedback'].forEach(function (modalName) {
             $ionicModal.fromTemplateUrl('templates/' + modalName + 'Modal.html', {
@@ -76,15 +79,20 @@ angular.module('Schedulogy')
             $scope.successInfo = '';
             $scope.errorInfo = '';
 
-            var show = $scope.modal[modalName].show();
-            if (modalName !== 'leftMenu' && modalName !== 'resources' && modalName !== 'users') {
-                $scope.closeModal('leftMenu');
-                show.then(function () {
+            $scope.modal[modalName].show().then(function () {
+                if (modalName !== 'leftMenu')
+                    $scope.closeModal('leftMenu');
+                
+                if($scope.modalScope[modalName] && $scope.modalScope[modalName].init)
+                    $scope.modalScope[modalName].init();
+                
+                if (modalName !== 'leftMenu' && modalName !== 'resources' && modalName !== 'users') {
                     if (angular.element($('#primaryInput')).scope()) {
                         angular.element($('#primaryInput')).scope().form.$setPristine();
                     }
-                });
-            }
+                }
+            });
+
         };
 
         $scope.$on('$destroy', function () {

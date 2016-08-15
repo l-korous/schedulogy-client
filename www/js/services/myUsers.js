@@ -8,15 +8,19 @@ angular.module('Schedulogy')
             _this.saveCallback = callback;
         };
 
-        _this.refresh = function () {
+        _this.refresh = function (callback) {
             User.query({btime: MyEvents.getBTime().unix()}, function (data) {
                 _this.users = data.usersLocal;
+                callback && callback();
             }, function (err) {
                 console.log('User.query - error');
             });
         };
 
         _this.saveUser = function () {
+            // TODO This is not the best place for this.
+            if(_this.currentUser.admin)
+                _this.currentUser.role = 'admin';
             _this.currentUser.$save({}, function (data) {
                 _this.users = data.usersLocal;
                 _this.saveCallback && _this.saveCallback();

@@ -39,7 +39,7 @@ angular.module('Schedulogy')
             },
             processTokenStoreUser: function () {
                 var payload = JSON.parse($window.atob($window.localStorage.token.split('.')[1].replace(/-/g, "+").replace(/_/g, "/")));
-                $rootScope.currentUser = this.fromUtf({_id: payload.uid, email: payload.uem, username: (payload.uname && payload.uname.length > 1) ? payload.uname : payload.uem});
+                $rootScope.currentUser = this.fromUtf({_id: payload.uid, email: payload.uem, username: (payload.uname && payload.uname.length > 1) ? payload.uname : payload.uem, role: payload.uro});
                 $window.localStorage.currentUserId = $rootScope.currentUser._id;
             },
             register: function (user) {
@@ -85,6 +85,7 @@ angular.module('Schedulogy')
                 return $http.post(settings.serverUrl + "/reset-password", {email: email});
             },
             logout: function () {
+                delete $rootScope.currentUser;
                 $window.localStorage.token && delete $window.localStorage.token;
                 $window.localStorage.currentUserId && delete $window.localStorage.currentUserId;
             }

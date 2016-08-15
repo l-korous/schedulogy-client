@@ -1,8 +1,10 @@
 <div class="modal" ng-click="customSelect_modal.hide()">
+    <ion-header-bar>
+        <h1 class="title">{{customSelect_nullValue}}</h1>
+    </ion-header-bar>
     <ion-content class="modal-middle-outer" has-bouncing="false" scroll="true">
         <div class="modal-middle-inner">
             <div class="list custom-select-list" ng-class="[customSelect_cssClass]" ng-click="$event.stopPropagation()">
-                <div class="item" ng-if="customSelect_nullValue" ng-click="customSelect_setValue()" ng-class="{selected: customSelect_isValue()}">{{customSelect_nullValue}}</div>
                 <div class="item" ng-repeat="customSelect_option in customSelect_options track by $index" ng-click="customSelect_setValue(customSelect_option)" ng-class="{selected: customSelect_isValue(customSelect_option), 'item-icon-left': customSelect_icon && customSelect_option[customSelect_icon]}" style="border-left:10px solid {{customSelect_option.color}};">
                     <i class="icon" ng-if="customSelect_icon && customSelect_option[customSelect_icon]" ng-class="[customSelect_option[customSelect_icon]]"></i>
                     {{customSelect_option[customSelect_label]}}

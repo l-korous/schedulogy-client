@@ -1,17 +1,24 @@
 angular.module('Schedulogy')
-    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, $timeout) {
+    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, $timeout, MyResources) {
+        $scope.myEvents = MyEvents;
+        $scope.myResources = MyResources;
+
         // Register confirm callback in parent.
         $scope.$parent.modals.task.confirmCallback = function () {
             $scope.saveEvent();
             $scope.$parent.closeModal('task');
         };
         
+        // Register self in parent (calendar).
+        $scope.$parent.modalScope.task = $scope;
+        $scope.init = function () {
+            $scope.myResources.refresh();
+        };
+
         $scope.maxEventDuration = settings.maxEventDuration;
         // TODO - can we do this in the view directly from settings?
         $scope.noPrerequisitesToListMsg = settings.noPrerequisitesToListMsg;
         $scope.noDependenciesToListMsg = settings.noDependenciesToListMsg;
-
-        $scope.myEvents = MyEvents;
 
         $scope.saveEvent = function () {
             MyEvents.saveEvent(MyEvents.currentEvent);
@@ -71,7 +78,7 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
                         MyEvents.updateEndDateTimeWithDuration();
-                    
+
                     var primaryInput = $('.taskSaveForm').find('#primaryInput');
                     angular.element(primaryInput).scope().taskSaveForm.$setDirty();
                 }
@@ -83,7 +90,7 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
                         MyEvents.updateEndDateTimeWithDuration();
-                    
+
                     var primaryInput = $('.taskSaveForm').find('#primaryInput');
                     angular.element(primaryInput).scope().taskSaveForm.$setDirty();
                 }

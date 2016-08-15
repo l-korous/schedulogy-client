@@ -225,7 +225,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             $location.search('');
             MyEvents.refresh();
             MyResources.refresh();
-            MyUsers.refresh();
             $state.go(settings.defaultStateAfterLogin, {}, {location: false});
         });
 

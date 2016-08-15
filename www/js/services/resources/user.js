@@ -41,6 +41,7 @@ angular.module('Schedulogy')
         });
 
         function unserialize(user) {
+            user.admin = (user.role === 'admin');
             return angular.extend(new User(), user);
         }
 

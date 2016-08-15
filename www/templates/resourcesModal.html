@@ -2,36 +2,53 @@
     <ion-header-bar>
         <h1 class="title">Resources</h1>
     </ion-header-bar>
-    <ion-content has-bouncing="false">
+    <ion-content has-bouncing="false" ng-show="!loading">
         <div class="list">
-            <div class="item item-no-wrap">
-                You can create as many 'artificial' resources as you want, set their time constraints and schedule tasks into these.
-                <br />
-                Only existing users under your tenant account represent the 'user' resources. These resources may not be deleted, they exist if and only if the respective user does.
+            <div class="item item-no-wrap item-intro" ng-if="$root.currentUser.role === 'admin'">
+                <span>
+                    Here you can view all resources of your tenant account. You can click on a resource to see the resource time constraints.
+                </span>
+                <span>
+                    You can create as many 'artificial' resources as you want, set their time constraints and schedule tasks into these.
+                </span>
+                <span>
+                    Only existing users under your tenant account represent the 'user' resources. These resources may not be deleted, they exist if and only if the respective user does.
+                </span>
+            </div>
+            <div class="item item-no-wrap item-intro" ng-if="$root.currentUser.role !== 'admin'">
+                <span>
+                    Here you can view all resources of your tenant account. You can click on a resource to see the resource time constraints.
+                </span>
+                <span>
+                    Only tenant account administrators can create / modify / delete resources.
+                </span>
             </div>
             <div class="item item-icon-left item-button-right" ng-repeat="resource in myResources.resources" ng-click="openDetailModal(resource)">
                 <i class="icon ion-person" ng-if="resource.type === 'user'"></i>
                 <i class="icon ion-wrench" ng-if="resource.type === 'artificial'"></i>
 
                 {{resource.type === 'user' ? resource.username : resource.name}}
-                <button class="button button-clear" ng-click="myResources.removeResource(resource); $event.stopPropagation();" ng-if="resource.type === 'artificial'">
+                <button class="button button-clear" ng-click="myResources.removeResource(resource);
+                                $event.stopPropagation();" ng-if="resource.type === 'artificial'">
                     <i class="icon ion-trash-a assertive"></i>
                 </button>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-50 padding-horizontal padding-top">
+            <div ng-if="$root.currentUser.role === 'admin'" class="col-50 padding-horizontal padding-top">
                 <button class="button button-block button-positive" ng-click="openDetailModal()">
                     Create New
                 </button>
 
             </div>
-            <div class="col-50 padding-horizontal padding-top">
+            <div class="padding-horizontal padding-top" ng-class="{'col-50': $root.currentUser.role === 'admin', 'col': $root.currentUser.role !== 'admin'}">
                 <button class="button button-block button-dark button-outline" ng-click="closeSelf();">
                     Close
                 </button>   
             </div>
         </div>
+    </ion-content>
+    <ion-content has-bouncing="false" ng-show="loading" style="z-index:20;width:100%;background:url('img/squares.gif') no-repeat center center white;">
     </ion-content>
 </ion-modal-view>

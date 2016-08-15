@@ -317,6 +317,10 @@ h2 {
     min-height:8em;
 }
 
+.fc-event {
+    line-height:1.05;
+}
+
 .fc-event .fc-bg {
     opacity:0;
 }
@@ -334,6 +338,7 @@ h2 {
     position:absolute;
     bottom:13px;
     left: 0px;
+    font-size:.95em;
     text-align:center;
     width:100%;
     text-overflow:ellipsis;
@@ -508,4 +513,16 @@ input[readonly=true] {
 
 .inactive {
     opacity:.5;
+}
+
+.item-intro span {
+    margin:5px;
+    font-size:.9em;
+    display:block;
+}
+
+.select-no-scrollbar {
+    overflow:hidden;
+    padding:10px;
+    margin:-5px -20px -5px -5px;
 }
