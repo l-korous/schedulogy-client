@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils, $rootScope, MyResources, $timeout) {
+    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils, $rootScope, $timeout) {
         var _this = this;
         _this.events = [];
 
@@ -44,8 +44,8 @@ angular.module('Schedulogy')
                 stick: true,
                 type: settings.defaultTaskType,
                 dur: settings.defaultTaskDuration,
-                resource: MyResources.getMyResourceId(),
-                admissibleResources: [MyResources.getMyResourceId()],
+                resource: $rootScope.myResourceId,
+                admissibleResources: [$rootScope.myResourceId],
                 start: btime,
                 startDateText: btime.format(settings.dateFormat),
                 startTimeText: btime.format(settings.timeFormat),
@@ -107,7 +107,7 @@ angular.module('Schedulogy')
 
         _this.getCurrentEvents = function (now) {
             return $.grep(this.events, function (event) {
-                return (event.type !== 'floating' && ((event.start < now) && (event.end > now)));
+                return ((event.start <= now) && (event.end >= now));
             });
         };
 
@@ -232,14 +232,15 @@ angular.module('Schedulogy')
 
         // Task edit modal.
         $ionicModal.fromTemplateUrl('templates/errorModal.html', {
-            animation: 'animated zoomIn'
+            animation: 'animated zoomIn',
+            $scope:_this
         }).then(function (modal) {
             _this.errorModal = modal;
         });
         _this.openErrorModal = function () {
             _this.errorModal.show();
         };
-        _this.closeErrorModal = function () {
+        $rootScope.closeErrorModal = function () {
             _this.errorModal.hide();
         };
 
@@ -336,8 +337,6 @@ angular.module('Schedulogy')
                     break;
                 }
             }
-            if (toReturn.minute() === 0)
-                toReturn.add(1, 'hour');
 
             // Move to next day.
             if ((toReturn.hours() * 60 + toReturn.minute()) > settings.endHour * 60) {

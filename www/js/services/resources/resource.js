@@ -14,13 +14,17 @@ angular.module('Schedulogy')
             save: {
                 method: "POST",
                 transformRequest: [serialize].concat($http.defaults.transformRequest),
-                transformResponse: $http.defaults.transformResponse.concat([unserializeArray])
+                transformResponse: $http.defaults.transformResponse.concat([unserializeArray]),
+                params: {
+                    btime: '@btime'
+                }
             },
             remove: {
                 method: "DELETE",
                 url: settings.serverUrl + "/resource/:resourceId",
                 params: {
-                    resourceId: "@resourceId"
+                    resourceId: "@resourceId",
+                    btime: '@btime'
                 },
                 transformResponse: $http.defaults.transformResponse.concat([unserializeArray])
             }
@@ -30,7 +34,7 @@ angular.module('Schedulogy')
             return angular.extend({}, {
                 _id: resource._id,
                 type: resource.type,
-                user: resource.type === 'user' ? resource.username : null,
+                user: resource.type === 'user' ? resource.user : null,
                 name: resource.type === 'artificial' ? resource.name : null,
                 tenant: resource.tenant,
                 constraints: [{

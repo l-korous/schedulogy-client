@@ -4950,7 +4950,7 @@
             }
             // single day, so full single date string will probably be in title text
             else {
-                return 'dddd'; // "Saturday"
+                return this.view.opt('dayOfMonthFormat'); // "Saturday"
             }
         },
         /* Slicing

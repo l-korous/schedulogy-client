@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyResources', function (settings, DateUtils, Resource, $rootScope) {
+    .service('MyResources', function (settings, DateUtils, Resource, $rootScope, MyEvents) {
         var _this = this;
         _this.resources = [];
 
@@ -11,6 +11,7 @@ angular.module('Schedulogy')
         _this.refresh = function (callback) {
             Resource.query({}, function (data) {
                 _this.resources = data.resourcesLocal;
+                $rootScope.myResourceId = _this.getMyResourceId();
                 callback && callback();
             }, function (err) {
                 console.log('Resource.query - error');
@@ -28,14 +29,14 @@ angular.module('Schedulogy')
         };
 
         _this.saveResource = function () {
-            _this.currentResource.$save({}, function (data) {
+            _this.currentResource.$save({btime: MyEvents.getBTime().unix()}, function (data) {
                 _this.resources = data.resourcesLocal;
                 _this.saveCallback && _this.saveCallback();
             });
         };
 
         _this.removeResource = function (resource) {
-            resource.$remove({resourceId: resource._id}, function (data) {
+            resource.$remove({resourceId: resource._id, btime: MyEvents.getBTime().unix()}, function (data) {
                 _this.resources = data.resourcesLocal;
             });
         };

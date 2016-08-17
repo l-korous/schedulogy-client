@@ -14,8 +14,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         weeks: 26,
         mobileWidth: 500,
         mobileHeight: 500,
-        startHour: 8,
-        endHour: 17,
+        startHour: 0,
+        endHour: 24,
         minuteGranularity: 30,
         // This has to be exactly calculated using minGranularity
         slotsPerHour: 2, // === (60 / minGranularity)
