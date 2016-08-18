@@ -1,6 +1,11 @@
 <ion-modal-view ng-controller="TaskModalCtrl">
     <ion-header-bar>
-        <h1 class="title">{{myEvents.currentEvent.title ? myEvents.currentEvent.title : 'New Task'}}</h1>
+        <h1 class="title" ng-class="{'has-button-right':myEvents.currentEvent._id}">{{myEvents.currentEvent.title ? myEvents.currentEvent.title : 'New Task'}}</h1>
+
+        <button class="button button-dark button-outline icon-right" ng-click="myEvents.deleteEventById(myEvents.currentEvent._id);" ng-if="myEvents.currentEvent._id">
+            Delete&nbsp;
+            <i class="icon ion-trash-b assertive"></i>
+        </button>
     </ion-header-bar>
     <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
     <ion-content class="modalNamingSearch" name="task">
@@ -153,13 +158,13 @@
                     <div class="input-label">
                         Prerequisites
                     </div>
-                    <div class="list nested-list">
+                    <div class="list nested-list" ng-show="myEvents.currentEvent.needsForShow.length > 0">
                         <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.needsForShow| filter : {_id: event._id} : true">
                             <span class="bold">{{event.title}}</span> {{event.type == 'floating' ? 'due ' : ''}} on 
                             {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
                             {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
                             <button class="button button-clear" on-tap="myEvents.removePrerequisite(event)">
-                                <i class="icon ion-trash-a assertive"></i>
+                                <i class="icon ion-trash-b assertive"></i>
                             </button>
                         </div>
                     </div>
@@ -172,13 +177,13 @@
                     <div class="input-label">
                         Dependent Tasks
                     </div>
-                    <div class="list nested-list">
+                    <div class="list nested-list" ng-show="myEvents.currentEvent.blocksForShow.length > 0">
                         <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.blocksForShow| filter : {_id: event._id} : true">
                             <span class="bold">{{event.title}}</span> {{event.type == 'floating' ? 'due ' : ''}} on 
                             {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
                             {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
                             <button class="button button-clear" on-tap="myEvents.removeDependency(event)">
-                                <i class="icon ion-trash-a assertive"></i>
+                                <i class="icon ion-trash-b assertive"></i>
                             </button>
                         </div>
                     </div>
@@ -186,22 +191,22 @@
                         <custom-select empty-message="{{noDependenciesToListMsg}}" css-class="select-blocks"  ng-model="myEvents.newDependency" options="$parent.eventSources[0] | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a dependency" ng-change="myEvents.addDependency(myEvents.newDependency)"></custom-select>
                     </label>
                 </label>
-                
-                <label class="item" ng-if="myEvents.currentEvent.type !== 'floating'">
+
+                <label class="item item-nested-list" ng-if="myEvents.currentEvent.type !== 'floating'">
                     <div class="input-label">
                         Resource
                     </div>
                     <select ng-model="myEvents.currentEvent.resource" style="width:100%;" data-ng-attr-size="{{myResources.resources.length}}" required name="resource"
-                        ng-options="resource._id as (resource.type === 'user' ? resource.username : resource.name) for resource in myResources.resources" class="select-no-scrollbar">
+                            ng-options="resource._id as resource.name for resource in myResources.resources" class="select-no-scrollbar">
                     </select>
                 </label>
 
-                <label class="item" ng-if="myEvents.currentEvent.type === 'floating'">
+                <label class="item item-nested-list" ng-if="myEvents.currentEvent.type === 'floating'">
                     <div class="input-label">
                         Admissible Resources
                     </div>
                     <select multiple ng-model="myEvents.currentEvent.admissibleResources" style="width:100%;" data-ng-attr-size="{{myResources.resources.length}}" required name="resources"
-                        ng-options="resource._id as (resource.type === 'user' ? resource.username : resource.name) for resource in myResources.resources" class="select-no-scrollbar">
+                            ng-options="resource._id as resource.name for resource in myResources.resources" class="select-no-scrollbar">
                     </select>
                 </label>
             </div>

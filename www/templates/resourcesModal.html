@@ -27,10 +27,10 @@
                 <i class="icon ion-person" ng-if="resource.type === 'user'"></i>
                 <i class="icon ion-wrench" ng-if="resource.type === 'artificial'"></i>
 
-                {{resource.type === 'user' ? resource.username : resource.name}}
+                {{resource.name}}
                 <button class="button button-clear" ng-click="myResources.removeResource(resource);
                                 $event.stopPropagation();" ng-if="resource.type === 'artificial'">
-                    <i class="icon ion-trash-a assertive"></i>
+                    <i class="icon ion-trash-b assertive"></i>
                 </button>
             </div>
         </div>

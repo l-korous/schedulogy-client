@@ -45,10 +45,10 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             floating: '#ffa400'
         },
         maxEventDuration: {
-            fixed: 24,
+            fixed: 48,
             fixedAllDay: 14,
             // This needs to correspond to startHour -> endHour
-            floating: 9
+            floating: 48
         },
         eventBorderColor: '#111',
         passwordResetErrorInfo: function (msg) {

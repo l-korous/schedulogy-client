@@ -41,6 +41,9 @@ angular.module('Schedulogy')
             from.needs = to.needs;
             from.needsForShow = to.needsForShow;
             from.desc = to.desc;
+            from.resource = to.resource;
+            from.resourceName = to.resourceName;
+            from.admissibleResources = to.admissibleResources;
         };
         this.processConstraint = function (event, constraint, btime) {
             var resConstraint = constraint || event.constraint;

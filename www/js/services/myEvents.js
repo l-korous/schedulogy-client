@@ -323,6 +323,8 @@ angular.module('Schedulogy')
                 event.endDateText = event.end.format(settings.dateFormat);
                 event.endTimeText = event.end.format(settings.timeFormat);
             }
+            
+            _this.recalcConstraints();
         };
 
         _this.getBTime = function () {

@@ -6899,6 +6899,12 @@
                     '</div>' :
                     ''
                     ) +
+                (event.resourceName ?
+                    '<div class="fc-resource"><i class="icon ion-levels light"></i>&nbsp;' +
+                    htmlEscape(event.resourceName) +
+                    '</div>' :
+                    ''
+                    ) +
                 (event.type === 'floating' ?
                     '<div class="fc-due">' + 'Due: ' +
                     htmlEscape(event.dueTimeText) + ' | ' +
@@ -7297,7 +7303,7 @@
             // Subclasses can override. Must return all properties.
             computeRange: function (date) {
                 var intervalUnit = computeIntervalUnit(this.intervalDuration);
-                var intervalStart = date.clone().startOf(intervalUnit);
+                var intervalStart = date.clone();
                 var intervalEnd = intervalStart.clone().add(this.intervalDuration);
                 var start, end;
 
@@ -7331,13 +7337,13 @@
             // Computes the new date when the user hits the prev button, given the current date
             computePrevDate: function (date) {
                 return this.massageCurrentDate(
-                    date.clone().startOf(this.intervalUnit).subtract(this.intervalDuration), -1
+                    date.clone().subtract(new moment.duration(1, 'days')), -1
                     );
             },
             // Computes the new date when the user hits the next button, given the current date
             computeNextDate: function (date) {
                 return this.massageCurrentDate(
-                    date.clone().startOf(this.intervalUnit).add(this.intervalDuration)
+                    date.clone().add(new moment.duration(1, 'days'))
                     );
             },
             // Given an arbitrarily calculated current date of the calendar, returns a date that is ensured to be completely
@@ -8803,9 +8809,9 @@
                     date = currentView.massageCurrentDate(date);
 
                     // render or rerender the view
-                    if (
-                        !currentView.displaying ||
-                        !date.isWithin(currentView.intervalStart, currentView.intervalEnd) // implicit date window change
+                    if (true
+                        // !currentView.displaying
+                        // || !date.isWithin(currentView.intervalStart, currentView.intervalEnd) // implicit date window change
                         ) {
                         if (elementVisible()) {
 
@@ -11292,6 +11298,18 @@
                 }
 
                 return range;
+            },
+            // Computes the new date when the user hits the prev button, given the current date
+            computePrevDate: function (date) {
+                return this.massageCurrentDate(
+                    date.clone().subtract(this.intervalDuration), -1
+                    );
+            },
+            // Computes the new date when the user hits the next button, given the current date
+            computeNextDate: function (date) {
+                return this.massageCurrentDate(
+                    date.clone().add(this.intervalDuration)
+                    );
             },
             // Overrides the default BasicView behavior to have special multi-week auto-height logic
             setGridHeight: function (height, isAuto) {

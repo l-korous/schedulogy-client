@@ -43,7 +43,7 @@
                 
                 <button ng-if="$root.currentUser.role === 'admin' && user._id !== $root.currentUser._id" class="button button-clear" ng-click="myUsers.removeUser(user);
                                 $event.stopPropagation();" ng-if="user.email !== $root.currentUser.email">
-                    <i class="icon ion-trash-a assertive"></i>
+                    <i class="icon ion-trash-b assertive"></i>
                 </button>
             </div>
         </div>

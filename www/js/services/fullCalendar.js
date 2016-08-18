@@ -8,8 +8,15 @@ angular.module('Schedulogy')
 
         this.uiConfig = {
             calendar: {
-                defaultView: 'agendaWeek',
-                weekends: false,
+                defaultView: $rootScope.isMobileNarrow ? 'agenda3Day' : 'agendaWeek',
+                views: {
+                    agenda3Day: {
+                        type: 'agenda',
+                        duration: {days: 3},
+                        buttonText: '3 days'
+                    }
+                },
+                weekends: true,
                 timezone: 'local',
                 timeFormat: 'H:mm',
                 slotLabelFormat: 'H:mm',
@@ -22,13 +29,13 @@ angular.module('Schedulogy')
                     end: MyEvents.getBTime().clone().add(settings.weeks, 'weeks')
                 },
                 slotDuration: '00:30:00',
-                defaultDate: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : moment(new Date()),
+                defaultDate: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : MyEvents.getBTime(),
                 now: MyEvents.getBTime(),
                 firstDay: 1,
                 nowIndicator: true,
                 editable: true,
                 header: {
-                    left: 'agendaDay agendaWeek month',
+                    left: $rootScope.isMobileNarrow ? 'agendaDay agenda3Day agendaWeek' : 'agendaDay agenda3Day agendaWeek month',
                     center: 'title',
                     right: 'today prev,next'
                 },
@@ -80,7 +87,7 @@ angular.module('Schedulogy')
 
                 },
                 eventMouseover: function (event, jsEvent, view) {
-                    var newdiv1 = $('<i class="icon ion-close assertive eventDeleter">');
+                    var newdiv1 = $('<i class="icon ion-trash-b eventDeleter" title="Delete">');
 
                     $(jsEvent.currentTarget).append(newdiv1);
 
@@ -101,7 +108,7 @@ angular.module('Schedulogy')
             style.type = 'text/css';
             style.innerHTML = '.fc-time-grid .fc-slats td { height: ' + row_height.toString() + 'px; }';
             // Hiding the title on narrow mobile.
-            if($rootScope.isMobileNarrow)
+            if ($rootScope.isMobileNarrow)
                 style.innerHTML += '.fc-center { display:none ! important; }';
             var list = document.getElementsByTagName('head')[0], item = document.getElementsByTagName('head')[0].lastElementChild;
             list.removeChild(item);
