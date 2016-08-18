@@ -37,7 +37,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         },
         minCalendarRowHeight: 45,
         checkNewVersion: false,
-        dateFormat: 'YYYY-MM-DD',
+        dateFormat: 'Do MMM',
         timeFormat: 'HH:mm',
         eventColor: {
             fixed: '#387ef5',

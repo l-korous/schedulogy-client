@@ -6900,8 +6900,8 @@
                     ''
                     ) +
                 (event.type === 'floating' ?
-                    '<div class="fc-due">' + 'Due at ' +
-                    htmlEscape(event.dueTimeText) + ' on ' +
+                    '<div class="fc-due">' + 'Due: ' +
+                    htmlEscape(event.dueTimeText) + ' | ' +
                     htmlEscape(event.dueDateText) +
                     '</div>' :
                     ''

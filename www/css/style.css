@@ -91,7 +91,7 @@ h2 {
 .eventDeleter {
     z-index: 55;
     position: absolute;
-    top: 5px;
+    top: 3px;
     right: 5px;
     font-size: 1em;
     color: #fff;
@@ -330,16 +330,17 @@ h2 {
     font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
 }
 .fc-event .fc-content .fc-title {
-    text-align:center;
+    text-align:left;
     overflow: hidden;
+    white-space: pre;
+    text-overflow:ellipsis;
     font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
 }
 .fc-event .fc-content .fc-due {
-    position:absolute;
-    bottom:13px;
-    left: 0px;
     font-size:.95em;
-    text-align:center;
+    text-align:left;
+    white-space: pre;
+    overflow: hidden;
     width:100%;
     text-overflow:ellipsis;
     font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
@@ -525,4 +526,8 @@ input[readonly=true] {
     overflow:hidden;
     padding:10px;
     margin:-5px -20px -5px -5px;
+}
+
+.fc .fc-toolbar > * > * {
+	margin-left: .35em;
 }
