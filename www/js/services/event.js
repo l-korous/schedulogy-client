@@ -1,7 +1,7 @@
 angular.module('Schedulogy')
     .service('Event', function (moment, settings, DateUtils) {
-        this.changeType = function(event, toType) {
-            if(toType === 'floating') {
+        this.changeType = function (event, toType) {
+            if (toType === 'floating') {
                 event.type = 'floating';
                 event.allDay = false;
             }
@@ -14,37 +14,7 @@ angular.module('Schedulogy')
                 event.allDay = true;
             }
         };
-        
-        // This function assumes that the _id (and id) will not change.
-        this.updateEvent = function (from, to) {
-            from.title = to.title;
-            from.start = to.start;
-            from.startDateText = to.startDateText;
-            from.startTimeText = to.startTimeText;
-            from.end = to.end;
-            from.endDateText = to.endDateText;
-            from.endTimeText = to.endTimeText;
-            from.dur = to.dur;
-            from.dueDateText = to.dueDateText;
-            from.dueTimeText = to.dueTimeText;
-            from.stick = to.stick;
-            from.type = to.type;
-            from.allDay = to.allDay;
-            from.due = to.due;
-            from.due = to.due;
-            from.due = to.due;
-            from.due = to.due;
-            from.color = to.color;
-            from.constraint = to.constraint;
-            from.blocks = to.blocks;
-            from.blocksForShow = to.blocksForShow;
-            from.needs = to.needs;
-            from.needsForShow = to.needsForShow;
-            from.desc = to.desc;
-            from.resource = to.resource;
-            from.resourceName = to.resourceName;
-            from.admissibleResources = to.admissibleResources;
-        };
+
         this.processConstraint = function (event, constraint, btime) {
             var resConstraint = constraint || event.constraint;
             if (resConstraint.start) {
@@ -85,20 +55,51 @@ angular.module('Schedulogy')
                     endTimeText: null
                 });
             }
+            // This is the case when task can't be scheduled in such a duration and due date because of constraints.
+            if ((event.dur * settings.minuteGranularity * (event.type === 'fixedAllDay' ? 1440 : 1)) > event.constraint.end.diff(event.constraint.start, 'm'))
+                return false;
+            else {
+                if (event.type === 'floating') {
+                    // Task is due earlier that it can be.
+                    var minDue = event.constraint.start.clone().add(event.dur * settings.minuteGranularity, 'm');
+                    if (event.due.diff(minDue, 'm') < 0) {
+                        event.due = minDue;
+                        event.dueDateText = event.due.format(settings.dateFormat);
+                        event.dueTimeText = event.due.format(settings.timeFormat);
+                    }
+                    // Task is due later that it can be.
+                    var maxDue = event.constraint.end;
+                    if (event.due.diff(maxDue, 'm') > 0) {
+                        event.due = maxDue;
+                        event.dueDateText = event.due.format(settings.dateFormat);
+                        event.dueTimeText = event.due.format(settings.timeFormat);
+                    }
+                }
+                else {
+                    // There is no constraint on start (fixed tasks do not have prerequisites).
+                    // Task is due later that it can be.
+                    var maxEnd = event.constraint.end;
+                    if (event.end.diff(maxDue, 'm') > 0) {
+                        event.end = maxEnd;
+                        event.endDateText = (event.type === 'fixedAllDay' ? event.end.startOf('day') : event.end).format(settings.dateFormat);
+                        event.endTimeText = (event.type === 'fixedAllDay' ? event.end.startOf('day') : event.end).format(settings.timeFormat);
+                    }
+                }
+            }
+            return event;
         };
         this.toEvent = function (task, btime) {
             var start = moment.unix(task.start).local();
             var toAddMinutes = (task.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * task.dur;
             var end = start.clone().add(toAddMinutes, 'm');
-            var custom_end = start.clone();
             var event = angular.extend(task, {
                 id: task._id,
                 start: (task.type === 'fixedAllDay' ? start.startOf('day') : start),
                 startDateText: start.format(settings.dateFormat),
                 startTimeText: task.type === 'fixedAllDay' ? null : start.format(settings.timeFormat),
                 end: (task.type === 'fixedAllDay' ? end.startOf('day') : end),
-                endDateText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.dateFormat),
-                endTimeText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.timeFormat),
+                endDateText: (task.type === 'fixedAllDay' ? end.startOf('day') : end).format(settings.dateFormat),
+                endTimeText: (task.type === 'fixedAllDay' ? end.startOf('day') : end).format(settings.timeFormat),
                 stick: true,
                 allDay: (task.type === 'fixedAllDay'),
                 blocksForShow: [],
@@ -112,12 +113,10 @@ angular.module('Schedulogy')
                 event.dueDateText = event.due.format(settings.dateFormat);
                 event.dueTimeText = event.due.format(settings.timeFormat);
             }
-            
+
             DateUtils.saveDurText(event);
 
-            this.processConstraint(event, event.constraint, btime);
-
-            return event;
+            return this.processConstraint(event, event.constraint, btime);
         };
         this.earliestPossibleFinish = function (event) {
             var toAddMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;

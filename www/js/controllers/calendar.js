@@ -172,7 +172,6 @@ angular.module('Schedulogy')
                 }
 
                 MyEvents.updateEndDateTimeWithDuration();
-                MyEvents.recalcConstraints();
                 $scope.openModal('task');
             },
             eventDrop: function (event, delta, revertFunc, jsEvent) {

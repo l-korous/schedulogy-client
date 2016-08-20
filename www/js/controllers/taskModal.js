@@ -74,7 +74,8 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
                         MyEvents.updateEndDateTimeWithDuration();
-                    MyEvents.recalcConstraints();
+                    if (!MyEvents.recalcConstraints())
+                        MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
 
                     var primaryInput = $('.taskSaveForm').find('#primaryInput');
                     angular.element(primaryInput).scope().taskSaveForm.$setDirty();
@@ -87,7 +88,8 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
                         MyEvents.updateEndDateTimeWithDuration();
-                    MyEvents.recalcConstraints();
+                    if (!MyEvents.recalcConstraints())
+                        MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
 
                     var primaryInput = $('.taskSaveForm').find('#primaryInput');
                     angular.element(primaryInput).scope().taskSaveForm.$setDirty();

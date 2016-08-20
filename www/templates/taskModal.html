@@ -22,13 +22,14 @@
                 <div ng-show="taskSaveForm.floatingDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
                 <div ng-show="taskSaveForm.resource.$error.required" class="item help-block">Please provide a valid resource.</div>
                 <div ng-show="taskSaveForm.resources.$error.required" class="item help-block">Please provide valid resources.</div>
+                <div ng-show="myEvents.currentEvent.error" class="item help-block">{{myEvents.currentEvent.error}}</div>
             </div>
             <div class="list">
                 <label class="item item-input item-select">
                     <div class="input-label">
                         Type
                     </div>
-                    <select ng-model="myEvents.currentEvent.type" class="taskTypeSelect" required ng-change="myEvents.handleChangeOfEventType(); myEvents.recalcConstraints()" id="tasktypeselector">
+                    <select ng-model="myEvents.currentEvent.type" class="taskTypeSelect" required ng-change="myEvents.handleChangeOfEventType();" id="tasktypeselector">
                         <option value="fixed" class="option-fixed">Fixed</option>
                         <option value="fixedAllDay" class="option-fixedAllDay">Fixed (all-day)</option>
                         <option value="floating" class="option-floating">Floating</option>
@@ -77,7 +78,7 @@
                     <div class="input-label">
                         End Time<br />[duration]
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-change="myEvents.updateEndDateTimeWithDuration()"
+                    <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-change="myEvents.updateEndDateTimeWithDuration();"
                            name="fixedDuration" ng-model="myEvents.currentEvent.dur" step="1" ng-required="myEvents.currentEvent.type === 'fixed'" id="fixedDuration"/>
 
 
@@ -146,7 +147,8 @@
                     <div class="input-label">
                         Duration<br />&nbsp;
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="myEvents.currentEvent.dur" ng-change="myEvents.updateEndDateTimeWithDuration()"
+                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="myEvents.currentEvent.dur" ng-change="myEvents.updateEndDateTimeWithDuration();
+                                    myEvents.recalcConstraints();"
                            name="floatingDuration" step="1" ng-required="myEvents.currentEvent.type === 'floating'" id="floatingDuration"/>
 
                     <div class="rangeInfoFloating rangeInfo">
@@ -213,7 +215,7 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button id="taskSave" class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid || taskSaveForm.$pristine" ng-click="$parent.confirmModal('task')">
+                    <button id="taskSave" class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid || taskSaveForm.$pristine || myEvents.currentEvent.error" ng-click="$parent.confirmModal('task')">
                         Save
                     </button>
 

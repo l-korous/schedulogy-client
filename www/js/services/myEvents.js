@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils, $rootScope, $timeout) {
+    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils, $rootScope, $timeout, $q) {
         var _this = this;
         _this.events = [];
 
@@ -31,7 +31,8 @@ angular.module('Schedulogy')
                 var eventToSet = _this.events.find(function (event) {
                     return event._id === _this.currentEvent._id;
                 });
-                eventToSet && Event.updateEvent(_this.currentEvent, eventToSet);
+                if (eventToSet)
+                    _this.currentEvent = eventToSet;
             }
         };
 
@@ -174,6 +175,7 @@ angular.module('Schedulogy')
                 _this.currentEvent.dueTimeText = _this.currentEvent.due.format(settings.timeFormat);
             }
             _this.currentEvent.color = settings.eventColor[_this.currentEvent.type];
+            _this.recalcConstraints();
         };
 
         _this.tasksInResponseSuccessHandler = function (data, successCallback) {
@@ -212,7 +214,7 @@ angular.module('Schedulogy')
                     _this.currentEvent.dur = 4;
                     _this.handleChangeOfEventType();
                 }
-                
+
                 return true;
             }
         };
@@ -251,60 +253,85 @@ angular.module('Schedulogy')
                 template: settings.loadingTemplate
             });
 
-            Task.fromEvent(this.currentEvent).$checkConstraints({btime: _this.getBTime().unix()}, function (data, headers) {
-                Event.processConstraint(_this.currentEvent, data, _this.getBTime());
+            var defer = $q.defer();
+
+            Task.fromEvent(this.currentEvent).$checkConstraints({btime: _this.getBTime().unix()}, function (data) {
                 $ionicLoading.hide();
+                var constraintProcessResult = Event.processConstraint(_this.currentEvent, data, _this.getBTime());
+                if (constraintProcessResult) {
+                    _this.currentEvent = constraintProcessResult;
+                    defer.resolve(true);
+                }
+                else
+                    defer.resolve(false);
             }, function (err) {
                 $ionicLoading.hide();
-
+                defer.resolve(true);
                 // error callback
                 console.log(err);
             });
+            return defer.promise;
         };
 
         _this.addDependency = function (eventId) {
-            _this.currentEvent.blocks.push(eventId);
-            _this.fillBlocksAndNeedsForShow(this.currentEvent);
-            eventId = null;
+            if (!_this.recalcConstraints())
+                _this.currentEvent.error = 'Impossible to schedule due to constraints';
 
-            _this.recalcConstraints();
+            else {
+                _this.currentEvent.blocks.push(eventId);
+                _this.fillBlocksAndNeedsForShow(this.currentEvent);
+                eventId = null;
+            }
         };
 
         _this.removeDependency = function (event) {
-            for (var i = _this.currentEvent.blocks.length - 1; i >= 0; i--) {
-                if (this.currentEvent.blocks[i] === event._id) {
-                    _this.currentEvent.blocks.splice(i, 1);
-                    _this.currentEvent.blocksForShow.splice(i, 1);
+            if (!_this.recalcConstraints())
+                _this.currentEvent.error = 'Impossible to schedule due to constraints';
+
+            else {
+                for (var i = _this.currentEvent.blocks.length - 1; i >= 0; i--) {
+                    if (this.currentEvent.blocks[i] === event._id) {
+                        _this.currentEvent.blocks.splice(i, 1);
+                        _this.currentEvent.blocksForShow.splice(i, 1);
+                    }
                 }
             }
-            _this.recalcConstraints();
         };
 
         _this.addPrerequisite = function (eventId) {
+
             if (!eventId)
                 return;
 
-            if (!this.currentEvent.needs)
-                _this.currentEvent.needs = [];
+            if (!_this.recalcConstraints())
+                _this.currentEvent.error = 'Impossible to schedule due to constraints';
 
-            _this.currentEvent.needs.push(eventId);
-            _this.fillBlocksAndNeedsForShow(this.currentEvent);
-            eventId = null;
+            else {
 
-            _this.recalcConstraints();
+                if (!this.currentEvent.needs)
+                    _this.currentEvent.needs = [];
+
+                _this.currentEvent.needs.push(eventId);
+                _this.fillBlocksAndNeedsForShow(this.currentEvent);
+                eventId = null;
+            }
         };
 
         _this.removePrerequisite = function (event) {
             if (!event)
                 return;
-            for (var i = _this.currentEvent.needs.length - 1; i >= 0; i--) {
-                if (this.currentEvent.needs[i] === event._id) {
-                    _this.currentEvent.needs.splice(i, 1);
-                    _this.currentEvent.needsForShow.splice(i, 1);
+
+            if (!_this.recalcConstraints())
+                _this.currentEvent.error = 'Impossible to schedule due to constraints';
+
+            else {
+                for (var i = _this.currentEvent.needs.length - 1; i >= 0; i--) {
+                    if (this.currentEvent.needs[i] === event._id) {
+                        _this.currentEvent.needs.splice(i, 1);
+                        _this.currentEvent.needsForShow.splice(i, 1);
+                    }
                 }
             }
-
-            _this.recalcConstraints();
         };
 
         _this.updateEndDateTimeWithDuration = function () {
