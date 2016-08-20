@@ -24,7 +24,8 @@ angular.module('Schedulogy')
                 url: settings.serverUrl + "/resource/:resourceId",
                 params: {
                     resourceId: "@resourceId",
-                    btime: '@btime'
+                    btime: '@btime',
+                    replacementResourceId: "@replacementResourceId"
                 },
                 transformResponse: $http.defaults.transformResponse.concat([unserializeArray])
             }

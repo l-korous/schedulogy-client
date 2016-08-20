@@ -1,5 +1,5 @@
 <div class="has-header maxWidth-1000" ng-class="{'marginTop3':(!$root.isMobileLow && !$root.isMobileNarrow)}" has-bouncing="false" scroll="true">
-    <form name="loginForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode);" class="marginSides3">
+    <form name="loginForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode);">
         <div class="list customFormErrorList">
             <div ng-show="beingSubmitted && (loginForm.email.$error.required || loginForm.email.$error.email) && !loginForm.email.$pristine" class="item help-block">
                 Please provide a valid password.
@@ -20,7 +20,7 @@
                 <input autofocus type="email" ng-model="data.email" id="emailEdit" required name="email"
                        ng-class="{ 'has-error' : beingSubmitted && (loginForm.email.$error.required || loginForm.email.$error.email) && !loginForm.email.$pristine }">
             </label>
-            
+
             <label class="item item-input">
                 <div class="input-label">
                     Password

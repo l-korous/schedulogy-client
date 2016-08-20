@@ -115,7 +115,10 @@ angular.module('Schedulogy')
             var eventToDelete = passedEvent || _this.currentEvent;
 
             _this.shouldShowLoading = true;
-            $timeout(function() {if(_this.shouldShowLoading) $ionicLoading.show({template: settings.loadingTemplate});}, 500);
+            $timeout(function () {
+                if (_this.shouldShowLoading)
+                    $ionicLoading.show({template: settings.loadingTemplate});
+            }, 500);
 
             Task.fromEvent(eventToDelete).$remove({btime: _this.getBTime().unix(), taskId: eventToDelete._id}, function (data, headers) {
                 _this.importFromTasks(data.tasks);
@@ -130,9 +133,12 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.deleteAll = function (passedEvent) {
+        _this.deleteAll = function () {
             _this.shouldShowLoading = true;
-            $timeout(function() {if(_this.shouldShowLoading) $ionicLoading.show({template: settings.loadingTemplate});}, 500);
+            $timeout(function () {
+                if (_this.shouldShowLoading)
+                    $ionicLoading.show({template: settings.loadingTemplate});
+            }, 500);
 
             Task.deleteAll({}, function (data, headers) {
                 _this.importFromTasks(data.tasks);
@@ -151,23 +157,23 @@ angular.module('Schedulogy')
             _this.deleteEvent(this.findEventById(passedEventId));
         };
 
-        _this.handleChangeOfEventType = function (eventPassed) {
-            var event = eventPassed || _this.currentEvent;
-            if (event.dur > settings.maxEventDuration[event.type])
-                event.dur = settings.maxEventDuration[event.type];
-            if (event.type === 'floating') {
-                var startHourOffset = (DateUtils.toMinutes(event.due) - event.dur * settings.minuteGranularity) - (settings.startHour * 60);
-                if (startHourOffset < 0)
-                    event.due.add(-startHourOffset, 'm');
-                var endHourOffset = (settings.endHour * 60) - (DateUtils.toMinutes(event.due) - event.dur * settings.minuteGranularity);
-                if (endHourOffset < 0)
-                    event.due.add(endHourOffset, 'm');
-
-                event.dueDateText = event.due.format(settings.dateFormat);
-                event.dueTimeText = event.due.format(settings.timeFormat);
+        _this.handleChangeOfEventType = function () {
+            if (_this.currentEvent.dur > settings.maxEventDuration[_this.currentEvent.type]) {
+                _this.currentEvent.dur = settings.maxEventDuration[_this.currentEvent.type];
+                _this.updateEndDateTimeWithDuration();
             }
-            _this.updateEndDateTimeWithDuration(event);
-            event.color = settings.eventColor[event.type];
+            if (_this.currentEvent.type === 'floating') {
+                var startHourOffset = (DateUtils.toMinutes(_this.currentEvent.due) - _this.currentEvent.dur * settings.minuteGranularity) - (settings.startHour * 60);
+                if (startHourOffset < 0)
+                    _this.currentEvent.due.add(-startHourOffset, 'm');
+                var endHourOffset = (settings.endHour * 60) - (DateUtils.toMinutes(_this.currentEvent.due) - _this.currentEvent.dur * settings.minuteGranularity);
+                if (endHourOffset < 0)
+                    _this.currentEvent.due.add(endHourOffset, 'm');
+
+                _this.currentEvent.dueDateText = _this.currentEvent.due.format(settings.dateFormat);
+                _this.currentEvent.dueTimeText = _this.currentEvent.due.format(settings.timeFormat);
+            }
+            _this.currentEvent.color = settings.eventColor[_this.currentEvent.type];
         };
 
         _this.tasksInResponseSuccessHandler = function (data, successCallback) {
@@ -187,41 +193,37 @@ angular.module('Schedulogy')
             $ionicLoading.hide();
         };
 
-        _this.processEventDrop = function (event, delta) {
-            if (event.type === 'fixed') {
-                if (event.allDay) {
-                    Event.changeType(event, 'fixedAllDay');
-                    event.start = event.start.startOf('day');
-                    event.dur = 1;
-                    _this.handleChangeOfEventType(event);
-                    return true;
+        _this.processEventDrop = function (delta) {
+            if (_this.currentEvent.type === 'fixed') {
+                if (_this.currentEvent.allDay) {
+                    Event.changeType(_this.currentEvent, 'fixedAllDay');
+                    _this.currentEvent.start = _this.currentEvent.start.startOf('day');
+                    _this.currentEvent.dur = 1;
+                    _this.handleChangeOfEventType();
                 }
-                else {
-                    _this.handleChangeOfEventType(event);
-                    return true;
-                }
+                return true;
             }
 
-            else if (event.type === 'fixedAllDay') {
-                if (!event.allDay) {
-                    Event.changeType(event, 'fixed');
-                    event.start = event.start.startOf('day');
-                    event.start.add(delta._milliseconds, 'ms');
-                    event.dur = 4;
-                    _this.handleChangeOfEventType(event);
-                    return true;
+            else if (_this.currentEvent.type === 'fixedAllDay') {
+                if (!_this.currentEvent.allDay) {
+                    Event.changeType(_this.currentEvent, 'fixed');
+                    _this.currentEvent.start = _this.currentEvent.start.startOf('day');
+                    _this.currentEvent.start.add(delta._milliseconds, 'ms');
+                    _this.currentEvent.dur = 4;
+                    _this.handleChangeOfEventType();
                 }
-                else {
-                    _this.handleChangeOfEventType(event);
-                    return true;
-                }
+                
+                return true;
             }
         };
 
         _this.saveEvent = function (passedEvent, successCallback, errorCallback) {
             var eventToSave = passedEvent || _this.currentEvent;
             _this.shouldShowLoading = true;
-            $timeout(function() {if(_this.shouldShowLoading) $ionicLoading.show({template: settings.loadingTemplate});}, 500);
+            $timeout(function () {
+                if (_this.shouldShowLoading)
+                    $ionicLoading.show({template: settings.loadingTemplate});
+            }, 500);
             Task.fromEvent(eventToSave).$save({btime: _this.getBTime().unix()}, function (data) {
                 _this.tasksInResponseSuccessHandler(data, successCallback);
             },
@@ -233,7 +235,7 @@ angular.module('Schedulogy')
         // Task edit modal.
         $ionicModal.fromTemplateUrl('templates/errorModal.html', {
             animation: 'animated zoomIn',
-            $scope:_this
+            $scope: _this
         }).then(function (modal) {
             _this.errorModal = modal;
         });
@@ -305,26 +307,24 @@ angular.module('Schedulogy')
             _this.recalcConstraints();
         };
 
-        _this.updateEndDateTimeWithDuration = function (eventPassed) {
-            var event = eventPassed || _this.currentEvent;
+        _this.updateEndDateTimeWithDuration = function () {
+            DateUtils.saveDurText(_this.currentEvent);
 
-            DateUtils.saveDurText(event);
+            if (_this.currentEvent.type === 'fixedAllDay' || _this.currentEvent.type === 'fixed') {
+                var toAddMinutes = (_this.currentEvent.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * _this.currentEvent.dur;
+                _this.currentEvent.end = _this.currentEvent.start.clone().add(toAddMinutes, 'minutes');
 
-            var toAddMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;
-            event.end = event.start.clone().add(toAddMinutes, 'minutes');
-
-            // For all-day events, we are displaying the end day the same as the current one.
-            if (event.type === 'fixedAllDay') {
-                var custom_end = event.start.clone();
-                event.endDateText = custom_end.format(settings.dateFormat);
-                event.endTimeText = custom_end.format(settings.timeFormat);
+                // For all-day events, we are displaying the end day the same as the current one.
+                if (_this.currentEvent.type === 'fixedAllDay') {
+                    var custom_end = _this.currentEvent.start.clone();
+                    _this.currentEvent.endDateText = custom_end.format(settings.dateFormat);
+                    _this.currentEvent.endTimeText = custom_end.format(settings.timeFormat);
+                }
+                else if (_this.currentEvent.type === 'fixed') {
+                    _this.currentEvent.endDateText = _this.currentEvent.end.format(settings.dateFormat);
+                    _this.currentEvent.endTimeText = _this.currentEvent.end.format(settings.timeFormat);
+                }
             }
-            else if (event.type === 'fixed') {
-                event.endDateText = event.end.format(settings.dateFormat);
-                event.endTimeText = event.end.format(settings.timeFormat);
-            }
-            
-            _this.recalcConstraints();
         };
 
         _this.getBTime = function () {

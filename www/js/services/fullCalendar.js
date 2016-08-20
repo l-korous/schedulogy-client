@@ -53,35 +53,14 @@ angular.module('Schedulogy')
                 eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
                     _this.callbacks.eventResize(event, delta, revertFunc, jsEvent);
                 },
-                eventClick: function (calEvent) {
-                    MyEvents.currentEvent = calEvent;
-                    _this.callbacks.eventClick();
+                eventClick: function (event) {
+                    _this.callbacks.eventClick(event);
                 },
                 eventDrop: function (event, delta, revertFunc, jsEvent) {
                     _this.callbacks.eventDrop(event, delta, revertFunc, jsEvent);
                 },
                 select: function (start, end, jsEvent, view, resource) {
-                    MyEvents.emptyCurrentEvent();
-                    MyEvents.currentEvent = angular.extend(MyEvents.currentEvent, {
-                        type: 'fixed',
-                        start: start,
-                        startDateText: start.format(settings.dateFormat),
-                        startTimeText: start.format(settings.timeFormat),
-                        end: end,
-                        endDateText: end.format(settings.dateFormat),
-                        endTimeText: end.format(settings.timeFormat),
-                        dur: Math.ceil(end.diff(start, 'm') / settings.minuteGranularity),
-                        due: end,
-                        dueDateText: end.format(settings.dateFormat),
-                        dueTimeText: end.format(settings.timeFormat),
-                    });
-
-                    if (view.name === 'month' || !(start.hasTime() || end.hasTime())) {
-                        MyEvents.currentEvent.dur = end.diff(start, 'd');
-                        MyEvents.currentEvent.type = 'fixedAllDay';
-                    }
-
-                    _this.callbacks.select();
+                    _this.callbacks.select(start, end, jsEvent, view, resource);
                 },
                 viewRender: function (view, element) {
 

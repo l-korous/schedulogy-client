@@ -35,8 +35,8 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.removeResource = function (resource) {
-            resource.$remove({resourceId: resource._id, btime: MyEvents.getBTime().unix()}, function (data) {
+        _this.removeResource = function (replacementResourceId) {
+            _this.currentResource.$remove({resourceId: _this.currentResource._id, btime: MyEvents.getBTime().unix(), replacementResourceId: replacementResourceId}, function (data) {
                 _this.resources = data.resourcesLocal;
             });
         };

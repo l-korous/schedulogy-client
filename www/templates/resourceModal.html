@@ -12,7 +12,7 @@
                     </div>
                     <input type="text" ng-model="$parent.myResources.currentResource.name" id="primaryInput" required name="name">
                 </label>
-               
+
                 <label class="item item-input range">
                     <div class="input-label">
                         Start day of the week
@@ -23,7 +23,7 @@
                         {{$parent.myResources.currentResource.sinceDayText}}
                     </div>
                 </label>
-               
+
                 <label class="item item-input range">
                     <div class="input-label">
                         End day of the week
@@ -34,8 +34,8 @@
                         {{$parent.myResources.currentResource.untilDayText}}
                     </div>
                 </label>
-                
-                 <label class="item item-input range">
+
+                <label class="item item-input range">
                     <div class="input-label">
                         Start hour of the day
                     </div>
@@ -45,7 +45,7 @@
                         {{$parent.myResources.currentResource.sinceTimeText}}
                     </div>
                 </label>
-               
+
                 <label class="item item-input range">
                     <div class="input-label">
                         End hour of the day
@@ -57,19 +57,35 @@
                     </div>
                 </label>
 
-            <div class="row">
-                <div ng-if="$root.currentUser.role === 'admin'" class="col-50 padding-horizontal padding-top">
-                    <button id="taskSave" class="button button-block button-positive" ng-disabled="resourceSaveForm.$invalid || resourceSaveForm.$pristine" ng-click="$parent.myResources.saveResource()">
-                        Save
-                    </button>
+                <div class="row">
+                    <div ng-if="$root.currentUser.role === 'admin'" class="col-50 padding-horizontal padding-top">
+                        <button id="taskSave" class="button button-block button-positive" ng-disabled="resourceSaveForm.$invalid || resourceSaveForm.$pristine" ng-click="$parent.myResources.saveResource()">
+                            Save
+                        </button>
 
-                </div>
-                <div class="padding-horizontal padding-top" ng-class="{'col-50': $root.currentUser.role === 'admin', 'col': $root.currentUser.role !== 'admin'}">
-                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeDetailModal()">
-                        Cancel
-                    </button>   
+                    </div>
+                    <div class="padding-horizontal padding-top" ng-class="{'col-50': $root.currentUser.role === 'admin', 'col': $root.currentUser.role !== 'admin'}">
+                        <button class="button button-block button-outline button-stable" ng-click="$parent.closeDetailModal()">
+                            Cancel
+                        </button>   
+                    </div>
                 </div>
             </div>
         </form>
+
+        <div class="row" ng-if="$root.currentUser.role === 'admin' && $parent.myResources.currentResource._id && $parent.myResources.currentResource.type != 'user'">
+            <div class="col-50 padding-horizontal padding-top">
+                <button id="taskSave" class="button button-block button-assertive" ng-click="$parent.myResources.removeResource($parent.resourceToReplaceCurrentWith);" ng-disabled="!$parent.resourceToReplaceCurrentWith">
+                    Delete
+                </button>
+
+            </div>
+            <div class="padding-horizontal padding-top col-50">
+                <select ng-model="$parent.resourceToReplaceCurrentWith" style="width:100%;margin-top:10px;margin-bottom:10px;min-height:47px;border-radius:4px" data-ng-attr-size="{{myResources.resources.length}}" name="resourceToReplace"
+                        ng-options="resource._id as resource.name for resource in myResources.resources | filter: {_id : '!' + $parent.myResources.currentResource._id}" class="select-no-scrollbar">
+                    <option value="">Select a replacement resource</option>
+                </select>
+            </div>
+        </div>
     </ion-content>
 </ion-modal-view>

@@ -28,10 +28,6 @@
                 <i class="icon ion-wrench" ng-if="resource.type === 'artificial'"></i>
 
                 {{resource.name}}
-                <button class="button button-clear" ng-click="myResources.removeResource(resource);
-                                $event.stopPropagation();" ng-if="resource.type === 'artificial'">
-                    <i class="icon ion-trash-b assertive"></i>
-                </button>
             </div>
         </div>
 

@@ -28,7 +28,7 @@
                     <div class="input-label">
                         Type
                     </div>
-                    <select ng-model="myEvents.currentEvent.type" class="taskTypeSelect" required ng-change="myEvents.handleChangeOfEventType()" id="tasktypeselector">
+                    <select ng-model="myEvents.currentEvent.type" class="taskTypeSelect" required ng-change="myEvents.handleChangeOfEventType(); myEvents.recalcConstraints()" id="tasktypeselector">
                         <option value="fixed" class="option-fixed">Fixed</option>
                         <option value="fixedAllDay" class="option-fixedAllDay">Fixed (all-day)</option>
                         <option value="floating" class="option-floating">Floating</option>

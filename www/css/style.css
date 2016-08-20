@@ -123,6 +123,12 @@ h2 {
 }
 
 .maxWidth-1000 {
+    margin:50px;
+    padding:50px;
+    border:1px solid #ddd;
+}
+
+.maxWidth-1000 form, .maxWidth-1000 div {
     max-width: 1000px;
     margin:auto;
 }
@@ -345,7 +351,6 @@ h2 {
     white-space: pre;
     text-overflow:ellipsis;
     font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
-    margin-top:2px;
 }
 .fc-event .fc-content .fc-due, .fc-event .fc-content .fc-resource {
     font-size:.95em;
@@ -393,7 +398,7 @@ h2 {
 .fc-event .fc-content {
     padding:5px;
     height:100%;
-    text-align: center;
+    text-align: left;
 }
 
 

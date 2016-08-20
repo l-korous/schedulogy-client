@@ -5,10 +5,10 @@ angular.module('Schedulogy')
 
         // Register confirm callback in parent.
         $scope.$parent.modals.task.confirmCallback = function () {
-            $scope.saveEvent();
-            $scope.$parent.closeModal('task');
+            $scope.myEvents.saveEvent();
+            $scope.$parent.justCloseModal('task');
         };
-        
+
         // Register self in parent (calendar).
         $scope.$parent.modalScope.task = $scope;
         $scope.init = function () {
@@ -19,10 +19,6 @@ angular.module('Schedulogy')
         // TODO - can we do this in the view directly from settings?
         $scope.noPrerequisitesToListMsg = settings.noPrerequisitesToListMsg;
         $scope.noDependenciesToListMsg = settings.noDependenciesToListMsg;
-
-        $scope.saveEvent = function () {
-            MyEvents.saveEvent(MyEvents.currentEvent);
-        };
 
         $scope.commonFilter = function (inspectedEvent) {
             if (MyEvents.currentEvent && inspectedEvent._id === MyEvents.currentEvent._id)
@@ -78,6 +74,7 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
                         MyEvents.updateEndDateTimeWithDuration();
+                    MyEvents.recalcConstraints();
 
                     var primaryInput = $('.taskSaveForm').find('#primaryInput');
                     angular.element(primaryInput).scope().taskSaveForm.$setDirty();
@@ -90,6 +87,7 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
                         MyEvents.updateEndDateTimeWithDuration();
+                    MyEvents.recalcConstraints();
 
                     var primaryInput = $('.taskSaveForm').find('#primaryInput');
                     angular.element(primaryInput).scope().taskSaveForm.$setDirty();

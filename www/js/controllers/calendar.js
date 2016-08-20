@@ -31,16 +31,17 @@ angular.module('Schedulogy')
                         $scope.floatToFixedRevertFunc && $scope.floatToFixedRevertFunc();
                     },
                     confirmCallback: function () {
-                        $scope.floatToFixedEvent.type = 'fixed';
+                        MyEvents.currentEvent = $scope.floatToFixedEvent;
+                        MyEvents.currentEvent.type = 'fixed';
                         if ($scope.floatToFixedMethod === 'resize') {
-                            $scope.floatToFixedEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
-                            MyEvents.handleChangeOfEventType($scope.floatToFixedEvent);
+                            MyEvents.currentEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
+                            MyEvents.handleChangeOfEventType();
                         }
                         else if ($scope.floatToFixedMethod === 'drop') {
-                            if (!MyEvents.processEventDrop($scope.floatToFixedEvent, $scope.floatToFixedDelta, $scope.floatToFixedRevertFunc))
+                            if (!MyEvents.processEventDrop($scope.floatToFixedDelta))
                                 return;
                         }
-                        MyEvents.saveEvent($scope.floatToFixedEvent);
+                        MyEvents.saveEvent();
                         $scope.floatToFixedModal.hide();
                     }
                 },
@@ -63,7 +64,6 @@ angular.module('Schedulogy')
                         });
                     },
                     closeCallback: function () {
-                        MyEvents.refresh();
                         var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
                         angular.element(primaryInput).scope().taskSaveForm.$setPristine();
                     }
@@ -113,11 +113,16 @@ angular.module('Schedulogy')
             });
         };
 
-        $scope.closeModal = function (modalName, callback) {
+        $scope.justCloseModal = function (modalName, callback) {
             $scope[modalName + 'Modal'].hide();
             $scope.modals[modalName].closeCallback && $scope.modals[modalName].closeCallback();
             callback && callback();
             $scope.currentModal = null;
+        };
+
+        $scope.closeModal = function (modalName, callback) {
+            $scope.justCloseModal(modalName, callback);
+            MyEvents.refresh();
         };
 
         $scope.confirmModal = function (modalName, callback) {
@@ -141,14 +146,37 @@ angular.module('Schedulogy')
                     $scope.confirmModal(modalData);
         });
         $scope.myCalendar.setCallbacks({
-            eventClick: function () {
+            eventClick: function (event) {
+                MyEvents.currentEvent = event;
                 $scope.openModal('task');
             },
-            select: function () {
+            select: function (start, end, jsEvent, view, resource) {
+                MyEvents.emptyCurrentEvent();
+                MyEvents.currentEvent = angular.extend(MyEvents.currentEvent, {
+                    type: 'fixed',
+                    start: start,
+                    startDateText: start.format(settings.dateFormat),
+                    startTimeText: start.format(settings.timeFormat),
+                    end: end,
+                    endDateText: end.format(settings.dateFormat),
+                    endTimeText: end.format(settings.timeFormat),
+                    dur: Math.ceil(end.diff(start, 'm') / settings.minuteGranularity),
+                    due: end,
+                    dueDateText: end.format(settings.dateFormat),
+                    dueTimeText: end.format(settings.timeFormat),
+                });
+
+                if (view.name === 'month' || !(start.hasTime() || end.hasTime())) {
+                    MyEvents.currentEvent.dur = end.diff(start, 'd');
+                    MyEvents.currentEvent.type = 'fixedAllDay';
+                }
+
                 MyEvents.updateEndDateTimeWithDuration();
+                MyEvents.recalcConstraints();
                 $scope.openModal('task');
             },
             eventDrop: function (event, delta, revertFunc, jsEvent) {
+                MyEvents.currentEvent = event;
                 if (event.type === 'floating') {
                     $scope.openModal('floatToFixed');
                     $scope.floatToFixedDelta = delta;
@@ -157,21 +185,22 @@ angular.module('Schedulogy')
                     $scope.floatToFixedRevertFunc = revertFunc;
                 }
                 else {
-                    if (MyEvents.processEventDrop(event, delta))
-                        MyEvents.saveEvent(event);
+                    if (MyEvents.processEventDrop(delta))
+                        MyEvents.saveEvent();
                 }
             },
             eventResize: function (event, delta, revertFunc) {
+                MyEvents.currentEvent = event;
                 if (event.type === 'fixed') {
                     event.dur += (delta._data.hours * settings.slotsPerHour);
                     event.dur += (delta._data.minutes / settings.minuteGranularity);
-                    MyEvents.handleChangeOfEventType(event);
-                    MyEvents.saveEvent(event);
+                    MyEvents.handleChangeOfEventType();
+                    MyEvents.saveEvent();
                 }
                 else if (event.type === 'fixedAllDay') {
                     event.dur += delta.days();
-                    MyEvents.handleChangeOfEventType(event);
-                    MyEvents.saveEvent(event);
+                    MyEvents.handleChangeOfEventType();
+                    MyEvents.saveEvent();
                 }
                 else if (event.type === 'floating') {
                     $scope.openModal('floatToFixed');
