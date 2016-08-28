@@ -6,7 +6,7 @@ angular.module('Schedulogy')
         // Register confirm callback in parent.
         $scope.$parent.modals.task.confirmCallback = function () {
             $scope.myEvents.saveEvent();
-            $scope.$parent.justCloseModal('task');
+            $scope.$parent.closeModal('task');
         };
 
         // Register self in parent (calendar).
@@ -19,6 +19,12 @@ angular.module('Schedulogy')
         // TODO - can we do this in the view directly from settings?
         $scope.noPrerequisitesToListMsg = settings.noPrerequisitesToListMsg;
         $scope.noDependenciesToListMsg = settings.noDependenciesToListMsg;
+
+        $scope.deleteCurrentEvent = function () {
+            $scope.myEvents.deleteEventById($scope.myEvents.currentEvent._id, function () {
+                $scope.$parent.closeModal('task');
+            });
+        };
 
         $scope.commonFilter = function (inspectedEvent) {
             if (MyEvents.currentEvent && inspectedEvent._id === MyEvents.currentEvent._id)

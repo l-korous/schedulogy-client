@@ -3735,7 +3735,7 @@
                 view.intervalDuration.as('months') == 1 &&
                 date.month() != view.intervalStart.month()
                 ) {
-                classes.push('fc-other-month');
+                //classes.push('fc-other-month');
             }
 
             if (date.isSame(today, 'day')) {
@@ -7952,6 +7952,7 @@
                     this.calendar.applyTimezone(span.end), // "
                     ev
                     );
+                this.unselect(ev);
             },
             // Undoes a selection. updates in the internal state and triggers handlers.
             // `ev` is the native mouse event that began the interaction.
@@ -11291,10 +11292,10 @@
                 var range = BasicView.prototype.computeRange.call(this, date); // get value from super-method
                 var rowCnt;
 
-                // ensure 6 weeks
+                // ensure 5 weeks
                 if (this.isFixedWeeks()) {
                     rowCnt = Math.ceil(range.end.diff(range.start, 'weeks', true)); // could be partial weeks due to hiddenDays
-                    range.end.add(6 - rowCnt, 'weeks');
+                    range.end.add(5 - rowCnt, 'weeks');
                 }
 
                 return range;
@@ -11302,13 +11303,13 @@
             // Computes the new date when the user hits the prev button, given the current date
             computePrevDate: function (date) {
                 return this.massageCurrentDate(
-                    date.clone().subtract(this.intervalDuration), -1
+                    date.clone().subtract(new moment.duration(1, 'weeks')), -1
                     );
             },
             // Computes the new date when the user hits the next button, given the current date
             computeNextDate: function (date) {
                 return this.massageCurrentDate(
-                    date.clone().add(this.intervalDuration)
+                    date.clone().add(new moment.duration(1, 'weeks'))
                     );
             },
             // Overrides the default BasicView behavior to have special multi-week auto-height logic
@@ -11333,10 +11334,7 @@
             }
 
         });
-
-        ;
-        ;
-
+        
         fcViews.basic = {
             'class': BasicView
         };
@@ -11358,8 +11356,6 @@
                 fixedWeekCount: true
             }
         };
-        ;
-        ;
 
         /* An abstract class for all agenda-related views. Displays one more columns with time slots running vertically.
          ----------------------------------------------------------------------------------------------------------------------*/
@@ -11426,6 +11422,7 @@
 
                 this.scroller.render();
                 var timeGridWrapEl = this.scroller.el.addClass('fc-time-grid-container');
+                timeGridWrapEl.attr("id", "fc-time-grid-container");
                 var timeGridEl = $('<div class="fc-time-grid" id="fc-time-grid" />').appendTo(timeGridWrapEl);
                 this.el.find('.fc-body > tr > td').append(timeGridWrapEl);
 

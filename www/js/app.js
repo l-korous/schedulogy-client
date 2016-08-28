@@ -8,7 +8,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         minPasswordLength: 1,
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
-            on: true,
+            on: false,
             date: 'Sat Aug 20 2016 08:00:00 GMT+0200'
         },
         weeks: 26,
@@ -202,7 +202,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, MyUsers) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources) {
         $rootScope.allSet = false;
 
         // Check stuff when changing state.
@@ -219,7 +219,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     event.preventDefault();
             }
         });
-
+        
         Auth.tryPreauthenticate().then(function () {
             $location.path('');
             $location.search('');

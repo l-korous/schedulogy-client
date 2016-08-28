@@ -2,7 +2,8 @@
     <ion-header-bar>
         <h1 class="title">Change Username</h1>
     </ion-header-bar>
-    <ion-content has-bouncing="false">
+    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160825 - in main.js -->
+    <ion-content has-bouncing="false" class="modalNamingSearch" name="changeUsername">
         <form name="form" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, form.$invalid);">
             <div class="list customFormErrorList">
                 <div ng-show="beingSubmitted && (form.username.$error.required || form.username.$error.minlength) && !form.username.$pristine" class="item help-block">
@@ -18,13 +19,13 @@
                     <div class="input-label">
                         Username
                     </div>
-                    <input type="text" ng-model="$root.currentUser.username" id="primaryInput" required name="username" autofocus minlength='4'>
+                    <input type="text" ng-model="user.name" id="primaryInput" required name="username" autofocus minlength='4'>
                 </label>
             </div>
-            
+
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine" ng-click="save('changeUsername');">
+                    <button class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine" ng-click="confirmModal('changeUsername');">
                         Save
                     </button>
 

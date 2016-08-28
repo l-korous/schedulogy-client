@@ -2,7 +2,10 @@
     <ion-header-bar>
         <h1 class="title">Users</h1>
     </ion-header-bar>
-    <ion-content has-bouncing="false" ng-show="!loading">
+    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160825 - in main.js -->
+    <ion-content has-bouncing="false" ng-show="!loading" class="modalNamingSearch" name="users" ng-keyup="$root.keyUpHandler($event.keyCode)">
+        <!-- This is a horrible hack, but without this, keyup event won't fire -->
+        <input type="text" ng-if="!$root.isMobileNarrow && !$root.isMobileLow" style="position:absolute;top:-10000px;" id="primaryInput"/>
         <div class="list">
             <div class="item item-no-wrap item-intro" ng-if="$root.currentUser.role === 'admin'">
                 <span>

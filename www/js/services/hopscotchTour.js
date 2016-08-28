@@ -5,10 +5,20 @@ angular.module('Schedulogy')
             id: "Introduction",
             steps: [
                 {
-                    title: "New Task",
-                    content: "Let's start with creating a task.",
-                    target: "newtask",
+                    title: "Menu",
+                    content: "Let's start with opening the menu.",
+                    target: "menuOpener",
                     placement: "bottom",
+                    arrowOffset: -1,
+                    nextOnTargetClick: true,
+                    showNextButton: false
+                },
+                {
+                    title: "New Task",
+                    content: "Let's go create a task.",
+                    target: "newtask",
+                    yOffset: -10,
+                    placement: "right",
                     nextOnTargetClick: true,
                     showNextButton: false
                 },
@@ -16,7 +26,7 @@ angular.module('Schedulogy')
                     title: "Task type",
                     content: "Here is where you can select task type. Select 'Fixed' now.",
                     target: "tasktypeselector",
-                    delay: 400,
+                    delay: 500,
                     placement: "bottom"
                 },
                 {
@@ -61,7 +71,7 @@ angular.module('Schedulogy')
                 {
                     title: "Create a task by dragging",
                     content: "Select several 'slots' in the calendar by dragging. This will open a New Task dialog",
-                    target: "fc-time-grid",
+                    target: "fc-time-grid-container",
                     placement: "top"
                 },
                 {
@@ -105,14 +115,24 @@ angular.module('Schedulogy')
                     title: "Success",
                     delay: 500,
                     content: "The scheduling backend now successfully scheduled your task.",
-                    target: "fc-time-grid",
+                    target: "fc-time-grid-container",
                     placement: "top"
+                },
+                {
+                    title: "Menu",
+                    content: "Let's go back to the menu.",
+                    target: "menuOpener",
+                    placement: "bottom",
+                    arrowOffset: -1,
+                    nextOnTargetClick: true,
+                    showNextButton: false
                 },
                 {
                     title: "More help",
                     content: "There are more help articles explaining the workings of SCHEDULOGY available under this link.",
                     target: "helplink",
-                    placement: "bottom"
+                    yOffset: -10,
+                    placement: "right"
                 }
             ],
             onError: function () {

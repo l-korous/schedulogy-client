@@ -21,130 +21,6 @@ angular.module('Schedulogy')
 
         $scope.myCalendar = FullCalendar;
 
-        // This is filled by the children.
-        $scope.modalScope = {};
-
-        $scope.modals =
-            {
-                floatToFixed: {
-                    closeCallback: function () {
-                        $scope.floatToFixedRevertFunc && $scope.floatToFixedRevertFunc();
-                    },
-                    confirmCallback: function () {
-                        MyEvents.currentEvent = $scope.floatToFixedEvent;
-                        MyEvents.currentEvent.type = 'fixed';
-                        if ($scope.floatToFixedMethod === 'resize') {
-                            MyEvents.currentEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
-                            MyEvents.handleChangeOfEventType();
-                        }
-                        else if ($scope.floatToFixedMethod === 'drop') {
-                            if (!MyEvents.processEventDrop($scope.floatToFixedDelta))
-                                return;
-                        }
-                        MyEvents.saveEvent();
-                        $scope.floatToFixedModal.hide();
-                    }
-                },
-                task: {
-                    openCallback: function (params) {
-                        if (!MyEvents.currentEvent || params) {
-                            MyEvents.emptyCurrentEvent();
-                        }
-
-                        // This is ugly hack, should be fixed.
-                        var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
-                        angular.element(primaryInput).scope().taskSaveForm.$setPristine();
-                        if ($rootScope.isMobileLow || $rootScope.isMobileNarrow) {
-                            primaryInput.focus();
-                            primaryInput.select();
-                        }
-
-                        $(function () {
-                            $('#taskModalTextarea').autogrow();
-                        });
-                    },
-                    closeCallback: function () {
-                        var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
-                        angular.element(primaryInput).scope().taskSaveForm.$setPristine();
-                    }
-                },
-                help: {
-                },
-                removeAll: {
-                    confirmCallback: function () {
-                        MyEvents.deleteAll();
-                        $scope.removeAllModal.hide();
-                    }
-                },
-                uploadIcal: {
-                }
-            };
-
-        for (var modalData in $scope.modals) {
-            $ionicModal.fromTemplateUrl('templates/' + modalData + 'Modal.html', {
-                scope: $scope,
-                animation: 'animated zoomIn'
-            }).then(function (modal) {
-                // This is a trick - we need to know which modalData we just finished creating the modal for.
-                var modalName = $(modal.el).find('.modalNamingSearch').attr('name');
-                $scope[modalName + 'Modal'] = modal;
-            });
-        }
-
-        $scope.openModal = function (modalName, params) {
-            if ($scope.modalScope[modalName] && $scope.modalScope[modalName].init)
-                $scope.modalScope[modalName].init();
-
-            // This is ugly hack, should be fixed.
-            var focusPrimaryInput = function () {
-                if (!$rootScope.isMobileLow && !$rootScope.isMobileNarrow) {
-                    var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
-                    primaryInput.focus();
-                    primaryInput.select();
-                }
-
-                $ionicScrollDelegate.scrollTop();
-            };
-
-            $scope.currentModal = modalName;
-            $scope[modalName + 'Modal'].show().then(function () {
-                focusPrimaryInput();
-                $scope.modals[modalName].openCallback && $scope.modals[modalName].openCallback(params);
-            });
-        };
-
-        $scope.justCloseModal = function (modalName, callback) {
-            $scope[modalName + 'Modal'].hide();
-            $scope.modals[modalName].closeCallback && $scope.modals[modalName].closeCallback();
-            callback && callback();
-            $scope.currentModal = null;
-        };
-
-        $scope.closeModal = function (modalName, callback) {
-            $scope.justCloseModal(modalName, callback);
-            MyEvents.refresh();
-        };
-
-        $scope.confirmModal = function (modalName, callback) {
-            $scope.modals[modalName].confirmCallback && $scope.modals[modalName].confirmCallback();
-            callback && callback();
-            $scope.currentModal = null;
-        };
-
-        $scope.$on('Esc', function () {
-            for (var modalData in $scope.modals)
-                $scope.closeModal(modalData);
-
-            // Also close all popups:
-            $timeout(function () {
-                $('.button_close').click();
-            });
-        });
-        $scope.$on('Enter', function () {
-            for (var modalData in $scope.modals)
-                if (modalData === $scope.currentModal)
-                    $scope.confirmModal(modalData);
-        });
         $scope.myCalendar.setCallbacks({
             eventClick: function (event) {
                 MyEvents.currentEvent = event;
@@ -211,6 +87,140 @@ angular.module('Schedulogy')
             }
         });
 
+        //////////// MODALS ////////////
+
+        // This is filled by the children if this parent needs to use methods of children controllers.
+        $scope.modalScope = {};
+
+        // This is definition of child modals of this parent.
+        // - All modals can state callbacks of three actions (open, close (~cancel), confirm (~save)).
+        $scope.modals =
+            {
+                floatToFixed: {
+                    closeCallback: function () {
+                        $scope.floatToFixedRevertFunc && $scope.floatToFixedRevertFunc();
+                    },
+                    confirmCallback: function () {
+                        MyEvents.currentEvent = $scope.floatToFixedEvent;
+                        MyEvents.currentEvent.type = 'fixed';
+                        if ($scope.floatToFixedMethod === 'resize') {
+                            MyEvents.currentEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
+                            MyEvents.handleChangeOfEventType();
+                        }
+                        else if ($scope.floatToFixedMethod === 'drop') {
+                            if (!MyEvents.processEventDrop($scope.floatToFixedDelta))
+                                return;
+                        }
+                        MyEvents.saveEvent();
+                        $scope.floatToFixedModal.hide();
+                        $scope.currentModal = null;
+                    }
+                },
+                task: {
+                    openCallback: function (params) {
+                        if (!MyEvents.currentEvent || params) {
+                            MyEvents.emptyCurrentEvent();
+                        }
+
+                        // This is ugly hack, should be fixed.
+                        var primaryInput = $($scope.taskModal.modalEl).find('#primaryInput');
+                        angular.element(primaryInput).scope().taskSaveForm.$setPristine();
+                        if ($rootScope.isMobileLow || $rootScope.isMobileNarrow) {
+                            primaryInput.focus();
+                            primaryInput.select();
+                        }
+
+                        $(function () {
+                            $('#taskModalTextarea').autogrow();
+                        });
+                    },
+                    closeCallback: function () {
+                        var primaryInput = $($scope.taskModal.modalEl).find('#primaryInput');
+                        angular.element(primaryInput).scope().taskSaveForm.$setPristine();
+                    }
+                },
+                help: {
+                },
+                removeAll: {
+                    confirmCallback: function () {
+                        MyEvents.deleteAll();
+                        $scope.removeAllModal.hide();
+                        $scope.currentModal = null;
+                    }
+                },
+                uploadIcal: {
+                }
+            };
+
+        // Uniform instantiating of modals.
+        for (var modalData in $scope.modals) {
+            $ionicModal.fromTemplateUrl('templates/' + modalData + 'Modal.html', {
+                scope: $scope,
+                animation: 'animated zoomIn'
+            }).then(function (modal) {
+                // This is a trick - we need to know which modalData we just finished creating the modal for.
+                var modalName = $(modal.el).find('.modalNamingSearch').attr('name');
+                $scope[modalName + 'Modal'] = modal;
+            });
+        }
+
+        // Uniform opening of modals.
+        $scope.openModal = function (modalName, params) {
+            if ($scope.modalScope[modalName] && $scope.modalScope[modalName].init)
+                $scope.modalScope[modalName].init();
+
+            // This is ugly hack, should be fixed. What it does:
+            // - keyup event 'Esc' won't fire until the modal has focus
+            // - modals which have primary inputs (e.g. task modal) will just focus the first input
+            // - modals which do not (float to fixed) have a special dummy hidden input for this purpose
+            var focusPrimaryInput = function () {
+                if (!$rootScope.isMobileLow && !$rootScope.isMobileNarrow) {
+                    var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
+                    primaryInput.focus();
+                    primaryInput.select();
+                }
+
+                $ionicScrollDelegate.scrollTop();
+            };
+
+            $scope.currentModal = modalName;
+            $scope[modalName + 'Modal'].show().then(function () {
+                focusPrimaryInput();
+                $scope.modals[modalName].openCallback && $scope.modals[modalName].openCallback(params);
+            });
+        };
+
+        // Uniform closing of modals.
+        $scope.closeModal = function (modalName, callback) {
+            $scope[modalName + 'Modal'].hide();
+            $scope.modals[modalName].closeCallback && $scope.modals[modalName].closeCallback();
+            callback && callback();
+            $scope.currentModal = null;
+        };
+
+        // Uniform confirming of modals.
+        // This does NOT close the modal.
+        $scope.confirmModal = function (modalName, callback) {
+            $scope.modals[modalName].confirmCallback && $scope.modals[modalName].confirmCallback();
+            callback && callback();
+        };
+
+        // 'Close' key handler - using the uniform method.
+        $scope.$on('Esc', function () {
+            for (var modalData in $scope.modals)
+                $scope.closeModal(modalData);
+
+            // Also close all popups:
+            $timeout(function () {
+                $('.button_close').click();
+            });
+        });
+        // 'Confirm' key handler - using the uniform method.
+        $scope.$on('Enter', function () {
+            for (var modalData in $scope.modals)
+                if (modalData === $scope.currentModal)
+                    $scope.confirmModal(modalData);
+        });
         // Cleanup when destroying.
         $scope.$on('$destroy', function () {
             for (var modalData in $scope.modals)

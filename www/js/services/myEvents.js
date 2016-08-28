@@ -19,8 +19,11 @@ angular.module('Schedulogy')
         _this.importFromTasks = function (tasks) {
             _this.events.splice(0, _this.events.length);
 
+            // Very important - we need to set BTime for accurate calculation of constraints of all created Events.
+            Event.setBTime(_this.getBTime());
+
             tasks.forEach(function (task) {
-                _this.events.push(Event.toEvent(task, _this.getBTime()));
+                _this.events.push(Event.toEvent(task));
             });
 
             _this.events.forEach(function (event) {
@@ -112,7 +115,7 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.deleteEvent = function (passedEvent) {
+        _this.deleteEvent = function (passedEvent, successCallback, errorCallback) {
             var eventToDelete = passedEvent || _this.currentEvent;
 
             _this.shouldShowLoading = true;
@@ -125,11 +128,11 @@ angular.module('Schedulogy')
                 _this.importFromTasks(data.tasks);
                 _this.shouldShowLoading = false;
                 $ionicLoading.hide();
+                successCallback && successCallback();
             }, function (err) {
                 _this.shouldShowLoading = false;
                 $ionicLoading.hide();
-
-                // error callback
+                errorCallback && errorCallback();
                 console.log(err);
             });
         };
@@ -154,8 +157,8 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.deleteEventById = function (passedEventId) {
-            _this.deleteEvent(this.findEventById(passedEventId));
+        _this.deleteEventById = function (passedEventId, successCallback, errorCallback) {
+            _this.deleteEvent(this.findEventById(passedEventId), successCallback, errorCallback);
         };
 
         _this.handleChangeOfEventType = function () {
@@ -228,10 +231,9 @@ angular.module('Schedulogy')
             }, 500);
             Task.fromEvent(eventToSave).$save({btime: _this.getBTime().unix()}, function (data) {
                 _this.tasksInResponseSuccessHandler(data, successCallback);
-            },
-                function (err) {
-                    _this.tasksInResponseErrorHandler(err, errorCallback);
-                });
+            }, function (err) {
+                _this.tasksInResponseErrorHandler(err, errorCallback);
+            });
         };
 
         // Task edit modal.
@@ -249,15 +251,16 @@ angular.module('Schedulogy')
         };
 
         _this.recalcConstraints = function () {
-            $ionicLoading.show({
-                template: settings.loadingTemplate
-            });
+            $ionicLoading.show({template: settings.loadingTemplate});
 
             var defer = $q.defer();
 
+            // Very important - we need to set BTime for accurate calculation of constraints of all created Events.
+            Event.setBTime(_this.getBTime());
+
             Task.fromEvent(this.currentEvent).$checkConstraints({btime: _this.getBTime().unix()}, function (data) {
                 $ionicLoading.hide();
-                var constraintProcessResult = Event.processConstraint(_this.currentEvent, data, _this.getBTime());
+                var constraintProcessResult = Event.processConstraint(_this.currentEvent, data);
                 if (constraintProcessResult) {
                     _this.currentEvent = constraintProcessResult;
                     defer.resolve(true);
@@ -379,15 +382,16 @@ angular.module('Schedulogy')
                 toReturn.minutes(0);
             }
             // Move Sat + Sun to Mon.
-            if (toReturn.day() === 0 || toReturn.day() >= 6) {
-                toReturn.hours(settings.startHour);
-                toReturn.minutes(0);
-                if (toReturn.day() === 0)
-                    toReturn.day(1);
-                else
-                    toReturn.day(8);
-            }
-
+            /*
+             if (toReturn.day() === 0 || toReturn.day() >= 6) {
+             toReturn.hours(settings.startHour);
+             toReturn.minutes(0);
+             if (toReturn.day() === 0)
+             toReturn.day(1);
+             else
+             toReturn.day(8);
+             }
+             */
             _this.getCurrentEvents(toReturn).forEach(function (currentEvent) {
                 toReturn = (currentEvent.end > toReturn ? currentEvent.end : toReturn);
             });

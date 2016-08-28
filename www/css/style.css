@@ -559,3 +559,23 @@ ion-modal-view ion-header-bar .has-button-right {
 .bar .button, .bar button {
     padding: 0 5px 0 7px;
 }
+
+div.hopscotch-bubble .hopscotch-bubble-number {
+    background: #ffa400;
+    padding: 0;
+}
+
+div.hopscotch-bubble .hopscotch-nav-button.next, div.hopscotch-bubble .hopscotch-nav-button.next:hover {
+    border:0;
+    text-shadow:none;
+    background-color: #387ef5;
+    background-image:none;
+}
+
+div.hopscotch-bubble .hopscotch-nav-button.next:hover {
+    color:#e1e1e1;
+}
+
+.fc-nonbusiness {
+    background: #c3c3c3;
+}

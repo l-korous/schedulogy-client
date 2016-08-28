@@ -2,7 +2,7 @@
     <ion-header-bar>
         <h1 class="title" ng-class="{'has-button-right':myEvents.currentEvent._id}">{{myEvents.currentEvent.title ? myEvents.currentEvent.title : 'New Task'}}</h1>
 
-        <button class="button button-dark button-outline icon-right" ng-click="myEvents.deleteEventById(myEvents.currentEvent._id);" ng-if="myEvents.currentEvent._id">
+        <button class="button button-dark button-outline icon-right" ng-click="deleteCurrentEvent();" ng-if="myEvents.currentEvent._id">
             Delete&nbsp;
             <i class="icon ion-trash-b assertive"></i>
         </button>

@@ -15,10 +15,10 @@ angular.module('Schedulogy')
         $scope.uploadFile = function () {
             $ionicLoading.show({template: settings.loadingTemplate});
 
-            // This is done through rootScope, because otherwise it would not work. Not a big deal, but may be fixed.
+            // This is done through rootScope, because otherwise it somehow does not work. Not a big deal, but may be fixed.
             var file = $rootScope.icalFile;
 
-            fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {}, function (data) {
+            fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {btime: MyEvents.getBTime().unix()}, function (data) {
                 MyEvents.tasksInResponseSuccessHandler(data, function () {
                     $scope.successInfo = settings.iCalUploadSuccess;
                     $timeout(function () {

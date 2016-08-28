@@ -10,7 +10,7 @@
                     <div class="input-label">
                         E-mail
                     </div>
-                    <input type="email" ng-model="$parent.myUsers.currentUser.email" id="primaryInput" ng-disabled="(!$parent.newUser) || (!$root.currentUser.role !== 'admin')" required name="email">
+                    <input type="email" ng-model="$parent.myUsers.currentUser.email" id="primaryInput" ng-disabled="(!$parent.newUser) || ($root.currentUser.role !== 'admin')" required name="email">
                 </label>
 
                 <ion-checkbox ng-disabled="($root.currentUser.role !== 'admin') || ($parent.myUsers.currentUser._id === $root.currentUser._id)" ng-model="$parent.myUsers.currentUser.admin" name="admin">
