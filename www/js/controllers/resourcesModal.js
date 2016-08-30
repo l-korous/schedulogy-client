@@ -11,6 +11,8 @@ angular.module('Schedulogy')
             $scope.myResources.refresh(function () {
                 $scope.loading = false;
             });
+            // This is used in main.js to indicate whether we need to refresh events upon closing of this modal.
+            $scope.eventRefreshNeeded = false;
         };
 
         $scope.closeSelf = function () {
@@ -69,24 +71,37 @@ angular.module('Schedulogy')
             else
                 $scope.myResources.emptyCurrentResource();
 
-            var focusPrimaryInput = function () {
+            var focusPrimaryInputAndSetPristine = function () {
                 var primaryInput = $($scope.detailModal.modalEl).find('#primaryInput');
                 primaryInput.focus();
                 primaryInput.select();
+                angular.element(primaryInput).scope().resourceSaveForm.$setPristine();
             };
 
             $scope.detailModal.show().then(function () {
-                focusPrimaryInput();
-                $scope.myResources.registerSaveCallback($scope.closeDetailModal);
+                focusPrimaryInputAndSetPristine();
+                $scope.myResources.registerSaveCallback(function () {
+                    $scope.closeDetailModal();
+                    $scope.eventRefreshNeeded = true;
+                });
+                
+                $scope.myResources.registerRemoveCallback(function () {
+                    $scope.closeDetailModal();
+                    $scope.eventRefreshNeeded = true;
+                    $scope.resourceToReplaceCurrentWith = null;
+                });
             });
         };
 
         $scope.closeDetailModal = function () {
             $scope.detailModal.hide();
+            $scope.loading = true;
+            $scope.myResources.refresh(function () {
+                $scope.loading = false;
+            });
             $scope.myResources.registerSaveCallback(null);
+            $scope.myResources.registerRemoveCallback(null);
         };
-
-        $scope.myResources.registerSaveCallback($scope.closeDetailModal);
 
         $scope.$on('$destroy', function () {
             $scope.detailModal.remove();

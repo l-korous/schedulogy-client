@@ -7,10 +7,26 @@ angular.module('Schedulogy')
         _this.registerSaveCallback = function (callback) {
             _this.saveCallback = callback;
         };
+        
+        _this.removeCallback = null;
+        _this.registerRemoveCallback = function (callback) {
+            _this.removeCallback = callback;
+        };
+
+        _this.importData = function (resourcesData) {
+            _this.resources = resourcesData;
+            if (_this.currentResource && _this.currentResource._id) {
+                var resourceToSet = _this.resources.find(function (resource) {
+                    return resource._id === _this.currentResource._id;
+                });
+                if (resourceToSet)
+                    _this.currentResource = resourceToSet;
+            }
+        };
 
         _this.refresh = function (callback) {
             Resource.query({}, function (data) {
-                _this.resources = data.resourcesLocal;
+                _this.importData(data.resourcesLocal);
                 $rootScope.myResourceId = _this.getMyResourceId();
                 callback && callback();
             }, function (err) {
@@ -30,14 +46,15 @@ angular.module('Schedulogy')
 
         _this.saveResource = function () {
             _this.currentResource.$save({btime: MyEvents.getBTime().unix()}, function (data) {
-                _this.resources = data.resourcesLocal;
+                _this.importData(data.resourcesLocal);
                 _this.saveCallback && _this.saveCallback();
             });
         };
 
         _this.removeResource = function (replacementResourceId) {
             _this.currentResource.$remove({resourceId: _this.currentResource._id, btime: MyEvents.getBTime().unix(), replacementResourceId: replacementResourceId}, function (data) {
-                _this.resources = data.resourcesLocal;
+                _this.importData(data.resourcesLocal);
+                _this.removeCallback && _this.removeCallback();
             });
         };
 

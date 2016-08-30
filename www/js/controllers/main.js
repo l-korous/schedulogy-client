@@ -32,8 +32,9 @@ angular.module('Schedulogy')
                     }
                 },
                 resources: {
-                    confirmCallback: function () {
-                        MyEvents.refresh();
+                    closeCallback: function () {
+                        if ($scope.modalScope.resources.eventRefreshNeeded)
+                            MyEvents.refresh();
                     },
                     openCallback: function (params) {
                         $scope.successInfo = '';
