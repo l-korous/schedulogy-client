@@ -26,7 +26,7 @@ angular.module('Schedulogy')
                     title: "Task type",
                     content: "Here is where you can select task type. Select 'Fixed' now.",
                     target: "tasktypeselector",
-                    delay: 500,
+                    delay: 1000,
                     placement: "bottom"
                 },
                 {
@@ -113,7 +113,7 @@ angular.module('Schedulogy')
                 },
                 {
                     title: "Success",
-                    delay: 500,
+                    delay: 1000,
                     content: "The scheduling backend now successfully scheduled your task.",
                     target: "fc-time-grid-container",
                     placement: "top"

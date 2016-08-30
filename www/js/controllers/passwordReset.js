@@ -38,6 +38,8 @@ angular.module('Schedulogy')
                         MyEvents.refresh();
                         MyResources.refresh();
                         MyUsers.refresh();
+                        $location.path('');
+                        $location.search('');
                         $state.go(settings.defaultStateAfterLogin, {}, {location: false});
                         if (loginResponse.runIntro && !$rootScope.isMobileNarrow && !$rootScope.isMobileLow)
                             Hopscotch.runTour(750);
