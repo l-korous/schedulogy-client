@@ -93,7 +93,7 @@ angular.module('Schedulogy')
             list.removeChild(item);
             list.appendChild(style);
             $timeout(function () {
-                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - settings.shiftCalendar[($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 'mobile' : 'normal']);
+                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - settings.shiftCalendar[$rootScope.isMobileNarrow ? 'mobile' : 'normal']);
             });
         };
 

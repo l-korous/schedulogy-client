@@ -505,7 +505,7 @@ input[readonly=true] {
     cursor:pointer ! important;
 }
 
-.leftMenu {
+.leftMenu{
     max-width:90% ! important;
     min-width:50% ! important;
     width:auto ! important;
@@ -514,6 +514,8 @@ input[readonly=true] {
     right:auto;
     top:44px;
     bottom:0;
+    padding-bottom:50px;
+    overflow-y: auto ! important;
     height:100%;
     box-shadow: 3px 3px 5px rgba(0,0,0,0.7);
 }
@@ -527,6 +529,12 @@ input[readonly=true] {
     font-weight:bold;
     padding:5px 5px 5px 10px;
     font-size:.99em ! important;
+}
+
+@media(max-height:700px) {
+    .list {
+        margin-bottom:10px;
+    }
 }
 
 .inactive {
