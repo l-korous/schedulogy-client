@@ -195,7 +195,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                         $timeout(function () {
                             if (['main.login', 'main.registration', 'main.passwordReset'].indexOf($state.current.name) === -1)
                                 $rootScope.goToLogin();
-                        });
+                        }, 500);
                     }
                     return $q.reject(response);
                 }
