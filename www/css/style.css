@@ -128,11 +128,6 @@ h2 {
     border:1px solid #ddd;
 }
 
-.maxWidth-1000 form, .maxWidth-1000 div {
-    max-width: 1000px;
-    margin:auto;
-}
-
 .marginTop5 {
     margin-top:4em ! important;
 }
@@ -158,6 +153,11 @@ h2 {
 .marginSides1 {
     margin-left:1em ! important;
     margin-right:1em ! important;
+}
+
+.maxWidth-1000 form, .maxWidth-1000 div {
+    max-width: 1000px;
+    margin:auto ! important;
 }
 
 @media(max-width:500px) {
