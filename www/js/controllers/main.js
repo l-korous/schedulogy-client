@@ -8,11 +8,6 @@ angular.module('Schedulogy')
 
         $scope.user = {name: $rootScope.currentUser ? $rootScope.currentUser.username : ''};
 
-        // For the calendar menu, we have to find the calendar scope.
-        $timeout(function () {
-            $scope.calendarScope = angular.element($('#theOnlyCalendar')).scope();
-        });
-
         // Could this be removed?
         $scope.appVersion = settings.appVersion;
 

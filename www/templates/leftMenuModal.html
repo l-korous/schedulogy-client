@@ -3,17 +3,17 @@
     <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160825 - in main.js -->
     <div class="list modalNamingSearch" name="leftMenu">
         <span class="list-divider">Tasks</span>
-        <a id="newtask" class="item item-icon-left" ng-click="calendarScope.openModal('task', true);">
+        <a id="newtask" class="item item-icon-left" ng-click="$root.calendarScope.openModal('task', true);">
             <i class="icon ion-plus-round positive"></i>
             New Task
         </a>
 
-        <a class="item item-icon-left" ng-click="calendarScope.openModal('uploadIcal');">
+        <a class="item item-icon-left" ng-click="$root.calendarScope.openModal('uploadIcal');">
             <i class="icon ion-upload positive"></i>
             Import from iCal
         </a>
 
-        <a class="item item-icon-left" ng-click="calendarScope.openModal('removeAll');">
+        <a class="item item-icon-left" ng-click="$root.calendarScope.openModal('removeAll');">
             <i class="icon ion-trash-b assertive"></i>  
             Delete all tasks
         </a>
@@ -35,12 +35,12 @@
 
         <span class="list-divider">Help</span>
         <a id="helplink" class="item item-icon-left" ng-click="closeModal('leftMenu');
-            calendarScope.runTour();">
+            $root.calendarScope.runTour();">
             <i class="icon ion-university positive"></i>  
             Tour
         </a>
 
-        <a class="item item-icon-left" ng-click="calendarScope.openModal('help');">
+        <a class="item item-icon-left" ng-click="$root.calendarScope.openModal('help');">
             <i class="icon ion-help-buoy positive"></i>
             Help
         </a>
