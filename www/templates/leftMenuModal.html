@@ -3,7 +3,7 @@
     <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160825 - in main.js -->
     <div class="list modalNamingSearch" name="leftMenu">
         <span class="list-divider">Tasks</span>
-        <a id="newtask" class="item item-icon-left" ng-click="$root.calendarScope.openModal('task', true);">
+        <a id="newtask" class="item item-icon-left" ng-click="$root.calendarScope.myEvents.emptyCurrentEvent(); $root.calendarScope.openModal('task', true);">
             <i class="icon ion-plus-round positive"></i>
             New Task
         </a>

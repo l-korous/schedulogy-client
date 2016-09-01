@@ -1,6 +1,7 @@
 angular.module('Schedulogy')
     .controller('CalendarCtrl', function ($scope, $ionicModal, settings, MyEvents, $timeout, FullCalendar, $ionicScrollDelegate, Hopscotch, $rootScope) {
         $rootScope.allSet = false;
+        $scope.myEvents = MyEvents;
         $rootScope.calendarScope = $scope;
         FullCalendar.calculateCalendarRowHeight();
         $scope.$on('MyEventsLoaded', function () {
