@@ -31,6 +31,7 @@ gulp.task('concat-js', function () {
         "www/js/services/myUsers.js",
         "www/js/services/myResources.js",
         "www/js/services/fullCalendar.js",
+        "www/js/services/modalService.js",
         "www/js/services/hopscotchTour.js",
         "www/js/services/resources/task.js",
         "www/js/services/resources/resource.js",
@@ -45,7 +46,17 @@ gulp.task('concat-js', function () {
         "www/js/controllers/login.js",
         "www/js/controllers/registration.js",
         "www/js/controllers/passwordReset.js",
-        "www/js/controllers/forgottenPassword.js"
+        "www/js/controllers/forgottenPassword.js",
+        "www/js/controllers/leftMenuModal.js",
+        "www/js/controllers/errorModal.js",
+        "www/js/controllers/dirtyTasksModal.js",
+        "www/js/controllers/changeUsernameModal.js",
+        "www/js/controllers/changePasswordModal.js",
+        "www/js/controllers/resourceModal.js",
+        "www/js/controllers/feedbackModal.js",
+        "www/js/controllers/floatToFixedModal.js",
+        "www/js/controllers/userModal.js",
+        "www/js/controllers/removeAllModal.js"
     ])
         .pipe(concat('app.min.js'))
         .pipe(bytediff.start())

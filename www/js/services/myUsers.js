@@ -17,15 +17,18 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.saveUser = function () {
+        _this.saveUser = function (successCallback, errorCallback) {
             $ionicLoading.show({template: settings.loadingTemplate});
             // TODO This is not the best place for this.
             if (_this.currentUser.admin)
                 _this.currentUser.role = 'admin';
             _this.currentUser.$save({}, function (data) {
                 _this.users = data.usersLocal;
-                _this.saveCallback && _this.saveCallback();
+                successCallback && successCallback();
                 $ionicLoading.hide();
+            }, function (err) {
+                console.log('saveUser error: ' + err);
+                errorCallback && errorCallback();
             });
         };
 

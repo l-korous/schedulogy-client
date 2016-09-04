@@ -16,6 +16,7 @@
         <link rel="stylesheet" type="text/css" href="css/style.css" />
 
         <script src="bower_components/ionic/release/js/ionic.bundle.min.js"></script>
+        <script src="bower_components/ng-lodash/build/ng-lodash.min.js"></script>
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/moment/min/moment-with-locales.js"></script>
         <script src="bower_components/angular-moment/angular-moment.min.js"></script>
@@ -48,6 +49,7 @@
         <script src="js/services/myResources.js"></script>
         <script src="js/services/hopscotchTour.js"></script>
         <script src="js/services/fullCalendar.js"></script>
+        <script src="js/services/modalService.js"></script>
         <script src="js/services/resources/task.js"></script>
         <script src="js/services/resources/resource.js"></script>
         <script src="js/services/resources/user.js"></script>
@@ -62,9 +64,19 @@
         <script src="js/controllers/registration.js"></script>
         <script src="js/controllers/passwordReset.js"></script>
         <script src="js/controllers/forgottenPassword.js"></script>
+        <script src="js/controllers/leftMenuModal.js"></script>
+        <script src="js/controllers/errorModal.js"></script>
+        <script src="js/controllers/dirtyTasksModal.js"></script>
+        <script src="js/controllers/changeUsernameModal.js"></script>
+        <script src="js/controllers/changePasswordModal.js"></script>
+        <script src="js/controllers/resourceModal.js"></script>
+        <script src="js/controllers/feedbackModal.js"></script>
+        <script src="js/controllers/floatToFixedModal.js"></script>
+        <script src="js/controllers/userModal.js"></script>
+        <script src="js/controllers/removeAllModal.js"></script>
 
     </head>
-    <body ng-app="Schedulogy">
+    <body ng-app="Schedulogy" ng-keyup="$root.keyUpHandler($event.keyCode);">
         <div ui-view></div>
     </body>
 </html>

@@ -116,7 +116,8 @@ angular.module('Schedulogy')
                 blocksForShow: [],
                 needsForShow: [],
                 color: settings.eventColor[task.type],
-                borderColor: settings.eventBorderColor
+                borderColor: settings.eventBorderColor,
+                shortInfo: task.title + ' - ' + start.format(settings.dateFormat) + (task.type === 'fixedAllDay' ? '' : (' ' + start.format(settings.timeFormat)))
             }, task);
 
             if (event.due) {

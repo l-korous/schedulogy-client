@@ -1,31 +1,35 @@
-<ion-modal-view class="leftMenu" ng-click="closeModal('leftMenu');" ng-keyup="$root.keyUpHandler($event.keyCode)">
-    
-    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160825 - in main.js -->
-    <div class="list modalNamingSearch" name="leftMenu">
+<ion-modal-view class="leftMenu" ng-click="modalService.closeModal('leftMenu');" ng-controller="LeftMenuModalCtrl">
+
+    <div class="list">
         <span class="list-divider">Tasks</span>
-        <a id="newtask" class="item item-icon-left" ng-click="$root.calendarScope.myEvents.emptyCurrentEvent(); $root.calendarScope.openModal('task', true);">
+        <a class="item item-icon-left" ng-if="myEvents.dirtyEvents.length" ng-click="modalService.openModal('dirtyTasks');">
+            <i class="icon ion-alert assertive"></i>
+            Unscheduled Tasks
+        </a>
+        
+        <a id="newtask" class="item item-icon-left" ng-click="myEvents.emptyCurrentEvent(); modalService.openModal('task');">
             <i class="icon ion-plus-round positive"></i>
             New Task
         </a>
 
-        <a class="item item-icon-left" ng-click="$root.calendarScope.openModal('uploadIcal');">
+        <a class="item item-icon-left" ng-click="modalService.openModal('uploadIcal');">
             <i class="icon ion-upload positive"></i>
             Import from iCal
         </a>
 
-        <a class="item item-icon-left" ng-click="$root.calendarScope.openModal('removeAll');">
-            <i class="icon ion-trash-b assertive"></i>  
+        <a class="item item-icon-left" ng-click="modalService.openModal('removeAll');">
+            <i class="icon ion-trash-b dark"></i>  
             Delete all tasks
         </a>
     </div>
 
     <div class="list">
         <span class="list-divider">Users &amp; Resources</span>
-        <a class="item item-icon-left" ng-click="openModal('users');">
+        <a class="item item-icon-left" ng-click="modalService.openModal('users');">
             <i class="icon ion-person-stalker positive"></i>
             Manage Users
         </a>
-        <a class="item item-icon-left" ng-click="openModal('resources');">
+        <a class="item item-icon-left" ng-click="modalService.openModal('resources');">
             <i class="icon ion-levels positive"></i>
             Manage Resources
         </a>
@@ -34,18 +38,17 @@
     <div class="list">
 
         <span class="list-divider">Help</span>
-        <a id="helplink" class="item item-icon-left" ng-click="closeModal('leftMenu');
-            $root.calendarScope.runTour();">
+        <a id="helplink" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); runTour();">
             <i class="icon ion-university positive"></i>  
             Tour
         </a>
 
-        <a class="item item-icon-left" ng-click="$root.calendarScope.openModal('help');">
+        <a class="item item-icon-left" ng-click="modalService.openModal('help');">
             <i class="icon ion-help-buoy positive"></i>
             Help
         </a>
 
-        <a class="item item-icon-left" ng-click="openModal('feedback');">
+        <a class="item item-icon-left" ng-click="modalService.openModal('feedback');">
             <i class="icon ion-mic-a positive"></i>
             Send Feedback
         </a>
@@ -53,24 +56,22 @@
 
     <div class="list">
         <span class="list-divider">Settings</span>
-        <a class="item item-icon-left" ng-click="openModal('changeUsername');">
+        <a class="item item-icon-left" ng-click="modalService.openModal('changeUsername');">
             <i class="icon ion-person positive"></i>
             Change Username
         </a>
 
-        <a class="item item-icon-left" ng-click="openModal('changePassword');">
+        <a class="item item-icon-left" ng-click="modalService.openModal('changePassword');">
             <i class="icon ion-locked positive"></i>
             Change Password
         </a>
     </div>
 
     <div class="list">
-        <a class="item item-icon-left" ng-click="closeModal('leftMenu');
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
             $root.goToLogin()">
             <i class="icon ion-log-out positive"></i>
             Logout
         </a>
     </div>
-    <!-- This is a horrible hack, but without this, keyup event won't fire -->
-    <input type="text" ng-if="!$root.isMobileNarrow && !$root.isMobileLow" style="position:absolute;top:-10000px;" id="primaryInput"/>
 </ion-modal-view>

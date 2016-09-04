@@ -49,6 +49,12 @@ angular.module('Schedulogy')
                     '<h2>Prerequisites / Dependent Tasks</h2><p>See the section on task dependencies.</p>'
             },
             {
+                name: 'Task notifications',
+                icon: 'ion-paper-airplane',
+                content:
+                    '<p>SCHEDULOGY automatically sends out notifications about upcoming tasks. Right now, these are preset at <strong>15 minutes</strong> before a regular task, <strong>1 day</strong> before an all-day task.</p>'
+            },
+            {
                 name: 'Task dependencies',
                 icon: 'ion-link',
                 content:

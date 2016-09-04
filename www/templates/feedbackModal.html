@@ -1,21 +1,20 @@
-<ion-modal-view>
+<ion-modal-view ng-controller="FeedbackModalCtrl">
     <ion-header-bar>
         <h1 class="title">Feedback</h1>
     </ion-header-bar>
-    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160825 - in main.js -->
-    <ion-content has-bouncing="false" class="modalNamingSearch" name="feedback" ng-keyup="$root.keyUpHandler($event.keyCode, (form.$invalid || $('#primaryInput')[0] == document.activeElement));">
-        <div class="list" ng-show="successInfo">
+    <ion-content has-bouncing="false">
+        <div class="list" ng-show="data.successInfo">
             <div class="item help-block item-no-wrap">
-                {{successInfo}}
+                {{data.successInfo}}
             </div>
-            <button class="button button-block button-outline button-positive button-single marginTop1" ng-click="closeModal('feedback');">
+            <button class="button button-block button-outline button-positive button-single marginTop1" ng-click="close();">
                 Close
             </button>
         </div>
-        <form name="form" ng-show="!successInfo" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, form.$invalid);">
+        <form name="form" ng-show="!data.successInfo" novalidate>
             <div class="list customFormErrorList">
-                <div ng-show="errorInfo" class="item help-block help-block-error item-no-wrap">
-                    {{errorInfo}}
+                <div ng-show="data.verrorInfo" class="item help-block help-block-error item-no-wrap">
+                    {{data.errorInfo}}
                 </div>
             </div>
             <div class="list">
@@ -24,10 +23,10 @@
                 </label>
             </div>
 
-            <button class="button button-block button-positive button-single marginTop3" ng-disabled="form.$invalid" ng-click="confirmModal('feedback');">
+            <button class="button button-block button-positive button-single marginTop3" ng-disabled="form.$invalid" ng-click="save();">
                 Send
             </button>
-            <button class="button button-block button-outline button-dark button-single marginTop1" ng-click="closeModal('feedback');">
+            <button class="button button-block button-outline button-dark button-single marginTop1" ng-click="close();">
                 Cancel
             </button>
         </form>

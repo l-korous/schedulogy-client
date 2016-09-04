@@ -1,12 +1,11 @@
-<ion-modal-view>
+<ion-modal-view ng-controller="ChangeUsernameModalCtrl">
     <ion-header-bar>
         <h1 class="title">Change Username</h1>
     </ion-header-bar>
-    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160825 - in main.js -->
-    <ion-content has-bouncing="false" class="modalNamingSearch" name="changeUsername">
-        <form name="form" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, form.$invalid);">
+    <ion-content has-bouncing="false">
+        <form name="form" novalidate>
             <div class="list customFormErrorList">
-                <div ng-show="beingSubmitted && (form.username.$error.required || form.username.$error.minlength) && !form.username.$pristine" class="item help-block">
+                <div ng-show="(form.username.$error.required || form.username.$error.minlength) && !form.username.$pristine" class="item help-block">
                     Please provide a valid username with at least 4 characters.
                 </div>
 
@@ -25,13 +24,13 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine" ng-click="confirmModal('changeUsername');">
+                    <button class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine" ng-click="save();">
                         Save
                     </button>
 
                 </div>
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-dark button-outline" ng-click="closeModal('changeUsername');">
+                    <button class="button button-block button-dark button-outline" ng-click="close();">
                         Cancel
                     </button>   
                 </div>

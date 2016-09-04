@@ -100,95 +100,47 @@ angular.module('Schedulogy')
             {
                 floatToFixed: {
                     closeCallback: function () {
-                        $scope.floatToFixedRevertFunc && $scope.floatToFixedRevertFunc();
+                        
                     },
                     confirmCallback: function () {
-                        MyEvents.currentEvent = $scope.floatToFixedEvent;
-                        MyEvents.currentEvent.type = 'fixed';
-                        if ($scope.floatToFixedMethod === 'resize') {
-                            MyEvents.currentEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
-                            MyEvents.handleChangeOfEventType();
-                        }
-                        else if ($scope.floatToFixedMethod === 'drop') {
-                            if (!MyEvents.processEventDrop($scope.floatToFixedDelta))
-                                return;
-                        }
-                        MyEvents.saveEvent();
-                        $scope.floatToFixedModal.hide();
-                        $scope.currentModal = null;
+                        
                     }
                 },
                 task: {
                     openCallback: function (params) {
-                        if (!MyEvents.currentEvent || params) {
-                            MyEvents.emptyCurrentEvent();
-                        }
-
-                        // This is ugly hack, should be fixed.
-                        var primaryInput = $($scope.taskModal.modalEl).find('#primaryInput');
-                        angular.element(primaryInput).scope().taskSaveForm.$setPristine();
-                        if ($rootScope.isMobileLow || $rootScope.isMobileNarrow) {
-                            primaryInput.focus();
-                            primaryInput.select();
-                        }
-
-                        $(function () {
-                            $('#taskModalTextarea').autogrow();
-                        });
+                        
                     },
                     closeCallback: function () {
-                        var primaryInput = $($scope.taskModal.modalEl).find('#primaryInput');
-                        angular.element(primaryInput).scope().taskSaveForm.$setPristine();
+                        
                     }
                 },
                 help: {
                 },
                 removeAll: {
                     confirmCallback: function () {
-                        MyEvents.deleteAll();
-                        $scope.removeAllModal.hide();
-                        $scope.currentModal = null;
+                        
                     }
                 },
                 uploadIcal: {
+                    // confirmCallback registered in separate controller
+                },
+                dirtyTasks: {
                 }
             };
 
-        // Uniform instantiating of modals.
-        for (var modalData in $scope.modals) {
-            $ionicModal.fromTemplateUrl('templates/' + modalData + 'Modal.html', {
-                scope: $scope,
-                animation: 'animated zoomIn'
-            }).then(function (modal) {
-                // This is a trick - we need to know which modalData we just finished creating the modal for.
-                var modalName = $(modal.el).find('.modalNamingSearch').attr('name');
-                $scope[modalName + 'Modal'] = modal;
-            });
-        }
-
+       
         // Uniform opening of modals.
         $scope.openModal = function (modalName, params) {
+            
+            
             if ($scope.modalScope[modalName] && $scope.modalScope[modalName].init)
                 $scope.modalScope[modalName].init();
 
-            // This is ugly hack, should be fixed. What it does:
-            // - keyup event 'Esc' won't fire until the modal has focus
-            // - modals which have primary inputs (e.g. task modal) will just focus the first input
-            // - modals which do not (float to fixed) have a special dummy hidden input for this purpose
-            var focusPrimaryInput = function () {
-                if (!$rootScope.isMobileLow && !$rootScope.isMobileNarrow) {
-                    var primaryInput = $($scope[$scope.currentModal + 'Modal'].modalEl).find('#primaryInput');
-                    primaryInput.focus();
-                    primaryInput.select();
-                }
-
-                $ionicScrollDelegate.scrollTop();
-            };
-
             $scope.currentModal = modalName;
+
             $scope[modalName + 'Modal'].show().then(function () {
-                focusPrimaryInput();
                 $scope.modals[modalName].openCallback && $scope.modals[modalName].openCallback(params);
+                $ionicScrollDelegate.scrollTop();
             });
         };
 
@@ -206,22 +158,27 @@ angular.module('Schedulogy')
             $scope.modals[modalName].confirmCallback && $scope.modals[modalName].confirmCallback();
             callback && callback();
         };
+        $scope.$on('modal.hidden', function (event, modal) {
+            // This event handler gets fired even if the modal is not in this scope, that is why we must check it first.
+            $scope.modals[modal.name] && $scope.modals[modal.name].closeCallback && $scope.modals[modal.name].closeCallback();
+            $scope.currentModal = null;
+        });
 
         // 'Close' key handler - using the uniform method.
         $scope.$on('Esc', function () {
-            for (var modalData in $scope.modals)
-                $scope.closeModal(modalData);
+            if ($scope.currentModal && !$scope.modalScope[$scope.currentModal]) {
+                $scope.closeModal($scope.currentModal);
 
-            // Also close all popups:
-            $timeout(function () {
-                $('.button_close').click();
-            });
+                // Also close all popups:
+                $timeout(function () {
+                    $('.button_close').click();
+                });
+            }
         });
         // 'Confirm' key handler - using the uniform method.
         $scope.$on('Enter', function () {
-            for (var modalData in $scope.modals)
-                if (modalData === $scope.currentModal)
-                    $scope.confirmModal(modalData);
+            if ($scope.currentModal)
+                $scope.confirmModal($scope.currentModal);
         });
         // Cleanup when destroying.
         $scope.$on('$destroy', function () {

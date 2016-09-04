@@ -36,6 +36,7 @@ angular.module('Schedulogy')
                 _id: resource._id,
                 type: resource.type,
                 user: resource.type === 'user' ? resource.user : null,
+                email: resource.type === 'artificial' ? resource.email : null,
                 name: resource.name,
                 tenant: resource.tenant,
                 constraints: [{

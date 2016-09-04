@@ -1,4 +1,4 @@
-<ion-modal-view ng-controller="ICalUploadCtrl">
+<ion-modal-view ng-controller="ICalUploadModalCtrl">
     <ion-header-bar>
         <h1 class="title">Upload iCal file</h1>
     </ion-header-bar>
@@ -7,18 +7,15 @@
             {{successInfo}}
         </div>
     </div>
-    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
-    <ion-content ng-show="!successInfo" class="modalNamingSearch" name="uploadIcal">
-        <form name="icalUploadForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, !$root.icalFile);">
+    <ion-content ng-show="!successInfo">
+        <form name="icalUploadForm" novalidate>
             <div class="list customFormErrorList">
                 <div ng-show="icalUploadForm.file.$error.required && !icalUploadForm.file.$pristine" class="item help-block">Please provide a valid file.</div>
                 <div ng-show="errorInfo" class="item help-block help-block-error item-no-wrap">
                     {{errorInfo}}
                 </div>
             </div>
-            <!-- This is a horrible hack, but without this, keyup event won't fire -->
-            <input type="text" ng-if="!$root.isMobileNarrow && !$root.isMobileLow" style="position:absolute;top:-10000px;" id="primaryInput"/>
-
+            
             <div class="list">
                 <label class="item item-input" ng-class="{ 'has-error' : icalUploadForm.file.$invalid && !icalUploadForm.file.$pristine }">
                     <div class="input-label">

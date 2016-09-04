@@ -1,0 +1,32 @@
+<ion-modal-view ng-controller="DirtyTasksModalCtrl">
+    <ion-header-bar>
+        <h1 class="title">Unscheduled Tasks</h1>
+    </ion-header-bar>
+    <ion-content has-bouncing="false" ng-show="!loading">
+        <div class="list">
+            <div class="item item-no-wrap item-intro">
+                <p>
+                    These are tasks that were impossible to be scheduled, due to dependencies, due dates, and resources constraints.
+                </p>
+                <p>
+                    When you edit any of these tasks, a new attempt to schedule them will occur.
+                </p>
+            </div>
+            <div class="item item-button-right" ng-repeat="event in myEvents.dirtyEvents" ng-click="myEvents.currentEvent = event;
+                            modalService.openModal('task');">
+                {{event.shortInfo}}
+                <button class="button button-clear" ng-click="deleteEvent(event, $event);">
+                    <i class="icon ion-trash-b assertive"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="padding-horizontal padding-top col">
+                <button class="button button-block button-dark button-outline" ng-click="close();">
+                    Close
+                </button>   
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

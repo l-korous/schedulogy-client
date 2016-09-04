@@ -483,7 +483,7 @@ input[type=text], input[type=password], input[type=email] {
     white-space:normal;
 }
 
-.taskSaveForm .input-label {
+.form .input-label {
     font-size:.85em;
     width:auto;
 }
@@ -586,4 +586,13 @@ div.hopscotch-bubble .hopscotch-nav-button.next:hover {
 
 .fc-nonbusiness {
     background: #c3c3c3;
+}
+
+input:required:invalid {
+    background-image: radial-gradient(circle 3px at 98% 3px, red 0%, transparent 50%, red 75%, transparent 100%);
+}
+
+h2.title {
+    margin:20px;
+    text-align:center;
 }

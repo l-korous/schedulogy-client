@@ -44,17 +44,23 @@ angular.module('Schedulogy')
             return $rootScope.currentUser.resourceId;
         };
 
-        _this.saveResource = function () {
+        _this.saveResource = function (successCallback, errorCallback) {
             _this.currentResource.$save({btime: MyEvents.getBTime().unix()}, function (data) {
                 _this.importData(data.resourcesLocal);
-                _this.saveCallback && _this.saveCallback();
+                successCallback && successCallback();
+            }, function(err) {
+                console.log('saveResource error: ' + err);
+                errorCallback && errorCallback();
             });
         };
 
-        _this.removeResource = function (replacementResourceId) {
+        _this.removeResource = function (replacementResourceId, successCallback, errorCallback) {
             _this.currentResource.$remove({resourceId: _this.currentResource._id, btime: MyEvents.getBTime().unix(), replacementResourceId: replacementResourceId}, function (data) {
                 _this.importData(data.resourcesLocal);
-                _this.removeCallback && _this.removeCallback();
+                successCallback && successCallback();
+            }, function(err) {
+                console.log('removeResource error: ' + err);
+                errorCallback && errorCallback();
             });
         };
 

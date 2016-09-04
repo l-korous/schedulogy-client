@@ -1,42 +1,54 @@
 angular.module('Schedulogy')
-    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, $ionicModal, DateUtils, $rootScope, $timeout, $q) {
+    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, ModalService, DateUtils, $rootScope, $timeout, $q) {
         var _this = this;
         _this.events = [];
+        _this.dirtyEvents = [];
 
         _this.refresh = function () {
             Task.query({btime: _this.getBTime().unix()}, function (data) {
-                _this.importFromTasks(data.tasks);
+                _this.importFromTasks(data.tasks, data.dirtyTasks);
                 $rootScope.$broadcast('MyEventsLoaded');
             }, function (err) {
                 console.log('Task.query - error');
-                if (err.data && err.data.tasks) {
-                    _this.importFromTasks(err.data.tasks);
+                if (err.data && err.data.tasks && err.data.dirtyTasks) {
+                    _this.importFromTasks(err.data.tasks, err.data.dirtyTasks);
                     $rootScope.$broadcast('MyEventsLoaded');
                 }
             });
         };
 
-        _this.importFromTasks = function (tasks) {
-            _this.events.splice(0, _this.events.length);
+        _this.importFromTasks = function (tasks, dirtyTasks) {
+            var processArray = function (taskArray, eventArray) {
+                eventArray.splice(0, eventArray.length);
 
-            // Very important - we need to set BTime for accurate calculation of constraints of all created Events.
-            Event.setBTime(_this.getBTime());
+                // Very important - we need to set BTime for accurate calculation of constraints of all created Events.
+                Event.setBTime(_this.getBTime());
 
-            tasks.forEach(function (task) {
-                _this.events.push(Event.toEvent(task));
-            });
+                taskArray.forEach(function (task) {
+                    eventArray.push(Event.toEvent(task));
+                });
+
+                if (_this.currentEvent && _this.currentEvent._id) {
+                    var eventToSet = eventArray.find(function (event) {
+                        return event._id === _this.currentEvent._id;
+                    });
+                    if (eventToSet)
+                        _this.currentEvent = eventToSet;
+                }
+            };
+            processArray(tasks, _this.events);
+            processArray(dirtyTasks, _this.dirtyEvents);
 
             _this.events.forEach(function (event) {
                 _this.fillBlocksAndNeedsForShow(event);
             });
 
-            if (_this.currentEvent && _this.currentEvent._id) {
-                var eventToSet = _this.events.find(function (event) {
-                    return event._id === _this.currentEvent._id;
-                });
-                if (eventToSet)
-                    _this.currentEvent = eventToSet;
-            }
+
+            _this.dirtyEvents.forEach(function (event) {
+                _this.fillBlocksAndNeedsForShow(event);
+            });
+            
+            $('#theOnlyCalendar').fullCalendar('render');
         };
 
         _this.emptyCurrentEvent = function () {
@@ -83,8 +95,15 @@ angular.module('Schedulogy')
                     });
                     if (depObject)
                         event.blocksForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
-                    else
-                        console.log('Error: dependent task not exists: ' + dep);
+                    else {
+                        depObject = _this.dirtyEvents.find(function (event) {
+                            if (event._id === dep)
+                                return true;
+                        });
+                        event.blocksForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
+                        if (!depObject)
+                            console.log('Error: dependent task not exists: ' + dep);
+                    }
                 });
             }
 
@@ -97,16 +116,27 @@ angular.module('Schedulogy')
                     });
                     if (depObject)
                         event.needsForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
-                    else
-                        console.log('Error: prerequisite not exists: ' + dep);
+                    else {
+                        depObject = _this.dirtyEvents.find(function (event) {
+                            if (event._id === dep)
+                                return true;
+                        });
+                        event.needsForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
+                        if (!depObject)
+                            console.log('Error: prerequisite task not exists: ' + dep);
+                    }
                 });
             }
         };
 
         _this.findEventById = function (passedEventId) {
-            return _this.events.find(function (event) {
+            var eventToDelete = _this.events.find(function (event) {
                 return event._id === passedEventId;
             });
+            if (!eventToDelete)
+                return _this.dirtyEvents.find(function (event) {
+                    return event._id === passedEventId;
+                });
         };
 
         _this.getCurrentEvents = function (now) {
@@ -125,7 +155,7 @@ angular.module('Schedulogy')
             }, 500);
 
             Task.fromEvent(eventToDelete).$remove({btime: _this.getBTime().unix(), taskId: eventToDelete._id}, function (data, headers) {
-                _this.importFromTasks(data.tasks);
+                _this.importFromTasks(data.tasks, data.dirtyTasks);
                 _this.shouldShowLoading = false;
                 $ionicLoading.hide();
                 successCallback && successCallback();
@@ -145,7 +175,7 @@ angular.module('Schedulogy')
             }, 500);
 
             Task.deleteAll({}, function (data, headers) {
-                _this.importFromTasks(data.tasks);
+                _this.importFromTasks(data.tasks, data.dirtyTasks);
                 _this.shouldShowLoading = false;
                 $ionicLoading.hide();
             }, function (err) {
@@ -182,17 +212,17 @@ angular.module('Schedulogy')
         };
 
         _this.tasksInResponseSuccessHandler = function (data, successCallback) {
-            _this.importFromTasks(data.tasks);
+            _this.importFromTasks(data.tasks, data.dirtyTasks);
             successCallback && successCallback();
             _this.shouldShowLoading = false;
             $ionicLoading.hide();
         };
 
         _this.tasksInResponseErrorHandler = function (err, errorCallback) {
-            if (err.data.tasks)
-                _this.importFromTasks(err.data.tasks);
+            if (err.data && err.data.tasks && err.data.dirtyTasks)
+                _this.importFromTasks(err.data.tasks, err.data.dirtyTasks);
 
-            _this.openErrorModal();
+            ModalService.openModal('error');
             errorCallback && errorCallback();
             _this.shouldShowLoading = false;
             $ionicLoading.hide();
@@ -234,20 +264,6 @@ angular.module('Schedulogy')
             }, function (err) {
                 _this.tasksInResponseErrorHandler(err, errorCallback);
             });
-        };
-
-        // Task edit modal.
-        $ionicModal.fromTemplateUrl('templates/errorModal.html', {
-            animation: 'animated zoomIn',
-            $scope: _this
-        }).then(function (modal) {
-            _this.errorModal = modal;
-        });
-        _this.openErrorModal = function () {
-            _this.errorModal.show();
-        };
-        $rootScope.closeErrorModal = function () {
-            _this.errorModal.hide();
         };
 
         _this.recalcConstraints = function () {

@@ -2,10 +2,7 @@
     <ion-header-bar>
         <h1 class="title">Users</h1>
     </ion-header-bar>
-    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160825 - in main.js -->
-    <ion-content has-bouncing="false" ng-show="!loading" class="modalNamingSearch" name="users" ng-keyup="$root.keyUpHandler($event.keyCode)">
-        <!-- This is a horrible hack, but without this, keyup event won't fire -->
-        <input type="text" ng-if="!$root.isMobileNarrow && !$root.isMobileLow" style="position:absolute;top:-10000px;" id="primaryInput"/>
+    <ion-content has-bouncing="false" ng-show="!loading">
         <div class="list">
             <div class="item item-no-wrap item-intro" ng-if="$root.currentUser.role === 'admin'">
                 <span>
@@ -36,14 +33,14 @@
             <div class="item item-no-wrap help-block" ng-if="successInfo">
                 {{successInfo}}
             </div>
-            <div class="item item-icon-left item-button-right" ng-repeat="user in myUsers.users" ng-click="openDetailModal(user)">
+            <div class="item item-icon-left item-button-right" ng-repeat="user in myUsers.users" ng-click="myUsers.currentUser = user; modalService.openModal('user')">
                 <i class="icon ion-person"  ng-class="{'inactive': !user.active}"></i>
                 <span ng-if="!user.active" class="inactive">(inactive)</span>
                 <span ng-class="{'inactive': !user.active}">{{user.email}}{{user.username ? ' / ' + user.username : ''}}</span>
                 <span ng-if="user.role === 'admin' && user._id !== $root.currentUser._id">(admin)</span>
                 <span ng-if="user.role === 'admin' && user._id === $root.currentUser._id">(You, admin)</span>
                 <span ng-if="user.role !== 'admin' && user._id === $root.currentUser._id">(You)</span>
-                
+
                 <button ng-if="$root.currentUser.role === 'admin' && user._id !== $root.currentUser._id" class="button button-clear" ng-click="myUsers.removeUser(user);
                                 $event.stopPropagation();" ng-if="user.email !== $root.currentUser.email">
                     <i class="icon ion-trash-b assertive"></i>
@@ -53,13 +50,13 @@
 
         <div class="row">
             <div ng-if="$root.currentUser.role === 'admin'" class="col-50 padding-horizontal padding-top">
-                <button class="button button-block button-positive" ng-click="openDetailModal()">
+                <button class="button button-block button-positive" ng-click="myUsers.emptyCurrentUser();modalService.openModal('user');">
                     Create New
                 </button>
 
             </div>
             <div class="padding-horizontal padding-top" ng-class="{'col-50': $root.currentUser.role === 'admin', 'col': $root.currentUser.role !== 'admin'}">
-                <button class="button button-block button-dark button-outline" ng-click="closeSelf();">
+                <button class="button button-block button-dark button-outline" ng-click="close();">
                     Close
                 </button>   
             </div>

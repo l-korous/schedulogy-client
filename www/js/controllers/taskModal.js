@@ -1,28 +1,52 @@
 angular.module('Schedulogy')
-    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, $timeout, MyResources) {
+    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, $rootScope, $timeout, MyResources, ModalService, $ionicScrollDelegate) {
         $scope.myEvents = MyEvents;
         $scope.myResources = MyResources;
+        $scope.popupOpen = false;
+        $scope.modalEl = null;
 
-        // Register confirm callback in parent.
-        $scope.$parent.modals.task.confirmCallback = function () {
-            $scope.myEvents.saveEvent();
-            $scope.$parent.closeModal('task');
+        ModalService.createModal('task', $scope, {}, $scope.open, $scope.close);
+
+        $scope.open = function () {
+            $scope.myResources.refresh();
+
+            if (!MyEvents.currentEvent) {
+                MyEvents.emptyCurrentEvent();
+            }
+
+            $scope.form.$setPristine();
+
+            var primaryInput = $($scope.modalEl).find('#primaryInput');
+            if ($rootScope.isMobileLow || $rootScope.isMobileNarrow) {
+                primaryInput.focus();
+                primaryInput.select();
+            }
+
+            $(function () {
+                $('#taskModalTextarea').autogrow();
+            });
+
+            ModalService.openModalInternal('task', function () {
+                $ionicScrollDelegate.scrollTop();
+            });
         };
 
-        // Register self in parent (calendar).
-        $scope.$parent.modalScope.task = $scope;
-        $scope.init = function () {
-            $scope.myResources.refresh();
+        $scope.close = function () {
+            ModalService.closeModalInternal(function () {
+                $scope.form.$setPristine();
+            });
+        };
+
+        $scope.save = function () {
+            $scope.myEvents.saveEvent();
+            $scope.close();
         };
 
         $scope.maxEventDuration = settings.maxEventDuration;
-        // TODO - can we do this in the view directly from settings?
-        $scope.noPrerequisitesToListMsg = settings.noPrerequisitesToListMsg;
-        $scope.noDependenciesToListMsg = settings.noDependenciesToListMsg;
 
         $scope.deleteCurrentEvent = function () {
             $scope.myEvents.deleteEventById($scope.myEvents.currentEvent._id, function () {
-                $scope.$parent.closeModal('task');
+                $scope.close();
             });
         };
 
@@ -83,8 +107,8 @@ angular.module('Schedulogy')
                     if (!MyEvents.recalcConstraints())
                         MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
 
-                    var primaryInput = $('.taskSaveForm').find('#primaryInput');
-                    angular.element(primaryInput).scope().taskSaveForm.$setDirty();
+                    var primaryInput = $('.form').find('#primaryInput');
+                    angular.element(primaryInput).scope().form.$setDirty();
                 }
             };
             d.tp = {
@@ -97,8 +121,8 @@ angular.module('Schedulogy')
                     if (!MyEvents.recalcConstraints())
                         MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
 
-                    var primaryInput = $('.taskSaveForm').find('#primaryInput');
-                    angular.element(primaryInput).scope().taskSaveForm.$setDirty();
+                    var primaryInput = $('.form').find('#primaryInput');
+                    angular.element(primaryInput).scope().form.$setDirty();
                 }
             };
         });
@@ -139,6 +163,7 @@ angular.module('Schedulogy')
             }
         };
         $scope.openDatePicker = function (dateUsed) {
+            $scope.popupOpen = true;
             var dateUsedConfig = datesUsed.find(function (e) {
                 return e.name === dateUsed;
             });
@@ -146,10 +171,29 @@ angular.module('Schedulogy')
             ionicDatePicker.openDatePicker(dateUsedConfig.dp);
         };
         $scope.openTimePicker = function (dateUsed) {
+            $scope.popupOpen = true;
             var dateUsedConfig = datesUsed.find(function (e) {
                 return e.name === dateUsed;
             });
             $scope.reinitTimePicker(dateUsedConfig.tp);
             ionicTimePicker.openTimePicker(dateUsedConfig.tp);
         };
+
+        $scope.$on('Esc', function () {
+            if (ModalService.currentModal === 'task') {
+                if ($scope.popupOpen) {
+                    $timeout(function () {
+                        $('.button_close').click();
+                    });
+                    $scope.popupOpen = false;
+                }
+                else {
+                    $scope.close();
+                }
+            }
+        });
+
+        $scope.$on('$destroy', function () {
+            ModalService.modals.task.modal.remove();
+        });
     });

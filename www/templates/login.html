@@ -1,5 +1,5 @@
 <div class="has-header maxWidth-1000" ng-class="{'marginTop3':(!$root.isMobileLow && !$root.isMobileNarrow)}" has-bouncing="false" scroll="true">
-    <form name="loginForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode);">
+    <form name="loginForm" novalidate>
         <div class="list customFormErrorList">
             <div ng-show="beingSubmitted && (loginForm.email.$error.required || loginForm.email.$error.email) && !loginForm.email.$pristine" class="item help-block">
                 Please provide a valid password.

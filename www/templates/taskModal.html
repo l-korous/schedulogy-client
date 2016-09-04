@@ -7,24 +7,23 @@
             <i class="icon ion-trash-b assertive"></i>
         </button>
     </ion-header-bar>
-    <!-- This is a hack how to know what modal is this template for - for some bookkeeping, at the time of writing - 20160729 - in calendar.js -->
-    <ion-content class="modalNamingSearch" name="task">
-        <form class="taskSaveForm" name="taskSaveForm" novalidate ng-keyup="$root.keyUpHandler($event.keyCode, (taskSaveForm.$invalid || $('#taskModalTextarea')[0] == document.activeElement));">
+    <ion-content>
+        <form name="form" novalidate>
             <div class="list customFormErrorList">
-                <div ng-show="taskSaveForm.title.$error.required && !taskSaveForm.title.$pristine" class="item help-block">Please provide a valid title.</div>
-                <div ng-show="taskSaveForm.fixedStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
-                <div ng-show="taskSaveForm.fixedStartTime.$error.required" class="item help-block">Please provide a valid time.</div>
-                <div ng-show="taskSaveForm.fixedDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
-                <div ng-show="taskSaveForm.fixedAllDayStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
-                <div ng-show="taskSaveForm.fixedAllDayDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
-                <div ng-show="taskSaveForm.floatingDueDate.$error.required" class="item help-block">Please provide a valid date.</div>
-                <div ng-show="taskSaveForm.floatingDueTime.$error.required" class="item help-block">Please provide a valid time.</div>
-                <div ng-show="taskSaveForm.floatingDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
-                <div ng-show="taskSaveForm.resource.$error.required" class="item help-block">Please provide a valid resource.</div>
-                <div ng-show="taskSaveForm.resources.$error.required" class="item help-block">Please provide valid resources.</div>
+                <div ng-show="form.title.$error.required && !form.title.$pristine" class="item help-block">Please provide a valid title.</div>
+                <div ng-show="form.fixedStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
+                <div ng-show="form.fixedStartTime.$error.required" class="item help-block">Please provide a valid time.</div>
+                <div ng-show="form.fixedDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
+                <div ng-show="form.fixedAllDayStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
+                <div ng-show="form.fixedAllDayDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
+                <div ng-show="form.floatingDueDate.$error.required" class="item help-block">Please provide a valid date.</div>
+                <div ng-show="form.floatingDueTime.$error.required" class="item help-block">Please provide a valid time.</div>
+                <div ng-show="form.floatingDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
+                <div ng-show="form.resource.$error.required" class="item help-block">Please provide a valid resource.</div>
+                <div ng-show="form.resources.$error.required" class="item help-block">Please provide valid resources.</div>
                 <div ng-show="myEvents.currentEvent.error" class="item help-block">{{myEvents.currentEvent.error}}</div>
             </div>
-            <div class="list">
+            <div class="list" style="margin-bottom:0;">
                 <label class="item item-input item-select">
                     <div class="input-label">
                         Type
@@ -35,25 +34,27 @@
                         <option value="floating" class="option-floating">Floating</option>
                     </select>
                 </label>
-                <label class="item item-input" ng-class="{ 'has-error' : taskSaveForm.title.$invalid && !taskSaveForm.title.$pristine }">
+                <label class="item item-input" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
                     <div class="input-label">
                         Title
                     </div>
-                    <input type="text" ng-model="myEvents.currentEvent.title" id="primaryInput" required name="title">
+                    <input autocomplete="off" type="text" ng-model="myEvents.currentEvent.title" id="primaryInput" required name="title">
                 </label>
                 <label class="item item-input">
                     <textarea placeholder="Description" ng-model="myEvents.currentEvent.desc" rows="5" id="taskModalTextarea"></textarea>
                 </label>
 
+                <!--
                 <label class="item" ng-show="myEvents.currentEvent.type === 'fixed' && myEvents.currentEvent.constraint.startDateText">
                     The earliest this task can start is on {{myEvents.currentEvent.constraint.startDateText}}, at {{myEvents.currentEvent.constraint.startTimeText}}.
                 </label>
+                -->
                 <label class="item" ng-show="myEvents.currentEvent.type === 'fixed' && myEvents.currentEvent.constraint.endDateText">
                     The latest this task can end is on {{myEvents.currentEvent.constraint.endDateText}}, at {{myEvents.currentEvent.constraint.endTimeText}}.
                 </label>
 
                 <label class="item item-input" ng-show="myEvents.currentEvent.type === 'fixed'"
-                       ng-class="{ 'has-error' : taskSaveForm.fixedStartDate.$invalid && !taskSaveForm.fixedStartDate.$pristine }">
+                       ng-class="{ 'has-error' : form.fixedStartDate.$invalid && !form.fixedStartDate.$pristine }">
                     <div class="input-label">
                         Start Date
                     </div>
@@ -64,7 +65,7 @@
                 </label>
 
                 <label class="item item-input" ng-show="myEvents.currentEvent.type === 'fixed'"
-                       ng-class="{ 'has-error' : taskSaveForm.fixedStartTime.$invalid && !taskSaveForm.fixedStartTime.$pristine }">
+                       ng-class="{ 'has-error' : form.fixedStartTime.$invalid && !form.fixedStartTime.$pristine }">
                     <div class="input-label">
                         Start Time
                     </div>
@@ -74,7 +75,7 @@
                 </label>
 
                 <label class="item item-input range" ng-show="myEvents.currentEvent.type === 'fixed'"
-                       ng-class="{ 'has-error' : taskSaveForm.fixedDuration.$invalid && !taskSaveForm.fixedDuration.$pristine }">
+                       ng-class="{ 'has-error' : form.fixedDuration.$invalid && !form.fixedDuration.$pristine }">
                     <div class="input-label">
                         End Time<br />[duration]
                     </div>
@@ -87,15 +88,17 @@
                     </div>
                 </label>
 
+                <!--
                 <label class="item" ng-show="myEvents.currentEvent.type === 'fixedAllDay' && myEvents.currentEvent.constraint.startDateText">
                     The earliest this task can start is on {{myEvents.currentEvent.constraint.startDateText}}, at {{myEvents.currentEvent.constraint.startTimeText}}.
                 </label>
+                -->
                 <label class="item" ng-show="myEvents.currentEvent.type === 'fixedAllDay' && myEvents.currentEvent.constraint.endDateText">
                     The latest this task can end is on {{myEvents.currentEvent.constraint.endDateText}}, at {{myEvents.currentEvent.constraint.endTimeText}}.
                 </label>
 
                 <label class="item item-input" ng-show="myEvents.currentEvent.type === 'fixedAllDay'"
-                       ng-class="{ 'has-error' : taskSaveForm.fixedAllDayStartDate.$invalid && !taskSaveForm.fixedAllDayStartDate.$pristine }">
+                       ng-class="{ 'has-error' : form.fixedAllDayStartDate.$invalid && !form.fixedAllDayStartDate.$pristine }">
                     <div class="input-label">
                         Start Date
                     </div>
@@ -104,7 +107,7 @@
                 </label>
 
                 <label class="item item-input range" ng-show="myEvents.currentEvent.type === 'fixedAllDay'"
-                       ng-class="{ 'has-error' : taskSaveForm.fixedAllDayDuration.$invalid && !taskSaveForm.fixedAllDayDuration.$pristine }">
+                       ng-class="{ 'has-error' : form.fixedAllDayDuration.$invalid && !form.fixedAllDayDuration.$pristine }">
                     <div class="input-label">
                         End Date<br />[duration]
                     </div>
@@ -125,7 +128,7 @@
                 </label>
 
                 <label class="item item-input" ng-show="myEvents.currentEvent.type === 'floating'"
-                       ng-class="{ 'has-error' : taskSaveForm.floatingDueDate.$invalid && !taskSaveForm.floatingDueDate.$pristine }">
+                       ng-class="{ 'has-error' : form.floatingDueDate.$invalid && !form.floatingDueDate.$pristine }">
                     <div class="input-label">
                         Due Date
                     </div>
@@ -134,7 +137,7 @@
                 </label>
 
                 <label class="item item-input" ng-show="myEvents.currentEvent.type === 'floating'" 
-                       ng-class="{ 'has-error' : taskSaveForm.floatingDueTime.$invalid && !taskSaveForm.floatingDueTime.$pristine }">
+                       ng-class="{ 'has-error' : form.floatingDueTime.$invalid && !form.floatingDueTime.$pristine }">
                     <div class="input-label">
                         Due Time
                     </div>
@@ -143,7 +146,7 @@
                 </label>
 
                 <label class="item item-input range" ng-show="myEvents.currentEvent.type === 'floating'"
-                       ng-class="{ 'has-error' : taskSaveForm.floatingDuration.$invalid && !taskSaveForm.floatingDuration.$pristine }">
+                       ng-class="{ 'has-error' : form.floatingDuration.$invalid && !form.floatingDuration.$pristine }">
                     <div class="input-label">
                         Duration<br />&nbsp;
                     </div>
@@ -156,42 +159,51 @@
                     </div>
                 </label>
 
-                <label class="item item-nested-list" ng-show="myEvents.currentEvent.type === 'floating'">
+                <label class="item item-nested-list" ng-show="myEvents.currentEvent.type === 'floating'" style="padding-bottom:0;border-bottom:0">
                     <div class="input-label">
                         Prerequisites
                     </div>
                     <div class="list nested-list" ng-show="myEvents.currentEvent.needsForShow.length > 0">
-                        <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.needsForShow| filter : {_id: event._id} : true">
+                        <div style="border:0;" class="item item-button-right" ng-repeat="event in myEvents.currentEvent.needsForShow| filter : {_id: event._id} : true">
                             <span class="bold">{{event.title}}</span> {{event.type == 'floating' ? 'due ' : ''}} on 
                             {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
                             {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
-                            <button class="button button-clear" on-tap="myEvents.removePrerequisite(event)">
+                            <button class="button button-clear" on-tap="myEvents.removePrerequisite(event); form.$setDirty();">
                                 <i class="icon ion-trash-b assertive"></i>
                             </button>
                         </div>
                     </div>
-                    <label class="item item-input item-select width-100">
-                        <custom-select id="prerequisiteSelect" empty-message="{{noPrerequisitesToListMsg}}" css-class="select-needs" ng-model="myEvents.newPrerequisite" options="$parent.eventSources[0] | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a prerequisite" ng-change="myEvents.addPrerequisite(myEvents.newPrerequisite)"></custom-select>
-                    </label>
+                </label>
+                <label class="item item-select" ng-show="myEvents.currentEvent.type === 'floating'">
+                    <select ng-model="myEvents.newPrerequisite" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
+                            ng-options="event._id as event.shortInfo for event in filteredPrerequisites = (myEvents.events | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies)"
+                            ng-change="myEvents.addPrerequisite(myEvents.newPrerequisite)">
+                        <option ng-selected="true" value="">{{filteredPrerequisites.length === 0 ? 'no other possible prerequisite tasks, see Help for explanation' : 'select a prerequisite task'}}</option>
+                    </select>
                 </label>
 
-                <label class="item item-nested-list">
+                <label class="item item-nested-list" style="padding-bottom:0;border-bottom:0">
                     <div class="input-label">
                         Dependent Tasks
                     </div>
                     <div class="list nested-list" ng-show="myEvents.currentEvent.blocksForShow.length > 0">
-                        <div class="item item-button-right" ng-repeat="event in myEvents.currentEvent.blocksForShow| filter : {_id: event._id} : true">
+                        <div style="border:0;" class="item item-button-right" ng-repeat="event in myEvents.currentEvent.blocksForShow| filter : {_id: event._id} : true">
                             <span class="bold">{{event.title}}</span> {{event.type == 'floating' ? 'due ' : ''}} on 
                             {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
                             {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
-                            <button class="button button-clear" on-tap="myEvents.removeDependency(event)">
+                            <button class="button button-clear" on-tap="myEvents.removeDependency(event); form.$setDirty();">
                                 <i class="icon ion-trash-b assertive"></i>
                             </button>
                         </div>
                     </div>
-                    <label class="item item-input item-select width-100">
-                        <custom-select empty-message="{{noDependenciesToListMsg}}" css-class="select-blocks"  ng-model="myEvents.newDependency" options="$parent.eventSources[0] | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies" value="_id" label="title" label2="startDateText" label3="startTimeText" null-value="Add a dependency" ng-change="myEvents.addDependency(myEvents.newDependency)"></custom-select>
-                    </label>
+                </label>
+
+                <label class="item item-select">
+                    <select ng-model="myEvents.newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
+                            ng-options="event._id as event.shortInfo for event in filteredDependencies = (myEvents.events | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
+                            ng-change="myEvents.addDependency(myEvents.newDependency)">
+                        <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible dependent tasks, see Help for explanation' : 'select a dependent task'}}</option>
+                    </select>
                 </label>
 
                 <label class="item item-nested-list" ng-if="myEvents.currentEvent.type !== 'floating'">
@@ -215,13 +227,13 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button id="taskSave" class="button button-block button-positive" ng-disabled="taskSaveForm.$invalid || taskSaveForm.$pristine || myEvents.currentEvent.error" ng-click="$parent.confirmModal('task')">
+                    <button id="taskSave" class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine || myEvents.currentEvent.error" ng-click="save();">
                         Save
                     </button>
 
                 </div>
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-outline button-stable" ng-click="$parent.closeModal('task');">
+                    <button class="button button-block button-outline button-stable" ng-click="close();">
                         Cancel
                     </button>   
                 </div>

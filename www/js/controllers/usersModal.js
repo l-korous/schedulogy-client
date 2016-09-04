@@ -1,63 +1,34 @@
 angular.module('Schedulogy')
-    .controller('UsersModalCtrl', function (MyUsers, $scope, $ionicModal, settings) {
+    .controller('UsersModalCtrl', function (MyUsers, $scope, ModalService) {
         $scope.myUsers = MyUsers;
+        $scope.modalService = ModalService;
         $scope.successInfo = null;
-        $scope.settings = settings;
         $scope.loading = true;
 
-        // Register self in parent (leftMenu).
-        $scope.$parent.modalScope.users = $scope;
-        $scope.init = function () {
+        ModalService.createModal('users', $scope, {}, $scope.open, $scope.close);
+
+        $scope.open = function () {
             $scope.loading = true;
             $scope.myUsers.refresh(function () {
                 $scope.loading = false;
             });
+
+            ModalService.openModalInternal('users');
         };
 
-        $scope.closeSelf = function () {
-            $scope.$parent.closeModal('users');
-            $scope.successInfo = null;
-        };
-
-        $ionicModal.fromTemplateUrl('templates/userModal.html', {
-            scope: $scope,
-            animation: 'animated zoomIn'
-        }).then(function (modal) {
-            $scope.detailModal = modal;
-        });
-
-        $scope.openDetailModal = function (user) {
-            if(!user) {
-                $scope.newUser = true;
-                $scope.myUsers.emptyCurrentUser();
-            }
-            else {
-                $scope.myUsers.currentUser = user;
-                $scope.newUser = false;
-            }
-
-            var focusPrimaryInput = function () {
-                var primaryInput = $($scope.detailModal.modalEl).find('#primaryInput');
-                primaryInput.focus();
-                primaryInput.select();
-            };
-
-            $scope.detailModal.show().then(function () {
-                focusPrimaryInput();
+        $scope.close = function () {
+            ModalService.closeModalInternal(function () {
+                $scope.successInfo = '';
+                $scope.errorInfo = '';
             });
         };
 
-        $scope.closeDetailModal = function () {
-            $scope.detailModal.hide();
-        };
-
-        $scope.myUsers.registerSaveCallback(function () {
-            $scope.closeDetailModal();
-            if($scope.newUser)
-                $scope.successInfo = settings.registrationSuccessInfo;
+        $scope.$on('Esc', function () {
+            if(ModalService.currentModal === 'users')
+                $scope.close();
         });
-
+        
         $scope.$on('$destroy', function () {
-            $scope.detailModal.remove();
+            ModalService.modals.users.modal.remove();
         });
     });

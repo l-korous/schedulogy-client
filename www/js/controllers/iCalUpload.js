@@ -1,8 +1,9 @@
 angular.module('Schedulogy')
-    .controller('ICalUploadCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading, $timeout) {
+    .controller('ICalUploadModalCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading, $timeout) {
         // Register confirm callback in parent.
         $scope.$parent.modals.uploadIcal.confirmCallback = function () {
-            $scope.uploadFile();
+            if($rootScope.icalFile)
+                $scope.uploadFile();
         };
         $scope.$parent.modals.uploadIcal.closeCallback = function () {
             $scope.successInfo = null;

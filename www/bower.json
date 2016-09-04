@@ -28,13 +28,14 @@
     "ionic-datepicker": "^1.1.0",
     "ionic-timepicker": "^0.5.1",
     "fullcalendar": "^2.6.0",
-    "hopscotch": "linkedin/hopscotch#^0.2.6"
+    "hopscotch": "linkedin/hopscotch#^0.2.6",
+    "ng-lodash": "^0.5.0"
   },
   "resolutions": {
     "jquery": "2.x",
-    "angular": "1.5.7",
+    "angular": ">= 1.2.0",
     "moment": ">=2.5.0",
     "angular-ui-router": "^1.0.0",
-    "fullcalendar": "^2.6.0"
+    "fullcalendar": "2.8.0"
   }
 }

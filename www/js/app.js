@@ -1,15 +1,16 @@
-angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker'])
+angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker', 'ngLodash'])
     .constant('settings', {
         serverUrl: 'http://localhost:8080/api',
+        //serverUrl: 'http://52.59.242.96/api',
         loadingTemplate: 'Loading,<br />please wait...',
-        appVersion: 'beta-2.0.0',
+        appVersion: 'beta-2.1.0',
         applicationName: 'Schedulogy',
         minPasswordGroups: 1,
         minPasswordLength: 1,
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
-            on: false,
-            date: 'Sat Aug 20 2016 08:00:00 GMT+0200'
+            on: true,
+            date: 'Sat Sep 03 2016 22:00:00 GMT+0200'
         },
         weeks: 26,
         mobileWidth: 500,
@@ -37,7 +38,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         },
         minCalendarRowHeight: 45,
         checkNewVersion: false,
-        dateFormat: 'Do MMM',
+        dateFormat: 'MMM, Do',
         timeFormat: 'HH:mm',
         eventColor: {
             fixed: '#387ef5',
@@ -202,7 +203,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, ModalService) {
         $rootScope.allSet = false;
 
         // Check stuff when changing state.
@@ -219,7 +220,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     event.preventDefault();
             }
         });
-        
+
         Auth.tryPreauthenticate().then(function () {
             $location.path('');
             $location.search('');
@@ -237,12 +238,25 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $state.go("main.login", {}, {location: false, reload: true});
             }
         };
-        $rootScope.keyUpHandler = function (keyCode, enterBlockPredicate) {
-            if (keyCode === 13 && !enterBlockPredicate) {
+        $rootScope.keyUpHandler = function (keyCode) {
+
+            if (keyCode === 13 && document.activeElement.tagName !== 'TEXTAREA') {
                 $rootScope.$broadcast('Enter');
             }
-            if (keyCode === 27)
+            else if (keyCode === 27)
                 $rootScope.$broadcast('Esc');
+            else if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                if (keyCode === 67) {
+                    MyEvents.emptyCurrentEvent();
+                    $rootScope.calendarScope.openModal('task');
+                }
+                else if(keyCode === 37) {
+                    $('#theOnlyCalendar').fullCalendar('next');
+                }
+                else if(keyCode === 39) {
+                    $('#theOnlyCalendar').fullCalendar('prev');
+                }
+            }
         };
 
         // Handle isMobile
@@ -251,5 +265,9 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         angular.element($window).bind('resize', function () {
             $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
             $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
+        });
+        
+        $rootScope.$on('modal.hidden', function (event, modal) {
+            ModalService.closeModal();
         });
     });
