@@ -27,12 +27,14 @@ angular.module('Schedulogy')
             // But no problem, what we do is that we treat it as having no constraint - it is a fixed task after all.
             if (resConstraint && resConstraint.start) {
                 var constraintStart = moment(resConstraint.start).local();
+                var constraintStartDue = constraintStart.clone().add(event.dur * settings.minuteGranularity, 'm');
                 event.constraint = angular.extend(event.constraint, {
                     start: constraintStart,
+                    startDue: constraintStartDue,
                     startDateText: constraintStart.format(settings.dateFormat),
                     startTimeText: constraintStart.format(settings.timeFormat),
-                    startDateDueText: constraintStart.clone().add(event.dur * settings.minuteGranularity, 'm').format(settings.dateFormat),
-                    startTimeDueText: constraintStart.clone().add(event.dur * settings.minuteGranularity, 'm').format(settings.timeFormat)
+                    startDateDueText: constraintStartDue.format(settings.dateFormat),
+                    startTimeDueText: constraintStartDue.format(settings.timeFormat)
                 });
             }
             else {
@@ -72,7 +74,7 @@ angular.module('Schedulogy')
             else {
                 if (event.type === 'floating') {
                     // Task is due earlier that it can be.
-                    var minDue = event.constraint.start.clone().add(event.dur * settings.minuteGranularity, 'm');
+                    var minDue = event.constraint.startDue;
                     if (event.due.diff(minDue, 'm') < 0) {
                         event.due = minDue;
                         event.dueDateText = event.due.format(settings.dateFormat);

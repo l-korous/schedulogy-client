@@ -1,5 +1,15 @@
 angular.module('Schedulogy')
-    .controller('HelpModalCtrl', function ($scope, settings, $sce) {
+    .controller('HelpModalCtrl', function ($scope, settings, $sce, ModalService) {
+        $scope.open = function () {
+            ModalService.openModalInternal('help');
+        };
+
+        $scope.close = function () {
+            ModalService.closeModalInternal();
+        };
+
+        ModalService.initModal('help', $scope, $scope.open, $scope.close);
+
         $scope.groups = [
             {
                 name: 'Introduction',
@@ -71,4 +81,13 @@ angular.module('Schedulogy')
         $scope.toggleGroup = function (group) {
             group.shown = !group.shown;
         };
+
+        $scope.$on('Esc', function () {
+            if (ModalService.currentModal === 'help')
+                $scope.close();
+        });
+
+        $scope.$on('$destroy', function () {
+            ModalService.modals['help'].modal.remove();
+        });
     });

@@ -8,16 +8,16 @@
         </div>
     </div>
     <ion-content ng-show="!successInfo">
-        <form name="icalUploadForm" novalidate>
+        <form name="$parent.form" novalidate>
             <div class="list customFormErrorList">
-                <div ng-show="icalUploadForm.file.$error.required && !icalUploadForm.file.$pristine" class="item help-block">Please provide a valid file.</div>
+                <div ng-show="form.file.$error.required && !form.file.$pristine" class="item help-block">Please provide a valid file.</div>
                 <div ng-show="errorInfo" class="item help-block help-block-error item-no-wrap">
                     {{errorInfo}}
                 </div>
             </div>
             
             <div class="list">
-                <label class="item item-input" ng-class="{ 'has-error' : icalUploadForm.file.$invalid && !icalUploadForm.file.$pristine }">
+                <label class="item item-input" ng-class="{ 'has-error' : form.file.$invalid && !form.file.$pristine }">
                     <div class="input-label">
                         iCalendar File
                     </div>
@@ -38,13 +38,13 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="!$root.icalFile" ng-click="confirmModal('uploadIcal');">
+                    <button class="button button-block button-positive" ng-disabled="!$root.icalFile" ng-click="save();">
                         Save
                     </button>
 
                 </div>
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-outline button-stable" ng-click="closeModal('uploadIcal');">
+                    <button class="button button-block button-outline button-stable" ng-click="close();">
                         Cancel
                     </button>   
                 </div>

@@ -3,8 +3,6 @@ angular.module('Schedulogy')
         $scope.myUsers = MyUsers;
         $scope.loading = true;
 
-        ModalService.createModal('user', $scope, {}, $scope.open, $scope.close);
-
         $scope.open = function () {
             if (!$scope.myUsers.currentUser) {
                 $scope.newUser = true;
@@ -25,6 +23,8 @@ angular.module('Schedulogy')
         $scope.close = function () {
             ModalService.closeModalInternal();
         };
+
+        ModalService.initModal('user', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
             if ($scope.form.$invalid)

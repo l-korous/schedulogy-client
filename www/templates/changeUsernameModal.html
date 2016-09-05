@@ -3,7 +3,7 @@
         <h1 class="title">Change Username</h1>
     </ion-header-bar>
     <ion-content has-bouncing="false">
-        <form name="form" novalidate>
+        <form name="$parent.form" novalidate>
             <div class="list customFormErrorList">
                 <div ng-show="(form.username.$error.required || form.username.$error.minlength) && !form.username.$pristine" class="item help-block">
                     Please provide a valid username with at least 4 characters.

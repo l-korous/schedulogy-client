@@ -1,7 +1,5 @@
 angular.module('Schedulogy')
     .controller('ChangePasswordModalCtrl', function ($scope, settings, $ionicLoading, Auth, ModalService) {
-        ModalService.createModal('changePassword', $scope, {}, $scope.open, $scope.close);
-
         // Some loading time to be sure we are all set.
         $scope.passwordRules = {
             minGroups: settings.minPasswordGroups,
@@ -22,6 +20,8 @@ angular.module('Schedulogy')
         $scope.close = function () {
             ModalService.closeModalInternal();
         };
+
+        ModalService.initModal('changePassword', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
             if ($scope.form.$invalid)

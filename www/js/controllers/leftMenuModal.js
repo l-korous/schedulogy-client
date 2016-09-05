@@ -3,8 +3,6 @@ angular.module('Schedulogy')
         $scope.modalService = ModalService;
         $scope.myEvents = MyEvents;
 
-        ModalService.createModal('leftMenu', $scope, {animation: 'animated fadeInLeft'}, $scope.open, $scope.close);
-
         $scope.open = function () {
             ModalService.openModalInternal('leftMenu');
         };
@@ -12,6 +10,8 @@ angular.module('Schedulogy')
         $scope.close = function () {
             ModalService.closeModalInternal();
         };
+
+        ModalService.initModal('leftMenu', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
             MyEvents.deleteAll();

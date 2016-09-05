@@ -47,7 +47,7 @@ angular.module('Schedulogy')
             _this.dirtyEvents.forEach(function (event) {
                 _this.fillBlocksAndNeedsForShow(event);
             });
-            
+
             $('#theOnlyCalendar').fullCalendar('render');
         };
 
@@ -85,7 +85,6 @@ angular.module('Schedulogy')
         };
 
         _this.fillBlocksAndNeedsForShow = function (event) {
-            var _this = this;
             if (event.blocks) {
                 event.blocksForShow.splice(0, event.blocksForShow.length);
                 event.blocks.forEach(function (dep) {
@@ -137,6 +136,7 @@ angular.module('Schedulogy')
                 return _this.dirtyEvents.find(function (event) {
                     return event._id === passedEventId;
                 });
+            return eventToDelete;
         };
 
         _this.getCurrentEvents = function (now) {
@@ -167,21 +167,22 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.deleteAll = function () {
+        _this.deleteAll = function (successCallback, errorCallback) {
             _this.shouldShowLoading = true;
             $timeout(function () {
                 if (_this.shouldShowLoading)
                     $ionicLoading.show({template: settings.loadingTemplate});
             }, 500);
 
-            Task.deleteAll({}, function (data, headers) {
+            Task.deleteAll({}, function (data) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
                 _this.shouldShowLoading = false;
                 $ionicLoading.hide();
+                successCallback && successCallback();
             }, function (err) {
                 _this.shouldShowLoading = false;
                 $ionicLoading.hide();
-
+                errorCallback && errorCallback();
                 // error callback
                 console.log(err);
             });
@@ -191,24 +192,29 @@ angular.module('Schedulogy')
             _this.deleteEvent(this.findEventById(passedEventId), successCallback, errorCallback);
         };
 
-        _this.handleChangeOfEventType = function () {
-            if (_this.currentEvent.dur > settings.maxEventDuration[_this.currentEvent.type]) {
-                _this.currentEvent.dur = settings.maxEventDuration[_this.currentEvent.type];
+        _this.handleChangeOfEventType = function (passedEvent) {
+            var event = passedEvent || _this.currentEvent;
+
+            if (event.dur > settings.maxEventDuration[event.type]) {
+                event.dur = settings.maxEventDuration[event.type];
                 _this.updateEndDateTimeWithDuration();
             }
-            if (_this.currentEvent.type === 'floating') {
-                var startHourOffset = (DateUtils.toMinutes(_this.currentEvent.due) - _this.currentEvent.dur * settings.minuteGranularity) - (settings.startHour * 60);
+            if (event.type === 'floating') {
+                var dueMinutes = DateUtils.toMinutes(event.due);
+                if (!dueMinutes)
+                    dueMinutes = 1440;
+                var startHourOffset = (dueMinutes - event.dur * settings.minuteGranularity) - (settings.startHour * 60);
                 if (startHourOffset < 0)
-                    _this.currentEvent.due.add(-startHourOffset, 'm');
-                var endHourOffset = (settings.endHour * 60) - (DateUtils.toMinutes(_this.currentEvent.due) - _this.currentEvent.dur * settings.minuteGranularity);
+                    event.due.add(-startHourOffset, 'm');
+                var endHourOffset = (settings.endHour * 60) - (dueMinutes - event.dur * settings.minuteGranularity);
                 if (endHourOffset < 0)
-                    _this.currentEvent.due.add(endHourOffset, 'm');
+                    event.due.add(endHourOffset, 'm');
 
-                _this.currentEvent.dueDateText = _this.currentEvent.due.format(settings.dateFormat);
-                _this.currentEvent.dueTimeText = _this.currentEvent.due.format(settings.timeFormat);
+                event.dueDateText = event.due.format(settings.dateFormat);
+                event.dueTimeText = event.due.format(settings.timeFormat);
             }
-            _this.currentEvent.color = settings.eventColor[_this.currentEvent.type];
-            _this.recalcConstraints();
+            event.color = settings.eventColor[event.type];
+            _this.recalcConstraints(event);
         };
 
         _this.tasksInResponseSuccessHandler = function (data, successCallback) {
@@ -222,7 +228,7 @@ angular.module('Schedulogy')
             if (err.data && err.data.tasks && err.data.dirtyTasks)
                 _this.importFromTasks(err.data.tasks, err.data.dirtyTasks);
 
-            ModalService.openModal('error');
+            ModalService.openModal('dirtyTasks');
             errorCallback && errorCallback();
             _this.shouldShowLoading = false;
             $ionicLoading.hide();
@@ -266,19 +272,22 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.recalcConstraints = function () {
+        _this.recalcConstraints = function (eventPassed) {
+            console.log('recalculating Constraints');
             $ionicLoading.show({template: settings.loadingTemplate});
+
+            var event = eventPassed ? eventPassed : _this.currentEvent;
 
             var defer = $q.defer();
 
             // Very important - we need to set BTime for accurate calculation of constraints of all created Events.
             Event.setBTime(_this.getBTime());
 
-            Task.fromEvent(this.currentEvent).$checkConstraints({btime: _this.getBTime().unix()}, function (data) {
+            Task.fromEvent(event).$checkConstraints({btime: _this.getBTime().unix()}, function (data) {
                 $ionicLoading.hide();
-                var constraintProcessResult = Event.processConstraint(_this.currentEvent, data);
+                var constraintProcessResult = Event.processConstraint(event, data);
                 if (constraintProcessResult) {
-                    _this.currentEvent = constraintProcessResult;
+                    event = constraintProcessResult;
                     defer.resolve(true);
                 }
                 else
@@ -292,83 +301,99 @@ angular.module('Schedulogy')
             return defer.promise;
         };
 
-        _this.addDependency = function (eventId) {
-            if (!_this.recalcConstraints())
-                _this.currentEvent.error = 'Impossible to schedule due to constraints';
+        _this.addDependency = function (eventPassed, dependencyId) {
+            if (!dependencyId)
+                return;
+
+            var event = eventPassed ? eventPassed : _this.currentEvent;
+
+            if (!_this.recalcConstraints(event))
+                event.error = 'Impossible to schedule due to constraints';
 
             else {
-                _this.currentEvent.blocks.push(eventId);
-                _this.fillBlocksAndNeedsForShow(this.currentEvent);
-                eventId = null;
+                event.blocks.push(dependencyId);
+                _this.fillBlocksAndNeedsForShow(event);
+                dependencyId = null;
             }
         };
 
-        _this.removeDependency = function (event) {
-            if (!_this.recalcConstraints())
-                _this.currentEvent.error = 'Impossible to schedule due to constraints';
+        _this.removeDependency = function (eventPassed, dependency) {
+            if (!dependency)
+                return;
+
+            var event = eventPassed ? eventPassed : _this.currentEvent;
+
+            if (!_this.recalcConstraints(event))
+                event.error = 'Impossible to schedule due to constraints';
 
             else {
-                for (var i = _this.currentEvent.blocks.length - 1; i >= 0; i--) {
-                    if (this.currentEvent.blocks[i] === event._id) {
-                        _this.currentEvent.blocks.splice(i, 1);
-                        _this.currentEvent.blocksForShow.splice(i, 1);
+                for (var i = event.blocks.length - 1; i >= 0; i--) {
+                    if (event.blocks[i] === dependency._id) {
+                        event.blocks.splice(i, 1);
+                        event.blocksForShow.splice(i, 1);
                     }
                 }
             }
         };
 
-        _this.addPrerequisite = function (eventId) {
-
-            if (!eventId)
+        _this.addPrerequisite = function (eventPassed, prerequisiteId) {
+            if (!prerequisiteId)
                 return;
 
-            if (!_this.recalcConstraints())
-                _this.currentEvent.error = 'Impossible to schedule due to constraints';
+            var event = eventPassed ? eventPassed : _this.currentEvent;
+
+            if (!_this.recalcConstraints(event))
+                event.error = 'Impossible to schedule due to constraints';
 
             else {
 
                 if (!this.currentEvent.needs)
-                    _this.currentEvent.needs = [];
+                    s
+                event.needs = [];
 
-                _this.currentEvent.needs.push(eventId);
-                _this.fillBlocksAndNeedsForShow(this.currentEvent);
-                eventId = null;
+                event.needs.push(prerequisiteId);
+                _this.fillBlocksAndNeedsForShow(event);
+                prerequisiteId = null;
             }
         };
 
-        _this.removePrerequisite = function (event) {
-            if (!event)
+        _this.removePrerequisite = function (eventPassed, prerequisite) {
+            if (!prerequisite)
                 return;
 
-            if (!_this.recalcConstraints())
-                _this.currentEvent.error = 'Impossible to schedule due to constraints';
+            var event = eventPassed ? eventPassed : _this.currentEvent;
+
+            if (!_this.recalcConstraints(event))
+                event.error = 'Impossible to schedule due to constraints';
 
             else {
-                for (var i = _this.currentEvent.needs.length - 1; i >= 0; i--) {
-                    if (this.currentEvent.needs[i] === event._id) {
-                        _this.currentEvent.needs.splice(i, 1);
-                        _this.currentEvent.needsForShow.splice(i, 1);
+                for (var i = event.needs.length - 1; i >= 0; i--) {
+                    if (event.needs[i] === prerequisite._id) {
+                        event.needs.splice(i, 1);
+                        event.needsForShow.splice(i, 1);
                     }
                 }
             }
         };
 
-        _this.updateEndDateTimeWithDuration = function () {
-            DateUtils.saveDurText(_this.currentEvent);
+        _this.updateEndDateTimeWithDuration = function (eventPassed) {
+            var event = eventPassed ? eventPassed : _this.currentEvent;
 
-            if (_this.currentEvent.type === 'fixedAllDay' || _this.currentEvent.type === 'fixed') {
-                var toAddMinutes = (_this.currentEvent.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * _this.currentEvent.dur;
-                _this.currentEvent.end = _this.currentEvent.start.clone().add(toAddMinutes, 'minutes');
+            DateUtils.saveDurText(event);
+
+            if (event.type === 'fixedAllDay' || event.type === 'fixed') {
+                var toAddMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;
+                event.end = event.start.clone().add(toAddMinutes, 'minutes');
 
                 // For all-day events, we are displaying the end day the same as the current one.
-                if (_this.currentEvent.type === 'fixedAllDay') {
-                    var custom_end = _this.currentEvent.start.clone();
-                    _this.currentEvent.endDateText = custom_end.format(settings.dateFormat);
-                    _this.currentEvent.endTimeText = custom_end.format(settings.timeFormat);
+                if (event.type === 'fixedAllDay') {
+                    var custom_end = event.start.clone();
+                    event.endDateText = custom_end.format(settings.dateFormat);
+                    event.endTimeText = custom_end.format(settings.timeFormat);
                 }
-                else if (_this.currentEvent.type === 'fixed') {
-                    _this.currentEvent.endDateText = _this.currentEvent.end.format(settings.dateFormat);
-                    _this.currentEvent.endTimeText = _this.currentEvent.end.format(settings.timeFormat);
+                else if (event.type === 'fixed') {
+                    event.endDateText = event.end.format(settings.dateFormat);
+                    event.endTimeText = event.end.format(settings.timeFormat);
                 }
             }
         };

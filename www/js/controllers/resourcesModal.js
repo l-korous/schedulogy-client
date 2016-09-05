@@ -4,10 +4,10 @@ angular.module('Schedulogy')
         $scope.modalService = ModalService;
         $scope.loading = true;
 
-        ModalService.createModal('resources', $scope, {}, $scope.open, $scope.close);
-
         $scope.open = function () {
             $scope.loading = true;
+            $scope.successInfo = '';
+            $scope.errorInfo = '';
             $scope.myResources.refresh(function () {
                 $scope.loading = false;
             });
@@ -16,11 +16,10 @@ angular.module('Schedulogy')
         };
 
         $scope.close = function () {
-            ModalService.closeModalInternal(function () {
-                $scope.successInfo = '';
-                $scope.errorInfo = '';
-            });
+            ModalService.closeModalInternal();
         };
+
+        ModalService.initModal('resources', $scope, $scope.open, $scope.close);
 
         $scope.$on('Esc', function () {
             if (ModalService.currentModal === 'resources')

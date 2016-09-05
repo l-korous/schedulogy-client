@@ -2,7 +2,6 @@ angular.module('Schedulogy')
     .controller('DirtyTasksModalCtrl', function ($scope, MyEvents, ModalService) {
         $scope.myEvents = MyEvents;
         $scope.modalService = ModalService;
-        ModalService.createModal('dirtyTasks', $scope, {}, $scope.open, $scope.close);
 
         $scope.open = function () {
             ModalService.openModalInternal('dirtyTasks');
@@ -11,6 +10,8 @@ angular.module('Schedulogy')
         $scope.close = function () {
             ModalService.closeModalInternal();
         };
+
+        ModalService.initModal('dirtyTasks', $scope, $scope.open, $scope.close);
 
         $scope.deleteEvent = function (event, jsEvent) {
             $scope.myEvents.deleteEventById(event._id);

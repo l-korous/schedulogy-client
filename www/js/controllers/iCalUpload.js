@@ -1,13 +1,22 @@
 angular.module('Schedulogy')
-    .controller('ICalUploadModalCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading, $timeout) {
-        // Register confirm callback in parent.
-        $scope.$parent.modals.uploadIcal.confirmCallback = function () {
-            if($rootScope.icalFile)
-                $scope.uploadFile();
-        };
-        $scope.$parent.modals.uploadIcal.closeCallback = function () {
+    .controller('ICalUploadModalCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading, $timeout, ModalService) {
+        $scope.open = function () {
             $scope.successInfo = null;
             $scope.errorInfo = null;
+            ModalService.openModalInternal('iCalUpload');
+        };
+
+        $scope.close = function () {
+            ModalService.closeModalInternal();
+        };
+
+        ModalService.initModal('iCalUpload', $scope, $scope.open, $scope.close);
+
+        $scope.save = function () {
+            if ($scope.form.$invalid)
+                return;
+            if ($rootScope.icalFile)
+                $scope.uploadFile();
         };
 
         // For display purposes only.
@@ -23,7 +32,7 @@ angular.module('Schedulogy')
                 MyEvents.tasksInResponseSuccessHandler(data, function () {
                     $scope.successInfo = settings.iCalUploadSuccess;
                     $timeout(function () {
-                        $scope.$parent.closeModal('uploadIcal');
+                        ModalService.closeModalInternal();
                         $scope.successInfo = null;
                         $scope.errorInfo = null;
                     }, 2000);
@@ -33,7 +42,7 @@ angular.module('Schedulogy')
                 function (err) {
                     try {
                         MyEvents.tasksInResponseErrorHandler(err, function () {
-                            $scope.$parent.closeModal('uploadIcal');
+                            ModalService.closeModalInternal();
                             $scope.successInfo = null;
                             $scope.errorInfo = null;
                             $rootScope.icalFile = null;
@@ -44,4 +53,18 @@ angular.module('Schedulogy')
                     }
                 });
         };
+
+        $scope.$on('Esc', function () {
+            if (ModalService.currentModal === 'iCalUpload')
+                $scope.close();
+        });
+
+        $scope.$on('Enter', function () {
+            if (ModalService.currentModal === 'iCalUpload')
+                $scope.save();
+        });
+
+        $scope.$on('$destroy', function () {
+            ModalService.modals['iCalUpload'].modal.remove();
+        });
     });

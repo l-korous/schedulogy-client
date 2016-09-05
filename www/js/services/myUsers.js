@@ -32,9 +32,12 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.removeUser = function (user) {
+        _this.removeUser = function (user, successCallback, errorCallback) {
             user.$remove({userId: user._id}, function (data) {
                 _this.users = data.usersLocal;
+                successCallback && successCallback();
+            }, function (err) {
+                errorCallback && errorCallback();
             });
         };
 

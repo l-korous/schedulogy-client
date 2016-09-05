@@ -4,8 +4,6 @@ angular.module('Schedulogy')
         $scope.settings = settings;
         $scope.loading = true;
 
-        ModalService.createModal('resource', $scope, {}, $scope.open, $scope.close);
-
         $scope.open = function () {
             if (!$scope.myResources.currentResource) {
                 $scope.myResources.emptyCurrentResource();
@@ -27,6 +25,8 @@ angular.module('Schedulogy')
         $scope.close = function () {
             ModalService.closeModalInternal();
         };
+
+        ModalService.initModal('resource', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
             if ($scope.form.$invalid)

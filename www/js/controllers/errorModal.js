@@ -1,6 +1,6 @@
 angular.module('Schedulogy')
     .controller('ErrorModalCtrl', function (ModalService, $scope) {
-        ModalService.createModal('error', $scope, {}, $scope.open, $scope.close);
+        $scope.modalService = ModalService;
 
         $scope.open = function () {
             ModalService.openModalInternal('error');
@@ -9,6 +9,8 @@ angular.module('Schedulogy')
         $scope.close = function () {
             ModalService.closeModalInternal();
         };
+
+        ModalService.initModal('error', $scope, $scope.open, $scope.close);
 
         $scope.$on('Esc', function () {
             if (ModalService.currentModal === 'error')

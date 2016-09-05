@@ -1,7 +1,6 @@
 angular.module('Schedulogy')
     .controller('FloatToFixedModalCtrl', function ($scope, settings, MyEvents, ModalService) {
         $scope.myEvents = MyEvents;
-        ModalService.createModal('floatToFixed', $scope, {}, $scope.open, $scope.close);
 
         $scope.open = function () {
             ModalService.openModalInternal('floatToFixed');
@@ -18,6 +17,8 @@ angular.module('Schedulogy')
             $scope.floatToFixedRevertFunc && $scope.floatToFixedRevertFunc();
             ModalService.closeModalInternal();
         };
+
+        ModalService.initModal('floatToFixed', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
             MyEvents.currentEvent = $scope.floatToFixedEvent;

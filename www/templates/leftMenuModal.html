@@ -1,23 +1,23 @@
-<ion-modal-view class="leftMenu" ng-click="modalService.closeModal('leftMenu');" ng-controller="LeftMenuModalCtrl">
+<ion-modal-view class="leftMenu" ng-controller="LeftMenuModalCtrl">
 
     <div class="list">
         <span class="list-divider">Tasks</span>
-        <a class="item item-icon-left" ng-if="myEvents.dirtyEvents.length" ng-click="modalService.openModal('dirtyTasks');">
+        <a class="item item-icon-left" ng-if="myEvents.dirtyEvents.length" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('dirtyTasks');">
             <i class="icon ion-alert assertive"></i>
             Unscheduled Tasks
         </a>
         
-        <a id="newtask" class="item item-icon-left" ng-click="myEvents.emptyCurrentEvent(); modalService.openModal('task');">
+        <a id="newtask" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); myEvents.emptyCurrentEvent(); modalService.openModal('task');">
             <i class="icon ion-plus-round positive"></i>
             New Task
         </a>
 
-        <a class="item item-icon-left" ng-click="modalService.openModal('uploadIcal');">
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('iCalUpload');">
             <i class="icon ion-upload positive"></i>
             Import from iCal
         </a>
 
-        <a class="item item-icon-left" ng-click="modalService.openModal('removeAll');">
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('removeAll');">
             <i class="icon ion-trash-b dark"></i>  
             Delete all tasks
         </a>
@@ -25,11 +25,11 @@
 
     <div class="list">
         <span class="list-divider">Users &amp; Resources</span>
-        <a class="item item-icon-left" ng-click="modalService.openModal('users');">
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('users');">
             <i class="icon ion-person-stalker positive"></i>
             Manage Users
         </a>
-        <a class="item item-icon-left" ng-click="modalService.openModal('resources');">
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('resources');">
             <i class="icon ion-levels positive"></i>
             Manage Resources
         </a>
@@ -43,12 +43,12 @@
             Tour
         </a>
 
-        <a class="item item-icon-left" ng-click="modalService.openModal('help');">
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('help');">
             <i class="icon ion-help-buoy positive"></i>
             Help
         </a>
 
-        <a class="item item-icon-left" ng-click="modalService.openModal('feedback');">
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('feedback');">
             <i class="icon ion-mic-a positive"></i>
             Send Feedback
         </a>
@@ -56,20 +56,19 @@
 
     <div class="list">
         <span class="list-divider">Settings</span>
-        <a class="item item-icon-left" ng-click="modalService.openModal('changeUsername');">
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('changeUsername');">
             <i class="icon ion-person positive"></i>
             Change Username
         </a>
 
-        <a class="item item-icon-left" ng-click="modalService.openModal('changePassword');">
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('changePassword');">
             <i class="icon ion-locked positive"></i>
             Change Password
         </a>
     </div>
 
     <div class="list">
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
-            $root.goToLogin()">
+        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); $root.goToLogin()">
             <i class="icon ion-log-out positive"></i>
             Logout
         </a>

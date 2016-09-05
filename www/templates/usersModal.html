@@ -41,7 +41,7 @@
                 <span ng-if="user.role === 'admin' && user._id === $root.currentUser._id">(You, admin)</span>
                 <span ng-if="user.role !== 'admin' && user._id === $root.currentUser._id">(You)</span>
 
-                <button ng-if="$root.currentUser.role === 'admin' && user._id !== $root.currentUser._id" class="button button-clear" ng-click="myUsers.removeUser(user);
+                <button ng-if="$root.currentUser.role === 'admin' && user._id !== $root.currentUser._id" class="button button-clear" ng-click="remove(user);
                                 $event.stopPropagation();" ng-if="user.email !== $root.currentUser.email">
                     <i class="icon ion-trash-b assertive"></i>
                 </button>

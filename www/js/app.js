@@ -238,8 +238,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $state.go("main.login", {}, {location: false, reload: true});
             }
         };
+        
         $rootScope.keyUpHandler = function (keyCode) {
-
             if (keyCode === 13 && document.activeElement.tagName !== 'TEXTAREA') {
                 $rootScope.$broadcast('Enter');
             }
@@ -248,7 +248,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             else if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                 if (keyCode === 67) {
                     MyEvents.emptyCurrentEvent();
-                    $rootScope.calendarScope.openModal('task');
+                    ModalService.openModal('task');
                 }
                 else if(keyCode === 37) {
                     $('#theOnlyCalendar').fullCalendar('next');
@@ -265,9 +265,5 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         angular.element($window).bind('resize', function () {
             $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
             $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
-        });
-        
-        $rootScope.$on('modal.hidden', function (event, modal) {
-            ModalService.closeModal();
         });
     });

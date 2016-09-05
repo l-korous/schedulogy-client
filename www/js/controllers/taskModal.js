@@ -1,18 +1,18 @@
 angular.module('Schedulogy')
-    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, $rootScope, $timeout, MyResources, ModalService, $ionicScrollDelegate) {
+    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, $rootScope, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
         $scope.myEvents = MyEvents;
         $scope.myResources = MyResources;
         $scope.popupOpen = false;
         $scope.modalEl = null;
-
-        ModalService.createModal('task', $scope, {}, $scope.open, $scope.close);
+        $scope.currentEvent = null;
 
         $scope.open = function () {
             $scope.myResources.refresh();
 
-            if (!MyEvents.currentEvent) {
+            if (!MyEvents.currentEvent)
                 MyEvents.emptyCurrentEvent();
-            }
+
+            $scope.currentEvent = angular.extend({}, $scope.myEvents.currentEvent);
 
             $scope.form.$setPristine();
 
@@ -32,34 +32,35 @@ angular.module('Schedulogy')
         };
 
         $scope.close = function () {
-            ModalService.closeModalInternal(function () {
-                $scope.form.$setPristine();
-            });
+            ModalService.closeModalInternal();
         };
 
+        ModalService.initModal('task', $scope, $scope.open, $scope.close);
+
         $scope.save = function () {
-            $scope.myEvents.saveEvent();
-            $scope.close();
+            $scope.myEvents.saveEvent($scope.currentEvent, function() {
+                ModalService.closeModalInternal();
+            });
         };
 
         $scope.maxEventDuration = settings.maxEventDuration;
 
-        $scope.deleteCurrentEvent = function () {
+        $scope.remove = function () {
             $scope.myEvents.deleteEventById($scope.myEvents.currentEvent._id, function () {
-                $scope.close();
+                ModalService.closeModalInternal();
             });
         };
 
         $scope.commonFilter = function (inspectedEvent) {
-            if (MyEvents.currentEvent && inspectedEvent._id === MyEvents.currentEvent._id)
+            if ($scope.currentEvent && inspectedEvent._id === $scope.currentEvent._id)
                 return false;
             var retVal = true;
-            if (MyEvents.currentEvent && (MyEvents.currentEvent.blocks || MyEvents.currentEvent.needs)) {
-                MyEvents.currentEvent.blocks && MyEvents.currentEvent.blocks.forEach(function (other) {
+            if ($scope.currentEvent && ($scope.currentEvent.blocks || $scope.currentEvent.needs)) {
+                $scope.currentEvent.blocks && $scope.currentEvent.blocks.forEach(function (other) {
                     if (other === inspectedEvent._id)
                         retVal = false;
                 });
-                MyEvents.currentEvent.needs && MyEvents.currentEvent.needs.forEach(function (other) {
+                $scope.currentEvent.needs && $scope.currentEvent.needs.forEach(function (other) {
                     if (other === inspectedEvent._id)
                         retVal = false;
                 });
@@ -71,9 +72,9 @@ angular.module('Schedulogy')
                 return false;
             if (!$scope.commonFilter(inspectedEvent))
                 return false;
-            if (MyEvents.currentEvent && MyEvents.currentEvent.constraint.start && inspectedEvent.constraint.end) {
+            if ($scope.currentEvent && $scope.currentEvent.constraint.start && inspectedEvent.constraint.end) {
                 var latestPossibleStartOfInspectedEvent = Event.latestPossibleStart(inspectedEvent);
-                var earliestPossibleFinishOfCurrentEvent = Event.earliestPossibleFinish(MyEvents.currentEvent);
+                var earliestPossibleFinishOfCurrentEvent = Event.earliestPossibleFinish($scope.currentEvent);
                 if (earliestPossibleFinishOfCurrentEvent.diff(latestPossibleStartOfInspectedEvent, 'm') > 0)
                     return false;
             }
@@ -82,8 +83,8 @@ angular.module('Schedulogy')
         $scope.needsFilter = function (inspectedEvent) {
             if (!$scope.commonFilter(inspectedEvent))
                 return false;
-            if (MyEvents.currentEvent && inspectedEvent.constraint.start && MyEvents.currentEvent.constraint.end) {
-                var latestPossibleStartOfCurrentEvent = Event.latestPossibleStart(MyEvents.currentEvent);
+            if ($scope.currentEvent && inspectedEvent.constraint.start && $scope.currentEvent.constraint.end) {
+                var latestPossibleStartOfCurrentEvent = Event.latestPossibleStart($scope.currentEvent);
                 var earliestPossibleFinishOfInspectedEvent = Event.earliestPossibleFinish(inspectedEvent);
                 if (latestPossibleStartOfCurrentEvent.diff(earliestPossibleFinishOfInspectedEvent, 'm') < 0)
                     return false;
@@ -99,66 +100,64 @@ angular.module('Schedulogy')
         datesUsed.forEach(function (d) {
             d.dp = {
                 callback: function (val) {
-                    MyEvents.currentEvent[d.name] = DateUtils.pushDatePart(moment(val), MyEvents.currentEvent[d.name]);
-                    MyEvents.currentEvent[d.name + 'DateText'] = MyEvents.currentEvent[d.name].format(settings.dateFormat);
-                    MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
+                    $scope.currentEvent[d.name] = DateUtils.pushDatePart(moment(val), $scope.currentEvent[d.name]);
+                    $scope.currentEvent[d.name + 'DateText'] = $scope.currentEvent[d.name].format(settings.dateFormat);
+                    $scope.currentEvent[d.name + 'TimeText'] = $scope.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
-                        MyEvents.updateEndDateTimeWithDuration();
-                    if (!MyEvents.recalcConstraints())
-                        MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
+                        MyEvents.updateEndDateTimeWithDuration($scope.currentEvent);
+                    if (!MyEvents.recalcConstraints($scope.currentEvent))
+                        $scope.currentEvent.error = 'Impossible to schedule due to constraints';
 
-                    var primaryInput = $('.form').find('#primaryInput');
-                    angular.element(primaryInput).scope().form.$setDirty();
+                    $scope.form.$setDirty();
                 }
             };
             d.tp = {
                 callback: function (val) {
-                    MyEvents.currentEvent[d.name] = DateUtils.pushTime(val, MyEvents.currentEvent[d.name]);
-                    MyEvents.currentEvent[d.name + 'DateText'] = MyEvents.currentEvent[d.name].format(settings.dateFormat);
-                    MyEvents.currentEvent[d.name + 'TimeText'] = MyEvents.currentEvent[d.name].format(settings.timeFormat);
+                    $scope.currentEvent[d.name] = DateUtils.pushTime(val, $scope.currentEvent[d.name]);
+                    $scope.currentEvent[d.name + 'DateText'] = $scope.currentEvent[d.name].format(settings.dateFormat);
+                    $scope.currentEvent[d.name + 'TimeText'] = $scope.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
-                        MyEvents.updateEndDateTimeWithDuration();
-                    if (!MyEvents.recalcConstraints())
-                        MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
+                        MyEvents.updateEndDateTimeWithDuration($scope.currentEvent);
+                    if (!MyEvents.recalcConstraints($scope.currentEvent))
+                        $scope.currentEvent.error = 'Impossible to schedule due to constraints';
 
-                    var primaryInput = $('.form').find('#primaryInput');
-                    angular.element(primaryInput).scope().form.$setDirty();
+                    $scope.form.$setDirty();
                 }
             };
         });
         $scope.reinitDatePicker = function (dateUsed) {
-            dateUsed.inputDate = MyEvents.currentEvent ? (MyEvents.currentEvent.type === 'floating' ? MyEvents.currentEvent.due.toDate() : MyEvents.currentEvent.start.toDate()) : MyEvents.getBTime();
-            if (MyEvents.currentEvent.constraint.start)
-                dateUsed.from = MyEvents.currentEvent.constraint.start.toDate();
-            if (MyEvents.currentEvent.constraint.end)
-                dateUsed.to = MyEvents.currentEvent.constraint.end.toDate();
+            dateUsed.inputDate = $scope.currentEvent ? ($scope.currentEvent.type === 'floating' ? $scope.currentEvent.due.toDate() : $scope.currentEvent.start.toDate()) : MyEvents.getBTime();
+            if ($scope.currentEvent.constraint.start)
+                dateUsed.from = $scope.currentEvent.constraint.start.toDate();
+            if ($scope.currentEvent.constraint.end)
+                dateUsed.to = $scope.currentEvent.constraint.end.toDate();
         };
         $scope.reinitTimePicker = function (dateUsed) {
-            dateUsed.inputTime = MyEvents.currentEvent ? (MyEvents.currentEvent.type === 'floating' ? (DateUtils.toMinutes(MyEvents.currentEvent.due) * 60) : (DateUtils.toMinutes(MyEvents.currentEvent.start) * 60)) : MyEvents.getBTime();
-            if (MyEvents.currentEvent.type === 'floating') {
+            dateUsed.inputTime = $scope.currentEvent ? ($scope.currentEvent.type === 'floating' ? (DateUtils.toMinutes($scope.currentEvent.due) * 60) : (DateUtils.toMinutes($scope.currentEvent.start) * 60)) : MyEvents.getBTime();
+            if ($scope.currentEvent.type === 'floating') {
                 // This is for the 'due' time picker.
                 var dueDateEqualsStartConstraint =
-                    MyEvents.currentEvent.constraint.start ? DateUtils.equalDays(MyEvents.currentEvent.due, MyEvents.currentEvent.constraint.start) : false;
+                    $scope.currentEvent.constraint.start ? DateUtils.equalDays($scope.currentEvent.due, $scope.currentEvent.constraint.startDue) : false;
 
                 var dueDateEqualsEndConstraint =
-                    MyEvents.currentEvent.constraint.end ? DateUtils.equalDays(MyEvents.currentEvent.due, MyEvents.currentEvent.constraint.end) : false;
+                    $scope.currentEvent.constraint.end ? DateUtils.equalDays($scope.currentEvent.due, $scope.currentEvent.constraint.end) : false;
 
                 dateUsed.constraint = {
-                    from: dueDateEqualsStartConstraint ? (DateUtils.toMinutesPlusDuration(MyEvents.currentEvent.constraint.start, MyEvents.currentEvent.dur)) : settings.startHour * 60,
-                    to: dueDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : settings.endHour * 60
+                    from: dueDateEqualsStartConstraint ? (DateUtils.toMinutes($scope.currentEvent.constraint.startDue)) : settings.startHour * 60,
+                    to: dueDateEqualsEndConstraint ? DateUtils.toMinutes($scope.currentEvent.constraint.end) : settings.endHour * 60
                 };
             }
             else {// here the event type is fixed, because allDay events do not have timePicker shown.
                 // This is for the 'start' time picker.
                 var startDateEqualsStartConstraint =
-                    MyEvents.currentEvent.constraint.start ? DateUtils.equalDays(MyEvents.currentEvent.start, MyEvents.currentEvent.constraint.start) : false;
+                    $scope.currentEvent.constraint.start ? DateUtils.equalDays($scope.currentEvent.start, $scope.currentEvent.constraint.start) : false;
 
                 var startDateEqualsEndConstraint =
-                    MyEvents.currentEvent.constraint.end ? DateUtils.equalDays(MyEvents.currentEvent.start, MyEvents.currentEvent.constraint.end) : false;
+                    $scope.currentEvent.constraint.end ? DateUtils.equalDays($scope.currentEvent.start, $scope.currentEvent.constraint.end) : false;
 
                 dateUsed.constraint = {
-                    from: startDateEqualsStartConstraint ? (DateUtils.toMinutes(MyEvents.currentEvent.constraint.start)) : 0,
-                    to: startDateEqualsEndConstraint ? DateUtils.toMinutes(MyEvents.currentEvent.constraint.end) : 24 * 60
+                    from: startDateEqualsStartConstraint ? (DateUtils.toMinutes($scope.currentEvent.constraint.start)) : 0,
+                    to: startDateEqualsEndConstraint ? DateUtils.toMinutes($scope.currentEvent.constraint.end) : 24 * 60
                 };
             }
         };
