@@ -7,7 +7,7 @@ angular.module('Schedulogy')
         _this.registerSaveCallback = function (callback) {
             _this.saveCallback = callback;
         };
-        
+
         _this.removeCallback = null;
         _this.registerRemoveCallback = function (callback) {
             _this.removeCallback = callback;
@@ -35,20 +35,24 @@ angular.module('Schedulogy')
         };
 
         _this.getMyResourceId = function () {
-            if (!$rootScope.currentUser.resourceId) {
-                var theResources = _this.resources.filter(function (res) {
-                    return (res.type === 'user') && (res.user = $rootScope.currentUser._id);
-                });
-                $rootScope.currentUser.resourceId = theResources[0]._id;
-            }
+            if (!$rootScope.currentUser.resourceId)
+                $rootScope.currentUser.resourceId = _this.getResourceByUserId($rootScope.currentUser._id)._id;
+
             return $rootScope.currentUser.resourceId;
+        };
+
+        _this.getResourceByUserId = function (userId) {
+            var theResources = _this.resources.filter(function (res) {
+                return (res.type === 'user') && (res.user = userId);
+            });
+            return theResources[0];
         };
 
         _this.saveResource = function (successCallback, errorCallback) {
             _this.currentResource.$save({btime: MyEvents.getBTime().unix()}, function (data) {
                 _this.importData(data.resourcesLocal);
                 successCallback && successCallback();
-            }, function(err) {
+            }, function (err) {
                 console.log('saveResource error: ' + err);
                 errorCallback && errorCallback();
             });
@@ -58,7 +62,7 @@ angular.module('Schedulogy')
             _this.currentResource.$remove({resourceId: _this.currentResource._id, btime: MyEvents.getBTime().unix(), replacementResourceId: replacementResourceId}, function (data) {
                 _this.importData(data.resourcesLocal);
                 successCallback && successCallback();
-            }, function(err) {
+            }, function (err) {
                 console.log('removeResource error: ' + err);
                 errorCallback && errorCallback();
             });

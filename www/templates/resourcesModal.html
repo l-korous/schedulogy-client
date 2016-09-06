@@ -23,23 +23,26 @@
                     Only tenant account administrators can create / modify / delete resources.
                 </span>
             </div>
-            <div class="item item-icon-left item-button-right" ng-repeat="resource in myResources.resources" ng-click="openDetailModal(resource)">
+            <div class="item item-icon-left item-button-right" ng-repeat="resource in myResources.resources" ng-click="openDetail(resource);">
                 <i class="icon ion-person" ng-if="resource.type === 'user'"></i>
                 <i class="icon ion-wrench" ng-if="resource.type === 'artificial'"></i>
-
                 {{resource.name}}
+                <button ng-if="resource.type === 'artificial'" class="button button-clear" ng-click="openRemoveDetail(resource);
+                                $event.stopPropagation();">
+                    <i class="icon ion-trash-b assertive"></i>
+                </button>
             </div>
         </div>
 
         <div class="row">
             <div ng-if="$root.currentUser.role === 'admin'" class="col-50 padding-horizontal padding-top">
-                <button class="button button-block button-positive" ng-click="openDetailModal()">
+                <button class="button button-block button-positive" ng-click="openDetail()">
                     Create New
                 </button>
 
             </div>
             <div class="padding-horizontal padding-top" ng-class="{'col-50': $root.currentUser.role === 'admin', 'col': $root.currentUser.role !== 'admin'}">
-                <button class="button button-block button-dark button-outline" ng-click="closeSelf();">
+                <button class="button button-block button-dark button-outline" ng-click="close();">
                     Close
                 </button>   
             </div>

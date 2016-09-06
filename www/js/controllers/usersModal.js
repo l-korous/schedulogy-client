@@ -1,7 +1,6 @@
 angular.module('Schedulogy')
     .controller('UsersModalCtrl', function (MyUsers, $scope, ModalService, MyEvents, MyResources) {
         $scope.myUsers = MyUsers;
-        $scope.modalService = ModalService;
         $scope.successInfo = null;
         $scope.loading = true;
 
@@ -29,6 +28,19 @@ angular.module('Schedulogy')
             });
         };
 
+        $scope.openDetail = function (user) {
+            if (user)
+                MyUsers.currentUser = user;
+            else
+                MyUsers.emptyCurrentUser();
+            ModalService.openModal('user');
+        };
+
+        $scope.openRemoveDetail = function (user) {
+            MyResources.currentResource = MyResources.getResourceByUserId(user._id);
+            ModalService.openModal('removeResource');
+        };
+        
         $scope.$on('Esc', function () {
             if (ModalService.currentModal === 'users')
                 $scope.close();

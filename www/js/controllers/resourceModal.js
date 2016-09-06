@@ -3,6 +3,7 @@ angular.module('Schedulogy')
         $scope.myResources = MyResources;
         $scope.settings = settings;
         $scope.loading = true;
+        $scope.currentResource = null;
 
         $scope.open = function () {
             if (!$scope.myResources.currentResource) {
@@ -12,8 +13,10 @@ angular.module('Schedulogy')
             else
                 $scope.myResources.updateAllTexts();
 
+            $scope.currentResource = angular.extend({}, $scope.myResources.currentResource);
+
             var focusPrimaryInputAndSetPristine = function () {
-                var primaryInput = $(ModalService.modals.resource.modal.modalEl).find('#primaryInput');
+                var primaryInput = $(ModalService.modals.resource.modalInternal.modalEl).find('#primaryInput');
                 primaryInput.focus();
                 primaryInput.select();
                 $scope.form.$setPristine();
@@ -31,7 +34,8 @@ angular.module('Schedulogy')
         $scope.save = function () {
             if ($scope.form.$invalid)
                 return;
-            $scope.myResources.saveUser(function () {
+            angular.extend($scope.myResources.currentResource, $scope.currentResource);
+            $scope.myResources.saveResource(function () {
                 ModalService.closeModalInternal(function () {
                     MyEvents.refresh();
                 });

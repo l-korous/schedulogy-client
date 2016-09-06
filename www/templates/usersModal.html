@@ -33,7 +33,7 @@
             <div class="item item-no-wrap help-block" ng-if="successInfo">
                 {{successInfo}}
             </div>
-            <div class="item item-icon-left item-button-right" ng-repeat="user in myUsers.users" ng-click="myUsers.currentUser = user; modalService.openModal('user')">
+            <div class="item item-icon-left item-button-right" ng-repeat="user in myUsers.users" ng-click="openDetail(user);">
                 <i class="icon ion-person"  ng-class="{'inactive': !user.active}"></i>
                 <span ng-if="!user.active" class="inactive">(inactive)</span>
                 <span ng-class="{'inactive': !user.active}">{{user.email}}{{user.username ? ' / ' + user.username : ''}}</span>
@@ -41,8 +41,8 @@
                 <span ng-if="user.role === 'admin' && user._id === $root.currentUser._id">(You, admin)</span>
                 <span ng-if="user.role !== 'admin' && user._id === $root.currentUser._id">(You)</span>
 
-                <button ng-if="$root.currentUser.role === 'admin' && user._id !== $root.currentUser._id" class="button button-clear" ng-click="remove(user);
-                                $event.stopPropagation();" ng-if="user.email !== $root.currentUser.email">
+                <button ng-if="$root.currentUser.role === 'admin' && user._id !== $root.currentUser._id" class="button button-clear" ng-click="openRemoveDetail(resource);
+                                $event.stopPropagation();">
                     <i class="icon ion-trash-b assertive"></i>
                 </button>
             </div>
@@ -50,7 +50,7 @@
 
         <div class="row">
             <div ng-if="$root.currentUser.role === 'admin'" class="col-50 padding-horizontal padding-top">
-                <button class="button button-block button-positive" ng-click="myUsers.emptyCurrentUser();modalService.openModal('user');">
+                <button class="button button-block button-positive" ng-click="openDetail();">
                     Create New
                 </button>
 

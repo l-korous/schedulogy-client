@@ -18,7 +18,8 @@ angular.module('Schedulogy')
             'resources',
             'task',
             'user',
-            'users'
+            'users',
+            'removeResource'
         ];
 
         // This is filled by the init method and the actual modals.
@@ -31,6 +32,9 @@ angular.module('Schedulogy')
         // }
         _this.modals = {};
 
+        // This is actuallly not a simple reference, but rather a stack-behaving array (so that we can work with modal -> modal structure).
+        _this.currentModals = [];
+        // This is for ease of use the end of the array.
         _this.currentModal = null;
 
         // North API - init
@@ -61,14 +65,17 @@ angular.module('Schedulogy')
 
         // South API - open
         _this.openModalInternal = function (modalName, callback) {
+            _this.currentModals.push(modalName);
             _this.currentModal = modalName;
-            _this.modals[modalName].modalInternal.show().then(callback);
+            _this.modals[_this.currentModal].modalInternal.show().then(callback);
         };
 
         // South API - close
         _this.closeModalInternal = function (callback) {
             _this.modals[_this.currentModal].modalInternal.hide().then(callback);
-            _this.currentModal = null;
+            _this.currentModals.pop();
+            if (_this.currentModals.length)
+                _this.currentModal = _this.currentModals[_this.currentModals.length - 1];
         };
 
         // Internal - create

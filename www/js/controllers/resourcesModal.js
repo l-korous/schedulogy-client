@@ -1,7 +1,6 @@
 angular.module('Schedulogy')
-    .controller('ResourcesModalCtrl', function (MyResources, $scope, $ionicModal, ModalService) {
+    .controller('ResourcesModalCtrl', function (MyResources, $scope, ModalService) {
         $scope.myResources = MyResources;
-        $scope.modalService = ModalService;
         $scope.loading = true;
 
         $scope.open = function () {
@@ -20,6 +19,19 @@ angular.module('Schedulogy')
         };
 
         ModalService.initModal('resources', $scope, $scope.open, $scope.close);
+
+        $scope.openDetail = function (resource) {
+            if (resource)
+                MyResources.currentResource = resource;
+            else
+                MyResources.emptyCurrentResource();
+            ModalService.openModal('resource');
+        };
+        
+        $scope.openRemoveDetail = function (resource) {
+            MyResources.currentResource = resource;
+            ModalService.openModal('removeResource');
+        };
 
         $scope.$on('Esc', function () {
             if (ModalService.currentModal === 'resources')

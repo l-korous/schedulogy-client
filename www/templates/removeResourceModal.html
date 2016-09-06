@@ -1,0 +1,35 @@
+<ion-modal-view ng-controller="RemoveResourceModalCtrl">
+    <ion-header-bar>
+        <h1 class="title">Deleting {{currentResource.name}}</h1>
+    </ion-header-bar>
+
+    <ion-content has-bouncing="false">
+        <div class="list">
+            <div class="item item-no-wrap item-intro">
+                <span>
+                    In order to remove a Resource, you need to either select the Resource that all Tasks for the deleted Resource will transfer to, or you can select to remove the Resource with all associated Tasks.
+                </span>
+            </div>
+            <label class="item" style="border-bottom:0;">
+                <select ng-model="resourceToReplaceCurrentWith" style="width:100%;" data-ng-attr-size="{{myResources.resources.length}}" name="resourceToReplace"
+                        ng-options="resource._id as resource.name for resource in myResources.resources | filter: {_id : '!' + currentResource._id}" class="select-no-scrollbar">
+                    <option value="">Select a replacement resource</option>
+                </select>
+            </label>
+            <label class="item" style="border-top:0;padding-top:0;">
+                <button class="button button-block button-assertive" ng-click="removeResource(resourceToReplaceCurrentWith);" ng-disabled="!resourceToReplaceCurrentWith">
+                    Delete - transfer tasks
+                </button>
+            </label>
+            
+            <label class="item">
+                <span>
+                    This removes all tasks that were assigned to this Resource.
+                </span>
+                <button class="button button-block button-assertive" ng-click="removeResource();">
+                    Delete without transfering tasks
+                </button>
+            </label>
+        </div>
+    </ion-content>
+</ion-modal-view>

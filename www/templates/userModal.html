@@ -1,6 +1,6 @@
 <ion-modal-view ng-controller="UserModalCtrl">
     <ion-header-bar>
-        <h1 class="title">{{(newUser && !myUsers.currentUser.email) ? 'New User' : myUsers.currentUser.email}}</h1>
+        <h1 class="title">{{(newUser && !currentUser.email) ? 'New User' : currentUser.email}}</h1>
     </ion-header-bar>
 
     <ion-content has-bouncing="false">
@@ -10,13 +10,13 @@
                     <div class="input-label">
                         E-mail
                     </div>
-                    <input type="email" ng-model="myUsers.currentUser.email" id="primaryInput" ng-disabled="(!newUser) || ($root.currentUser.role !== 'admin')" required name="email">
+                    <input type="email" ng-model="currentUser.email" id="primaryInput" ng-disabled="(!newUser) || ($root.currentUser.role !== 'admin')" required name="email">
                 </label>
 
-                <ion-checkbox ng-disabled="($root.currentUser.role !== 'admin') || (myUsers.currentUser._id === $root.currentUser._id)" ng-model="myUsers.currentUser.admin" name="admin">
+                <ion-checkbox ng-disabled="($root.currentUser.role !== 'admin') || (currentUser._id === $root.currentUser._id)" ng-model="currentUser.admin" name="admin">
                     Administrator
                 </ion-checkbox>
-                <label class="item item-no-wrap" ng-if="($root.currentUser.role !== 'admin') || (myUsers.currentUser._id === $root.currentUser._id)">
+                <label class="item item-no-wrap" ng-if="($root.currentUser.role !== 'admin') || (currentUser._id === $root.currentUser._id)">
                     Note - Administrator:<br />
                     <ul style='list-style-type: square;margin-left:25px;'><li>You cannot change this attribute for yourself.</li><li>You cannot change this attribute if you are not an admin.</li></ul>
                 </label>

@@ -2,6 +2,7 @@ angular.module('Schedulogy')
     .controller('UserModalCtrl', function (MyUsers, $scope, settings, ModalService) {
         $scope.myUsers = MyUsers;
         $scope.loading = true;
+        $scope.currentUser = null;
 
         $scope.open = function () {
             if (!$scope.myUsers.currentUser) {
@@ -10,14 +11,16 @@ angular.module('Schedulogy')
             }
             else
                 $scope.newUser = false;
+            
+            $scope.currentUser = angular.extend({}, $scope.myUsers.currentUser);
 
             var focusPrimaryInput = function () {
-                var primaryInput = $(ModalService.modals.user.modal.modalEl).find('#primaryInput');
+                var primaryInput = $(ModalService.modals.user.modalInternal.modalEl).find('#primaryInput');
                 primaryInput.focus();
                 primaryInput.select();
             };
 
-            ModalService.openModalInternal('users', focusPrimaryInput);
+            ModalService.openModalInternal('user', focusPrimaryInput);
         };
 
         $scope.close = function () {
@@ -29,6 +32,7 @@ angular.module('Schedulogy')
         $scope.save = function () {
             if ($scope.form.$invalid)
                 return;
+            angular.extend($scope.myUsers.currentUser, $scope.currentUser);
             $scope.myUsers.saveUser(function () {
                 ModalService.closeModalInternal(function () {
                     ModalService.modals.users.scope.successInfo = settings.registrationSuccessInfo;

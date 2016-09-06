@@ -1,6 +1,6 @@
 <ion-modal-view ng-controller="ResourceModalCtrl">
     <ion-header-bar>
-        <h1 class="title">{{(newResource && !myResources.currentResource.name) ? 'New Resource' : myResources.currentResource.name}}</h1>
+        <h1 class="title">{{(newResource && !currentResource.name) ? 'New Resource' : currentResource.name}}</h1>
     </ion-header-bar>
 
     <ion-content has-bouncing="false">
@@ -10,28 +10,28 @@
                 <div ng-show="form.email.$error.required || form.email.$error.email" class="item help-block">Please provide a valid email.</div>
             </div>
             <div class="list">
-                <label class="item item-input" ng-if="myResources.currentResource.type === 'artificial'">
+                <label class="item item-input" ng-if="currentResource.type === 'artificial'">
                     <div class="input-label">
                         Name
                     </div>
-                    <input type="text" ng-model="myResources.currentResource.name" id="primaryInput" required name="name">
+                    <input type="text" ng-model="currentResource.name" id="primaryInput" required name="name">
                 </label>
                 
-                <label class="item item-input" ng-if="myResources.currentResource.type === 'artificial'">
+                <label class="item item-input" ng-if="currentResource.type === 'artificial'">
                     <div class="input-label">
                         E-mail (for notifications)
                     </div>
-                    <input type="email" ng-model="myResources.currentResource.email" required name="email">
+                    <input type="email" ng-model="currentResource.email" required name="email">
                 </label>
 
                 <label class="item item-input range">
                     <div class="input-label">
                         Start day of the week
                     </div>
-                    <input type="range" min="1" max="7" name="sinceDay" ng-model="myResources.currentResource.sinceDay" step="1" required/>
+                    <input type="range" min="1" max="7" name="sinceDay" ng-model="currentResource.sinceDay" step="1" required/>
 
                     <div class="rangeInfo">
-                        {{myResources.currentResource.sinceDayText}}
+                        {{currentResource.sinceDayText}}
                     </div>
                 </label>
 
@@ -39,10 +39,10 @@
                     <div class="input-label">
                         End day of the week
                     </div>
-                    <input type="range" min="1" max="7" name="untilDay" ng-model="myResources.currentResource.untilDay" step="1" required/>
+                    <input type="range" min="1" max="7" name="untilDay" ng-model="currentResource.untilDay" step="1" required/>
 
                     <div class="rangeInfo">
-                        {{myResources.currentResource.untilDayText}}
+                        {{currentResource.untilDayText}}
                     </div>
                 </label>
 
@@ -50,10 +50,10 @@
                     <div class="input-label">
                         Start hour of the day
                     </div>
-                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="sinceTime" ng-model="myResources.currentResource.sinceTime" step="1" required/>
+                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="sinceTime" ng-model="currentResource.sinceTime" step="1" required/>
 
                     <div class="rangeInfo">
-                        {{myResources.currentResource.sinceTimeText}}
+                        {{currentResource.sinceTimeText}}
                     </div>
                 </label>
 
@@ -61,10 +61,10 @@
                     <div class="input-label">
                         End hour of the day
                     </div>
-                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="untilTime" ng-model="myResources.currentResource.untilTime" step="1" required/>
+                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="untilTime" ng-model="currentResource.untilTime" step="1" required/>
 
                     <div class="rangeInfo">
-                        {{myResources.currentResource.untilTimeText}}
+                        {{currentResource.untilTimeText}}
                     </div>
                 </label>
 
@@ -83,20 +83,5 @@
                 </div>
             </div>
         </form>
-
-        <div class="row" ng-if="$root.currentUser.role === 'admin' && myResources.currentResource._id && myResources.currentResource.type != 'user'">
-            <div class="col-50 padding-horizontal padding-top">
-                <button id="taskSave" class="button button-block button-assertive" ng-click="removeResource(resourceToReplaceCurrentWith);" ng-disabled="!resourceToReplaceCurrentWith">
-                    Delete
-                </button>
-
-            </div>
-            <div class="padding-horizontal padding-top col-50">
-                <select ng-model="resourceToReplaceCurrentWith" style="width:100%;margin-top:10px;margin-bottom:10px;min-height:47px;border-radius:4px" data-ng-attr-size="{{myResources.resources.length}}" name="resourceToReplace"
-                        ng-options="resource._id as resource.name for resource in myResources.resources | filter: {_id : '!' + myResources.currentResource._id}" class="select-no-scrollbar">
-                    <option value="">Select a replacement resource</option>
-                </select>
-            </div>
-        </div>
     </ion-content>
 </ion-modal-view>

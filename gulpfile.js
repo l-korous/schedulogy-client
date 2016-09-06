@@ -56,7 +56,8 @@ gulp.task('concat-js', function () {
         "www/js/controllers/feedbackModal.js",
         "www/js/controllers/floatToFixedModal.js",
         "www/js/controllers/userModal.js",
-        "www/js/controllers/removeAllModal.js"
+        "www/js/controllers/removeAllModal.js",
+        "www/js/controllers/removeResourceModal.js"
     ])
         .pipe(concat('app.min.js'))
         .pipe(bytediff.start())
