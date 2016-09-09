@@ -1,46 +1,46 @@
-<ion-content has-bouncing="false" scroll="true" >
-    <div ui-view class="simpleScreenWrapper" scroll="true">
-    <div class="simpleScreen" has-bouncing="false" scroll="true">
-        <form name="$parent.form" novalidate>
-            <h1>SCHEDULOGY</h1>
-            <div class="list customFormErrorList">
-                <div ng-show="beingSubmitted && (form.email.$error.required || form.email.$error.email) && !form.email.$pristine" class="item help-block">
-                    Please provide a valid e-mail.
+<ion-content has-bouncing="false" scroll="true">
+    <div ui-view class="simpleScreenWrapper">
+        <div class="simpleScreen" ng-controller="LoginCtrl">
+            <form name="form" novalidate>
+                <h1>SCHEDULOGY</h1>
+                <div class="list customFormErrorList">
+                    <div ng-show="beingSubmitted && (form.email.$error.required || form.email.$error.email) && !form.email.$pristine" class="item help-block">
+                        Please provide a valid e-mail.
+                    </div>
+                    <div ng-show="beingSubmitted && form.password.$error.required && !form.password.$pristine" class="item help-block">
+                        Please provide a valid password.
+                    </div>
+                    <div ng-show="errorInfo" class="item help-block help-block-error item-no-wrap">
+                        {{errorInfo}}
+                    </div>
                 </div>
-                <div ng-show="beingSubmitted && form.password.$error.required && !form.password.$pristine" class="item help-block">
-                    Please provide a valid password.
-                </div>
-                <div ng-show="errorInfo" class="item help-block help-block-error item-no-wrap">
-                    {{errorInfo}}
-                </div>
-            </div>
-            <p>Please login with your SCHEDULOGY account (if you have already created one).</p>
-            <br />
-            <div class="list">
-                <label class="item item-input">
-                    <input placeholder="E-mail" autofocus type="email" ng-model="data.email" id="emailEdit" required name="email"
-                           ng-class="{ 'has-error' : beingSubmitted && (form.email.$error.required || form.email.$error.email) && !form.email.$pristine }">
-                </label>
+                <p>Please login with your SCHEDULOGY account (if you have already created one).</p>
+                <br />
+                <div class="list">
+                    <label class="item item-input">
+                        <input placeholder="E-mail" autofocus type="email" ng-model="data.email" id="emailEdit" required name="email"
+                               ng-class="{ 'has-error' : beingSubmitted && (form.email.$error.required || form.email.$error.email) && !form.email.$pristine }">
+                    </label>
 
-                <label class="item item-input" style="margin-top:4px;">
-                    <input placeholder="Password" type="password" ng-model="data.password" required name="password"
-                           ng-class="{ 'has-error' : beingSubmitted && form.password.$error.required && !form.password.$pristine }">
-                </label>
-            </div>
-            <button class="button button-block button-positive button-single" ng-disabled="form.$invalid" ng-click="login()">
-                Login
-            </button>
-            
-            <br />
-            <p>Don't have a SCHEDULOGY account yet?</p>
-            <button class="button button-block button-positive button-single" ng-click="goToRegistration();">
-                Create Account
-            </button>
-            <p>Forgot your password?</p>
-            <button class="button button-block button-assertive button-single" ng-click="goToForgottenPassword();">
-                Reset Password
-            </button>
-        </form>
+                    <label class="item item-input" style="margin-top:4px;">
+                        <input placeholder="Password" type="password" ng-model="data.password" required name="password"
+                               ng-class="{ 'has-error' : beingSubmitted && form.password.$error.required && !form.password.$pristine }">
+                    </label>
+                </div>
+                <button class="button button-block button-positive button-single" ng-disabled="form.$invalid" ng-click="login()">
+                    Login
+                </button>
+
+                <br />
+                <p>Don't have a SCHEDULOGY account yet?</p>
+                <button class="button button-block button-positive button-single" ng-click="goToRegistration();">
+                    Create Account
+                </button>
+                <p>Forgot your password?</p>
+                <button class="button button-block button-assertive button-single" ng-click="goToForgottenPassword();">
+                    Reset Password
+                </button>
+            </form>
+        </div>
     </div>
-</div>
 </ion-content>

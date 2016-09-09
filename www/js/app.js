@@ -119,23 +119,19 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     })
                 .state('login', {
                     url: '/login',
-                    templateUrl: 'templates/login.html',
-                    controller: 'LoginCtrl'
+                    templateUrl: 'templates/login.html'
                 })
                 .state('registration', {
                     url: '/registration',
-                    templateUrl: 'templates/registration.html',
-                    controller: 'RegistrationCtrl'
+                    templateUrl: 'templates/registration.html'
                 })
                 .state('forgottenPassword', {
                     url: '/forgotten-password',
-                    templateUrl: 'templates/forgottenPassword.html',
-                    controller: 'ForgottenPasswordCtrl'
+                    templateUrl: 'templates/forgottenPassword.html'
                 })
                 .state('passwordReset', {
                     url: '/password-reset',
-                    templateUrl: 'templates/passwordReset.html',
-                    controller: 'PasswordResetCtrl'
+                    templateUrl: 'templates/passwordReset.html'
                 });
         }])
 
@@ -252,7 +248,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 }
                 else if (keyCode === 37) {
                     $('#theOnlyCalendar').fullCalendar('next');
-                    
+
                 }
                 else if (keyCode === 39) {
                     $('#theOnlyCalendar').fullCalendar('prev');
