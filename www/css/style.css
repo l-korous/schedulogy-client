@@ -534,10 +534,13 @@ input[readonly=true] {
     right:auto;
     top:44px;
     bottom:0;
-    padding-bottom:50px;
     overflow-y: auto ! important;
     height:100%;
     box-shadow: 3px 3px 5px rgba(0,0,0,0.7);
+}
+
+.leftMenu ion-content { 
+    margin-bottom:50px;
 }
 
 .leftMenu .item-icon-left {

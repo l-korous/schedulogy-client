@@ -1,5 +1,5 @@
-<ion-content has-bouncing="false" scroll="true">
-    <ion-modal-view class="leftMenu" ng-controller="LeftMenuModalCtrl">
+<ion-modal-view class="leftMenu">
+    <ion-content ng-controller="LeftMenuModalCtrl">
         <div class="list">
             <span class="list-divider">Tasks</span>
             <a class="item item-icon-left" ng-if="myEvents.dirtyEvents.length" ng-click="modalService.closeModal('leftMenu');
@@ -45,7 +45,7 @@
         <div class="list">
 
             <span class="list-divider">Help</span>
-            <a id="helplink" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+            <a id="helplink" ng-if="!$root.isMobileNarrow && !$root.isMobileLow" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
                         runTour();">
                 <i class="icon ion-university positive"></i>  
                 Tour
@@ -86,5 +86,5 @@
                 Logout
             </a>
         </div>
-    </ion-modal-view>
-</ion-content>
+    </ion-content>
+</ion-modal-view>
