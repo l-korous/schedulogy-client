@@ -24,9 +24,9 @@ angular.module('Schedulogy')
         ModalService.initModal('changePassword', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
+            $scope.beingSubmitted = true;
             if ($scope.form.$invalid)
                 return;
-            $scope.beingSubmitted = true;
             $ionicLoading.show({template: settings.loadingTemplate});
             Auth.changePassword($scope.data.password).then(function () {
                 $ionicLoading.hide();

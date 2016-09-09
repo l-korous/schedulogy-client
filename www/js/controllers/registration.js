@@ -8,6 +8,8 @@ angular.module('Schedulogy')
 
         $scope.register = function () {
             $scope.beingSubmitted = true;
+            if ($scope.form.$invalid)
+                return;
             if (!$scope.registrationForm.$invalid) {
                 $scope.errorInfo = null;
                 $ionicLoading.show({template: settings.loadingTemplate});
@@ -19,5 +21,5 @@ angular.module('Schedulogy')
                     $scope.errorInfo = settings.registrationErrorInfo(errorResponse.msg);
                 });
             }
-        }
+        };
     });

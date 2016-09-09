@@ -163,7 +163,21 @@ gulp.task('minify-css', function () {
         .pipe(gulp.dest('www/css-min'));
 });
 
+gulp.task('minify-css-ionic', function () {
+    return gulp.src([
+        "www/bower_components/ionic/release/css/ionic.css"
+    ])
+    .pipe(concat('ionic.min.css'))
+        .pipe(replace('\\r\\n', ''))
+        .pipe(replace('\\r', ''))
+        .pipe(replace('\\n', ''))
+        .pipe(replace('  ', ' '))
+        .pipe(replace('  ', ' '))
+        .pipe(replace('  ', ' '))
+        .pipe(gulp.dest('www/bower_components/ionic/release/css/'));
+});
+
 // start here
 gulp.task('default', function () {
-    gulp.start('clean', 'minify-css', 'template-bundle', 'concat-js', 'html');
+    gulp.start('clean', 'minify-css', 'minify-css-ionic', 'template-bundle', 'concat-js', 'html');
 });

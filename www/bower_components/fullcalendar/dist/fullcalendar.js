@@ -5300,7 +5300,7 @@
 
             return '' +
                 '<td class="' + classes.join(' ') + '" data-date="' + date.format() + '">' +
-                date.date() + '/' + date.format('MMM') + 
+                date.date() + '/' + date.format('MMM') +
                 '</td>';
         },
         /* Options
@@ -9003,14 +9003,28 @@
 
 
             function prev() {
+                var _this = this;
+                _this.scrollTop = $('.fc-scroller').scrollTop();
+                
                 date = currentView.computePrevDate(date);
                 renderView();
+
+                setTimeout(function () {
+                    $('.fc-scroller').scrollTop(_this.scrollTop);
+                });
             }
 
 
             function next() {
+                var _this = this;
+                _this.scrollTop = $('.fc-scroller').scrollTop();
+
                 date = currentView.computeNextDate(date);
                 renderView();
+
+                setTimeout(function () {
+                    $('.fc-scroller').scrollTop(_this.scrollTop);
+                });
             }
 
 
@@ -11334,7 +11348,7 @@
             }
 
         });
-        
+
         fcViews.basic = {
             'class': BasicView
         };

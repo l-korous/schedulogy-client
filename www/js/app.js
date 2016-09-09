@@ -117,22 +117,22 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                         templateUrl: 'templates/calendar.html',
                         controller: 'CalendarCtrl'
                     })
-                .state('main.login', {
+                .state('login', {
                     url: '/login',
                     templateUrl: 'templates/login.html',
                     controller: 'LoginCtrl'
                 })
-                .state('main.registration', {
+                .state('registration', {
                     url: '/registration',
                     templateUrl: 'templates/registration.html',
                     controller: 'RegistrationCtrl'
                 })
-                .state('main.forgottenPassword', {
+                .state('forgottenPassword', {
                     url: '/forgotten-password',
                     templateUrl: 'templates/forgottenPassword.html',
                     controller: 'ForgottenPasswordCtrl'
                 })
-                .state('main.passwordReset', {
+                .state('passwordReset', {
                     url: '/password-reset',
                     templateUrl: 'templates/passwordReset.html',
                     controller: 'PasswordResetCtrl'
@@ -194,7 +194,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                         delete $window.localStorage.token;
                         delete $window.localStorage.currentUserId;
                         $timeout(function () {
-                            if (['main.login', 'main.registration', 'main.passwordReset'].indexOf($state.current.name) === -1)
+                            if (['login', 'registration', 'passwordReset'].indexOf($state.current.name) === -1)
                                 $rootScope.goToLogin();
                         }, 500);
                     }
@@ -203,7 +203,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, ModalService) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, ModalService, $timeout) {
         $rootScope.allSet = false;
 
         // Check stuff when changing state.
@@ -211,11 +211,11 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             $rootScope.allSet = false;
             $location.path('');
             $location.search('');
-            if ((['main.login', 'main.registration', 'main.passwordReset'].indexOf(toState.name) === -1) && !Auth.isAuthenticated()) {
+            if ((['login', 'registration', 'passwordReset'].indexOf(toState.name) === -1) && !Auth.isAuthenticated()) {
                 // User isn’t authenticated
                 $rootScope.goToLogin();
                 event.preventDefault();
-            } else if (toState.name === 'main.login' && Auth.isAuthenticated()) {
+            } else if (toState.name === 'login' && Auth.isAuthenticated()) {
                 if (fromState.name !== '')
                     event.preventDefault();
             }
@@ -234,11 +234,11 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             Auth.logout();
             $location.path('');
             $location.search('');
-            if ($state.current.name !== 'main.login') {
-                $state.go("main.login", {}, {location: false, reload: true});
+            if ($state.current.name !== 'login') {
+                $state.go("login", {}, {location: false, reload: true});
             }
         };
-        
+
         $rootScope.keyUpHandler = function (keyCode) {
             if (keyCode === 13 && document.activeElement.tagName !== 'TEXTAREA') {
                 $rootScope.$broadcast('Enter');
@@ -250,10 +250,11 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     MyEvents.emptyCurrentEvent();
                     ModalService.openModal('task');
                 }
-                else if(keyCode === 37) {
+                else if (keyCode === 37) {
                     $('#theOnlyCalendar').fullCalendar('next');
+                    
                 }
-                else if(keyCode === 39) {
+                else if (keyCode === 39) {
                     $('#theOnlyCalendar').fullCalendar('prev');
                 }
             }

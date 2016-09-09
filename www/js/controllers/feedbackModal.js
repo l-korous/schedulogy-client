@@ -18,10 +18,10 @@ angular.module('Schedulogy')
         ModalService.initModal('feedback', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
+            $scope.beingSubmitted = true;
             if ($scope.form.$invalid)
                 return;
 
-            $scope.beingSubmitted = true;
             $ionicLoading.show({template: settings.loadingTemplate});
             $http.post(settings.serverUrl + '/msg', {msg: $scope.data.feedbackText})
                 .success(function () {

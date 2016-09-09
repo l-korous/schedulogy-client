@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="list">
-                <label class="item item-input" ng-class="{ 'has-error' : beingSubmitted && (form.username.$error.required || form.username.$error.minlength) && !form.username.$pristine }">
+                <label class="item item-input" ng-class="{ 'has-error' : (form.username.$error.required || form.username.$error.minlength) && !form.username.$pristine }">
                     <div class="input-label">
                         Username
                     </div>

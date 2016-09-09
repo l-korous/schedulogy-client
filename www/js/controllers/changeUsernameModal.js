@@ -13,6 +13,7 @@ angular.module('Schedulogy')
         ModalService.initModal('changeUsername', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
+            $scope.beingSubmitted = true;
             if ($scope.form.$invalid)
                 return;
             $ionicLoading.show({template: settings.loadingTemplate});
