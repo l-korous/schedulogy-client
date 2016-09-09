@@ -1,76 +1,90 @@
-<ion-modal-view class="leftMenu" ng-controller="LeftMenuModalCtrl">
+<ion-content has-bouncing="false" scroll="true">
+    <ion-modal-view class="leftMenu" ng-controller="LeftMenuModalCtrl">
+        <div class="list">
+            <span class="list-divider">Tasks</span>
+            <a class="item item-icon-left" ng-if="myEvents.dirtyEvents.length" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('dirtyTasks');">
+                <i class="icon ion-alert assertive"></i>
+                Unscheduled Tasks
+            </a>
 
-    <div class="list">
-        <span class="list-divider">Tasks</span>
-        <a class="item item-icon-left" ng-if="myEvents.dirtyEvents.length" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('dirtyTasks');">
-            <i class="icon ion-alert assertive"></i>
-            Unscheduled Tasks
-        </a>
-        
-        <a id="newtask" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); myEvents.emptyCurrentEvent(); modalService.openModal('task');">
-            <i class="icon ion-plus-round positive"></i>
-            New Task
-        </a>
+            <a id="newtask" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        myEvents.emptyCurrentEvent();
+                        modalService.openModal('task');">
+                <i class="icon ion-plus-round positive"></i>
+                New Task
+            </a>
 
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('iCalUpload');">
-            <i class="icon ion-upload positive"></i>
-            Import from iCal
-        </a>
+            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('iCalUpload');">
+                <i class="icon ion-upload positive"></i>
+                Import from iCal
+            </a>
 
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('removeAll');">
-            <i class="icon ion-trash-b dark"></i>  
-            Delete all tasks
-        </a>
-    </div>
+            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('removeAll');">
+                <i class="icon ion-trash-b dark"></i>  
+                Delete all tasks
+            </a>
+        </div>
 
-    <div class="list">
-        <span class="list-divider">Users &amp; Resources</span>
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('users');">
-            <i class="icon ion-person-stalker positive"></i>
-            Manage Users
-        </a>
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('resources');">
-            <i class="icon ion-levels positive"></i>
-            Manage Resources
-        </a>
-    </div>
+        <div class="list">
+            <span class="list-divider">Users &amp; Resources</span>
+            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('users');">
+                <i class="icon ion-person-stalker positive"></i>
+                Manage Users
+            </a>
+            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('resources');">
+                <i class="icon ion-levels positive"></i>
+                Manage Resources
+            </a>
+        </div>
 
-    <div class="list">
+        <div class="list">
 
-        <span class="list-divider">Help</span>
-        <a id="helplink" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); runTour();">
-            <i class="icon ion-university positive"></i>  
-            Tour
-        </a>
+            <span class="list-divider">Help</span>
+            <a id="helplink" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        runTour();">
+                <i class="icon ion-university positive"></i>  
+                Tour
+            </a>
 
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('help');">
-            <i class="icon ion-help-buoy positive"></i>
-            Help
-        </a>
+            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('help');">
+                <i class="icon ion-help-buoy positive"></i>
+                Help
+            </a>
 
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('feedback');">
-            <i class="icon ion-mic-a positive"></i>
-            Send Feedback
-        </a>
-    </div>
+            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('feedback');">
+                <i class="icon ion-mic-a positive"></i>
+                Send Feedback
+            </a>
+        </div>
 
-    <div class="list">
-        <span class="list-divider">Settings</span>
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('changeUsername');">
-            <i class="icon ion-person positive"></i>
-            Change Username
-        </a>
+        <div class="list">
+            <span class="list-divider">Settings</span>
+            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('changeUsername');">
+                <i class="icon ion-person positive"></i>
+                Change Username
+            </a>
 
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); modalService.openModal('changePassword');">
-            <i class="icon ion-locked positive"></i>
-            Change Password
-        </a>
-    </div>
+            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('changePassword');">
+                <i class="icon ion-locked positive"></i>
+                Change Password
+            </a>
+        </div>
 
-    <div class="list">
-        <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu'); $root.goToLogin()">
-            <i class="icon ion-log-out positive"></i>
-            Logout
-        </a>
-    </div>
-</ion-modal-view>
+        <div class="list">
+            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        $root.goToLogin()">
+                <i class="icon ion-log-out positive"></i>
+                Logout
+            </a>
+        </div>
+    </ion-modal-view>
+</ion-content>

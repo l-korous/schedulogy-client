@@ -4,13 +4,13 @@
             <form name="form" novalidate>
                 <h1>SCHEDULOGY</h1>
                 <div class="list customFormErrorList">
-                    <div ng-show="beingSubmitted && (form.email.$error.required || form.email.$error.email) && !form.email.$pristine" class="item help-block">
+                    <div ng-show="beingSubmitted && (form.email.$error.required || form.email.$error.email) && !form.email.$pristine" class="item help-block item-no-wrap">
                         Please provide a valid e-mail.
                     </div>
-                    <div ng-show="beingSubmitted && form.password.$error.required && !form.password.$pristine" class="item help-block">
+                    <div ng-show="beingSubmitted && form.password.$error.required && !form.password.$pristine" class="item help-block item-no-wrap">
                         Please provide a valid password.
                     </div>
-                    <div ng-show="errorInfo" class="item help-block help-block-error item-no-wrap">
+                    <div ng-show="errorInfo" class="item help-block help-block-error item-no-wrap item-no-wrap">
                         {{errorInfo}}
                     </div>
                 </div>
