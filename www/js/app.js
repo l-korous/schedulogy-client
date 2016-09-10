@@ -10,7 +10,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
             on: true,
-            date: 'Sat Sep 03 2016 22:00:00 GMT+0200'
+            date: 'Sat Sep 03 2016 12:00:00 GMT+0200'
         },
         weeks: 26,
         mobileWidth: 500,
@@ -20,13 +20,11 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         minuteGranularity: 30,
         // This has to be exactly calculated using minGranularity
         slotsPerHour: 2, // === (60 / minGranularity)
-        defaultTaskDuration: 2,
+        defaultTaskDuration: 4,
         defaultTaskType: 'fixed',
         defaultStateAfterLogin: 'main.calendar',
         noPrerequisitesToListMsg: 'No possible prerequisites to list. Possible prerequisites are any tasks that can end before the due date of this one.',
         noDependenciesToListMsg: 'No possible dependent tasks to list. Only floating tasks, that are due after this task can be completed, are possible dependent tasks.',
-        dateTimeFormatEdit: 'YYYY-MM-DDTHH:mm',
-        dateTimeFormatDisplay: 'YYYY-MM-DD HH:mm',
         shiftAgendaRows: {
             normal: 191,
             // Minimum height will apply here.
@@ -85,9 +83,9 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             }
             return 'General error.';
         },
-        registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to the e-mail address. You may close this tab.',
+        registrationSuccessInfo: 'An e-mail with password setup instructions has been sent to the e-mail address. Please check your inbox.',
         passwordResetSuccessInfo: 'Password successfully set.',
-        forgottenPasswordSuccessInfo: 'An e-mail with password reset instructions has been sent to your e-mail address. You may close this tab.',
+        forgottenPasswordSuccessInfo: 'An e-mail with password reset instructions has been sent to your e-mail address. Please check your inbox.',
         feedbackSuccessInfo: 'Feedback received and greatly appreciated.',
         feedbackErrorInfo: function (msg) {
             return 'Something went wrong.';
@@ -177,6 +175,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         ionicTimePickerProvider.configTimePicker(timePickerObj);
     })
     .config(function ($httpProvider) {
+        $httpProvider.defaults.withCredentials = true;
         $httpProvider.interceptors.push(function ($rootScope, $q, $window, $timeout, $state, moment) {
             return {
                 request: function (config) {
@@ -248,7 +247,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 }
                 else if (keyCode === 37) {
                     $('#theOnlyCalendar').fullCalendar('next');
-
                 }
                 else if (keyCode === 39) {
                     $('#theOnlyCalendar').fullCalendar('prev');

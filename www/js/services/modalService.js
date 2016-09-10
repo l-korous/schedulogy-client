@@ -47,6 +47,9 @@ angular.module('Schedulogy')
 
         // North API - open
         _this.openModal = function (modalName) {
+            // Store the scroll, so that after the modal is hidden, we can re-establish the scroll.
+            _this.scrollTop = $('.fc-scroller').scrollTop();
+
             // A workaround for the stacking problem.
             $('.modal').css('z-index', 10);
             $(_this.modals[modalName].modalInternal.modalEl).css('z-index', 11);
@@ -76,6 +79,11 @@ angular.module('Schedulogy')
             _this.currentModals.pop();
             if (_this.currentModals.length)
                 _this.currentModal = _this.currentModals[_this.currentModals.length - 1];
+
+            // Scroll to where I was before.
+            setTimeout(function () {
+                $('.fc-scroller').scrollTop(_this.scrollTop);
+            });
         };
 
         // Internal - create

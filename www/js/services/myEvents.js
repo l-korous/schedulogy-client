@@ -48,7 +48,15 @@ angular.module('Schedulogy')
                 _this.fillBlocksAndNeedsForShow(event);
             });
 
+            // Store the scroll, so that after the modal is hidden, we can re-establish the scroll.
+            _this.scrollTop = $('.fc-scroller').scrollTop();
+
             $('#theOnlyCalendar').fullCalendar('render');
+
+            // Scroll to where I was before.
+            setTimeout(function () {
+                $('.fc-scroller').scrollTop(_this.scrollTop);
+            });
         };
 
         _this.emptyCurrentEvent = function () {
@@ -192,14 +200,18 @@ angular.module('Schedulogy')
             _this.deleteEvent(this.findEventById(passedEventId), successCallback, errorCallback);
         };
 
-        _this.handleChangeOfEventType = function (passedEvent) {
+        _this.imposeEventDurationBound = function (passedEvent) {
             var event = passedEvent || _this.currentEvent;
 
-            if (event.dur > settings.maxEventDuration[event.type]) {
+            if (event.dur > settings.maxEventDuration[event.type])
                 event.dur = settings.maxEventDuration[event.type];
-                _this.updateEndDateTimeWithDuration();
-            }
-            if (event.type === 'floating') {
+        };
+
+        // (!!!) Might change duration and start.
+        _this.processChangeOfEventType = function (passedEvent, prevType) {
+            var event = passedEvent || _this.currentEvent;
+            if (event.type === 'floating' && prevType !== 'floating') {
+                event.allDay = false;
                 var dueMinutes = DateUtils.toMinutes(event.due);
                 if (!dueMinutes)
                     dueMinutes = 1440;
@@ -213,8 +225,20 @@ angular.module('Schedulogy')
                 event.dueDateText = event.due.format(settings.dateFormat);
                 event.dueTimeText = event.due.format(settings.timeFormat);
             }
+
+            if (event.type === 'fixedAllDay' && (prevType === 'fixed' || prevType === 'floating')) {
+                event.allDay = true;
+                Event.setStart(event, event.start.startOf('day'));
+                event.dur = 1;
+            }
+
+            if (event.type === 'fixed' && prevType === 'fixedAllDay') {
+                event.allDay = false;
+                Event.setStart(event, event.start.startOf('day'));
+                event.dur = settings.defaultTaskDuration;
+            }
+
             event.color = settings.eventColor[event.type];
-            _this.recalcConstraints(event);
         };
 
         _this.tasksInResponseSuccessHandler = function (data, successCallback) {
@@ -234,30 +258,6 @@ angular.module('Schedulogy')
             $ionicLoading.hide();
         };
 
-        _this.processEventDrop = function (delta) {
-            if (_this.currentEvent.type === 'fixed') {
-                if (_this.currentEvent.allDay) {
-                    Event.changeType(_this.currentEvent, 'fixedAllDay');
-                    _this.currentEvent.start = _this.currentEvent.start.startOf('day');
-                    _this.currentEvent.dur = 1;
-                    _this.handleChangeOfEventType();
-                }
-                return true;
-            }
-
-            else if (_this.currentEvent.type === 'fixedAllDay') {
-                if (!_this.currentEvent.allDay) {
-                    Event.changeType(_this.currentEvent, 'fixed');
-                    _this.currentEvent.start = _this.currentEvent.start.startOf('day');
-                    _this.currentEvent.start.add(delta._milliseconds, 'ms');
-                    _this.currentEvent.dur = 4;
-                    _this.handleChangeOfEventType();
-                }
-
-                return true;
-            }
-        };
-
         _this.saveEvent = function (passedEvent, successCallback, errorCallback) {
             var eventToSave = passedEvent || _this.currentEvent;
             _this.shouldShowLoading = true;
@@ -272,7 +272,7 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.recalcConstraints = function (eventPassed) {
+        _this.recalcEventConstraints = function (eventPassed) {
             console.log('recalculating Constraints');
             $ionicLoading.show({template: settings.loadingTemplate});
 
@@ -307,7 +307,7 @@ angular.module('Schedulogy')
 
             var event = eventPassed ? eventPassed : _this.currentEvent;
 
-            if (!_this.recalcConstraints(event))
+            if (!_this.recalcEventConstraints(event))
                 event.error = 'Impossible to schedule due to constraints';
 
             else {
@@ -323,7 +323,7 @@ angular.module('Schedulogy')
 
             var event = eventPassed ? eventPassed : _this.currentEvent;
 
-            if (!_this.recalcConstraints(event))
+            if (!_this.recalcEventConstraints(event))
                 event.error = 'Impossible to schedule due to constraints';
 
             else {
@@ -342,14 +342,13 @@ angular.module('Schedulogy')
 
             var event = eventPassed ? eventPassed : _this.currentEvent;
 
-            if (!_this.recalcConstraints(event))
+            if (!_this.recalcEventConstraints(event))
                 event.error = 'Impossible to schedule due to constraints';
 
             else {
 
-                if (!this.currentEvent.needs)
-                    s
-                event.needs = [];
+                if (!event.needs)
+                    event.needs = [];
 
                 event.needs.push(prerequisiteId);
                 _this.fillBlocksAndNeedsForShow(event);
@@ -363,7 +362,7 @@ angular.module('Schedulogy')
 
             var event = eventPassed ? eventPassed : _this.currentEvent;
 
-            if (!_this.recalcConstraints(event))
+            if (!_this.recalcEventConstraints(event))
                 event.error = 'Impossible to schedule due to constraints';
 
             else {
@@ -376,25 +375,14 @@ angular.module('Schedulogy')
             }
         };
 
-        _this.updateEndDateTimeWithDuration = function (eventPassed) {
+        _this.processEventDuration = function (eventPassed) {
             var event = eventPassed ? eventPassed : _this.currentEvent;
 
             DateUtils.saveDurText(event);
 
             if (event.type === 'fixedAllDay' || event.type === 'fixed') {
                 var toAddMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;
-                event.end = event.start.clone().add(toAddMinutes, 'minutes');
-
-                // For all-day events, we are displaying the end day the same as the current one.
-                if (event.type === 'fixedAllDay') {
-                    var custom_end = event.start.clone();
-                    event.endDateText = custom_end.format(settings.dateFormat);
-                    event.endTimeText = custom_end.format(settings.timeFormat);
-                }
-                else if (event.type === 'fixed') {
-                    event.endDateText = event.end.format(settings.dateFormat);
-                    event.endTimeText = event.end.format(settings.timeFormat);
-                }
+                Event.setEnd(event, event.start.clone().add(toAddMinutes, 'minutes'));
             }
         };
 
@@ -422,17 +410,6 @@ angular.module('Schedulogy')
                 toReturn.hours(settings.startHour);
                 toReturn.minutes(0);
             }
-            // Move Sat + Sun to Mon.
-            /*
-             if (toReturn.day() === 0 || toReturn.day() >= 6) {
-             toReturn.hours(settings.startHour);
-             toReturn.minutes(0);
-             if (toReturn.day() === 0)
-             toReturn.day(1);
-             else
-             toReturn.day(8);
-             }
-             */
             _this.getCurrentEvents(toReturn).forEach(function (currentEvent) {
                 toReturn = (currentEvent.end > toReturn ? currentEvent.end : toReturn);
             });

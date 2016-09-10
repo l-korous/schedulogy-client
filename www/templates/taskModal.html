@@ -28,17 +28,14 @@
                     <div class="input-label">
                         Type
                     </div>
-                    <select style="width:100%" ng-model="currentEvent.type" class="taskTypeSelect" required ng-change="myEvents.handleChangeOfEventType(currentEvent);" id="tasktypeselector">
+                    <select style="width:100%" ng-model="currentEvent.type" class="taskTypeSelect" required id="tasktypeselector">
                         <option value="fixed" class="option-fixed">Fixed</option>
                         <option value="fixedAllDay" class="option-fixedAllDay">Fixed (all-day)</option>
                         <option value="floating" class="option-floating">Floating</option>
                     </select>
                 </label>
                 <label class="item item-input" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
-                    <div class="input-label">
-                        Title
-                    </div>
-                    <input autocomplete="off" type="text" ng-model="currentEvent.title" id="primaryInput" required name="title">
+                    <input placeholder="Title" autocomplete="off" type="text" ng-model="currentEvent.title" id="primaryInput" required name="title">
                 </label>
                 <label class="item item-input">
                     <textarea placeholder="Description" ng-model="currentEvent.desc" rows="5" id="taskModalTextarea"></textarea>
@@ -79,7 +76,7 @@
                     <div class="input-label">
                         End Time<br />[duration]
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-change="myEvents.updateEndDateTimeWithDuration(currentEvent);"
+                    <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-change="myEvents.processEventDuration(currentEvent);"
                            name="fixedDuration" ng-model="currentEvent.dur" step="1" ng-required="currentEvent.type === 'fixed'" id="fixedDuration"/>
 
 
@@ -111,7 +108,7 @@
                     <div class="input-label">
                         End Date<br />[duration]
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.fixedAllDay}}" ng-change="myEvents.updateEndDateTimeWithDuration(currentEvent)"
+                    <input type="range" min="1" max="{{maxEventDuration.fixedAllDay}}" ng-change="myEvents.processEventDuration(currentEvent)"
                            name="fixedAllDayDuration" ng-model="currentEvent.dur" step="1" ng-required="currentEvent.type === 'fixedAllDay'"/>
 
 
@@ -150,7 +147,7 @@
                     <div class="input-label">
                         Duration<br />&nbsp;
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="currentEvent.dur" ng-change="myEvents.updateEndDateTimeWithDuration(currentEvent); myEvents.recalcConstraints(currentEvent);"
+                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="currentEvent.dur" ng-change="myEvents.processEventDuration(currentEvent); myEvents.recalcEventConstraints(currentEvent);"
                            name="floatingDuration" step="1" ng-required="currentEvent.type === 'floating'" id="floatingDuration"/>
 
                     <div class="rangeInfoFloating rangeInfo">

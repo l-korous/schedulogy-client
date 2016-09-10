@@ -1,10 +1,19 @@
 angular.module('Schedulogy')
-    .controller('CalendarCtrl', function ($scope, settings, MyEvents, FullCalendar, $rootScope, ModalService) {
+    .controller('CalendarCtrl', function ($scope, settings, MyEvents, FullCalendar, $rootScope, ModalService, $timeout, DateUtils) {
         $rootScope.allSet = false;
         $scope.myEvents = MyEvents;
         FullCalendar.calculateCalendarRowHeight();
+
         $scope.$on('MyEventsLoaded', function () {
             $rootScope.allSet = true;
+            // We move to some user-friendly slot - 2 slots before the current one.
+            $timeout(function () {
+                var currentTime = DateUtils.toMinutes(MyEvents.getBTime()) / settings.minuteGranularity;
+                // This will most probably change if we implement some custom visibility for users.
+                var totalSlots = 48;
+                var oneSlotHeight = $('.fc-time-grid').height() / totalSlots;                
+                $('.fc-scroller').scrollTop(oneSlotHeight * Math.max(currentTime - 2, 0));
+            });
         });
 
         $scope.eventSources = [MyEvents.events];
@@ -37,7 +46,7 @@ angular.module('Schedulogy')
                     MyEvents.currentEvent.type = 'fixedAllDay';
                 }
 
-                MyEvents.updateEndDateTimeWithDuration();
+                MyEvents.processEventDuration();
                 ModalService.openModal('task');
             },
             eventDrop: function (event, delta, revertFunc, jsEvent) {
@@ -51,22 +60,40 @@ angular.module('Schedulogy')
                         floatToFixedRevertFunc: revertFunc
                     });
                 }
-                else {
-                    if (MyEvents.processEventDrop(delta))
-                        MyEvents.saveEvent();
+                else if (MyEvents.currentEvent.type === 'fixed' && MyEvents.currentEvent.allDay) {
+                    MyEvents.currentEvent.type = 'fixedAllDay';
+                    MyEvents.processChangeOfEventType(MyEvents.currentEvent, 'fixed');
+                    MyEvents.imposeEventDurationBound();
+                    MyEvents.saveEvent();
                 }
+
+                else if (MyEvents.currentEvent.type === 'fixedAllDay' && !MyEvents.currentEvent.allDay) {
+                    MyEvents.currentEvent.type = 'fixed';
+                    MyEvents.processChangeOfEventType(MyEvents.currentEvent, 'fixedAllDay');
+                    MyEvents.currentEvent.start.add(delta._milliseconds, 'ms');
+                    MyEvents.imposeEventDurationBound();
+                    MyEvents.saveEvent();
+                }
+                else
+                    MyEvents.saveEvent();
             },
             eventResize: function (event, delta, revertFunc) {
                 MyEvents.currentEvent = event;
                 if (event.type === 'fixed') {
                     event.dur += (delta._data.hours * settings.slotsPerHour);
                     event.dur += (delta._data.minutes / settings.minuteGranularity);
-                    MyEvents.handleChangeOfEventType();
+                    MyEvents.imposeEventDurationBound();
+                    MyEvents.processEventDuration();
+                    if (!MyEvents.recalcEventConstraints())
+                        $scope.currentEvent.error = 'Impossible to schedule due to constraints';
                     MyEvents.saveEvent();
                 }
                 else if (event.type === 'fixedAllDay') {
                     event.dur += delta.days();
-                    MyEvents.handleChangeOfEventType();
+                    MyEvents.imposeEventDurationBound();
+                    MyEvents.processEventDuration();
+                    if (!MyEvents.recalcEventConstraints())
+                        $scope.currentEvent.error = 'Impossible to schedule due to constraints';
                     MyEvents.saveEvent();
                 }
                 else if (event.type === 'floating') {

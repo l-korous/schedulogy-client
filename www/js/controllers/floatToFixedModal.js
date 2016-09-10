@@ -24,12 +24,16 @@ angular.module('Schedulogy')
             MyEvents.currentEvent = $scope.floatToFixedEvent;
             MyEvents.currentEvent.type = 'fixed';
             if ($scope.floatToFixedMethod === 'resize') {
+                MyEvents.processChangeOfEventType(MyEvents.currentEvent, 'floating');
                 MyEvents.currentEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
-                MyEvents.handleChangeOfEventType();
+                MyEvents.imposeEventDurationBound();
+                MyEvents.processEventDuration();
+                MyEvents.recalcEventConstraints();
             }
             else if ($scope.floatToFixedMethod === 'drop') {
-                if (!MyEvents.processEventDrop($scope.floatToFixedDelta))
-                    return;
+                MyEvents.processChangeOfEventType(MyEvents.currentEvent, 'floating');
+                MyEvents.processEventDuration();
+                MyEvents.recalcEventConstraints();
             }
             MyEvents.saveEvent();
             ModalService.closeModalInternal();

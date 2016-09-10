@@ -2,9 +2,12 @@ angular.module('Schedulogy')
     .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, $rootScope, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
         $scope.myEvents = MyEvents;
         $scope.myResources = MyResources;
+        $scope.maxEventDuration = settings.maxEventDuration;
         $scope.popupOpen = false;
         $scope.modalEl = null;
         $scope.currentEvent = null;
+        // Used in changing of the task type to offer better UX - by changing the types, you can get back to what you had selected there for the previous type.
+        $scope.taskSwitchingValues = {};
 
         $scope.open = function () {
             $scope.myResources.refresh();
@@ -13,6 +16,8 @@ angular.module('Schedulogy')
                 MyEvents.emptyCurrentEvent();
 
             $scope.currentEvent = angular.extend({}, $scope.myEvents.currentEvent);
+
+            $scope.eventPrevType = null;
 
             $scope.form.$setPristine();
 
@@ -38,12 +43,33 @@ angular.module('Schedulogy')
         ModalService.initModal('task', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
-            $scope.myEvents.saveEvent($scope.currentEvent, function() {
+            $scope.myEvents.saveEvent($scope.currentEvent, function () {
                 ModalService.closeModalInternal();
             });
         };
 
-        $scope.maxEventDuration = settings.maxEventDuration;
+        $scope.$watch('currentEvent.type', function (newValue, oldValue) {
+            if (oldValue && newValue) {
+                $scope.taskSwitchingValues[oldValue] = {
+                    dur: parseInt($scope.currentEvent.dur),
+                    start: $scope.currentEvent.start.clone(),
+                    due: $scope.currentEvent.due.clone()
+                };
+
+                MyEvents.processChangeOfEventType($scope.currentEvent, oldValue);
+                if ($scope.taskSwitchingValues[newValue]) {
+                    $scope.currentEvent.dur = $scope.taskSwitchingValues[newValue].dur;
+                    Event.setStart($scope.currentEvent, $scope.taskSwitchingValues[newValue].start.clone());
+                    Event.setDue($scope.currentEvent, $scope.taskSwitchingValues[newValue].due.clone());
+                }
+                else
+                    MyEvents.imposeEventDurationBound($scope.currentEvent);
+
+                MyEvents.processEventDuration($scope.currentEvent);
+                if (!MyEvents.recalcEventConstraints($scope.currentEvent))
+                    $scope.currentEvent.error = 'Impossible to schedule due to constraints';
+            }
+        });
 
         $scope.remove = function () {
             $scope.myEvents.deleteEventById($scope.myEvents.currentEvent._id, function () {
@@ -67,6 +93,7 @@ angular.module('Schedulogy')
             }
             return retVal;
         };
+
         $scope.blocksFilter = function (inspectedEvent) {
             if (inspectedEvent.type !== 'floating')
                 return false;
@@ -80,6 +107,7 @@ angular.module('Schedulogy')
             }
             return true;
         };
+
         $scope.needsFilter = function (inspectedEvent) {
             if (!$scope.commonFilter(inspectedEvent))
                 return false;
@@ -91,6 +119,7 @@ angular.module('Schedulogy')
             }
             return true;
         };
+
         $scope.startValueForOrderingOfDependencies = function (event) {
             return event.start.unix();
         };
@@ -104,8 +133,8 @@ angular.module('Schedulogy')
                     $scope.currentEvent[d.name + 'DateText'] = $scope.currentEvent[d.name].format(settings.dateFormat);
                     $scope.currentEvent[d.name + 'TimeText'] = $scope.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
-                        MyEvents.updateEndDateTimeWithDuration($scope.currentEvent);
-                    if (!MyEvents.recalcConstraints($scope.currentEvent))
+                        MyEvents.processEventDuration($scope.currentEvent);
+                    if (!MyEvents.recalcEventConstraints($scope.currentEvent))
                         $scope.currentEvent.error = 'Impossible to schedule due to constraints';
 
                     $scope.form.$setDirty();
@@ -117,8 +146,8 @@ angular.module('Schedulogy')
                     $scope.currentEvent[d.name + 'DateText'] = $scope.currentEvent[d.name].format(settings.dateFormat);
                     $scope.currentEvent[d.name + 'TimeText'] = $scope.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
-                        MyEvents.updateEndDateTimeWithDuration($scope.currentEvent);
-                    if (!MyEvents.recalcConstraints($scope.currentEvent))
+                        MyEvents.processEventDuration($scope.currentEvent);
+                    if (!MyEvents.recalcEventConstraints($scope.currentEvent))
                         $scope.currentEvent.error = 'Impossible to schedule due to constraints';
 
                     $scope.form.$setDirty();

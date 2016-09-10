@@ -1,22 +1,34 @@
 angular.module('Schedulogy')
     .service('Event', function (moment, settings, DateUtils) {
         this.btime = null;
+
         this.setBTime = function (btime) {
             this.btime = btime;
         };
 
-        this.changeType = function (event, toType) {
-            if (toType === 'floating') {
-                event.type = 'floating';
-                event.allDay = false;
+        this.setStart = function (event, start) {
+            event.start = start;
+            event.startDateText = event.start.format(settings.dateFormat);
+            event.startTimeText = event.start.format(settings.timeFormat);
+        };
+
+        this.setDue = function (event, due) {
+            event.due = due;
+            event.dueDateText = event.due.format(settings.dateFormat);
+            event.dueTimeText = event.due.format(settings.timeFormat);
+        };
+
+        this.setEnd = function (event, end) {
+            event.end = end;
+            // For fixedAllDay, we deduct one day from what we present as the 'end'.
+            if (event.type === 'fixedAllDay') {
+                var custom_end = event.end.clone().add(-1, 'days');
+                event.endDateText = custom_end.format(settings.dateFormat);
+                event.endTimeText = custom_end.format(settings.timeFormat);
             }
-            else if (toType === 'fixed') {
-                event.type = 'fixed';
-                event.allDay = false;
-            }
-            else if (toType === 'fixedAllDay') {
-                event.type = 'fixedAllDay';
-                event.allDay = true;
+            else {
+                event.endDateText = event.end.format(settings.dateFormat);
+                event.endTimeText = event.end.format(settings.timeFormat);
             }
         };
 
@@ -101,6 +113,7 @@ angular.module('Schedulogy')
             }
             return event;
         };
+
         this.toEvent = function (task) {
             var start = moment.unix(task.start).local();
             var toAddMinutes = (task.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * task.dur;
@@ -132,6 +145,7 @@ angular.module('Schedulogy')
 
             return this.processConstraint(event, event.constraint, this.btime);
         };
+
         this.earliestPossibleFinish = function (event) {
             var toAddMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;
 
@@ -146,6 +160,7 @@ angular.module('Schedulogy')
                 }
             }
         };
+
         this.latestPossibleStart = function (event) {
             var toSubtractMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;
 
