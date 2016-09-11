@@ -5653,10 +5653,7 @@
                     ) +
                 '>' +
                 '<div class="fc-content">' +
-                (this.isRTL ?
-                    titleHtml + ' ' + timeHtml : // put a natural space in between
-                    timeHtml + ' ' + titleHtml   //
-                    ) +
+                (titleHtml + ' ' + timeHtml) +
                 '</div>' +
                 (isResizableFromStart ?
                     '<div class="fc-resizer fc-start-resizer" />' :

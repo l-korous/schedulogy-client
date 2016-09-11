@@ -23,7 +23,7 @@
 
 html, body
 {
-    font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
+    font-family: "Flat-it-Compasse-Light", "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
     width:100%;
     height:100%;
 }
@@ -39,6 +39,11 @@ footer {
     height: 100px;
     width:100%;
     background-color: #263238;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: "Flat-it-Compasse-Light", "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
 }
 
 h2 {
@@ -97,7 +102,7 @@ h2 {
     position: absolute;
     top: 2px;
     right: 4px;
-    font-size: 1.2em;
+    font-size: 18px;
     color:rgba(255, 0, 0, .7);
 }
 
@@ -333,10 +338,8 @@ h2 {
     position: absolute;
     right: 0;
     left: 0;
-    height: 14px;
     padding:0;
     border-width: 0;
-    background-color: #222;
     bottom: 0;
 }
 
@@ -345,11 +348,11 @@ h2 {
     line-height:10px;
     height:10px;
     padding:0;
-    margin:2px auto;
-    text-align:center;
+    margin:0 10px;
+    text-align:right;
     vertical-align: middle;
     display:block;
-    color:white;
+    color: #2f3131
 }
 
 .margin-left-menu {
@@ -404,8 +407,8 @@ h2 {
     background:white;
     box-shadow:none;
     text-shadow:none;
-    border:1px solid #222;
-    color: #222;
+    border:1px solid #2f3131;
+    color: #2f3131;
 }
 
 .fc-state-active {
@@ -441,14 +444,16 @@ h2 {
     }   
 }
 
-.no-side-padding {
+.no-cal-padding {
     padding-left:0;
     padding-right:0;
     border-left:0;
     border-right:0;
+    padding-bottom:0;
+    border-bottom:0;
 }
 
-.no-side-padding > .fc-toolbar {
+.no-cal-padding > .fc-toolbar {
     padding-left:3px ! important;
     padding-right:3px ! important;
 }
@@ -457,9 +462,8 @@ h2 {
     padding:1px 6px;
     border-radius:3px;
     background: #ffa400;
+    margin-left:4px;
 }
-
-/* Ionic fixes */
 
 .modal .range {
     padding: 6px 16px 5px 16px;
@@ -562,6 +566,18 @@ input[readonly=true] {
     .list {
         margin-bottom:10px;
     }
+
+    .fc-toolbar h2 {
+        font-size:20px;
+    }
+
+    #theOnlyCalendar {
+        padding-top:.5em;
+    }
+
+    .fc-toolbar {
+        margin-bottom:.5em;
+    }
 }
 
 .inactive {
@@ -616,7 +632,7 @@ div.hopscotch-bubble .hopscotch-nav-button.next:hover {
 }
 
 input:required:invalid {
-    background-image: radial-gradient(circle 4px at calc(100% - 4px) 4px, red 0%, transparent 100%);
+    background-image: radial-gradient(circle 4px at calc(100% - 4px) 4px, #f00 0%, transparent 100%);
 }
 
 h2.title {
@@ -627,5 +643,32 @@ h2.title {
 @media(max-width:500px) {
     .fc-agendaWeek-view .fc-day-header {
         font-size:.8em;
+    }
+}
+
+.button-assertive {
+    background:#2f3131;
+}
+
+i.assertive {
+    color:#2f3131;
+}
+
+.bar .title {
+    font-size:19px;
+}
+
+.fc-day-grid-event .fc-time {
+    font-weight: normal;
+}
+
+.fc-day-grid-event .fc-title {
+    font-weight: bold;
+}
+
+
+@media(max-width:500px) {
+    #button-customId-month {
+        display:none;
     }
 }

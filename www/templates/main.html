@@ -13,6 +13,6 @@
     </div>
 </ion-content>
 
-<div class="footer">
-    <div class="footer-title">{{appVersion}}</div>
+<div class="footer" ng-if="!$root.isMobileNarrow && !$root.isMobileLow">
+    <div class="footer-title">Version: {{appVersion}}</div>
 </div>

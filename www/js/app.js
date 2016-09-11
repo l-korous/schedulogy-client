@@ -3,7 +3,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         serverUrl: 'http://localhost:8080/api',
         //serverUrl: 'http://52.59.242.96/api',
         loadingTemplate: 'Loading,<br />please wait...',
-        appVersion: 'beta-2.1.0',
+        appVersion: '2.1.2-b',
         applicationName: 'Schedulogy',
         minPasswordGroups: 1,
         minPasswordLength: 1,
@@ -31,8 +31,9 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             mobile: 0
         },
         shiftCalendar: {
-            normal: 125,
-            mobile: 115
+            normal: 115,
+            mobileLow: 97,
+            mobileNarrow: 97
         },
         minCalendarRowHeight: 45,
         checkNewVersion: false,

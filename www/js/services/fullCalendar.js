@@ -35,7 +35,7 @@ angular.module('Schedulogy')
                 nowIndicator: true,
                 editable: true,
                 header: {
-                    left: $rootScope.isMobileNarrow ? 'agendaDay agenda3Day agendaWeek' : 'agendaDay agenda3Day agendaWeek month',
+                    left: 'agendaDay agenda3Day agendaWeek month',
                     center: 'title',
                     right: 'today prev,next'
                 },
@@ -66,23 +66,31 @@ angular.module('Schedulogy')
 
                 },
                 eventMouseover: function (event, jsEvent, view) {
-                    var newdiv1 = $('<i class="icon ion-trash-b eventDeleter" title="Delete">');
+                    if ($rootScope.isMobileLow || $rootScope.isMobileNarrow)
+                        return;
+                    else {
+                        var newdiv1 = $('<i class="icon ion-trash-b eventDeleter" title="Delete">');
 
-                    $(jsEvent.currentTarget).append(newdiv1);
+                        $(jsEvent.currentTarget).append(newdiv1);
 
-                    $('.eventDeleter').click(function (evt) {
-                        evt.stopPropagation();
-                        MyEvents.deleteEventById(event._id);
-                    });
+                        $('.eventDeleter').click(function (evt) {
+                            evt.stopPropagation();
+                            MyEvents.deleteEventById(event._id);
+                        });
+                    }
                 },
                 eventMouseout: function (event, jsEvent, view) {
-                    $('i').remove(".eventDeleter");
+                    if ($rootScope.isMobileLow || $rootScope.isMobileNarrow)
+                        return;
+                    else
+                        $('i').remove(".eventDeleter");
                 }
             }
         };
 
         this.calculateCalendarRowHeight = function () {
-            var row_height = Math.max(settings.minCalendarRowHeight, ($window.innerHeight - settings.shiftAgendaRows[($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 'mobile' : 'normal']) / (settings.slotsPerHour * (settings.endHour - settings.startHour)));
+            //var row_height = Math.max(settings.minCalendarRowHeight, ($window.innerHeight - settings.shiftAgendaRows[($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 'mobile' : 'normal']) / (settings.slotsPerHour * (settings.endHour - settings.startHour)));
+            var row_height = settings.minCalendarRowHeight;
             var style = document.createElement('style');
             style.type = 'text/css';
             style.innerHTML = '.fc-time-grid .fc-slats td { height: ' + row_height.toString() + 'px; }';
@@ -93,7 +101,7 @@ angular.module('Schedulogy')
             list.removeChild(item);
             list.appendChild(style);
             $timeout(function () {
-                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - settings.shiftCalendar[$rootScope.isMobileNarrow ? 'mobile' : 'normal']);
+                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', 'auto');
             });
         };
 
