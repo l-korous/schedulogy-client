@@ -11,8 +11,11 @@ angular.module('Schedulogy')
                 var currentTime = DateUtils.toMinutes(MyEvents.getBTime()) / settings.minuteGranularity;
                 // This will most probably change if we implement some custom visibility for users.
                 var totalSlots = 48;
-                var oneSlotHeight = $('.fc-time-grid').height() / totalSlots;                
-                $('.fc-scroller').scrollTop(oneSlotHeight * Math.max(currentTime - 2, 0));
+                var oneSlotHeight = $('.fc-time-grid').height() / totalSlots;       
+                
+                var shift = ($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 1 : 2;
+                
+                $('.fc-scroller').scrollTop(oneSlotHeight * Math.max(currentTime - shift, 0));
             });
         });
 

@@ -32,8 +32,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         },
         shiftCalendar: {
             normal: 115,
-            mobileLow: 97,
-            mobileNarrow: 97
+            mobileLow: 87,
+            mobileNarrow: 87
         },
         minCalendarRowHeight: 45,
         checkNewVersion: false,
