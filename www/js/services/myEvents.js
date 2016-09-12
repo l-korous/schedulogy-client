@@ -244,8 +244,6 @@ angular.module('Schedulogy')
         _this.tasksInResponseSuccessHandler = function (data, successCallback) {
             _this.importFromTasks(data.tasks, data.dirtyTasks);
             successCallback && successCallback();
-            _this.shouldShowLoading = false;
-            $ionicLoading.hide();
         };
 
         _this.tasksInResponseErrorHandler = function (err, errorCallback) {
@@ -254,8 +252,6 @@ angular.module('Schedulogy')
 
             ModalService.openModal('dirtyTasks');
             errorCallback && errorCallback();
-            _this.shouldShowLoading = false;
-            $ionicLoading.hide();
         };
 
         _this.saveEvent = function (passedEvent, successCallback, errorCallback) {
@@ -266,9 +262,16 @@ angular.module('Schedulogy')
                     $ionicLoading.show({template: settings.loadingTemplate});
             }, 500);
             Task.fromEvent(eventToSave).$save({btime: _this.getBTime().unix()}, function (data) {
-                _this.tasksInResponseSuccessHandler(data, successCallback);
+                _this.tasksInResponseSuccessHandler(data, function () {
+                    successCallback && successCallback();
+
+                });
             }, function (err) {
-                _this.tasksInResponseErrorHandler(err, errorCallback);
+                _this.tasksInResponseErrorHandler(err, function () {
+                    errorCallback && errorCallback();
+                    _this.shouldShowLoading = false;
+                    $ionicLoading.hide();
+                });
             });
         };
 

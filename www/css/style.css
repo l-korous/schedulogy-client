@@ -89,7 +89,7 @@ h2 {
 }
 
 .customFormErrorList {
-    margin:-1px 0 0 0;
+    margin:-1px 0 0 0 ! important;
     padding:0;
 }
 
@@ -301,10 +301,11 @@ h2 {
     position:relative;
 }
 
-.taskTypeSelect {
+.leftAlignedSelect {
     position:relative ! important;
     margin:0 ! important;
     padding:5px ! important;
+    width:100% ! important;
     text-align:left ! important;
     direction: inherit ! important;
 }
@@ -482,6 +483,10 @@ input[type=text], input[type=password], input[type=email] {
     padding:5px;
 }
 
+.modal input[type=text], .modal input[type=password], .modal input[type=email] {
+    padding-left:0 ! important;
+}
+
 .button-hover-balanced:hover {
     color: #ccc ! important;
 }
@@ -562,6 +567,10 @@ input[readonly=true] {
     font-size:.99em ! important;
 }
 
+.fc-toolbar {
+    margin-bottom:.5em;
+}
+
 @media(max-height:700px) {
     .list {
         margin-bottom:10px;
@@ -573,10 +582,6 @@ input[readonly=true] {
 
     #theOnlyCalendar {
         padding-top:.5em;
-    }
-
-    .fc-toolbar {
-        margin-bottom:.5em;
     }
 }
 
@@ -590,7 +595,7 @@ input[readonly=true] {
     display:block;
 }
 
-.select-no-scrollbar {
+.noScrollbarSelect {
     overflow:hidden;
     padding:10px;
     margin:0 -20px 0 0;

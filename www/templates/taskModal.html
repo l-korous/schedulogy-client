@@ -24,11 +24,29 @@
                 <div ng-show="currentEvent.error" class="item help-block">{{currentEvent.error}}</div>
             </div>
             <div class="list" style="margin-bottom:0;">
+                <label class="item item-input item-select"  ng-if="currentEvent.type !== 'floating'">
+                    <div class="input-label">
+                        Resource
+                    </div>
+                    <select ng-model="currentEvent.resource" class="leftAlignedSelect" required name="resource"
+                            ng-options="resource._id as resource.name for resource in myResources.resources">
+                    </select>
+                </label>
+
+                <label class="item item-input item-select"  ng-if="currentEvent.type === 'floating'">
+                    <div class="input-label">
+                        Resources Pool
+                    </div>
+                    <select multiple ng-model="currentEvent.admissibleResources" class="leftAlignedSelect noScrollbarSelect" data-ng-attr-size="{{myResources.resources.length}}" required name="resources"
+                            ng-options="resource._id as resource.name for resource in myResources.resources">
+                    </select>
+                </label>
+                
                 <label class="item item-input item-select">
                     <div class="input-label">
                         Type
                     </div>
-                    <select style="width:100%" ng-model="currentEvent.type" class="taskTypeSelect" required id="tasktypeselector">
+                    <select ng-model="currentEvent.type" class="leftAlignedSelect" required id="tasktypeselector">
                         <option value="fixed" class="option-fixed">Fixed</option>
                         <option value="fixedAllDay" class="option-fixedAllDay">Fixed (all-day)</option>
                         <option value="floating" class="option-floating">Floating</option>
@@ -147,10 +165,11 @@
                     <div class="input-label">
                         Duration<br />&nbsp;
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="currentEvent.dur" ng-change="myEvents.processEventDuration(currentEvent); myEvents.recalcEventConstraints(currentEvent);"
+                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="currentEvent.dur" ng-change="myEvents.processEventDuration(currentEvent);
+                                    myEvents.recalcEventConstraints(currentEvent);"
                            name="floatingDuration" step="1" ng-required="currentEvent.type === 'floating'" id="floatingDuration"/>
 
-                    <div class="rangeInfoFloating rangeInfo">
+                    <div class="rangeInfo">
                         {{currentEvent.durText}}
                     </div>
                 </label>
@@ -160,7 +179,7 @@
                         Prerequisites
                     </div>
                     <div class="list nested-list" ng-show="currentEvent.needsForShow.length > 0">
-                        <div style="border:0;" class="item item-button-right" ng-repeat="event in currentEvent.needsForShow | filter : {_id: event._id} : true">
+                        <div style="border:0;" class="item item-button-right" ng-repeat="event in currentEvent.needsForShow| filter : {_id: event._id} : true">
                             <span class="bold">{{event.title}}</span> {{event.type == 'floating' ? 'due ' : ''}} on 
                             {{event.type == 'floating' ? event.dueDateText : event.startDateText}} at 
                             {{event.type == 'floating' ? event.dueTimeText : event.startTimeText}}
@@ -199,24 +218,6 @@
                             ng-options="event._id as event.shortInfo for event in filteredDependencies = (myEvents.events | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myEvents.addDependency(currentEvent, newDependency)">
                         <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible dependent tasks, see Help for explanation' : 'select a dependent task'}}</option>
-                    </select>
-                </label>
-
-                <label class="item item-nested-list" ng-if="currentEvent.type !== 'floating'">
-                    <div class="input-label">
-                        Resource
-                    </div>
-                    <select ng-model="currentEvent.resource" style="width:100%;" data-ng-attr-size="{{myResources.resources.length}}" required name="resource"
-                            ng-options="resource._id as resource.name for resource in myResources.resources" class="select-no-scrollbar">
-                    </select>
-                </label>
-
-                <label class="item item-nested-list" ng-if="currentEvent.type === 'floating'">
-                    <div class="input-label">
-                        Admissible Resources
-                    </div>
-                    <select multiple ng-model="currentEvent.admissibleResources" style="width:100%;" data-ng-attr-size="{{myResources.resources.length}}" required name="resources"
-                            ng-options="resource._id as resource.name for resource in myResources.resources" class="select-no-scrollbar">
                     </select>
                 </label>
             </div>

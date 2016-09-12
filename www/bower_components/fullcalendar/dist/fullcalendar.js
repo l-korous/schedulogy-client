@@ -8779,6 +8779,8 @@
             // Renders a view because of a date change, view-type change, or for the first time.
             // If not given a viewType, keep the current view but render different dates.
             function renderView(viewType) {
+                this.scrollTop = $('.fc-scroller').scrollTop();
+                
                 ignoreWindowResize++;
 
                 // if viewType is changing, remove the old view's rendering
@@ -8827,6 +8829,10 @@
 
                 unfreezeContentHeight(); // undo any lone freezeContentHeight calls
                 ignoreWindowResize--;
+
+                setTimeout(function () {
+                    $('.fc-scroller').scrollTop(this.scrollTop);
+                });
             }
 
 
@@ -9001,27 +9007,15 @@
 
             function prev() {
                 var _this = this;
-                _this.scrollTop = $('.fc-scroller').scrollTop();
-                
                 date = currentView.computePrevDate(date);
                 renderView();
-
-                setTimeout(function () {
-                    $('.fc-scroller').scrollTop(_this.scrollTop);
-                });
             }
 
 
             function next() {
                 var _this = this;
-                _this.scrollTop = $('.fc-scroller').scrollTop();
-
                 date = currentView.computeNextDate(date);
                 renderView();
-
-                setTimeout(function () {
-                    $('.fc-scroller').scrollTop(_this.scrollTop);
-                });
             }
 
 

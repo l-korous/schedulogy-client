@@ -99,7 +99,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             }
             return 'General error.';
         },
-        iCalUploadError: 'File upload failed.',
+        iCalUploadError: 'File upload failed. Please check that you only upload valid iCal files.',
         iCalUploadSuccess: 'File uploaded successfully.',
         resourceSaveSuccessInfo: 'Resource saved successfully.'
     })

@@ -34,9 +34,10 @@ angular.module('Schedulogy')
                     $timeout(function () {
                         ModalService.closeModalInternal();
                         $scope.successInfo = null;
-                        $scope.errorInfo = null;
                     }, 2000);
                     $rootScope.icalFile = null;
+                    $scope.errorInfo = null;
+                    $ionicLoading.hide();
                 });
             },
                 function (err) {
@@ -44,12 +45,16 @@ angular.module('Schedulogy')
                         MyEvents.tasksInResponseErrorHandler(err, function () {
                             ModalService.closeModalInternal();
                             $scope.successInfo = null;
-                            $scope.errorInfo = null;
+                            $scope.errorInfo = settings.iCalUploadError;
                             $rootScope.icalFile = null;
+                            $ionicLoading.hide();
                         });
                     }
                     catch (e) {
+                        $scope.successInfo = null;
                         $scope.errorInfo = settings.iCalUploadError;
+                        $rootScope.icalFile = null;
+                        $ionicLoading.hide();
                     }
                 });
         };
