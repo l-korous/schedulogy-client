@@ -4,7 +4,6 @@ angular.module('Schedulogy')
         $scope.myResources = MyResources;
         $scope.maxEventDuration = settings.maxEventDuration;
         $scope.popupOpen = false;
-        $scope.modalEl = null;
         $scope.currentEvent = null;
         // Used in changing of the task type to offer better UX - by changing the types, you can get back to what you had selected there for the previous type.
         $scope.taskSwitchingValues = {};
@@ -21,18 +20,15 @@ angular.module('Schedulogy')
 
             $scope.form.$setPristine();
 
-            var primaryInput = $($scope.modalEl).find('#primaryInput');
-            if ($rootScope.isMobileLow || $rootScope.isMobileNarrow) {
-                primaryInput.focus();
-                primaryInput.select();
-            }
-
             $(function () {
                 $('#taskModalTextarea').autogrow();
             });
 
             ModalService.openModalInternal('task', function () {
                 $ionicScrollDelegate.scrollTop();
+                var primaryInput = $(ModalService.modals.task.modalInternal.modalEl).find('#primaryInput');
+                primaryInput.focus();
+                primaryInput.select();
             });
         };
 
