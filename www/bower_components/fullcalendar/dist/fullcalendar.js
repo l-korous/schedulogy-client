@@ -8778,8 +8778,9 @@
             // Renders a view because of a date change, view-type change, or for the first time.
             // If not given a viewType, keep the current view but render different dates.
             function renderView(viewType) {
+                var scrollTop;
                 if (!currentView || (currentView.name !== 'month'))
-                    this.scrollTop = $('.fc-scroller').scrollTop();
+                    scrollTop = $('.fc-scroller').scrollTop();
 
                 ignoreWindowResize++;
 
@@ -8800,6 +8801,8 @@
                     currentView.setElement(
                         $("<div class='fc-view fc-" + viewType + "-view' />").appendTo(content)
                         );
+                    if (viewType !== 'month')
+                        currentView.scrollTop = scrollTop;
                     header.activateButton(viewType);
                 }
 
@@ -8821,6 +8824,9 @@
                             // need to do this after View::render, so dates are calculated
                             updateHeaderTitle();
                             updateTodayButton();
+                            setTimeout(function () {
+                                currentView.updateNowIndicator();
+                            });
 
                             getAndRenderEvents();
                         }
@@ -8830,11 +8836,6 @@
                 unfreezeContentHeight(); // undo any lone freezeContentHeight calls
                 ignoreWindowResize--;
 
-                if (viewType !== 'month') {
-                    var _this = this;
-                    $('.fc-scroller').scrollTop(_this.scrollTop);
-                    currentView.updateNowIndicator();
-                }
             }
 
 
@@ -11604,6 +11605,9 @@
 
             // Computes the initial pre-configured scroll state prior to allowing the user to change it
             computeInitialScroll: function () {
+                if (this.scrollTop)
+                    return this.scrollTop
+
                 var scrollTime = moment.duration(this.opt('scrollTime'));
                 var top = this.timeGrid.computeTimeTop(scrollTime);
 
