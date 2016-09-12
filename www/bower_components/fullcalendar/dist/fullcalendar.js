@@ -8832,11 +8832,8 @@
 
                 if (viewType !== 'month') {
                     var _this = this;
-                    setTimeout(function () {
-                        $('.fc-scroller').scrollTop(_this.scrollTop);
-                        currentView.updateNowIndicator();
-
-                    });
+                    $('.fc-scroller').scrollTop(_this.scrollTop);
+                    currentView.updateNowIndicator();
                 }
             }
 
