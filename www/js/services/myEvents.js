@@ -264,7 +264,8 @@ angular.module('Schedulogy')
             Task.fromEvent(eventToSave).$save({btime: _this.getBTime().unix()}, function (data) {
                 _this.tasksInResponseSuccessHandler(data, function () {
                     successCallback && successCallback();
-
+                    _this.shouldShowLoading = false;
+                    $ionicLoading.hide();
                 });
             }, function (err) {
                 _this.tasksInResponseErrorHandler(err, function () {
