@@ -25,7 +25,7 @@
         <script src="bower_components/hopscotch/dist/js/hopscotch.min.js"></script>
         <script src="js-min/app.min.js"></script>
     </head>
-    <body ng-app="Schedulogy">
+    <body ng-app="Schedulogy" ng-keyup="$root.keyUpHandler($event.keyCode);">
         <div ui-view></div>
     </body>
 </html>
