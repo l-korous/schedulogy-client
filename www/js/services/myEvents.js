@@ -414,11 +414,9 @@ angular.module('Schedulogy')
                 toReturn.hours(settings.startHour);
                 toReturn.minutes(0);
             }
-            _this.getCurrentEvents(toReturn).forEach(function (currentEvent) {
-                toReturn = (currentEvent.end > toReturn ? currentEvent.end : toReturn);
-            });
 
             toReturn.second(0);
+            console.log(toReturn);
             return toReturn;
         };
     });
