@@ -88,6 +88,7 @@ angular.module('Schedulogy')
                 delete $rootScope.currentUser;
                 $window.localStorage.token && delete $window.localStorage.token;
                 $window.localStorage.currentUserId && delete $window.localStorage.currentUserId;
+		document.cookie = 'schedulogyAppAccessed=1; domain=.schedulogy.com; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
             }
         };
         return Auth;
