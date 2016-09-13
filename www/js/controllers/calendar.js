@@ -10,6 +10,14 @@ angular.module('Schedulogy')
 
         $scope.eventSources = [MyEvents.events];
 
+        $scope.onSwipeLeft = function () {
+            $('#theOnlyCalendar').fullCalendar('next');
+        };
+
+        $scope.onSwipeRight = function () {
+            $('#theOnlyCalendar').fullCalendar('prev');
+        };
+
         $scope.myCalendar = FullCalendar;
 
         $scope.myCalendar.setCallbacks({

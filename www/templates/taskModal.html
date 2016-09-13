@@ -94,7 +94,7 @@
                     <div class="input-label">
                         End Time<br />[duration]
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-change="processEventDuration();"
+                    <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
                            name="fixedDuration" ng-model="currentEvent.dur" step="1" ng-required="currentEvent.type === 'fixed'" id="fixedDuration"/>
 
 
@@ -126,7 +126,7 @@
                     <div class="input-label">
                         End Date<br />[duration]
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.fixedAllDay}}" ng-change="processEventDuration()"
+                    <input type="range" min="1" max="{{maxEventDuration.fixedAllDay}}" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
                            name="fixedAllDayDuration" ng-model="currentEvent.dur" step="1" ng-required="currentEvent.type === 'fixedAllDay'"/>
 
 
