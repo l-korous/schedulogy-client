@@ -61,11 +61,11 @@
 
                 <!--
                 <label class="item" ng-show="currentEvent.type === 'fixed' && currentEvent.constraint.startDateText">
-                    The earliest this task can start is on {{currentEvent.constraint.startDateText}}, at {{currentEvent.constraint.startTimeText}}.
+                    The earliest this Task can start is on {{currentEvent.constraint.startDateText}}, at {{currentEvent.constraint.startTimeText}}.
                 </label>
                 -->
                 <label class="item" ng-show="currentEvent.type === 'fixed' && currentEvent.constraint.endDateText">
-                    The latest this task can end is on {{currentEvent.constraint.endDateText}}, at {{currentEvent.constraint.endTimeText}}.
+                    The latest this Task can end is on {{currentEvent.constraint.endDateText}}, at {{currentEvent.constraint.endTimeText}}.
                 </label>
 
                 <label class="item item-input" ng-show="currentEvent.type === 'fixed'"
@@ -94,7 +94,7 @@
                     <div class="input-label">
                         End Time<br />[duration]
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-change="myEvents.processEventDuration(currentEvent);"
+                    <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-change="processEventDuration();"
                            name="fixedDuration" ng-model="currentEvent.dur" step="1" ng-required="currentEvent.type === 'fixed'" id="fixedDuration"/>
 
 
@@ -105,11 +105,11 @@
 
                 <!--
                 <label class="item" ng-show="currentEvent.type === 'fixedAllDay' && currentEvent.constraint.startDateText">
-                    The earliest this task can start is on {{currentEvent.constraint.startDateText}}, at {{currentEvent.constraint.startTimeText}}.
+                    The earliest this Task can start is on {{currentEvent.constraint.startDateText}}, at {{currentEvent.constraint.startTimeText}}.
                 </label>
                 -->
                 <label class="item" ng-show="currentEvent.type === 'fixedAllDay' && currentEvent.constraint.endDateText">
-                    The latest this task can end is on {{currentEvent.constraint.endDateText}}, at {{currentEvent.constraint.endTimeText}}.
+                    The latest this Task can end is on {{currentEvent.constraint.endDateText}}, at {{currentEvent.constraint.endTimeText}}.
                 </label>
 
                 <label class="item item-input" ng-show="currentEvent.type === 'fixedAllDay'"
@@ -126,7 +126,7 @@
                     <div class="input-label">
                         End Date<br />[duration]
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.fixedAllDay}}" ng-change="myEvents.processEventDuration(currentEvent)"
+                    <input type="range" min="1" max="{{maxEventDuration.fixedAllDay}}" ng-change="processEventDuration()"
                            name="fixedAllDayDuration" ng-model="currentEvent.dur" step="1" ng-required="currentEvent.type === 'fixedAllDay'"/>
 
 
@@ -136,10 +136,10 @@
                 </label>
 
                 <label class="item" ng-show="currentEvent.type === 'floating' && currentEvent.constraint.startDateText">
-                    The earliest this task can be due is on {{currentEvent.constraint.startDateDueText}}, at {{currentEvent.constraint.startTimeDueText}}.
+                    The earliest this Task can be due is on {{currentEvent.constraint.startDateDueText}}, at {{currentEvent.constraint.startTimeDueText}}.
                 </label>
                 <label class="item" ng-show="currentEvent.type === 'floating' && currentEvent.constraint.endDateText">
-                    The latest this task can be due is on {{currentEvent.constraint.endDateText}}, at {{currentEvent.constraint.endTimeText}}.
+                    The latest this Task can be due is on {{currentEvent.constraint.endDateText}}, at {{currentEvent.constraint.endTimeText}}.
                 </label>
 
                 <label class="item item-input" ng-show="currentEvent.type === 'floating'"
@@ -165,8 +165,7 @@
                     <div class="input-label">
                         Duration<br />&nbsp;
                     </div>
-                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="currentEvent.dur" ng-change="myEvents.processEventDuration(currentEvent);
-                                    myEvents.recalcEventConstraints(currentEvent);"
+                    <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="currentEvent.dur" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
                            name="floatingDuration" step="1" ng-required="currentEvent.type === 'floating'" id="floatingDuration"/>
 
                     <div class="rangeInfo">
@@ -193,7 +192,7 @@
                     <select ng-model="newPrerequisite" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
                             ng-options="event._id as event.shortInfo for event in filteredPrerequisites = (myEvents.events | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myEvents.addPrerequisite(currentEvent, newPrerequisite)">
-                        <option ng-selected="true" value="">{{filteredPrerequisites.length === 0 ? 'no other possible prerequisite tasks, see Help for explanation' : 'select a prerequisite task'}}</option>
+                        <option ng-selected="true" value="">{{filteredPrerequisites.length === 0 ? 'no other possible Prerequisite Task, see Help for explanation' : 'select a prerequisite task'}}</option>
                     </select>
                 </label>
 
@@ -217,7 +216,7 @@
                     <select ng-model="newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
                             ng-options="event._id as event.shortInfo for event in filteredDependencies = (myEvents.events | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myEvents.addDependency(currentEvent, newDependency)">
-                        <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible dependent tasks, see Help for explanation' : 'select a dependent task'}}</option>
+                        <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible Dependent Task, see Help for explanation' : 'select a dependent task'}}</option>
                     </select>
                 </label>
             </div>

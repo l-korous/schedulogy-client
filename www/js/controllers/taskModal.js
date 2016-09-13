@@ -67,6 +67,15 @@ angular.module('Schedulogy')
             }
         });
 
+        $scope.processEventDuration = function () {
+            if (!$scope.myEvents.recalcEventConstraints($scope.currentEvent))
+                $scope.currentEvent.error = 'Impossible to schedule due to constraints';
+        };
+
+        $scope.renderEventDuration = function () {
+            $scope.myEvents.processEventDuration($scope.currentEvent);
+        };
+
         $scope.remove = function () {
             $scope.myEvents.deleteEventById($scope.myEvents.currentEvent._id, function () {
                 ModalService.closeModalInternal();

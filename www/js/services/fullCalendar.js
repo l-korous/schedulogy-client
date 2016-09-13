@@ -20,7 +20,7 @@ angular.module('Schedulogy')
                 timezone: 'local',
                 timeFormat: 'H:mm',
                 // We move to some user-friendly slot - 2 slots before the current one.
-                scrollTime: MyEvents.getBTime().clone().subtract((($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 1 : 2)*settings.minuteGranularity, 'minute').format('hh:mm:ss'),
+                scrollTime: MyEvents.getBTime().clone().subtract((($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 1 : 2) * settings.minuteGranularity, 'minute').format('HH:mm:ss'),
                 slotLabelFormat: 'H:mm',
                 eventBackgroundColor: '#387ef5',
                 eventBorderColor: '#000',

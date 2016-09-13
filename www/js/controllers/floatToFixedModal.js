@@ -29,11 +29,18 @@ angular.module('Schedulogy')
                 MyEvents.imposeEventDurationBound();
                 MyEvents.processEventDuration();
                 MyEvents.recalcEventConstraints();
+                if (!MyEvents.recalcEventConstraints()) {
+                    MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
+                    return;
+                }
             }
             else if ($scope.floatToFixedMethod === 'drop') {
                 MyEvents.processChangeOfEventType(MyEvents.currentEvent, 'floating');
                 MyEvents.processEventDuration();
-                MyEvents.recalcEventConstraints();
+                if (!MyEvents.recalcEventConstraints()) {
+                    MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
+                    return;
+                }
             }
             MyEvents.saveEvent();
             ModalService.closeModalInternal();

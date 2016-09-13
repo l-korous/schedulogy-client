@@ -60,8 +60,8 @@ angular.module('Schedulogy')
         };
 
         _this.emptyCurrentEvent = function () {
-            var btime = _this.getBTime();
-            var btimePlusDuration = btime.clone().add(settings.defaultTaskDuration / settings.minuteGranularity, 'm');
+            var startTime = _this.getBTime().clone().add(settings.defaultHourShiftFromNow, 'h');
+            var startTimePlusDuration = startTime.clone().add(settings.defaultTaskDuration / settings.minuteGranularity, 'm');
 
             _this.currentEvent = {
                 new : true,
@@ -70,15 +70,15 @@ angular.module('Schedulogy')
                 dur: settings.defaultTaskDuration,
                 resource: $rootScope.myResourceId,
                 admissibleResources: [$rootScope.myResourceId],
-                start: btime,
-                startDateText: btime.format(settings.dateFormat),
-                startTimeText: btime.format(settings.timeFormat),
-                end: btimePlusDuration,
-                endDateText: btimePlusDuration.format(settings.dateFormat),
-                endTimeText: btimePlusDuration.format(settings.timeFormat),
-                due: btimePlusDuration,
-                dueDateText: btimePlusDuration.format(settings.dateFormat),
-                dueTimeText: btimePlusDuration.format(settings.timeFormat),
+                start: startTime,
+                startDateText: startTime.format(settings.dateFormat),
+                startTimeText: startTime.format(settings.timeFormat),
+                end: startTimePlusDuration,
+                endDateText: startTimePlusDuration.format(settings.dateFormat),
+                endTimeText: startTimePlusDuration.format(settings.timeFormat),
+                due: startTimePlusDuration,
+                dueDateText: startTimePlusDuration.format(settings.dateFormat),
+                dueTimeText: startTimePlusDuration.format(settings.timeFormat),
                 blocks: [],
                 blocksForShow: [],
                 needs: [],
@@ -277,7 +277,6 @@ angular.module('Schedulogy')
         };
 
         _this.recalcEventConstraints = function (eventPassed) {
-            console.log('recalculating Constraints');
             $ionicLoading.show({template: settings.loadingTemplate});
 
             var event = eventPassed ? eventPassed : _this.currentEvent;
@@ -416,7 +415,6 @@ angular.module('Schedulogy')
             }
 
             toReturn.second(0);
-            console.log(toReturn);
             return toReturn;
         };
     });
