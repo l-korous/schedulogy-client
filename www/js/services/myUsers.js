@@ -26,9 +26,10 @@ angular.module('Schedulogy')
                 _this.users = data.usersLocal;
                 successCallback && successCallback();
                 $ionicLoading.hide();
-            }, function (err) {
-                console.log('saveUser error: ' + err);
-                errorCallback && errorCallback();
+            }, function (data) {
+                _this.users = data.usersLocal;
+                $ionicLoading.hide();
+                errorCallback && errorCallback(data.error);
             });
         };
 

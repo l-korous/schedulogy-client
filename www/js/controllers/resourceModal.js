@@ -6,10 +6,8 @@ angular.module('Schedulogy')
         $scope.currentResource = null;
 
         $scope.open = function () {
-            if (!$scope.myResources.currentResource) {
+            if (!$scope.myResources.currentResource)
                 $scope.myResources.emptyCurrentResource();
-                $scope.newResource = true;
-            }
             else
                 $scope.myResources.updateAllTexts();
 

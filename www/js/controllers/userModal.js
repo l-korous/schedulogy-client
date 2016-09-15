@@ -3,15 +3,14 @@ angular.module('Schedulogy')
         $scope.myUsers = MyUsers;
         $scope.loading = true;
         $scope.currentUser = null;
+        $scope.newUser = true;
 
         $scope.open = function () {
-            if (!$scope.myUsers.currentUser) {
-                $scope.newUser = true;
+            $scope.errorInfo = null;
+
+            if (!$scope.myUsers.currentUser)
                 $scope.myUsers.emptyCurrentUser();
-            }
-            else
-                $scope.newUser = false;
-            
+
             $scope.currentUser = angular.extend({}, $scope.myUsers.currentUser);
 
             var focusPrimaryInput = function () {
@@ -30,6 +29,7 @@ angular.module('Schedulogy')
         ModalService.initModal('user', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
+            $scope.beingSubmitted = true;
             if ($scope.form.$invalid)
                 return;
             angular.extend($scope.myUsers.currentUser, $scope.currentUser);
@@ -37,6 +37,8 @@ angular.module('Schedulogy')
                 ModalService.closeModalInternal(function () {
                     ModalService.modals.users.scope.successInfo = settings.registrationSuccessInfo;
                 });
+            }, function (error) {
+                $scope.errorInfo = settings.registrationErrorInfo(error);
             });
         };
 
