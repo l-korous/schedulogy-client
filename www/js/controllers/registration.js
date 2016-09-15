@@ -10,7 +10,7 @@ angular.module('Schedulogy')
             $scope.beingSubmitted = true;
             if ($scope.form.$invalid)
                 return;
-            if (!$scope.registrationForm.$invalid) {
+            if (!$scope.form.$invalid) {
                 $scope.errorInfo = null;
                 $ionicLoading.show({template: settings.loadingTemplate});
                 Auth.register({email: $scope.data.email}).success(function () {

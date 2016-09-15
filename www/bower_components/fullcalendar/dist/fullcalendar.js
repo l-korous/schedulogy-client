@@ -2480,20 +2480,27 @@
 
         bindHandlers: function () {
             var _this = this;
-            var touchStartIgnores = 1;
+            _this.touchStartIgnores = 1;
 
             if (this.isTouch) {
                 this.listenTo($(document), {
                     touchmove: this.handleTouchMove,
-                    touchend: this.endInteraction,
-                    touchcancel: this.endInteraction,
+                    touchend: function(ev) {
+                        console.log(_this.latestTouchStart);
+                        console.log(ev.timeStamp);
+                        this.endInteraction(ev, ((ev.timeStamp - _this.latestTouchStart) < 1000));
+                    },
+                    touchcancel: function(ev) {
+                        this.endInteraction(ev, true);
+                    },
                     // Sometimes touchend doesn't fire
                     // (can't figure out why. touchcancel doesn't fire either. has to do with scrolling?)
                     // If another touchstart happens, we know it's bogus, so cancel the drag.
                     // touchend will continue to be broken until user does a shorttap/scroll, but this is best we can do.
                     touchstart: function (ev) {
-                        if (touchStartIgnores) { // bindHandlers is called from within a touchstart,
-                            touchStartIgnores--; // and we don't want this to fire immediately, so ignore.
+                        _this.latestTouchStart = ev.timeStamp;
+                        if (_this.touchStartIgnores) { // bindHandlers is called from within a touchstart,
+                            _this.touchStartIgnores--; // and we don't want this to fire immediately, so ignore.
                         }
                         else {
                             _this.endInteraction(ev, true); // isCancelled=true
