@@ -2486,8 +2486,6 @@
                 this.listenTo($(document), {
                     touchmove: this.handleTouchMove,
                     touchend: function(ev) {
-                        console.log(_this.latestTouchStart);
-                        console.log(ev.timeStamp);
                         this.endInteraction(ev, ((ev.timeStamp - _this.latestTouchStart) < 1000));
                     },
                     touchcancel: function(ev) {
