@@ -8806,12 +8806,13 @@
                     currentView.setElement(
                         $("<div class='fc-view fc-" + viewType + "-view' />").appendTo(content)
                         );
-                    if (viewType !== 'month')
-                        currentView.scrollTop = scrollTop;
                     header.activateButton(viewType);
                 }
 
                 if (currentView) {
+
+                    if (viewType !== 'month')
+                        currentView.scrollTop = scrollTop;
 
                     // in case the view should render a period of time that is completely hidden
                     date = currentView.massageCurrentDate(date);
