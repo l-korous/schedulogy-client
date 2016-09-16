@@ -37,7 +37,7 @@ angular.module('Schedulogy')
 
             // Event.constraint will always be there EXCEPT for the case when we are importing an iCal and there is an event which started before the input and finishes after that.
             // But no problem, what we do is that we treat it as having no constraint - it is a fixed task after all.
-            if (resConstraint && resConstraint.start) {
+            if (event.type === 'floating' && resConstraint && resConstraint.start) {
                 var constraintStart = moment(resConstraint.start).local();
                 var constraintStartDue = constraintStart.clone().add(event.dur * settings.minuteGranularity, 'm');
                 event.constraint = angular.extend(event.constraint, {
@@ -53,7 +53,7 @@ angular.module('Schedulogy')
                 event.constraint = {
                     // If the event is currently going on (i.e. this.btime > event.start), push the constraint start before this.btime
                     // => if the user wants to move the current task to later, he should move it to earlier than this.btime actually.
-                    start: ((event.start.diff(this.btime.local(), 'm') < 0) ? event.start.clone() : this.btime.local()),
+                    start: event.type === 'floating' ? ((event.start.diff(this.btime.local(), 'm') < 0) ? event.start.clone() : this.btime.local()) : this.btime.clone().add(-settings.weeks, 'w').local(),
                     startDateText: null,
                     startTimeText: null,
                     startDateDueText: null,
@@ -118,14 +118,15 @@ angular.module('Schedulogy')
             var start = moment.unix(task.start).local();
             var toAddMinutes = (task.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * task.dur;
             var end = start.clone().add(toAddMinutes, 'm');
+            var custom_end = end.clone().add(-1, 'days');
             var event = angular.extend(task, {
                 id: task._id,
                 start: (task.type === 'fixedAllDay' ? start.startOf('day') : start),
                 startDateText: start.format(settings.dateFormat),
                 startTimeText: task.type === 'fixedAllDay' ? null : start.format(settings.timeFormat),
                 end: (task.type === 'fixedAllDay' ? end.startOf('day') : end),
-                endDateText: (task.type === 'fixedAllDay' ? end.startOf('day') : end).format(settings.dateFormat),
-                endTimeText: (task.type === 'fixedAllDay' ? end.startOf('day') : end).format(settings.timeFormat),
+                endDateText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.dateFormat),
+                endTimeText: (task.type === 'fixedAllDay' ? custom_end : end).format(settings.timeFormat),
                 stick: true,
                 allDay: (task.type === 'fixedAllDay'),
                 blocksForShow: [],
