@@ -2485,10 +2485,10 @@
             if (this.isTouch) {
                 this.listenTo($(document), {
                     touchmove: this.handleTouchMove,
-                    touchend: function(ev) {
+                    touchend: function (ev) {
                         this.endInteraction(ev, ((ev.timeStamp - _this.latestTouchStart) < 1000));
                     },
-                    touchcancel: function(ev) {
+                    touchcancel: function (ev) {
                         this.endInteraction(ev, true);
                     },
                     // Sometimes touchend doesn't fire
@@ -8153,8 +8153,10 @@
                 this.el = this.renderEl();
                 this.applyOverflow();
             },
-            renderEl: function () {
+            renderEl: function (scrollTop) {
                 return (this.scrollEl = $('<div class="fc-scroller"></div>'));
+                if (scrollTop)
+                    this.setScrollTop(scrollTop);
             },
             // sets to natural height, unlocks overflow
             clear: function () {
@@ -8810,9 +8812,8 @@
                 }
 
                 if (currentView) {
-
                     if (viewType !== 'month')
-                        currentView.scrollTop = scrollTop;
+                        currentView.setScroll(scrollTop);
 
                     // in case the view should render a period of time that is completely hidden
                     date = currentView.massageCurrentDate(date);
@@ -11434,7 +11435,7 @@
                 this.el.addClass('fc-agenda-view').html(this.renderSkeletonHtml());
                 this.renderHead();
 
-                this.scroller.render();
+                this.scroller.render(this.scrollTop);
                 var timeGridWrapEl = this.scroller.el.addClass('fc-time-grid-container');
                 timeGridWrapEl.attr("id", "fc-time-grid-container");
                 var timeGridEl = $('<div class="fc-time-grid" id="fc-time-grid" />').appendTo(timeGridWrapEl);
@@ -11611,8 +11612,8 @@
 
             // Computes the initial pre-configured scroll state prior to allowing the user to change it
             computeInitialScroll: function () {
-                if (this.scrollTop)
-                    return this.scrollTop
+                if (this.scrollTop || this.scrollTop === 0)
+                    return this.scrollTop;
 
                 var scrollTime = moment.duration(this.opt('scrollTime'));
                 var top = this.timeGrid.computeTimeTop(scrollTime);
@@ -11630,7 +11631,10 @@
                 return this.scroller.getScrollTop();
             },
             setScroll: function (top) {
-                this.scroller.setScrollTop(top);
+                if (top || top === 0) {
+                    this.scroller.setScrollTop(top);
+                    this.scrollTop = top;
+                }
             },
             /* Hit Areas
              ------------------------------------------------------------------------------------------------------------------*/
