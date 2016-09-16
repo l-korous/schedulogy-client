@@ -31,7 +31,7 @@ angular.module('Schedulogy')
         };
 
         $scope.removeResource = function (resourceToReplaceCurrentWith) {
-            $scope.myResources.removeResource(resourceToReplaceCurrentWith, function () {
+            $scope.myResources.removeResource($scope.currentResource, resourceToReplaceCurrentWith, function () {
                 $scope.associatedUser && MyUsers.removeUser($scope.associatedUser);
 
                 ModalService.closeModalInternal(function () {

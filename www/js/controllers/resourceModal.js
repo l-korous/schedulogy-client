@@ -5,12 +5,8 @@ angular.module('Schedulogy')
         $scope.currentResource = null;
 
         $scope.open = function () {
-            if (!MyResources.currentResource)
-                MyResources.emptyCurrentResource();
-            else
-                MyResources.updateAllTexts();
-
             $scope.currentResource = angular.extend({}, MyResources.currentResource);
+            MyResources.updateAllTexts($scope.currentResource);
 
             var focusPrimaryInputAndSetPristine = function () {
                 var primaryInput = $(ModalService.modals.resource.modalInternal.modalEl).find('#primaryInput');
@@ -32,47 +28,47 @@ angular.module('Schedulogy')
             if ($scope.form.$invalid)
                 return;
             angular.extend(MyResources.currentResource, $scope.currentResource);
-            MyResources.saveResource(function () {
+            MyResources.saveResource($scope.currentResource, function () {
                 ModalService.closeModalInternal(function () {
                     MyEvents.refresh();
                 });
             });
         };
 
-        $scope.$watch('myResources.currentResource.sinceDay', function (newValue, oldValue) {
-            if (oldValue) {
+        $scope.$watch('currentResource.sinceDay', function (newValue, oldValue) {
+            if (oldValue || (oldValue === 0)) {
                 if (newValue > MyResources.currentResource.untilDay)
                     MyResources.currentResource.sinceDay = oldValue;
                 else
-                    MyResources.updateText('sinceDay');
+                    MyResources.updateText($scope.currentResource, 'sinceDay');
             }
         });
 
-        $scope.$watch('myResources.currentResource.untilDay', function (newValue, oldValue) {
-            if (oldValue) {
+        $scope.$watch('currentResource.untilDay', function (newValue, oldValue) {
+            if (oldValue || (oldValue === 0)) {
                 if (MyResources.currentResource.sinceDay > newValue)
                     MyResources.currentResource.untilDay = oldValue;
                 else
-                    MyResources.updateText('untilDay');
+                    MyResources.updateText($scope.currentResource, 'untilDay');
             }
         });
 
-        $scope.$watch('myResources.currentResource.sinceTime', function (newValue, oldValue) {
-            if (oldValue) {
+        $scope.$watch('currentResource.sinceTime', function (newValue, oldValue) {
+            if (oldValue || (oldValue === 0)) {
                 if (newValue > MyResources.currentResource.untilTime)
                     MyResources.currentResource.sinceTime = oldValue;
                 else
-                    MyResources.updateText('sinceTime');
+                    MyResources.updateText($scope.currentResource, 'sinceTime');
             }
         });
 
-        $scope.$watch('myResources.currentResource.untilTime', function (newValue, oldValue) {
-            if (oldValue) {
+        $scope.$watch('currentResource.untilTime', function (newValue, oldValue) {
+            if (oldValue || (oldValue === 0)) {
                 if (MyResources.currentResource.sinceTime > newValue)
                     MyResources.currentResource.untilTime = oldValue;
 
                 else
-                    MyResources.updateText('untilTime');
+                    MyResources.updateText($scope.currentResource, 'untilTime');
             }
         });
 

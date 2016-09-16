@@ -48,9 +48,10 @@ angular.module('Schedulogy')
             return theResources[0];
         };
 
-        _this.saveResource = function (successCallback, errorCallback) {
+        _this.saveResource = function (passedResource, successCallback, errorCallback) {
+            var resource = passedResource || _this.currentResource;
             $ionicLoading.show({template: settings.loadingTemplate});
-            _this.currentResource.$save({btime: MyEvents.getBTime().unix()}, function (data) {
+            resource.$save({btime: MyEvents.getBTime().unix()}, function (data) {
                 _this.importData(data.resourcesLocal);
                 successCallback && successCallback();
                 $ionicLoading.hide();
@@ -61,8 +62,9 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.removeResource = function (replacementResourceId, successCallback, errorCallback) {
-            _this.currentResource.$remove({resourceId: _this.currentResource._id, btime: MyEvents.getBTime().unix(), replacementResourceId: replacementResourceId}, function (data) {
+        _this.removeResource = function (passedResource, replacementResourceId, successCallback, errorCallback) {
+            var resource = passedResource || _this.currentResource;
+            resource.$remove({resourceId: resource._id, btime: MyEvents.getBTime().unix(), replacementResourceId: replacementResourceId}, function (data) {
                 _this.importData(data.resourcesLocal);
                 successCallback && successCallback();
             }, function (err) {
@@ -82,27 +84,29 @@ angular.module('Schedulogy')
             _this.updateAllTexts();
         };
 
-        _this.updateText = function (identifier) {
+        _this.updateText = function (passedResource, identifier) {
+            var resource = passedResource || _this.currentResource;
             switch (identifier) {
                 case 'sinceDay':
-                    _this.currentResource.sinceDayText = DateUtils.getDayName(_this.currentResource.sinceDay);
+                    resource.sinceDayText = DateUtils.getDayName(resource.sinceDay);
                     break;
                 case 'untilDay':
-                    _this.currentResource.untilDayText = DateUtils.getDayName(_this.currentResource.untilDay);
+                    resource.untilDayText = DateUtils.getDayName(resource.untilDay);
                     break;
                 case 'sinceTime':
-                    _this.currentResource.sinceTimeText = DateUtils.getTimeFromSlotCount(_this.currentResource.sinceTime);
+                    resource.sinceTimeText = DateUtils.getTimeFromSlotCount(resource.sinceTime);
                     break;
                 case 'untilTime':
-                    _this.currentResource.untilTimeText = DateUtils.getTimeFromSlotCount(_this.currentResource.untilTime);
+                    resource.untilTimeText = DateUtils.getTimeFromSlotCount(resource.untilTime);
                     break;
             }
         };
 
-        _this.updateAllTexts = function () {
-            _this.updateText('sinceDay');
-            _this.updateText('untilDay');
-            _this.updateText('sinceTime');
-            _this.updateText('untilTime');
+        _this.updateAllTexts = function (passedResource) {
+            var resource = passedResource || _this.currentResource;
+            _this.updateText(resource, 'sinceDay');
+            _this.updateText(resource, 'untilDay');
+            _this.updateText(resource, 'sinceTime');
+            _this.updateText(resource, 'untilTime');
         };
     });

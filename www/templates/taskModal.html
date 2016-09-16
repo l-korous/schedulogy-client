@@ -64,7 +64,7 @@
                     The earliest this Task can start is on {{currentEvent.constraint.startDateText}}, at {{currentEvent.constraint.startTimeText}}.
                 </label>
                 -->
-                <label class="item" ng-show="currentEvent.type === 'fixed' && currentEvent.constraint.endDateText">
+                <label class="item" ng-show="currentEvent.type === 'fixed' && currentEvent.constraint.endDateText && currentEvent.constraint.end.year() < 2050">
                     The latest this Task can end is on {{currentEvent.constraint.endDateText}}, at {{currentEvent.constraint.endTimeText}}.
                 </label>
 

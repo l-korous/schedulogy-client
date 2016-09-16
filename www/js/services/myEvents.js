@@ -59,29 +59,40 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.emptyCurrentEvent = function () {
-            var startTime = _this.getBTime().clone().add(settings.defaultHourShiftFromNow, 'h');
-            var startTimePlusDuration = startTime.clone().add(settings.defaultTaskDuration / settings.minuteGranularity, 'm');
+        _this.setCurrentEvent = function (eventId) {
+            _this.currentEvent = _this.events.find(function (event) {
+                if (event._id === eventId)
+                    return true;
+            });
+        };
 
+        _this.newCurrentEvent = function (defaultObj) {
+            var startTime = (defaultObj && defaultObj.start) ? defaultObj.start : _this.getBTime().clone().add(settings.defaultHourShiftFromNow, 'h');
+            var endTime = (defaultObj && defaultObj.end) ? defaultObj.end : startTime.clone().add(settings.defaultTaskDuration / settings.minuteGranularity, 'm');
+            var dur = (defaultObj && defaultObj.dur) ? defaultObj.dur : settings.defaultTaskDuration;
+            var type = (defaultObj && defaultObj.type) ? defaultObj.type : settings.defaultTaskType;
+            
             _this.currentEvent = {
                 new : true,
                 stick: true,
-                type: settings.defaultTaskType,
-                dur: settings.defaultTaskDuration,
+                type: type,
+                dur: dur,
                 resource: $rootScope.myResourceId,
                 admissibleResources: [$rootScope.myResourceId],
                 start: startTime,
                 startDateText: startTime.format(settings.dateFormat),
                 startTimeText: startTime.format(settings.timeFormat),
-                end: startTimePlusDuration,
-                endDateText: startTimePlusDuration.format(settings.dateFormat),
-                endTimeText: startTimePlusDuration.format(settings.timeFormat),
-                due: startTimePlusDuration,
-                dueDateText: startTimePlusDuration.format(settings.dateFormat),
-                dueTimeText: startTimePlusDuration.format(settings.timeFormat),
+                end: endTime,
+                endDateText: type === 'fixedAllDay' ? endTime.clone().add(-1,'days').format(settings.dateFormat) : endTime.format(settings.dateFormat),
+                endTimeText: endTime.format(settings.timeFormat),
+                due: endTime,
+                dueDateText: endTime.format(settings.dateFormat),
+                dueTimeText: endTime.format(settings.timeFormat),
                 blocks: [],
                 blocksForShow: [],
                 needs: [],
+                title: '',
+                desc: '',
                 needsForShow: [],
                 constraint: {
                     start: null,
@@ -89,7 +100,7 @@ angular.module('Schedulogy')
                 }
             };
 
-            DateUtils.saveDurText(this.currentEvent);
+            DateUtils.saveDurText(_this.currentEvent);
         };
 
         _this.fillBlocksAndNeedsForShow = function (event) {

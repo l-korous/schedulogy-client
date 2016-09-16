@@ -53,7 +53,7 @@ angular.module('Schedulogy')
                 event.constraint = {
                     // If the event is currently going on (i.e. this.btime > event.start), push the constraint start before this.btime
                     // => if the user wants to move the current task to later, he should move it to earlier than this.btime actually.
-                    start: event.type === 'floating' ? ((event.start.diff(this.btime.local(), 'm') < 0) ? event.start.clone() : this.btime.local()) : this.btime.clone().add(-settings.weeks, 'w').local(),
+                    start: event.type === 'floating' ? ((event.start.diff(this.btime.local(), 'm') < 0) ? event.start.clone() : this.btime.local()) : moment({y:2010}),
                     startDateText: null,
                     startTimeText: null,
                     startDateDueText: null,
@@ -72,7 +72,7 @@ angular.module('Schedulogy')
             }
             else {
                 event.constraint = angular.extend(event.constraint, {
-                    end: this.btime.clone().add(settings.weeks, 'w').local(),
+                    end: moment({y:2030}),
                     endDateText: null,
                     endTimeText: null
                 });

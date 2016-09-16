@@ -244,7 +244,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $rootScope.$broadcast('Esc');
             else if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                 if (keyCode === 67) {
-                    MyEvents.emptyCurrentEvent();
+                    MyEvents.newCurrentEvent();
                     ModalService.openModal('task');
                 }
                 else if (keyCode === 37) {

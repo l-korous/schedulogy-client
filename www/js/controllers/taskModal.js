@@ -4,19 +4,16 @@ angular.module('Schedulogy')
         $scope.myResources = MyResources;
         $scope.maxEventDuration = settings.maxEventDuration;
         $scope.popupOpen = false;
+        $scope.disableEventTypeWatch = false;
         $scope.currentEvent = null;
         // Used in changing of the task type to offer better UX - by changing the types, you can get back to what you had selected there for the previous type.
         $scope.taskSwitchingValues = {};
 
         $scope.open = function () {
+            $scope.disableEventTypeWatch = true;
             $scope.myResources.refresh();
 
-            if (!MyEvents.currentEvent)
-                MyEvents.emptyCurrentEvent();
-
-            $scope.currentEvent = angular.extend({}, $scope.myEvents.currentEvent);
-
-            $scope.eventPrevType = null;
+            $scope.currentEvent = angular.extend({}, MyEvents.currentEvent);
 
             $scope.form.$setPristine();
 
@@ -29,6 +26,7 @@ angular.module('Schedulogy')
                 var primaryInput = $(ModalService.modals.task.modalInternal.modalEl).find('#primaryInput');
                 primaryInput.focus();
                 primaryInput.select();
+                $scope.disableEventTypeWatch = false;
             });
         };
 
@@ -45,7 +43,7 @@ angular.module('Schedulogy')
         };
 
         $scope.$watch('currentEvent.type', function (newValue, oldValue) {
-            if (oldValue && newValue) {
+            if (oldValue && newValue && !$scope.disableEventTypeWatch) {
                 $scope.taskSwitchingValues[oldValue] = {
                     dur: parseInt($scope.currentEvent.dur),
                     start: $scope.currentEvent.start.clone(),

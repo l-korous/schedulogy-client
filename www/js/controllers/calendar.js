@@ -22,31 +22,17 @@ angular.module('Schedulogy')
 
         $scope.myCalendar.setCallbacks({
             eventClick: function (event) {
-                MyEvents.currentEvent = event;
+                MyEvents.setCurrentEvent(event._id);
                 ModalService.openModal('task');
             },
             select: function (start, end, jsEvent, view, resource) {
-                MyEvents.emptyCurrentEvent();
-                MyEvents.currentEvent = angular.extend(MyEvents.currentEvent, {
-                    type: 'fixed',
+                MyEvents.newCurrentEvent({
                     start: start,
-                    startDateText: start.format(settings.dateFormat),
-                    startTimeText: start.format(settings.timeFormat),
                     end: end,
-                    endDateText: end.format(settings.dateFormat),
-                    endTimeText: end.format(settings.timeFormat),
-                    dur: Math.ceil(end.diff(start, 'm') / settings.minuteGranularity),
-                    due: end,
-                    dueDateText: end.format(settings.dateFormat),
-                    dueTimeText: end.format(settings.timeFormat),
+                    type: (view.name === 'month' || !(start.hasTime() || end.hasTime())) ? 'fixedAllDay' : 'fixed',
+                    dur: (view.name === 'month' || !(start.hasTime() || end.hasTime())) ? end.diff(start, 'd') : Math.ceil(end.diff(start, 'm') / settings.minuteGranularity)
                 });
 
-                if (view.name === 'month' || !(start.hasTime() || end.hasTime())) {
-                    MyEvents.currentEvent.dur = end.diff(start, 'd');
-                    MyEvents.currentEvent.type = 'fixedAllDay';
-                }
-
-                MyEvents.processEventDuration();
                 ModalService.openModal('task');
             },
             eventDrop: function (event, delta, revertFunc, jsEvent) {
