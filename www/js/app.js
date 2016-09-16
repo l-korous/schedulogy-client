@@ -248,10 +248,12 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     ModalService.openModal('task');
                 }
                 else if (keyCode === 37) {
-                    $('#theOnlyCalendar').fullCalendar('next');
+                    if (!$rootScope.isMobileNarrow && !$rootScope.isMobileLow)
+                        $('#theOnlyCalendar').fullCalendar('next');
                 }
                 else if (keyCode === 39) {
-                    $('#theOnlyCalendar').fullCalendar('prev');
+                    if (!$rootScope.isMobileNarrow && !$rootScope.isMobileLow)
+                        $('#theOnlyCalendar').fullCalendar('prev');
                 }
             }
         };

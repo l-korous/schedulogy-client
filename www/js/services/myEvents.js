@@ -18,6 +18,9 @@ angular.module('Schedulogy')
         };
 
         _this.importFromTasks = function (tasks, dirtyTasks) {
+            if (dirtyTasks.length > 0)
+                ModalService.openModal('dirtyTasks');
+
             var processArray = function (taskArray, eventArray) {
                 eventArray.splice(0, eventArray.length);
 
@@ -71,7 +74,7 @@ angular.module('Schedulogy')
             var endTime = (defaultObj && defaultObj.end) ? defaultObj.end : startTime.clone().add(settings.defaultTaskDuration / settings.minuteGranularity, 'm');
             var dur = (defaultObj && defaultObj.dur) ? defaultObj.dur : settings.defaultTaskDuration;
             var type = (defaultObj && defaultObj.type) ? defaultObj.type : settings.defaultTaskType;
-            
+
             _this.currentEvent = {
                 new : true,
                 stick: true,
@@ -83,7 +86,7 @@ angular.module('Schedulogy')
                 startDateText: startTime.format(settings.dateFormat),
                 startTimeText: startTime.format(settings.timeFormat),
                 end: endTime,
-                endDateText: type === 'fixedAllDay' ? endTime.clone().add(-1,'days').format(settings.dateFormat) : endTime.format(settings.dateFormat),
+                endDateText: type === 'fixedAllDay' ? endTime.clone().add(-1, 'days').format(settings.dateFormat) : endTime.format(settings.dateFormat),
                 endTimeText: endTime.format(settings.timeFormat),
                 due: endTime,
                 dueDateText: endTime.format(settings.dateFormat),
@@ -261,7 +264,6 @@ angular.module('Schedulogy')
             if (err.data && err.data.tasks && err.data.dirtyTasks)
                 _this.importFromTasks(err.data.tasks, err.data.dirtyTasks);
 
-            ModalService.openModal('dirtyTasks');
             errorCallback && errorCallback();
         };
 
