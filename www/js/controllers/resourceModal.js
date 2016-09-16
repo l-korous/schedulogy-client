@@ -1,17 +1,16 @@
 angular.module('Schedulogy')
     .controller('ResourceModalCtrl', function (MyResources, $scope, settings, ModalService, MyEvents) {
-        $scope.myResources = MyResources;
         $scope.settings = settings;
         $scope.loading = true;
         $scope.currentResource = null;
 
         $scope.open = function () {
-            if (!$scope.myResources.currentResource)
-                $scope.myResources.emptyCurrentResource();
+            if (!MyResources.currentResource)
+                MyResources.emptyCurrentResource();
             else
-                $scope.myResources.updateAllTexts();
+                MyResources.updateAllTexts();
 
-            $scope.currentResource = angular.extend({}, $scope.myResources.currentResource);
+            $scope.currentResource = angular.extend({}, MyResources.currentResource);
 
             var focusPrimaryInputAndSetPristine = function () {
                 var primaryInput = $(ModalService.modals.resource.modalInternal.modalEl).find('#primaryInput');
@@ -32,57 +31,48 @@ angular.module('Schedulogy')
         $scope.save = function () {
             if ($scope.form.$invalid)
                 return;
-            angular.extend($scope.myResources.currentResource, $scope.currentResource);
-            $scope.myResources.saveResource(function () {
+            angular.extend(MyResources.currentResource, $scope.currentResource);
+            MyResources.saveResource(function () {
                 ModalService.closeModalInternal(function () {
                     MyEvents.refresh();
-                });
-            });
-        };
-
-        $scope.removeResource = function (resourceToReplaceCurrentWith) {
-            $scope.myResources.removeResource(resourceToReplaceCurrentWith, function () {
-                ModalService.closeModalInternal(function () {
-                    MyEvents.refresh();
-                    $scope.resourceToReplaceCurrentWith = null;
                 });
             });
         };
 
         $scope.$watch('myResources.currentResource.sinceDay', function (newValue, oldValue) {
             if (oldValue) {
-                if (newValue > $scope.myResources.currentResource.untilDay)
-                    $scope.myResources.currentResource.sinceDay = oldValue;
+                if (newValue > MyResources.currentResource.untilDay)
+                    MyResources.currentResource.sinceDay = oldValue;
                 else
-                    $scope.myResources.updateText('sinceDay');
+                    MyResources.updateText('sinceDay');
             }
         });
 
         $scope.$watch('myResources.currentResource.untilDay', function (newValue, oldValue) {
             if (oldValue) {
-                if ($scope.myResources.currentResource.sinceDay > newValue)
-                    $scope.myResources.currentResource.untilDay = oldValue;
+                if (MyResources.currentResource.sinceDay > newValue)
+                    MyResources.currentResource.untilDay = oldValue;
                 else
-                    $scope.myResources.updateText('untilDay');
+                    MyResources.updateText('untilDay');
             }
         });
 
         $scope.$watch('myResources.currentResource.sinceTime', function (newValue, oldValue) {
             if (oldValue) {
-                if (newValue > $scope.myResources.currentResource.untilTime)
-                    $scope.myResources.currentResource.sinceTime = oldValue;
+                if (newValue > MyResources.currentResource.untilTime)
+                    MyResources.currentResource.sinceTime = oldValue;
                 else
-                    $scope.myResources.updateText('sinceTime');
+                    MyResources.updateText('sinceTime');
             }
         });
 
         $scope.$watch('myResources.currentResource.untilTime', function (newValue, oldValue) {
             if (oldValue) {
-                if ($scope.myResources.currentResource.sinceTime > newValue)
-                    $scope.myResources.currentResource.untilTime = oldValue;
+                if (MyResources.currentResource.sinceTime > newValue)
+                    MyResources.currentResource.untilTime = oldValue;
 
                 else
-                    $scope.myResources.updateText('untilTime');
+                    MyResources.updateText('untilTime');
             }
         });
 

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyResources', function (settings, DateUtils, Resource, $rootScope, MyEvents) {
+    .service('MyResources', function (settings, DateUtils, Resource, $rootScope, MyEvents, $ionicLoading) {
         var _this = this;
         _this.resources = [];
 
@@ -49,12 +49,15 @@ angular.module('Schedulogy')
         };
 
         _this.saveResource = function (successCallback, errorCallback) {
+            $ionicLoading.show({template: settings.loadingTemplate});
             _this.currentResource.$save({btime: MyEvents.getBTime().unix()}, function (data) {
                 _this.importData(data.resourcesLocal);
                 successCallback && successCallback();
+                $ionicLoading.hide();
             }, function (err) {
                 console.log('saveResource error: ' + err);
                 errorCallback && errorCallback();
+                $ionicLoading.hide();
             });
         };
 

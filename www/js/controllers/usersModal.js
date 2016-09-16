@@ -39,6 +39,7 @@ angular.module('Schedulogy')
         $scope.openRemoveDetail = function (user) {
             MyResources.currentResource = MyResources.getResourceByUserId(user._id);
             ModalService.openModal('removeResource');
+            ModalService.modals.removeResource.scope.setAssociatedUser(user);
         };
         
         $scope.$on('Esc', function () {
