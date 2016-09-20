@@ -8216,7 +8216,8 @@
                 return this.scrollEl.scrollTop();
             },
             setScrollTop: function (top) {
-                this.scrollEl.scrollTop(top);
+                if(this.scrollEl)
+                    this.scrollEl.scrollTop(top);
             },
             getClientWidth: function () {
                 return this.scrollEl[0].clientWidth;
