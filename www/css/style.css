@@ -140,12 +140,6 @@ h2 {
     padding: 50px;
 }
 
-@media(max-width:500px) {
-    .simpleScreenWrapper {
-        padding:20px;
-    }   
-}
-
 .simpleScreen {
     border:1px solid #ccc;  
     padding:30px;
@@ -191,13 +185,6 @@ h2 {
 .marginSides1 {
     margin-left:1em ! important;
     margin-right:1em ! important;
-}
-
-@media(max-width:500px) {
-    .marginSides3, .marginSides5 {
-        margin-left:0 ! important;
-        margin-right:0 ! important;
-    }
 }
 
 .button-single {
@@ -366,7 +353,7 @@ h2 {
 }
 
 .fc-event {
-    line-height:1.05;
+    line-height:1;
 }
 
 .fc-event .fc-bg {
@@ -379,20 +366,20 @@ h2 {
 }
 .fc-event .fc-content .fc-title {
     text-align:left;
+    margin-bottom:1px;
+    font-weight: bold;
     overflow: hidden;
-    white-space: pre;
+    white-space: pre-line;
     text-overflow:ellipsis;
     font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
 }
 .fc-event .fc-content .fc-due, .fc-event .fc-content .fc-resource {
-    font-size:.95em;
     text-align:left;
     white-space: pre;
     overflow: hidden;
     width:100%;
     text-overflow:ellipsis;
-    font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
-    margin-top:2px;
+    font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
 }
 
 .fc-agenda-view .fc-day-grid .fc-row {
@@ -412,6 +399,10 @@ h2 {
     color: #2f3131;
 }
 
+.fc-day-grid .fc-title, .fc-day-grid .fc-time {
+    font-weight:normal ! important;
+}
+
 .fc-state-active {
     background: #387ef5;
     color:white;
@@ -423,8 +414,8 @@ h2 {
     color:#888;
 }
 
-.fc-ltr .fc-time-grid .fc-event-container, .fc-rtl .fc-time-grid .fc-event-container {
-    margin: 1px 1px 1px 2px;
+.fc-ltr .fc-time-grid .fc-event-container, .fc-rtl .fc-time-grid .fc-event-container, .fc-helper-container {
+    margin:0 ! important;
 }
 
 .fc-event .fc-content {
@@ -433,16 +424,9 @@ h2 {
     text-align: left;
 }
 
-
 .fc-time-grid-event .fc-time {
     font-size: .8em;
     white-space: normal;
-}
-
-@media(max-width:500px) {
-    .fc-event .fc-content {
-        padding:3px;
-    }   
 }
 
 .no-cal-padding {
@@ -568,21 +552,11 @@ input[readonly=true] {
 }
 
 .fc-toolbar {
-    margin-bottom:.5em;
+    margin-bottom:.3em;
 }
 
-@media(max-height:700px) {
-    .list {
-        margin-bottom:10px;
-    }
-
-    .fc-toolbar h2 {
-        font-size:20px;
-    }
-
-    #theOnlyCalendar {
-        padding-top:.5em;
-    }
+#theOnlyCalendar {
+    padding-top:.3em;
 }
 
 .inactive {
@@ -646,12 +620,6 @@ h2.title {
     text-align:center;
 }
 
-@media(max-width:500px) {
-    .fc-agendaWeek-view .fc-day-header {
-        font-size:.8em;
-    }
-}
-
 .button-assertive {
     background:#2f3131;
 }
@@ -664,17 +632,109 @@ i.assertive {
     font-size:19px;
 }
 
-.fc-day-grid-event .fc-time {
-    font-weight: normal;
+@media(max-width:1000px) {
+    .fc-event .fc-content {
+        padding:4px;
+    }
 }
 
-.fc-day-grid-event .fc-title {
-    font-weight: bold;
+@media(max-width:850px) {
+    .fc-toolbar h2 {
+        font-size:18px;
+        position: relative;
+        top:4px;
+    }
 }
 
+@media(max-width:700px) {
+    .list {
+        margin-bottom:10px;
+    }
+
+    .fc-toolbar h2 {
+        font-size:16px;
+        position: relative;
+        top:5px;
+    }
+
+    .fc-event .fc-content {
+        padding:3px;
+    }
+}
+
+@media(max-width:650px) {
+     .fc-toolbar h2 {
+        font-size:15px;
+        position: relative;
+        top:6px;
+    }
+}
+
+@media(max-width:620px) {
+     .fc-toolbar h2 {
+        font-size:14px;
+        position: relative;
+        top:6px;
+    }
+}
+
+@media(max-width:600px) {
+    .fc-toolbar h2 {
+        display:none;
+    }
+}
 
 @media(max-width:500px) {
-    #button-customId-month {
-        display:none;
+    .simpleScreenWrapper {
+        padding:20px;
+    } 
+
+    .marginSides3, .marginSides5 {
+        margin-left:0 ! important;
+        margin-right:0 ! important;
+    }
+
+    .fc-event .fc-content {
+        padding:3px;
+    }   
+
+    .fc-agendaWeek-view .fc-day-header {
+        font-size:.8em;
+    }
+
+    .fc button {
+        padding: 0 .45em;
+    }
+
+    .fc-agendaWeek-view .fc-day-header {
+        font-size:.8em;
+    }
+
+    .fc button {
+        padding: 0 .45em;
+    }
+
+    .fc-event .fc-content {
+        padding:1.5px;
+    }
+}
+
+@media(max-width:400px) {
+    .fc button {
+        padding: 0 .3em;
+    }
+
+    .fc-agendaWeek-view .fc-day-header {
+        font-size:.725em;
+    }
+}
+
+@media(max-width:350px) {
+    .fc button {
+        padding: 0 .2em;
+    }
+
+    .fc-agendaWeek-view .fc-day-header {
+        font-size:.7em;
     }
 }

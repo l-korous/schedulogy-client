@@ -39,6 +39,7 @@ gulp.task('concat-js', function () {
         "www/js/controllers/main.js",
         "www/js/controllers/calendar.js",
         "www/js/controllers/helpModal.js",
+        "www/js/controllers/privacyPolicyModal.js",
         "www/js/controllers/iCalUpload.js",
         "www/js/controllers/taskModal.js",
         "www/js/controllers/usersModal.js",

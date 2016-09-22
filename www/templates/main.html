@@ -4,7 +4,14 @@
     <div class="h1 title padding-horizontal margin-left-menu">
         SCHEDULOGY <span>BETA</span>
     </div>
-    <span class="button button-clear button-light" style="cursor:initial;" ng-if="$root.currentUser && !$root.isMobileNarrow">{{$root.currentUser.username}}</span>
+    <div class="buttons">
+        <span class="button button-clear button-light" style="cursor:initial;" ng-if="$root.currentUser && !$root.isMobileNarrow">
+            {{$root.currentUser.username}}
+        </span>
+        <span class="button button-icon" ng-click="modalService.openModal('help');">
+            <i class="icon ion-help-circled light" style="color:#ffa400;"><div style="height:20px;width:12px;background:white;position:relative;top:-27px;left:11px;z-index:-1"></div></i>
+        </span>
+    </div>
 </ion-header-bar>
 
 <ion-content class="has-header" has-bouncing="false" scroll="true" >

@@ -11,6 +11,7 @@ angular.module('Schedulogy')
             'feedback',
             'floatToFixed',
             'help',
+            'privacyPolicy',
             'iCalUpload',
             'leftMenu',
             'removeAll',

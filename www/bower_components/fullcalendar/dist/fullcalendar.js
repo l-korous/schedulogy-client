@@ -4540,6 +4540,8 @@
             var optionColor = view.opt('eventColor');
 
             return {
+                'background':
+                        event.background,
                 'background-color':
                     event.backgroundColor ||
                     eventColor ||
@@ -6886,18 +6888,18 @@
                     ) +
                 '>' +
                 '<div class="fc-content">' +
+                (event.title ?
+                    '<div class="fc-title">' +
+                    htmlEscape(event.title) +
+                    '</div>' :
+                    ''
+                    ) +
                 (timeText ?
                     '<div class="fc-time"' +
                     ' data-start="' + htmlEscape(startTimeText) + '"' +
                     ' data-full="' + htmlEscape(fullTimeText) + '"' +
                     '>' +
-                    '<span>' + htmlEscape(timeText) + '</span>' +
-                    '</div>' :
-                    ''
-                    ) +
-                (event.title ?
-                    '<div class="fc-title">' +
-                    htmlEscape(event.title) +
+                    '<span><i class="icon ion-clock light"></i>&nbsp;' + htmlEscape(timeText) + '</span>' +
                     '</div>' :
                     ''
                     ) +
@@ -6944,8 +6946,8 @@
 
                 for (i = 0; i < segs.length; i++) {
                     seg = segs[i];
-                    seg.top = this.computeDateTop(seg.start, seg.start);
-                    seg.bottom = this.computeDateTop(seg.end, seg.start) - 2;
+                    seg.top = this.computeDateTop(seg.start, seg.start) + 1;
+                    seg.bottom = this.computeDateTop(seg.end, seg.start) - 1;
                 }
             },
             // Given segments that already have their top/bottom properties computed, applies those values to
@@ -7100,6 +7102,8 @@
                         // add padding to the edge so that forward stacked events don't cover the resizer's icon
                         props[this.isRTL ? 'marginLeft' : 'marginRight'] = 10 * 2; // 10 is a guesstimate of the icon's width
                     }
+                    if(left > 0)
+                        props['border-left-width'] = '0';
 
                     return props;
                 }
@@ -7346,6 +7350,18 @@
             computeNextDate: function (date) {
                 return this.massageCurrentDate(
                     date.clone().add(new moment.duration(1, 'days'))
+                    );
+            },
+            // Computes the new date when the user hits the prev button, given the current date
+            computePrevDateLong: function (date) {
+                return this.massageCurrentDate(
+                    date.clone().startOf(this.intervalUnit).subtract(this.intervalDuration), -1
+                    );
+            },
+            // Computes the new date when the user hits the next button, given the current date
+            computeNextDateLong: function (date) {
+                return this.massageCurrentDate(
+                    date.clone().startOf(this.intervalUnit).add(this.intervalDuration)
                     );
             },
             // Given an arbitrarily calculated current date of the calendar, returns a date that is ensured to be completely
@@ -8491,7 +8507,10 @@
             t.next = next;
             t.prevYear = prevYear;
             t.nextYear = nextYear;
+            t.prevLong = prevLong;
+            t.nextLong = nextLong;
             t.today = today;
+            t.now = now;
             t.gotoDate = gotoDate;
             t.incrementDate = incrementDate;
             t.zoomTo = zoomTo;
@@ -8982,12 +9001,7 @@
 
             function updateTodayButton() {
                 var now = t.getNow();
-                if (now.isWithin(currentView.intervalStart, currentView.intervalEnd)) {
-                    header.disableButton('today');
-                }
-                else {
-                    header.enableButton('today');
-                }
+                header.enableButton('today');
             }
 
 
@@ -9029,18 +9043,35 @@
                 renderView();
             }
 
+            function prevLong() {
+                var _this = this;
+                date = currentView.computePrevDateLong(date);
+                renderView();
+            }
+
+
+            function nextLong() {
+                var _this = this;
+                date = currentView.computeNextDateLong(date);
+                renderView();
+            }
 
             function prevYear() {
                 date.add(-1, 'years');
                 renderView();
             }
 
-
             function nextYear() {
                 date.add(1, 'years');
                 renderView();
             }
 
+            function now() {
+                date = t.getNow();
+                if(currentView.timeGrid)
+                    currentView.forceScroll(currentView.timeGrid.computeDateTop(date, date));
+                renderView();
+            }
 
             function today() {
                 date = t.getNow();
@@ -9190,7 +9221,10 @@
                 next: "next",
                 prevYear: "prev year",
                 nextYear: "next year",
+                prevLong: "prev",
+                nextLong: "next",
                 year: 'year', // TODO: locale files need to specify this
+                now: 'now',
                 today: 'today',
                 month: 'month',
                 week: 'week',
@@ -9199,16 +9233,16 @@
             buttonIcons: {
                 prev: 'left-single-arrow',
                 next: 'right-single-arrow',
-                prevYear: 'left-double-arrow',
-                nextYear: 'right-double-arrow'
+                prevLong: 'left-double-arrow',
+                nextLong: 'right-double-arrow'
             },
             // jquery-ui theming
             theme: false,
             themeButtonIcons: {
                 prev: 'circle-triangle-w',
                 next: 'circle-triangle-e',
-                prevYear: 'seek-prev',
-                nextYear: 'seek-next'
+                prevLong: 'seek-prev',
+                nextLong: 'seek-next'
             },
             //eventResizableFromStart: false,
             dragOpacity: .75,
@@ -9244,14 +9278,14 @@
             buttonIcons: {
                 prev: 'right-single-arrow',
                 next: 'left-single-arrow',
-                prevYear: 'right-double-arrow',
-                nextYear: 'left-double-arrow'
+                prevLong: 'right-double-arrow',
+                nextLong: 'left-double-arrow'
             },
             themeButtonIcons: {
                 prev: 'circle-triangle-e',
                 next: 'circle-triangle-w',
-                nextYear: 'seek-prev',
-                prevYear: 'seek-next'
+                nextLong: 'seek-prev',
+                prevLong: 'seek-next'
             }
         };
 
@@ -9549,7 +9583,6 @@
                                 }
 
                                 if (buttonClick) {
-
                                     themeIcon =
                                         customButtonProps ?
                                         customButtonProps.themeIcon :
@@ -11328,6 +11361,18 @@
                     date.clone().add(new moment.duration(1, 'weeks'))
                     );
             },
+            // Computes the new date when the user hits the prev button, given the current date
+            computePrevDateLong: function (date) {
+                return this.massageCurrentDate(
+                    date.clone().subtract(this.intervalDuration), -1
+                    );
+            },
+            // Computes the new date when the user hits the next button, given the current date
+            computeNextDateLong: function (date) {
+                return this.massageCurrentDate(
+                    date.clone().add(this.intervalDuration)
+                    );
+            },
             // Overrides the default BasicView behavior to have special multi-week auto-height logic
             setGridHeight: function (height, isAuto) {
 
@@ -11613,10 +11658,14 @@
 
             // Computes the initial pre-configured scroll state prior to allowing the user to change it
             computeInitialScroll: function () {
-                if (this.scrollTop || this.scrollTop === 0)
+                return this.computeScroll(this.opt('scrollTime'));
+            },
+            // Computes the initial pre-configured scroll state prior to allowing the user to change it
+            computeScroll: function (time, override) {
+                if (!override && (this.scrollTop || this.scrollTop === 0))
                     return this.scrollTop;
 
-                var scrollTime = moment.duration(this.opt('scrollTime'));
+                var scrollTime = moment.duration(time);
                 var top = this.timeGrid.computeTimeTop(scrollTime);
 
                 // zoom can give weird floating-point values. rather scroll a little bit further
@@ -11625,7 +11674,7 @@
                 if (top) {
                     top++; // to overcome top border that slots beyond the first have. looks better
                 }
-
+                
                 return top;
             },
             queryScroll: function () {
