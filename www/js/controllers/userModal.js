@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('UserModalCtrl', function (MyUsers, $scope, settings, ModalService) {
+    .controller('UserModalCtrl', function (MyUsers, $scope, settings, ModalService, User) {
         $scope.myUsers = MyUsers;
         $scope.loading = true;
         $scope.currentUser = null;
@@ -11,7 +11,7 @@ angular.module('Schedulogy')
             if (!$scope.myUsers.currentUser)
                 $scope.myUsers.emptyCurrentUser();
 
-            $scope.currentUser = angular.extend({}, $scope.myUsers.currentUser);
+            $scope.currentUser = angular.extend(new User, $scope.myUsers.currentUser);
 
             var focusPrimaryInput = function () {
                 var primaryInput = $(ModalService.modals.user.modalInternal.modalEl).find('#primaryInput');

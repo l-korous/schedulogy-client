@@ -1,11 +1,11 @@
 angular.module('Schedulogy')
-    .controller('ResourceModalCtrl', function (MyResources, $scope, settings, ModalService, MyEvents) {
+    .controller('ResourceModalCtrl', function (MyResources, $scope, settings, ModalService, MyEvents, Resource) {
         $scope.settings = settings;
         $scope.loading = true;
         $scope.currentResource = null;
 
         $scope.open = function () {
-            $scope.currentResource = angular.extend({}, MyResources.currentResource);
+            $scope.currentResource = angular.extend(new Resource, MyResources.currentResource);
             MyResources.updateAllTexts($scope.currentResource);
 
             var focusPrimaryInputAndSetPristine = function () {
