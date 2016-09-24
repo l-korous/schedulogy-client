@@ -101,34 +101,6 @@ NOTE: use percentage font sizes or else old IE chokes
 	position: relative;
 }
 
-.fc-icon-left-single-arrow:after {
-	content: "\02039";
-	font-weight: bold;
-	font-size: 200%;
-	top: -10%;
-}
-
-.fc-icon-right-single-arrow:after {
-	content: "\0203A";
-	font-weight: bold;
-	font-size: 200%;
-	top: -10%;
-}
-
-.fc-icon-left-double-arrow:after {
-	content: "\000AB";
-	font-weight: bold;
-	font-size: 200%;
-	top: -16%;
-}
-
-.fc-icon-right-double-arrow:after {
-	content: "\000BB";
-	font-weight: bold;
-	font-size: 200%;
-	top: -16%;
-}
-
 .fc-icon-left-triangle:after {
 	content: "\25C4";
 	font-size: 125%;

@@ -9217,12 +9217,12 @@
             // locale
             isRTL: false,
             buttonText: {
-                prev: "prev",
-                next: "next",
+                prev: "&nbsp;<&nbsp;",
+                next: "&nbsp;>&nbsp;",
                 prevYear: "prev year",
                 nextYear: "next year",
-                prevLong: "prev",
-                nextLong: "next",
+                prevLong: "<<",
+                nextLong: ">>",
                 year: 'year', // TODO: locale files need to specify this
                 now: 'now',
                 today: 'today',
@@ -9231,10 +9231,7 @@
                 day: 'day'
             },
             buttonIcons: {
-                prev: 'left-single-arrow',
-                next: 'right-single-arrow',
-                prevLong: 'left-double-arrow',
-                nextLong: 'right-double-arrow'
+                
             },
             // jquery-ui theming
             theme: false,
@@ -9276,10 +9273,7 @@
                 right: 'title'
             },
             buttonIcons: {
-                prev: 'right-single-arrow',
-                next: 'left-single-arrow',
-                prevLong: 'right-double-arrow',
-                nextLong: 'left-double-arrow'
+                
             },
             themeButtonIcons: {
                 prev: 'circle-triangle-e',
@@ -9603,7 +9597,7 @@
                                         innerHtml = "<span class='fc-icon fc-icon-" + normalIcon + "'></span>";
                                     }
                                     else {
-                                        innerHtml = htmlEscape(defaultText);
+                                        innerHtml = defaultText;
                                     }
 
                                     classes = [
