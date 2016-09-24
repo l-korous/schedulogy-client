@@ -10,10 +10,6 @@ angular.module('Schedulogy')
 
         ModalService.initModal('privacyPolicy', $scope, $scope.open, $scope.close);
 
-        $scope.toggleGroup = function (group) {
-            group.shown = !group.shown;
-        };
-
         $scope.$on('Esc', function () {
             if (ModalService.currentModal === 'privacyPolicy')
                 $scope.close();

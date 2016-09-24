@@ -93,7 +93,7 @@ h2 {
     padding:0;
 }
 
-.customFormErrorList .help-block:last-of-type {
+.customFormErrorList .help-block {
     margin:0 0 20px 0 ! important;
 }
 
@@ -403,6 +403,14 @@ h2 {
     font-weight:normal ! important;
 }
 
+.fc-title{
+    margin-bottom:3px ! important;
+}
+
+.fc-desc {
+    margin-top:3px;
+}
+
 .fc-state-active {
     background: #387ef5;
     color:white;
@@ -425,8 +433,17 @@ h2 {
 }
 
 .fc-time-grid-event .fc-time {
-    font-size: .8em;
+    font-size: .9em;
     white-space: normal;
+    margin-left:2px;
+    margin-bottom:1px;
+}
+
+.fc-time-grid-event .fc-resource, .fc-time-grid-event .fc-due {
+    font-size: .9em;
+    white-space: normal;
+    margin-left:3px;
+    margin-bottom:1px;
 }
 
 .no-cal-padding {
@@ -551,14 +568,6 @@ input[readonly=true] {
     font-size:.99em ! important;
 }
 
-.fc-toolbar {
-    margin-bottom:.3em;
-}
-
-#theOnlyCalendar {
-    padding-top:.3em;
-}
-
 .inactive {
     opacity:.5;
 }
@@ -632,6 +641,24 @@ i.assertive {
     font-size:19px;
 }
 
+.fc-toolbar {
+    margin-bottom:.2em;
+}
+
+#theOnlyCalendar {
+    padding-top:.5em;
+}
+
+.item-small {
+    padding-top:5px ! important;
+    padding-bottom:5px ! important;
+}
+
+.item-small .icon {
+    font-size:1em ! important;
+}
+
+
 @media(max-width:1000px) {
     .fc-event .fc-content {
         padding:4px;
@@ -660,10 +687,14 @@ i.assertive {
     .fc-event .fc-content {
         padding:3px;
     }
+
+    #theOnlyCalendar {
+        padding-top:.3em;
+    }
 }
 
 @media(max-width:650px) {
-     .fc-toolbar h2 {
+    .fc-toolbar h2 {
         font-size:15px;
         position: relative;
         top:6px;
@@ -671,7 +702,7 @@ i.assertive {
 }
 
 @media(max-width:620px) {
-     .fc-toolbar h2 {
+    .fc-toolbar h2 {
         font-size:14px;
         position: relative;
         top:6px;

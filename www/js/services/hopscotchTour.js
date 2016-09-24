@@ -15,7 +15,7 @@ angular.module('Schedulogy')
                 },
                 {
                     title: "New Task",
-                    content: "Let's go create a task.",
+                    content: "Let's go create a new task.",
                     target: "newtask",
                     yOffset: -10,
                     placement: "right",
@@ -31,7 +31,7 @@ angular.module('Schedulogy')
                 },
                 {
                     title: "Task title",
-                    content: "Insert a title.",
+                    content: "Insert a title, e.g. 'Meeting with Adam'.",
                     target: "primaryInput",
                     placement: "bottom"
                 },
@@ -55,6 +55,7 @@ angular.module('Schedulogy')
                 },
                 {
                     title: "Save the task",
+                    content: "Save the task by pressing the 'Save' button.",
                     target: "taskSave",
                     placement: "top",
                     nextOnTargetClick: true,
@@ -62,6 +63,7 @@ angular.module('Schedulogy')
                 },
                 {
                     title: "Move to next day/week/month",
+                    content: "Move to next day/week/month by using the arrows in the top right corner.",
                     target: "button-customId-next",
                     placement: "left",
                     yOffset: -17,
@@ -70,25 +72,25 @@ angular.module('Schedulogy')
                 },
                 {
                     title: "Create a task by dragging",
-                    content: "Select several 'slots' in the calendar by dragging. This will open a New Task dialog",
+                    content: "Select several 'slots' in the calendar by dragging. This will open a New Task dialog.",
                     target: "fc-time-grid-container",
                     placement: "top"
                 },
                 {
                     title: "Task type",
-                    content: "Let us give floating tasks a go - select 'Floating'",
+                    content: "Let us give floating tasks a go - select 'Floating'.",
                     target: "tasktypeselector",
                     placement: "bottom"
                 },
                 {
                     title: "Task title",
-                    content: "Insert a title.",
+                    content: "Insert a title of the floating task - e.g. 'Prepare the meeting agenda'.",
                     target: "primaryInput",
                     placement: "bottom"
                 },
                 {
                     title: "Task due date",
-                    content: "This is the date (later we will set the time) when the task needs to be completed. Let us leave this as it is now",
+                    content: "This is the date (later we will set the time) when the task needs to be completed. Let us leave this as it is now.",
                     target: "floatingDueDate",
                     placement: "bottom"
                 },
@@ -106,6 +108,7 @@ angular.module('Schedulogy')
                 },
                 {
                     title: "Save the task",
+                    content: "Save the task by pressing the 'Save' button.",
                     target: "taskSave",
                     placement: "top",
                     nextOnTargetClick: true,
@@ -114,7 +117,8 @@ angular.module('Schedulogy')
                 {
                     title: "Success",
                     delay: 1000,
-                    content: "The scheduling backend now successfully scheduled your task.",
+                    content: "The scheduling backend now successfully scheduled your task. You can look to which slot it has been scheduled.",
+                    width:400,
                     target: "fc-time-grid-container",
                     placement: "top"
                 },

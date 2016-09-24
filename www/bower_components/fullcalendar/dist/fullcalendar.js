@@ -6895,27 +6895,27 @@
                     ''
                     ) +
                 (timeText ?
-                    '<div class="fc-time"' +
-                    ' data-start="' + htmlEscape(startTimeText) + '"' +
-                    ' data-full="' + htmlEscape(fullTimeText) + '"' +
-                    '>' +
-                    '<span><i class="icon ion-clock light"></i>&nbsp;' + htmlEscape(timeText) + '</span>' +
+                    '<div class="fc-time"><i class="icon ion-clock light"></i>&nbsp;' + htmlEscape(timeText) + 
                     '</div>' :
                     ''
                     ) +
                 (event.resourceName ?
-                    '<div class="fc-resource"><i class="icon ion-levels light"></i>&nbsp;' +
+                    '<div class="fc-resource"><i class="icon ion-ios-body light"></i>&nbsp;' +
                     htmlEscape(event.resourceName) +
                     '</div>' :
                     ''
                     ) +
                 (event.type === 'floating' ?
-                    '<div class="fc-due">' + 'Due: ' +
+                    '<div class="fc-due">&nbsp;<i class="ion-alert light"></i>&nbsp;' +
                     htmlEscape(event.dueTimeText) + ' | ' +
                     htmlEscape(event.dueDateText) +
                     '</div>' :
                     ''
-                    ) +
+                    ) + 
+                    '<div class="fc-desc">' +
+                    htmlEscape(event.desc) +
+                    '</div>'
+                    +
                 '</div>' +
                 '<div class="fc-bg"/>' +
                 /* TODO: write CSS for this

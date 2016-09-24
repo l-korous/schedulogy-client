@@ -26,6 +26,27 @@
                 <i class="icon ion-trash-b dark"></i>  
                 Delete all Tasks
             </a>
+        </div>   
+
+        <div class="list">
+            <span class="list-divider">Help</span>
+            <a ng-if="!$root.isMobileNarrow && !$root.isMobileLow" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        runTour();">
+                <i class="icon ion-university " style="color:#ffa400"></i>  
+                Tour
+            </a>
+
+            <a id="helplink" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('help');">
+                <i class="icon ion-help" style="color:#ffa400"></i>
+                Help
+            </a>
+
+            <a class="item item-icon-left dark" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('feedback');">
+                <i class="icon ion-mic-a dark" style="color:#ffa400"></i>
+                Send Feedback
+            </a>
         </div>
 
         <div class="list">
@@ -43,56 +64,43 @@
         </div>
 
         <div class="list">
-
-            <span class="list-divider">Help</span>
-            <a id="helplink" ng-if="!$root.isMobileNarrow && !$root.isMobileLow" class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
-                        runTour();">
-                <i class="icon ion-university positive"></i>  
-                Tour
-            </a>
-
-            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
-                        modalService.openModal('help');">
-                <i class="icon ion-help-buoy positive"></i>
-                Help
-            </a>
-
-            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
-                        modalService.openModal('privacyPolicy');">
-                <i class="icon ion-locked positive"></i>
-                Privacy Policy
-            </a>
-
-            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
-                        modalService.openModal('feedback');">
-                <i class="icon ion-mic-a positive"></i>
-                Send Feedback
-            </a>
-        </div>
-
-        <div class="list">
             <span class="list-divider">Settings</span>
-            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+            <a class="item item-icon-left item-small" ng-click="modalService.closeModal('leftMenu');
                         modalService.openModal('changeUsername');">
-                <i class="icon ion-person positive"></i>
+                <i class="icon ion-person dark"></i>
                 Change Username
             </a>
 
-            <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+            <a class="item item-icon-left item-small" ng-click="modalService.closeModal('leftMenu');
                         modalService.openModal('changePassword');">
-                <i class="icon ion-locked positive"></i>
+                <i class="icon ion-locked dark"></i>
                 Change Password
             </a>
         </div>
 
         <div class="list">
-              <a class="item item-icon-left" href="https://www.schedulogy.com/home" target="_blank">
-                <i class="icon ion-home positive"></i>
+            <a class="item item-icon-left item-small" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('privacyPolicy');">
+                <i class="icon ion-key dark"></i>
+                Privacy Policy
+            </a>
+
+            <a class="item item-icon-left item-small" ng-click="modalService.closeModal('leftMenu');
+                        modalService.openModal('termsOfService');">
+                <i class="icon ion-clipboard dark"></i>
+                Terms of Service
+            </a>
+
+            <a class="item item-icon-left item-small" href="https://www.schedulogy.com/home" target="_blank">
+                <i class="icon ion-home dark"></i>
                 SCHEDULOGY website
             </a>
-           <a class="item item-icon-left" ng-click="modalService.closeModal('leftMenu');
+        </div>
+
+        <div class="list">
+            <a class="item item-icon-left item-small" ng-click="modalService.closeModal('leftMenu');
                         $root.goToLogin()">
-                <i class="icon ion-log-out positive"></i>
+                <i class="icon ion-log-out dark"></i>
                 Logout
             </a>
         </div>

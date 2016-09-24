@@ -11,11 +11,13 @@ angular.module('Schedulogy')
         $scope.eventSources = [MyEvents.events];
 
         $scope.onSwipeLeft = function () {
-            $('#theOnlyCalendar').fullCalendar('next');
+            if ($rootScope.isMobileNarrow || $rootScope.isMobileLow)
+                $('#theOnlyCalendar').fullCalendar('next');
         };
 
         $scope.onSwipeRight = function () {
-            $('#theOnlyCalendar').fullCalendar('prev');
+            if ($rootScope.isMobileNarrow || $rootScope.isMobileLow)
+                $('#theOnlyCalendar').fullCalendar('prev');
         };
 
         $scope.myCalendar = FullCalendar;

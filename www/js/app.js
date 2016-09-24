@@ -26,13 +26,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         defaultStateAfterLogin: 'main.calendar',
         noPrerequisitesToListMsg: 'No possible prerequisites to list. Possible prerequisites are any tasks that can end before the due date of this one.',
         noDependenciesToListMsg: 'No possible dependent tasks to list. Only floating tasks, that are due after this task can be completed, are possible dependent tasks.',
-        shiftAgendaRows: {
-            normal: 191,
-            // Minimum height will apply here.
-            mobile: 0
-        },
         shiftCalendar: {
-            normal: 115,
+            normal: 103,
             mobileLow: 80,
             mobileNarrow: 80
         },
