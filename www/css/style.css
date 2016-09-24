@@ -59,14 +59,9 @@ h2 {
     position: absolute;
     text-align:center;
     width:100%;
-    bottom: 7px;
+    bottom: 3px;
     right: 0px;
-    padding-left:35%;
     font-size:90%;
-}
-
-.rangeInfoFloating {
-    right: 29%;
 }
 
 .calendarControls {
@@ -472,7 +467,7 @@ h2 {
 }
 
 .modal .range input[type="range"] {
-    margin-top:-13px;
+    margin:-8px 0 9px 0;
 }
 
 .button-small {

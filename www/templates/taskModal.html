@@ -90,15 +90,12 @@
 
                 <label class="item item-input range" ng-show="currentEvent.type === 'fixed'"
                        ng-class="{ 'has-error' : form.fixedDuration.$invalid && !form.fixedDuration.$pristine }">
-                    <div class="input-label">
-                        End Time<br />[duration]
-                    </div>
                     <input type="range" min="1" max="{{maxEventDuration.fixed}}" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
                            name="fixedDuration" ng-model="currentEvent.dur" step="1" ng-required="currentEvent.type === 'fixed'" id="fixedDuration"/>
 
 
                     <div class="rangeInfo">
-                        {{currentEvent.endTimeText}} ({{currentEvent.endDateText}}) &nbsp; [ {{currentEvent.durText}} ]
+                        End Time [duration]: {{currentEvent.endTimeText}} ({{currentEvent.endDateText}}) [ {{currentEvent.durText}} ]
                     </div>
                 </label>
 
@@ -122,15 +119,12 @@
 
                 <label class="item item-input range" ng-show="currentEvent.type === 'fixedAllDay'"
                        ng-class="{ 'has-error' : form.fixedAllDayDuration.$invalid && !form.fixedAllDayDuration.$pristine }">
-                    <div class="input-label">
-                        End Date<br />[duration]
-                    </div>
                     <input type="range" min="1" max="{{maxEventDuration.fixedAllDay}}" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
                            name="fixedAllDayDuration" ng-model="currentEvent.dur" step="1" ng-required="currentEvent.type === 'fixedAllDay'"/>
 
 
                     <div class="rangeInfo">
-                        {{currentEvent.endDateText}} &nbsp; [ {{currentEvent.dur}} days ]
+                        End Time [duration]: {{currentEvent.endDateText}} [ {{currentEvent.dur}} days ]
                     </div>
                 </label>
 
@@ -161,14 +155,11 @@
 
                 <label class="item item-input range" ng-show="currentEvent.type === 'floating'"
                        ng-class="{ 'has-error' : form.floatingDuration.$invalid && !form.floatingDuration.$pristine }">
-                    <div class="input-label">
-                        Duration<br />&nbsp;
-                    </div>
                     <input type="range" min="1" max="{{maxEventDuration.floating}}" ng-model="currentEvent.dur" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
                            name="floatingDuration" step="1" ng-required="currentEvent.type === 'floating'" id="floatingDuration"/>
 
                     <div class="rangeInfo">
-                        {{currentEvent.durText}}
+                        Duration: {{currentEvent.durText}}
                     </div>
                 </label>
 
