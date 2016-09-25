@@ -1,15 +1,15 @@
-angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker', 'ngLodash'])
+angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker', 'ngLodash', 'ngCordova'])
     .constant('settings', {
         serverUrl: 'http://localhost:8080/api',
         //serverUrl: 'http://52.59.242.96/api',
         loadingTemplate: 'Loading,<br />please wait...',
-        appVersion: '2.1.7-b',
+        appVersion: '2.2.1-b',
         applicationName: 'Schedulogy',
         minPasswordGroups: 1,
         minPasswordLength: 1,
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
-            on: false,
+            on: true,
             date: 'Sat Sep 03 2016 12:00:00 GMT+0200'
         },
         weeks: 26,
@@ -195,9 +195,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, ModalService, $timeout) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, ModalService, Cordova, $cordovaNetwork) {
         $rootScope.allSet = false;
-
         // Check stuff when changing state.
         $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
             $rootScope.allSet = false;
@@ -212,13 +211,31 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     event.preventDefault();
             }
         });
-
         Auth.tryPreauthenticate().then(function () {
             $location.path('');
             $location.search('');
             MyEvents.refresh();
             MyResources.refresh();
             $state.go(settings.defaultStateAfterLogin, {}, {location: false});
+            
+            if (Cordova.isBrowser()) {
+                window.addEventListener("online", function (e) {
+                    $rootScope.isOffline = false;
+                }, false);
+                window.addEventListener("offline", function (e) {
+                    $rootScope.isOffline = true;
+                }, false);
+                $rootScope.isOffline = !navigator.onLine;
+            }
+            else {
+                $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+                    $rootScope.isOffline = false;
+                });
+                $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+                    $rootScope.isOffline = true;
+                });
+                $rootScope.isOffline = !$cordovaNetwork.isOnline();
+            }
         });
 
         // This must be defined here, when the $state is defined.
@@ -230,7 +247,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $state.go("login", {}, {location: false, reload: true});
             }
         };
-
         $rootScope.keyUpHandler = function (keyCode) {
             if (keyCode === 13 && document.activeElement.tagName !== 'TEXTAREA') {
                 $rootScope.$broadcast('Enter');
@@ -252,7 +268,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 }
             }
         };
-
         // Handle isMobile
         $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
         $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);

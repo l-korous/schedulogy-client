@@ -4,6 +4,9 @@ angular.module('Schedulogy')
             isAndroid: function () {
                 return $window.ionic.Platform.isAndroid();
             },
+            isBrowser: function () {
+                return !(document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1);
+            },
             isAndroid44: function () {
                 return this.isAndroid() && $window.ionic.Platform.version().toString().indexOf('4.4') === 0;
             },

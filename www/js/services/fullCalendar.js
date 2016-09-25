@@ -21,6 +21,7 @@ angular.module('Schedulogy')
                     timeFormat: 'H:mm',
                     // We move to some user-friendly slot - 2 slots before the current one.
                     scrollTime: MyEvents.getBTime().clone().subtract((($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 1 : 2) * settings.minuteGranularity, 'minute').format('HH:mm:ss'),
+                    scrollOffsetMinutes: (($rootScope.isMobileNarrow || $rootScope.isMobileLow) ? 1 : 2) * settings.minuteGranularity,
                     slotLabelFormat: 'H:mm',
                     eventBackgroundColor: '#387ef5',
                     eventBorderColor: '#000',
@@ -32,7 +33,7 @@ angular.module('Schedulogy')
                     },
                     slotDuration: '00:30:00',
                     defaultDate: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : MyEvents.getBTime(),
-                    now: MyEvents.getBTime(),
+                    now: MyEvents.getBTime,
                     firstDay: 1,
                     slotEventOverlap: false,
                     nowIndicator: true,

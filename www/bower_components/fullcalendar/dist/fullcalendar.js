@@ -9067,7 +9067,8 @@
             }
 
             function now() {
-                date = t.getNow();
+                currentView.updateNowIndicator();
+                date = t.getNow().clone().subtract(this.options['scrollOffsetMinutes'], 'minute');
                 if(currentView.timeGrid)
                     currentView.forceScroll(currentView.timeGrid.computeDateTop(date, date));
                 renderView();
@@ -9217,12 +9218,12 @@
             // locale
             isRTL: false,
             buttonText: {
-                prev: "&nbsp;<&nbsp;",
-                next: "&nbsp;>&nbsp;",
+                prev: "&nbsp;&nbsp;<&nbsp;&nbsp;",
+                next: "&nbsp;&nbsp;>&nbsp;&nbsp;",
                 prevYear: "prev year",
                 nextYear: "next year",
-                prevLong: "<<",
-                nextLong: ">>",
+                prevLong: "&nbsp;<<&nbsp;",
+                nextLong: "&nbsp;>>&nbsp;",
                 year: 'year', // TODO: locale files need to specify this
                 now: 'now',
                 today: 'today',

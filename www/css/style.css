@@ -653,6 +653,22 @@ i.assertive {
     font-size:1em ! important;
 }
 
+.offline-wrapper {
+  position: relative;
+  height:100%;
+  width:100%;
+}
+.offline {
+  position: absolute;
+  top: calc(50% + 80px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background:rgba(0,0,0,.6);
+  border-radius:5px;
+  color:white;
+  padding:10px;
+}
+
 
 @media(max-width:1000px) {
     .fc-event .fc-content {
@@ -755,12 +771,19 @@ i.assertive {
     }
 }
 
-@media(max-width:350px) {
+@media(max-width:360px) {
     .fc button {
         padding: 0 .2em;
     }
 
     .fc-agendaWeek-view .fc-day-header {
         font-size:.7em;
+    }
+}
+
+
+@media(max-width:335px) {
+    #button-customId-prevLong, #button-customId-prev, #button-customId-now, #button-customId-next, #button-customId-nextLong {
+        padding:0 .1em;
     }
 }
