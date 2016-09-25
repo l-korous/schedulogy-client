@@ -9,7 +9,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         minPasswordLength: 1,
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
-            on: true,
+            on: false,
             date: 'Sat Sep 03 2016 12:00:00 GMT+0200'
         },
         weeks: 26,
