@@ -8853,6 +8853,7 @@
                             updateTodayButton();
                             setTimeout(function () {
                                 currentView.updateNowIndicator();
+                                $('.fc-scroller').attr("tabindex",-1).focus();
                             });
 
                             getAndRenderEvents();

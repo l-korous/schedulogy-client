@@ -392,7 +392,7 @@ angular.module('Schedulogy')
         _this.processEventDuration = function (eventPassed) {
             var event = eventPassed ? eventPassed : _this.currentEvent;
 
-            DateUtils.saveDurText(event);
+            Event.setDur(event);
 
             if (event.type === 'fixedAllDay' || event.type === 'fixed') {
                 var toAddMinutes = (event.type === 'fixedAllDay' ? 1440 : settings.minuteGranularity) * event.dur;

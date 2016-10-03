@@ -81,11 +81,13 @@ angular.module('Schedulogy')
             _this.currentModals.pop();
             if (_this.currentModals.length)
                 _this.currentModal = _this.currentModals[_this.currentModals.length - 1];
-
-            // Scroll to where I was before.
-            setTimeout(function () {
-                $('.fc-scroller').scrollTop(_this.scrollTop);
-            });
+            else {
+                // Scroll to where I was before.
+                setTimeout(function () {
+                    $('.fc-scroller').scrollTop(_this.scrollTop);
+                    $('.fc-scroller').attr("tabindex",-1).focus();
+                });
+            }
         };
 
         // Internal - create

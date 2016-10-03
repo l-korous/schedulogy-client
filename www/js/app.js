@@ -260,12 +260,12 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $rootScope.isOffline = true;
             });
             $rootScope.isOffline = !$cordovaNetwork.isOnline();
-            
-            document.addEventListener("resume", function() {
+
+            document.addEventListener("resume", function () {
                 $('#theOnlyCalendar').fullCalendar('next');
             }, false);
-            
-            setInterval(function() {
+
+            setInterval(function () {
                 $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
             }, 60000);
         }

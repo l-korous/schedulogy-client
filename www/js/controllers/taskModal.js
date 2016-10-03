@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, $rootScope, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
+    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyEvents, Event, moment, ionicDatePicker, ionicTimePicker, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
         $scope.myEvents = MyEvents;
         $scope.myResources = MyResources;
         $scope.maxEventDuration = settings.maxEventDuration;
@@ -26,6 +26,12 @@ angular.module('Schedulogy')
 
                 $(function () {
                     $('#taskModalTextarea').autogrow();
+                });
+                Notification.addAlways({
+                    id: 123,
+                    title: "PM tool",
+                    message: "uploading file",
+                    ongoing: true
                 });
             });
         };
