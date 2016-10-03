@@ -4,11 +4,11 @@ angular.module('Schedulogy')
         $ionicPlatform.ready(function () {
             try {
                 $window.plugin.notification.local.setDefaults({
-                    title: 'PM tool',
-                    text: 'new event',
+                    title: 'Schedulogy',
+                    text: 'Task',
                     sound: null,
-                    icon: 'res://icon',
-                    smallIcon: 'res://icon'
+                    icon: 'res://drawable-xxxhdpi/icon',
+                    smallIcon: 'res://drawable-xxxhdpi/icon'
                 });
                 $window.plugin.notification.local.on('click', function (notification) {
                     // callbacker.trigger('click', JSON.parse(notification.data || '{}'));
