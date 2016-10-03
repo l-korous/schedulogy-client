@@ -1,15 +1,14 @@
 angular.module('Schedulogy')
-    .controller('UsersModalCtrl', function (MyUsers, $scope, ModalService, MyEvents, MyResources) {
+    .controller('UsersModalCtrl', function (MyUsers, $scope, ModalService, MyEvents, MyResources, $rootScope) {
         $scope.myUsers = MyUsers;
         $scope.successInfo = null;
-        $scope.loading = true;
 
         $scope.open = function () {
+            $rootScope.isLoading = true;
             $scope.successInfo = '';
             $scope.errorInfo = '';
-            $scope.loading = true;
             $scope.myUsers.refresh(function () {
-                $scope.loading = false;
+                $rootScope.isLoading = false;
             });
 
             ModalService.openModalInternal('users');

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('FeedbackModalCtrl', function ($scope, settings, $http, ModalService, $ionicLoading) {
+    .controller('FeedbackModalCtrl', function ($scope, settings, $http, ModalService, $rootScope) {
         $scope.open = function () {
             $scope.data = {
                 feedbackText: '',
@@ -22,14 +22,14 @@ angular.module('Schedulogy')
             if ($scope.form.$invalid)
                 return;
 
-            $ionicLoading.show({template: settings.loadingTemplate});
+            $rootScope.isLoading = true;
             $http.post(settings.serverUrl + '/msg', {msg: $scope.data.feedbackText})
                 .success(function () {
-                    $ionicLoading.hide();
+                    $rootScope.isLoading = false;
                     $scope.successInfo = settings.feedbackSuccessInfo;
                 })
                 .error(function (errorResponse) {
-                    $ionicLoading.hide();
+                    $rootScope.isLoading = false;
                     $scope.errorInfo = settings.feedbackErrorInfo(errorResponse.msg);
                 });
             ModalService.closeModalInternal();

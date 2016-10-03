@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyEvents', function (moment, settings, Event, $ionicLoading, Task, ModalService, DateUtils, $rootScope, $timeout, $q) {
+    .service('MyEvents', function (moment, settings, Event, Task, ModalService, DateUtils, $rootScope, $timeout, $q) {
         var _this = this;
         _this.events = [];
         _this.dirtyEvents = [];
@@ -83,14 +83,8 @@ angular.module('Schedulogy')
                 resource: $rootScope.myResourceId,
                 admissibleResources: [$rootScope.myResourceId],
                 start: startTime,
-                startDateText: startTime.format(settings.dateFormat),
-                startTimeText: startTime.format(settings.timeFormat),
                 end: endTime,
-                endDateText: type === 'fixedAllDay' ? endTime.clone().add(-1, 'days').format(settings.dateFormat) : endTime.format(settings.dateFormat),
-                endTimeText: endTime.format(settings.timeFormat),
                 due: endTime,
-                dueDateText: endTime.format(settings.dateFormat),
-                dueTimeText: endTime.format(settings.timeFormat),
                 blocks: [],
                 blocksForShow: [],
                 needs: [],
@@ -103,7 +97,12 @@ angular.module('Schedulogy')
                 }
             };
 
-            DateUtils.saveDurText(_this.currentEvent);
+            Event.setStart(_this.currentEvent);
+            Event.setDur(_this.currentEvent);
+            if (type === 'floating')
+                Event.setDue(_this.currentEvent);
+            else
+                Event.setEnd(_this.currentEvent);
         };
 
         _this.fillBlocksAndNeedsForShow = function (event) {
@@ -173,17 +172,17 @@ angular.module('Schedulogy')
             _this.shouldShowLoading = true;
             $timeout(function () {
                 if (_this.shouldShowLoading)
-                    $ionicLoading.show({template: settings.loadingTemplate});
+                    $rootScope.isLoading = true;
             }, 500);
 
             Task.fromEvent(eventToDelete).$remove({btime: _this.getBTime().unix(), taskId: eventToDelete._id}, function (data, headers) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
                 _this.shouldShowLoading = false;
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 successCallback && successCallback();
             }, function (err) {
                 _this.shouldShowLoading = false;
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 errorCallback && errorCallback();
                 console.log(err);
             });
@@ -193,17 +192,17 @@ angular.module('Schedulogy')
             _this.shouldShowLoading = true;
             $timeout(function () {
                 if (_this.shouldShowLoading)
-                    $ionicLoading.show({template: settings.loadingTemplate});
+                    $rootScope.isLoading = true;
             }, 500);
 
             Task.deleteAll({}, function (data) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
                 _this.shouldShowLoading = false;
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 successCallback && successCallback();
             }, function (err) {
                 _this.shouldShowLoading = false;
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 errorCallback && errorCallback();
                 // error callback
                 console.log(err);
@@ -236,8 +235,7 @@ angular.module('Schedulogy')
                 if (endHourOffset < 0)
                     event.due.add(endHourOffset, 'm');
 
-                event.dueDateText = event.due.format(settings.dateFormat);
-                event.dueTimeText = event.due.format(settings.timeFormat);
+                Event.setDue(event);
             }
 
             if (event.type === 'fixedAllDay' && (prevType === 'fixed' || prevType === 'floating')) {
@@ -272,25 +270,25 @@ angular.module('Schedulogy')
             _this.shouldShowLoading = true;
             $timeout(function () {
                 if (_this.shouldShowLoading)
-                    $ionicLoading.show({template: settings.loadingTemplate});
+                    $rootScope.isLoading = true;
             }, 500);
             Task.fromEvent(eventToSave).$save({btime: _this.getBTime().unix()}, function (data) {
                 _this.tasksInResponseSuccessHandler(data, function () {
                     successCallback && successCallback();
                     _this.shouldShowLoading = false;
-                    $ionicLoading.hide();
+                    $rootScope.isLoading = false;
                 });
             }, function (err) {
                 _this.tasksInResponseErrorHandler(err, function () {
                     errorCallback && errorCallback();
                     _this.shouldShowLoading = false;
-                    $ionicLoading.hide();
+                    $rootScope.isLoading = false;
                 });
             });
         };
 
         _this.recalcEventConstraints = function (eventPassed) {
-            $ionicLoading.show({template: settings.loadingTemplate});
+            $rootScope.isLoading = true;
 
             var event = eventPassed ? eventPassed : _this.currentEvent;
 
@@ -300,7 +298,7 @@ angular.module('Schedulogy')
             Event.setBTime(_this.getBTime());
 
             Task.fromEvent(event).$checkConstraints({btime: _this.getBTime().unix()}, function (data) {
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 var constraintProcessResult = Event.processConstraint(event, data);
                 if (constraintProcessResult) {
                     event = constraintProcessResult;
@@ -309,7 +307,7 @@ angular.module('Schedulogy')
                 else
                     defer.resolve(false);
             }, function (err) {
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 defer.resolve(true);
                 // error callback
                 console.log(err);

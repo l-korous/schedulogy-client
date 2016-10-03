@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-        .controller("RegistrationCtrl", function ($scope, Auth, $ionicLoading, settings, $timeout, $state) {
+        .controller("RegistrationCtrl", function ($scope, Auth, settings, $timeout, $state, $rootScope) {
             $scope.successInfo = null;
             $scope.errorInfo = null;
             $scope.beingSubmitted = false;
@@ -14,12 +14,12 @@ angular.module('Schedulogy')
                     return;
                 if (!$scope.form.$invalid) {
                     $scope.errorInfo = null;
-                    $ionicLoading.show({template: settings.loadingTemplate});
+                    $rootScope.isLoading = true;
                     Auth.register({email: $scope.data.email}).success(function () {
-                        $ionicLoading.hide();
+                        $rootScope.isLoading = false;
                         $scope.successInfo = settings.registrationSuccessInfo;
                     }).error(function (errorResponse) {
-                        $ionicLoading.hide();
+                        $rootScope.isLoading = false;
                         $scope.errorInfo = settings.registrationErrorInfo(errorResponse.msg);
                     });
                 }

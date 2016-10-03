@@ -1,14 +1,13 @@
 angular.module('Schedulogy')
-    .controller('ResourcesModalCtrl', function (MyResources, $scope, ModalService) {
+    .controller('ResourcesModalCtrl', function (MyResources, $scope, ModalService, $rootScope) {
         $scope.myResources = MyResources;
-        $scope.loading = true;
-
+        
         $scope.open = function () {
-            $scope.loading = true;
+            $rootScope.isLoading = true;
             $scope.successInfo = '';
             $scope.errorInfo = '';
             $scope.myResources.refresh(function () {
-                $scope.loading = false;
+                $rootScope.isLoading = false;
             });
 
             ModalService.openModalInternal('resources');

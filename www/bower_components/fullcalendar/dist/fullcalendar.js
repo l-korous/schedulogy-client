@@ -9073,7 +9073,12 @@
                     currentView.forceScroll(currentView.timeGrid.computeDateTop(date, date));
                 renderView();
             }
-
+            
+            function updateNowIndicator() {
+                currentView.updateNowIndicator();
+                renderView();
+            }
+                
             function today() {
                 date = t.getNow();
                 renderView();

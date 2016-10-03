@@ -44,12 +44,6 @@ angular.module('Schedulogy')
                 var hours = Math.floor(slotCount / settings.slotsPerHour);
                 var minutes = (slotCount % settings.slotsPerHour) * settings.minuteGranularity;
                 return (hours.toString().length > 1 ? '' : '0') + hours + ':' + (minutes.toString().length > 1 ? '' : '0') + minutes;
-            },
-            saveDurText: function (event) {
-                if (event.type === 'fixedAllDay')
-                    event.durText = event.dur + ' days';
-                else
-                    event.durText = this.getTimeFromSlotCount(event.dur) + ' hrs';
             }
         };
     });

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ICalUploadModalCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $ionicLoading, $timeout, ModalService) {
+    .controller('ICalUploadModalCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $timeout, ModalService) {
         $scope.open = function () {
             $scope.successInfo = null;
             $scope.errorInfo = null;
@@ -23,7 +23,7 @@ angular.module('Schedulogy')
         $scope.weeksFromSettings = settings.weeks;
 
         $scope.uploadFile = function () {
-            $ionicLoading.show({template: settings.loadingTemplate});
+            $rootScope.isLoading = true;
 
             // This is done through rootScope, because otherwise it somehow does not work. Not a big deal, but may be fixed.
             var file = $rootScope.icalFile;
@@ -37,7 +37,7 @@ angular.module('Schedulogy')
                     }, 2000);
                     $rootScope.icalFile = null;
                     $scope.errorInfo = null;
-                    $ionicLoading.hide();
+                    $rootScope.isLoading = false;
                 });
             },
                 function (err) {
@@ -47,14 +47,14 @@ angular.module('Schedulogy')
                             $scope.successInfo = null;
                             $scope.errorInfo = settings.iCalUploadError;
                             $rootScope.icalFile = null;
-                            $ionicLoading.hide();
+                            $rootScope.isLoading = false;
                         });
                     }
                     catch (e) {
                         $scope.successInfo = null;
                         $scope.errorInfo = settings.iCalUploadError;
                         $rootScope.icalFile = null;
-                        $ionicLoading.hide();
+                        $rootScope.isLoading = false;
                     }
                 });
         };

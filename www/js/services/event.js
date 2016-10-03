@@ -7,19 +7,42 @@ angular.module('Schedulogy')
         };
 
         this.setStart = function (event, start) {
-            event.start = start;
+            if (start)
+                event.start = start;
+            else
+                start = event.start;
             event.startDateText = event.start.format(settings.dateFormat);
             event.startTimeText = event.start.format(settings.timeFormat);
+
+            if (event.start.diff(new Date(), "day") === 0)
+                event.startDateText += ' (today)';
+            if (event.start.diff(new Date(), "day") === -1)
+                event.startDateText += ' (yesterday)';
+            if (event.start.diff(new Date(), "day") === 1)
+                event.startDateText += ' (tomorrow)';
         };
 
         this.setDue = function (event, due) {
-            event.due = due;
+            if (due)
+                event.due = due;
+            else
+                due = event.due;
             event.dueDateText = event.due.format(settings.dateFormat);
             event.dueTimeText = event.due.format(settings.timeFormat);
         };
 
+        this.setDur = function (event) {
+            if (event.type === 'fixedAllDay')
+                event.durText = event.dur + ' days';
+            else
+                event.durText = DateUtils.getTimeFromSlotCount(event.dur) + ' hrs';
+        };
+
         this.setEnd = function (event, end) {
-            event.end = end;
+            if (end)
+                event.end = end;
+            else
+                end = event.end;
             // For fixedAllDay, we deduct one day from what we present as the 'end'.
             if (event.type === 'fixedAllDay') {
                 var custom_end = event.end.clone().add(-1, 'days');
@@ -53,7 +76,7 @@ angular.module('Schedulogy')
                 event.constraint = {
                     // If the event is currently going on (i.e. this.btime > event.start), push the constraint start before this.btime
                     // => if the user wants to move the current task to later, he should move it to earlier than this.btime actually.
-                    start: event.type === 'floating' ? ((event.start.diff(this.btime.local(), 'm') < 0) ? event.start.clone() : this.btime.local()) : moment({y:2010}),
+                    start: event.type === 'floating' ? ((event.start.diff(this.btime.local(), 'm') < 0) ? event.start.clone() : this.btime.local()) : moment({y: 2010}),
                     startDateText: null,
                     startTimeText: null,
                     startDateDueText: null,
@@ -72,7 +95,7 @@ angular.module('Schedulogy')
             }
             else {
                 event.constraint = angular.extend(event.constraint, {
-                    end: moment({y:2030}),
+                    end: moment({y: 2030}),
                     endDateText: null,
                     endTimeText: null
                 });
@@ -136,13 +159,16 @@ angular.module('Schedulogy')
                 shortInfo: task.title + ' - ' + start.format(settings.dateFormat) + (task.type === 'fixedAllDay' ? '' : (' ' + start.format(settings.timeFormat)))
             }, task);
 
+            this.setStart(event);
+
             if (event.due) {
                 event.due = moment.unix(task.due);
-                event.dueDateText = event.due.format(settings.dateFormat);
-                event.dueTimeText = event.due.format(settings.timeFormat);
+                this.setDue(event);
             }
+            else
+                this.setEnd(event);
 
-            DateUtils.saveDurText(event);
+            this.setDur(event);
 
             return this.processConstraint(event, event.constraint, this.btime);
         };

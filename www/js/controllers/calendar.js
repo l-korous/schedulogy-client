@@ -1,11 +1,10 @@
 angular.module('Schedulogy')
     .controller('CalendarCtrl', function ($scope, settings, MyEvents, FullCalendar, $rootScope, ModalService, $timeout, DateUtils) {
-        $rootScope.allSet = false;
         $scope.myEvents = MyEvents;
         FullCalendar.calculateCalendarRowHeight();
 
         $scope.$on('MyEventsLoaded', function () {
-            $rootScope.allSet = true;
+            $rootScope.isLoading = false;
         });
 
         $scope.eventSources = [MyEvents.events];

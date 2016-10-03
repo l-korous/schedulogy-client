@@ -155,7 +155,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             templateType: 'popup',
             from: new Date(2012, 8, 1),
             to: moment(new Date()).add(settings.weeks, 'w').toDate(),
-            showTodayButton: true,
+            showTodayButton: false,
             dateFormat: 'dd MMMM yyyy',
             closeOnSelect: true,
             disableWeekdays: []
@@ -196,10 +196,19 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         });
     })
     .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, ModalService, Cordova, $cordovaNetwork) {
-        $rootScope.allSet = false;
+        // Handle isMobile
+        $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
+        $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
+        angular.element($window).bind('resize', function () {
+            $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
+            $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
+        });
+
+        // Controls display of 'loading'
+        $rootScope.isLoading = true;
+
         // Check stuff when changing state.
         $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-            $rootScope.allSet = false;
             $location.path('');
             $location.search('');
             if ((['login', 'registration', 'passwordReset'].indexOf(toState.name) === -1) && !Auth.isAuthenticated()) {
@@ -211,32 +220,55 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     event.preventDefault();
             }
         });
-        Auth.tryPreauthenticate().then(function () {
+
+        // Preauthentication - only on browser
+        if (!Cordova.isBrowser()) {
+            Auth.tryPreauthenticate().then(function () {
+                $location.path('');
+                $location.search('');
+                MyEvents.refresh();
+                MyResources.refresh();
+                $state.go(settings.defaultStateAfterLogin, {}, {location: false});
+            });
+        }
+        else if (Auth.isAuthenticated()) {
+            Auth.processTokenStoreUser();
             $location.path('');
             $location.search('');
             MyEvents.refresh();
             MyResources.refresh();
             $state.go(settings.defaultStateAfterLogin, {}, {location: false});
+        }
+        else
+            $rootScope.goToLogin();
+
+        // Online / offline handlers.
+        if (Cordova.isBrowser()) {
+            window.addEventListener("online", function (e) {
+                $rootScope.isOffline = false;
+            }, false);
+            window.addEventListener("offline", function (e) {
+                $rootScope.isOffline = true;
+            }, false);
+            $rootScope.isOffline = !navigator.onLine;
+        }
+        else {
+            $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+                $rootScope.isOffline = false;
+            });
+            $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+                $rootScope.isOffline = true;
+            });
+            $rootScope.isOffline = !$cordovaNetwork.isOnline();
             
-            if (Cordova.isBrowser()) {
-                window.addEventListener("online", function (e) {
-                    $rootScope.isOffline = false;
-                }, false);
-                window.addEventListener("offline", function (e) {
-                    $rootScope.isOffline = true;
-                }, false);
-                $rootScope.isOffline = !navigator.onLine;
-            }
-            else {
-                $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-                    $rootScope.isOffline = false;
-                });
-                $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
-                    $rootScope.isOffline = true;
-                });
-                $rootScope.isOffline = !$cordovaNetwork.isOnline();
-            }
-        });
+            document.addEventListener("resume", function() {
+                $('#theOnlyCalendar').fullCalendar('next');
+            }, false);
+            
+            setInterval(function() {
+                $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
+            }, 60000);
+        }
 
         // This must be defined here, when the $state is defined.
         $rootScope.goToLogin = function () {
@@ -247,6 +279,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $state.go("login", {}, {location: false, reload: true});
             }
         };
+
+        // Key bindings.
         $rootScope.keyUpHandler = function (keyCode) {
             if (keyCode === 13 && document.activeElement.tagName !== 'TEXTAREA') {
                 $rootScope.$broadcast('Enter');
@@ -260,19 +294,12 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 }
                 else if (keyCode === 37) {
                     if (!$rootScope.isMobileNarrow && !$rootScope.isMobileLow)
-                        $('#theOnlyCalendar').fullCalendar('next');
+                        $('#theOnlyCalendar').fullCalendar('prev');
                 }
                 else if (keyCode === 39) {
                     if (!$rootScope.isMobileNarrow && !$rootScope.isMobileLow)
-                        $('#theOnlyCalendar').fullCalendar('prev');
+                        $('#theOnlyCalendar').fullCalendar('next');
                 }
             }
         };
-        // Handle isMobile
-        $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
-        $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
-        angular.element($window).bind('resize', function () {
-            $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
-            $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
-        });
     });

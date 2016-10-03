@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ChangeUsernameModalCtrl', function ($scope, settings, $ionicLoading, Auth, ModalService, $rootScope) {
+    .controller('ChangeUsernameModalCtrl', function ($scope, settings, Auth, ModalService, $rootScope) {
         $scope.user = {name: $rootScope.currentUser ? $rootScope.currentUser.username : ''};
 
         $scope.open = function () {
@@ -16,9 +16,9 @@ angular.module('Schedulogy')
             $scope.beingSubmitted = true;
             if ($scope.form.$invalid)
                 return;
-            $ionicLoading.show({template: settings.loadingTemplate});
+            $rootScope.isLoading = true;
             Auth.changeUsername($scope.user.name).then(function () {
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 ModalService.closeModalInternal();
             }, function (msg) {
                 $scope.errorInfo = settings.generalErrorInfo(msg);

@@ -2,7 +2,7 @@
     <ion-header-bar>
         <h1 class="title">Resources</h1>
     </ion-header-bar>
-    <ion-content has-bouncing="false" ng-show="!loading">
+    <ion-content has-bouncing="false" ng-show="!$root.isLoading">
         <div class="list">
             <div class="item item-no-wrap item-intro" ng-if="$root.currentUser.role === 'admin'">
                 <span>
@@ -47,7 +47,5 @@
                 </button>   
             </div>
         </div>
-    </ion-content>
-    <ion-content has-bouncing="false" ng-show="loading" style="z-index:20;width:100%;background:url('img/squares.gif') no-repeat center center white;">
     </ion-content>
 </ion-modal-view>

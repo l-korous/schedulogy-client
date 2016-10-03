@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyUsers', function (MyEvents, User, $ionicLoading, settings) {
+    .service('MyUsers', function (MyEvents, User, settings, $rootScope) {
         var _this = this;
         _this.users = [];
 
@@ -18,17 +18,17 @@ angular.module('Schedulogy')
         };
 
         _this.saveUser = function (successCallback, errorCallback) {
-            $ionicLoading.show({template: settings.loadingTemplate});
+            $rootScope.isLoading = true;
             // TODO This is not the best place for this.
             if (_this.currentUser.admin)
                 _this.currentUser.role = 'admin';
             _this.currentUser.$save({}, function (data) {
                 _this.users = data.usersLocal;
                 successCallback && successCallback();
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
             }, function (data) {
                 _this.users = data.usersLocal;
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 errorCallback && errorCallback(data.error);
             });
         };

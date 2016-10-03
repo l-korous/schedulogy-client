@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller("PasswordResetCtrl", function ($scope, Auth, $location, settings, $ionicLoading, Hopscotch, $rootScope, MyEvents, MyResources, MyUsers, $timeout, $state) {
+    .controller("PasswordResetCtrl", function ($scope, Auth, $location, settings, Hopscotch, $rootScope, MyEvents, MyResources, MyUsers, $timeout, $state) {
         $scope.successInfo = null;
         $scope.errorInfo = null;
         $scope.data = {};
@@ -12,19 +12,19 @@ angular.module('Schedulogy')
         
         $scope.userId = $location.search().user;
         $scope.passwordResetHash = $location.search().id;
-        $ionicLoading.show({template: settings.loadingTemplate});
+        $rootScope.isLoading = true;
 
         $scope.$on('Enter', function () {
             $scope.setPassword();
         });
 
         Auth.checkPasswordResetLink($scope.userId, $scope.passwordResetHash).success(function () {
-            $ionicLoading.hide();
+            $rootScope.isLoading = false;
             $timeout(function () {
                 $scope.linkChecked = true;
             });
         }).error(function (errorResponse) {
-            $ionicLoading.hide();
+            $rootScope.isLoading = false;
             $timeout(function () {
                 $scope.linkChecked = true;
             });
@@ -36,9 +36,9 @@ angular.module('Schedulogy')
             if ($scope.form.$invalid)
                 return;
             $scope.errorInfo = null;
-            $ionicLoading.show({template: settings.loadingTemplate});
+            $rootScope.isLoading = true;
             Auth.activate($scope.data.password, $scope.userId, $scope.passwordResetHash).success(function (activateResponse) {
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 Auth.tryLogin({email: activateResponse.email, password: $scope.data.password}).then(function (loginResponse) {
                     MyEvents.refresh();
                     MyResources.refresh();
@@ -52,7 +52,7 @@ angular.module('Schedulogy')
                     $scope.errorInfo = settings.loginErrorInfo(msg);
                 });
             }).error(function (errorResponse) {
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
                 $scope.errorInfo = settings.passwordResetErrorInfo(errorResponse.msg);
             });
         };

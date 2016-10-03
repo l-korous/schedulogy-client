@@ -1,19 +1,19 @@
 angular.module('Schedulogy')
-    .controller('ForgottenPasswordCtrl', function (settings, $scope, Auth, $ionicLoading) {
+    .controller('ForgottenPasswordCtrl', function (settings, $scope, Auth, $rootScope) {
         $scope.data = {};
         $('#emailEdit').focus();
         $scope.sendPasswordResetLink = function () {
             $scope.beingSubmitted = true;
             if ($scope.form.$invalid)
                 return;
-            $ionicLoading.show({template: settings.loadingTemplate});
+            $rootScope.isLoading = true;
             $scope.errorInfo = null;
             Auth.sendPasswordResetLink($scope.data.email).then(function () {
                 $scope.successInfo = settings.forgottenPasswordSuccessInfo;
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
             }, function (msg) {
                 $scope.errorInfo = settings.forgottenPasswordErrorInfo(msg);
-                $ionicLoading.hide();
+                $rootScope.isLoading = false;
             });
         };
     });

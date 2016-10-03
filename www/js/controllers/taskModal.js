@@ -17,16 +17,16 @@ angular.module('Schedulogy')
 
             $scope.form.$setPristine();
 
-            $(function () {
-                $('#taskModalTextarea').autogrow();
-            });
-
             ModalService.openModalInternal('task', function () {
                 $ionicScrollDelegate.scrollTop();
                 var primaryInput = $(ModalService.modals.task.modalInternal.modalEl).find('#primaryInput');
                 primaryInput.focus();
                 primaryInput.select();
                 $scope.disableEventTypeWatch = false;
+
+                $(function () {
+                    $('#taskModalTextarea').autogrow();
+                });
             });
         };
 
@@ -133,10 +133,12 @@ angular.module('Schedulogy')
             d.dp = {
                 callback: function (val) {
                     $scope.currentEvent[d.name] = DateUtils.pushDatePart(moment(val), $scope.currentEvent[d.name]);
-                    $scope.currentEvent[d.name + 'DateText'] = $scope.currentEvent[d.name].format(settings.dateFormat);
-                    $scope.currentEvent[d.name + 'TimeText'] = $scope.currentEvent[d.name].format(settings.timeFormat);
-                    if (d.name === 'start')
+                    if (d.name === 'start') {
+                        Event.setStart($scope.currentEvent);
                         MyEvents.processEventDuration($scope.currentEvent);
+                    }
+                    else
+                        Event.setDue($scope.currentEvent);
                     if (!MyEvents.recalcEventConstraints($scope.currentEvent))
                         $scope.currentEvent.error = 'Impossible to schedule due to constraints';
 
@@ -146,7 +148,6 @@ angular.module('Schedulogy')
             d.tp = {
                 callback: function (val) {
                     $scope.currentEvent[d.name] = DateUtils.pushTime(val, $scope.currentEvent[d.name]);
-                    $scope.currentEvent[d.name + 'DateText'] = $scope.currentEvent[d.name].format(settings.dateFormat);
                     $scope.currentEvent[d.name + 'TimeText'] = $scope.currentEvent[d.name].format(settings.timeFormat);
                     if (d.name === 'start')
                         MyEvents.processEventDuration($scope.currentEvent);
