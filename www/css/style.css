@@ -660,7 +660,7 @@ i.assertive {
 }
 .app-info {
     position: absolute;
-    top: 50%;
+    top: calc(50% + 30px);
     left: 50%;
     transform: translate(-50%, -50%);
     background:rgba(0,0,0,.6);
