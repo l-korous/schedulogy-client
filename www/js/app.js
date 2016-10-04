@@ -226,7 +226,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         }
         else
             $rootScope.goToLogin();
-        
+
         // Handle isMobile
         $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
         $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
@@ -254,31 +254,36 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
 
         // Online / offline handlers.
         if (Cordova.isBrowser()) {
-            window.addEventListener("online", function (e) {
-                $rootScope.isOffline = false;
-            }, false);
-            window.addEventListener("offline", function (e) {
-                $rootScope.isOffline = true;
-            }, false);
-            $rootScope.isOffline = !navigator.onLine;
+            document.addEventListener("deviceready", function () {
+                window.addEventListener("online", function (e) {
+                    $rootScope.isOffline = false;
+                }, false);
+                window.addEventListener("offline", function (e) {
+                    $rootScope.isOffline = true;
+                }, false);
+                $rootScope.isOffline = !navigator.onLine;
+            });
         }
         else {
-            $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-                $rootScope.isOffline = false;
-            });
-            $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
-                $rootScope.isOffline = true;
-            });
-            $rootScope.isOffline = !$cordovaNetwork.isOnline();
+            document.addEventListener("deviceready", function () {
+                $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+                    $rootScope.isOffline = false;
+                });
+                $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+                    $rootScope.isOffline = true;
+                });
+                $rootScope.isOffline = !$cordovaNetwork.isOnline();
 
-            document.addEventListener("resume", function () {
-                $('#theOnlyCalendar').fullCalendar('next');
-            }, false);
-
-            setInterval(function () {
-                $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
-            }, 60000);
+                document.addEventListener("resume", function () {
+                    $('#theOnlyCalendar').fullCalendar('next');
+                }, false);
+            });
         }
+
+        // Update now indicator periodically.
+        setInterval(function () {
+            $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
+        }, 60000);
 
         // Key bindings.
         $rootScope.keyUpHandler = function (keyCode) {

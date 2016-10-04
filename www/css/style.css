@@ -802,7 +802,17 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 }
 
-@media(max-width:360px) {
+@media(max-width:380px) {
+    .fc button {
+        padding: 0 .28em;
+    }
+
+    .fc-agendaWeek-view .fc-day-header {
+        font-size:.7em;
+    }
+}
+
+@media(max-width:359px) {
     .fc button {
         padding: 0 .2em;
     }
@@ -813,7 +823,7 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
 }
 
 
-@media(max-width:335px) {
+@media(max-width:340px) {
     #button-customId-prevLong, #button-customId-prev, #button-customId-now, #button-customId-next, #button-customId-nextLong {
         padding:0 .1em;
     }
