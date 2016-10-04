@@ -196,6 +196,37 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         });
     })
     .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, ModalService, Cordova, $cordovaNetwork) {
+        // This must be defined here, when the $state is defined.
+        $rootScope.goToLogin = function () {
+            Auth.logout();
+            $location.path('');
+            $location.search('');
+            if ($state.current.name !== 'login') {
+                $state.go("login", {}, {location: false, reload: true});
+            }
+        };
+
+        // Preauthentication - only on browser
+        if (!Cordova.isBrowser()) {
+            Auth.tryPreauthenticate().then(function () {
+                $location.path('');
+                $location.search('');
+                MyEvents.refresh();
+                MyResources.refresh();
+                $state.go(settings.defaultStateAfterLogin, {}, {location: false});
+            });
+        }
+        else if (Auth.isAuthenticated()) {
+            Auth.processTokenStoreUser();
+            $location.path('');
+            $location.search('');
+            MyEvents.refresh();
+            MyResources.refresh();
+            $state.go(settings.defaultStateAfterLogin, {}, {location: false});
+        }
+        else
+            $rootScope.goToLogin();
+        
         // Handle isMobile
         $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
         $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
@@ -220,27 +251,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     event.preventDefault();
             }
         });
-
-        // Preauthentication - only on browser
-        if (!Cordova.isBrowser()) {
-            Auth.tryPreauthenticate().then(function () {
-                $location.path('');
-                $location.search('');
-                MyEvents.refresh();
-                MyResources.refresh();
-                $state.go(settings.defaultStateAfterLogin, {}, {location: false});
-            });
-        }
-        else if (Auth.isAuthenticated()) {
-            Auth.processTokenStoreUser();
-            $location.path('');
-            $location.search('');
-            MyEvents.refresh();
-            MyResources.refresh();
-            $state.go(settings.defaultStateAfterLogin, {}, {location: false});
-        }
-        else
-            $rootScope.goToLogin();
 
         // Online / offline handlers.
         if (Cordova.isBrowser()) {
@@ -269,16 +279,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
             }, 60000);
         }
-
-        // This must be defined here, when the $state is defined.
-        $rootScope.goToLogin = function () {
-            Auth.logout();
-            $location.path('');
-            $location.search('');
-            if ($state.current.name !== 'login') {
-                $state.go("login", {}, {location: false, reload: true});
-            }
-        };
 
         // Key bindings.
         $rootScope.keyUpHandler = function (keyCode) {
