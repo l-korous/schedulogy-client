@@ -8,24 +8,24 @@
     },
     "installed_plugins": {
         "cordova-plugin-network-information": {
-            "PACKAGE_NAME": "org.apache.cordova.schedulogy"
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         },
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "org.apache.cordova.schedulogy"
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         },
         "cordova-plugin-x-toast": {
-            "PACKAGE_NAME": "org.apache.cordova.schedulogy"
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         },
         "de.appplant.cordova.plugin.local-notification": {
-            "PACKAGE_NAME": "org.apache.cordova.schedulogy"
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-app-event": {
-            "PACKAGE_NAME": "org.apache.cordova.schedulogy"
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         },
         "cordova-plugin-device": {
-            "PACKAGE_NAME": "org.apache.cordova.schedulogy"
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         }
     }
 }
