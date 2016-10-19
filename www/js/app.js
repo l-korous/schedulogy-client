@@ -141,7 +141,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         $rootScope.isLoading = true;
         $timeout(function() {
             $rootScope.isLoading = false;
-        }, 2500);
+        }, 1500);
 
         // Check stuff when changing state.
         $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
