@@ -41,7 +41,7 @@ angular.module('Schedulogy')
                     '<h2 style="border-left:5px solid ' + settings.itemColor.event + '">Event (all-day)</h2>' +
                     '<p>Convenience type, similar to events, with start, end and duration containing date part only (no specific time).</p>' +
                     '<p>All events can be concurrently in the calendar. There is no limit on the number of concurrent events.</p>' +
-                    '<h2 style="border-left:5px solid ' + settings.itemColor.floating + '">Task</h2>' +
+                    '<h2 style="border-left:5px solid ' + settings.itemColor.task + '">Task</h2>' +
                     '<p class="bold">This type ("floating" task) does NOT have a fixed start and end, but has a fixed due date. SCHEDULOGY schedules these tasks so that these due dates (as well as dependencies - see later sections) are satisfied.</p>' +
                     '<p>SCHEDULOGY makes sure that there is only one concurrent floating task in the calendar. There can be no fixed task concurrent with any floating task either.</p>'
                     )
