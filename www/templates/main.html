@@ -12,7 +12,7 @@
         </span>
     </div>
 
-    <div class="topLauncher" ng-show="$root.smallScreen">
+    <div class="topLauncher" ng-if="$root.smallScreen">
         <span class="button button-assertive" ng-click="$('.topLauncherTypes').toggle();
             myItems.newCurrentItem('event');
             modalService.openModal('event');" style="background-color:#387ef5;">

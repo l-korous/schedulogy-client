@@ -17,6 +17,8 @@ angular.module('Schedulogy')
                     }
                 },
                 weekends: true,
+                navLinks: true,
+                weekNumbers: true,
                 timezone: 'local',
                 timeFormat: 'H:mm',
                 // We move to some user-friendly slot - 2 slots before the current one.
@@ -39,7 +41,7 @@ angular.module('Schedulogy')
                 nowIndicator: true,
                 editable: true,
                 header: {
-                    left: 'agendaDay,agenda3Day,agendaWeek,month',
+                    left: 'agendaDay,agenda3Day,agendaWeek,month,listMonth',
                     center: 'title',
                     right: 'prevLong,prev,now,next,nextLong'
                 },
@@ -68,7 +70,26 @@ angular.module('Schedulogy')
                         _this.callbacks.select(start, end, jsEvent, view, resource);
                 },
                 viewRender: function (view, element) {
-
+                    switch (view.name) {
+                        case 'listMonth':
+                            $('#button-customId-prev').hide();
+                            $('#button-customId-next').hide();
+                            $('#button-customId-prevLong').show();
+                            $('#button-customId-nextLong').show();
+                            break;
+                        case 'agendaDay':
+                            $('#button-customId-prev').show();
+                            $('#button-customId-next').show();
+                            $('#button-customId-prevLong').hide();
+                            $('#button-customId-nextLong').hide();
+                            break;
+                        default:
+                            $('#button-customId-prev').show();
+                            $('#button-customId-next').show();
+                            $('#button-customId-prevLong').show();
+                            $('#button-customId-nextLong').show();
+                            break;
+                    }
                 },
                 eventMouseover: function (event, jsEvent, view) {
                     if ($rootScope.smallScreen)

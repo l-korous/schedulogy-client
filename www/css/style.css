@@ -359,8 +359,36 @@ h2 {
     opacity:0;
 }
 
-.fc-agenda-view .fc-day-grid .fc-row {
-    min-height: 2em; /* all-day section will never get shorter than this */
+.fc-axis {
+    font-size:13px;
+}
+
+.fc-time-grid .fc-slats td {
+    padding-top:2px ! important;
+    vertical-align:top ! important;
+}
+
+a.fc-day-number {
+    width:100%;
+    text-align:right;
+}
+
+.fc-week-number {
+    padding:1px ! important;
+    height:100%;
+    background-color:#ccc;
+}
+
+.fc-week-number a {
+    height:100%;
+}
+
+.fc-day-top.fc-other-month {
+    opacity: 0.8 ! important;
+}
+
+.fc-day-top {
+    background-color:#ddd ! important;
 }
 
 .fc-agenda-view .fc-day-grid .fc-row .fc-content-skeleton {
@@ -615,11 +643,11 @@ i.assertive {
 }
 
 .fc-toolbar {
-    margin-bottom:.2em;
+    margin-bottom:10px;
 }
 
 #theOnlyCalendar {
-    padding-top:.5em;
+    padding-top:10px;
 }
 
 .item-small {
@@ -746,6 +774,10 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
         position: relative;
         top:4px;
     }
+
+    .fc-toolbar {
+        margin-bottom:.3em;
+    }
 }
 
 @media(max-width:720px) {
@@ -756,13 +788,18 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 }
 
-@media(max-width:500px) {
-    .fc-toolbar h2 {
+
+@media(max-width:650px) {
+    #mainHeader .title {
         display:none;
     }
 }
 
 @media(max-width:500px) {
+    .fc-toolbar h2 {
+        display:none;
+    }
+
     .simpleScreenWrapper {
         padding:20px;
     } 

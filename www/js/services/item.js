@@ -203,8 +203,7 @@ angular.module('Schedulogy')
                         shortInfo: task.title + (task.done ? ' (done)' : '')
                     });
                     if (task.done) {
-                        item.color = '#fff';
-                        item.borderColor = settings.itemColor.reminder;
+                        item.color = '#ddd';
                         item.textColor = settings.itemColor.reminder;
                     }
 
