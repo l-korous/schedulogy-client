@@ -1,5 +1,6 @@
 <ion-header-bar align-title="left" class="bar bar-header bar-light" id="mainHeader">
-    <button id="menuOpener" class="button ion-navicon button-icon" ng-if="$root.currentUser && $root.smallScreen" ng-click="toggleMenu()"></button>
+    <button id="menuOpener" class="button ion-navicon button-icon" ng-if="$root.currentUser && $root.smallScreen" ng-click="toggleMenu()"
+            ng-class="{'red': myItems.dirtyItems.length}" ></button>
     <div class="h1 title " ng-class="{'margin-left-menu' : $root.smallScreen, 'padding-horizontal' : $root.smallScreen}">
         SCHEDULOGY <span>BETA</span>
     </div>
@@ -18,13 +19,13 @@
             Event
         </span>
         <span class="button button-assertive" ng-click="$('.topLauncherTypes').toggle();
-                myItems.newCurrentItem('task');
-                modalService.openModal('task');" style="background-color: #ffa400;">
+            myItems.newCurrentItem('task');
+            modalService.openModal('task');" style="background-color: #ffa400;">
             Task
         </span>
         <span class="button button-assertive" ng-click="$('.topLauncherTypes').toggle();
-                myItems.newCurrentItem('reminder');
-                modalService.openModal('reminder');" style="background-color: #bd0000;">
+            myItems.newCurrentItem('reminder');
+            modalService.openModal('reminder');" style="background-color: #bd0000;">
             Reminder
         </span>
     </div>
@@ -39,7 +40,8 @@
                     Logged-in as:<br />
                     <span>{{$root.currentUser.username}}</span>
                 </span>
-                <a class="item item-icon-left item-small" ng-if="myItems.dirtyItems.length" ng-click="modalService.openModal('dirtyTasks');">
+                <a class="item item-icon-left item-small" ng-if="myItems.dirtyItems.length" ng-click="toggleMenu();
+                    modalService.openModal('dirtyTasks');">
                     <i class="icon ion-alert assertive"></i>
                     Unscheduled Tasks
                 </a>
@@ -165,7 +167,7 @@
 
 </ion-side-menus>
 
-<ion-content has-bouncing="false" scroll="true" ng-show="$root.isOffline || $root.isLoading" style="z-index:20;width:100%;background-color:rgba(0, 0, 0, 0.15);position:absolute;top:0;bottom:0;left:0;right:0;">
+<ion-content has-bouncing="false" scroll="true" ng-show="$root.isOffline || $root.isLoading" style="z-index:20;width:100%;background-color:white;position:absolute;top:44px;bottom:0;left:0;right:0;">
     <div class="app-info-wrapper" ng-show="$root.isOffline">
         <div class="app-info">
             <ion-spinner icon="lines" class="spinner-positive"></ion-spinner>

@@ -18,6 +18,7 @@ gulp.task('concat-js', function () {
         "www/bower_components/fullcalendar/dist/fullcalendar.js",
         "www/bower_components/fullcalendar/dist/gcal.js",
         "www/js/app.js",
+        "www/js/settings.js",
         "www/js/directives/select.js",
         "www/js/directives/complexPassword.js",
         "www/js/directives/repeatPassword.js",

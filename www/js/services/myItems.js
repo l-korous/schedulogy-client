@@ -8,12 +8,9 @@ angular.module('Schedulogy')
         _this.refresh = function () {
             Task.query({btime: _this.getBTime().unix()}, function (data) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
-                $rootScope.$broadcast('MyItemsLoaded');
             }, function (err) {
-                console.log('Task.query - error');
                 if (err.data && err.data.tasks && err.data.dirtyTasks) {
                     _this.importFromTasks(err.data.tasks, err.data.dirtyTasks);
-                    $rootScope.$broadcast('MyItemsLoaded');
                 }
             });
         };

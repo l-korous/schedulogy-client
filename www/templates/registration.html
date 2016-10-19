@@ -36,6 +36,11 @@
                     Login
                 </button>
             </form>
+            <form name="$parent.form" ng-show="successInfo" novalidate>
+                <button class="button button-block button-positive button-single marginTop1" ng-click="$root.goToLogin();">
+                    Login
+                </button>
+            </form>
         </div>
     </div>
 </ion-content>

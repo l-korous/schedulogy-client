@@ -359,28 +359,6 @@ h2 {
     opacity:0;
 }
 
-.fc-event .fc-content .fc-time {
-    text-align:left;
-    font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
-}
-.fc-event .fc-content .fc-title {
-    text-align:left;
-    margin-bottom:1px;
-    font-weight: bold;
-    overflow: hidden;
-    white-space: pre-line;
-    text-overflow:ellipsis;
-    font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
-}
-.fc-event .fc-content .fc-due, .fc-event .fc-content .fc-resource {
-    text-align:left;
-    white-space: pre;
-    overflow: hidden;
-    width:100%;
-    text-overflow:ellipsis;
-    font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
-}
-
 .fc-agenda-view .fc-day-grid .fc-row {
     min-height: 2em; /* all-day section will never get shorter than this */
 }
@@ -431,18 +409,32 @@ h2 {
     text-align: left;
 }
 
-.fc-time-grid-event .fc-time {
+.fc-time-grid-event .fc-time,.fc-time-grid-event .fc-resource, .fc-time-grid-event .fc-due {
     font-size: .9em;
     white-space: normal;
     margin-left:2px;
     margin-bottom:1px;
+    font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif; 
 }
 
-.fc-time-grid-event .fc-resource, .fc-time-grid-event .fc-due {
-    font-size: .9em;
-    white-space: normal;
-    margin-left:3px;
+.fc-event .fc-content .fc-time {
+    text-align:left;
+}
+.fc-event .fc-content .fc-title {
+    text-align:left;
     margin-bottom:1px;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: pre-line;
+    text-overflow:ellipsis;
+}
+
+.fc-event .fc-content .fc-due, .fc-event .fc-content .fc-resource {
+    text-align:left;
+    white-space: pre;
+    overflow: hidden;
+    width:100%;
+    text-overflow:ellipsis;
 }
 
 .no-cal-padding {
@@ -708,6 +700,10 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     height:44px;
     padding:5px 0;
     text-align: center;
+}
+
+.red {
+    color:red ! important;
 }
 
 @media(max-width:1000px) {

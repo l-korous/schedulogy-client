@@ -3,10 +3,6 @@ angular.module('Schedulogy')
         $scope.myItems = MyItems;
         FullCalendar.calculateCalendarRowHeight();
 
-        $scope.$on('MyItemsLoaded', function () {
-            $rootScope.isLoading = false;
-        });
-
         $scope.onSwipeLeft = function () {
             if ($rootScope.smallScreen)
                 $('#theOnlyCalendar').fullCalendar('next');
