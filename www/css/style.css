@@ -373,13 +373,14 @@ a.fc-day-number {
     text-align:right;
 }
 
-.fc-week-number {
+td.fc-week-number {
     padding:1px ! important;
     height:100%;
-    background-color:#ccc;
+    background-color:#eee ! important;
+    border:1px solid #ddd ! important;
 }
 
-.fc-week-number a {
+td.fc-week-number a {
     height:100%;
 }
 
@@ -388,7 +389,8 @@ a.fc-day-number {
 }
 
 .fc-day-top {
-    background-color:#ddd ! important;
+    background-color:#eee ! important;
+    border:1px solid #ddd ! important;
 }
 
 .fc-agenda-view .fc-day-grid .fc-row .fc-content-skeleton {
@@ -744,19 +746,13 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
 
 @media(max-width:950px) {
     .fc-toolbar h2 {
-        font-size:16px;
-        position: relative;
-        top:5px;
+        display:none;
     }
 }
 
 @media(max-width:850px) {
     .list {
         margin-bottom:10px;
-    }
-
-    .fc-toolbar h2 {
-        display:none;
     }
 
     .fc-event .fc-content {
@@ -838,7 +834,7 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 }
 
-@media(max-width:400px) {
+@media(max-width:450px) {
     .fc button {
         padding: 0 .3em;
     }
@@ -848,9 +844,9 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 }
 
-@media(max-width:380px) {
+@media(max-width:400px) {
     .fc button {
-        padding: 0 .28em;
+        padding: 0 .25em;
     }
 
     .fc-agendaWeek-view .fc-day-header {
@@ -858,7 +854,7 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 }
 
-@media(max-width:359px) {
+@media(max-width:360px) {
     .fc button {
         padding: 0 .2em;
     }

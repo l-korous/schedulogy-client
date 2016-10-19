@@ -21,8 +21,8 @@ angular.module('Schedulogy')
                 weekNumbers: true,
                 timezone: 'local',
                 timeFormat: 'H:mm',
-                // We move to some user-friendly slot - 2 slots before the current one.
-                scrollTime: MyItems.getBTime().clone().subtract(settings.minuteGranularity, 'minute').format('HH:mm:ss'),
+                // We move to some user-friendly slot 1 slot before the current one.
+                scrollTime: (MyItems.getBTime().hours() < 1 ? MyItems.getBTime().clone() : MyItems.getBTime().clone().subtract(settings.minuteGranularity, 'minute')).format('HH:mm:ss'),
                 scrollOffsetMinutes: settings.minuteGranularity,
                 slotLabelFormat: 'H:mm',
                 eventBackgroundColor: '#387ef5',

@@ -5229,17 +5229,20 @@ var DayTableMixin = FC.DayTableMixin = {
 	computeColHeadFormat: function() {
 		// if more than one week row, or if there are a lot of columns with not much space,
 		// put just the day numbers will be in each cell
-		if (this.rowCnt > 1 || this.colCnt > 10) {
-			return 'ddd'; // "Sat"
-		}
-		// multiple days, so full single date string WON'T be in title text
-		else if (this.colCnt > 1) {
-			return this.view.opt('dayOfMonthFormat'); // "Sat 12/10"
-		}
-		// single day, so full single date string will probably be in title text
-		else {
-			return 'dddd'; // "Saturday"
-		}
+		if (this.rowCnt > 1) {
+            return 'ddd';
+        }
+        else if (this.colCnt >= 7) {
+            return ($(window).outerWidth() > 1000 ? 'ddd DD MMM' : 'ddd DD'); // "Sat"
+        }
+        // multiple days, so full single date string WON'T be in title text
+        else if (this.colCnt > 1) {
+            return 'dddd DD MMM';//this.view.opt('dayOfMonthFormat'); // "Sat 12/10"
+        }
+        // single day, so full single date string will probably be in title text
+        else {
+            return 'dddd DD MMMM'; // "Saturday"
+        }
 	},
 
 
@@ -5672,7 +5675,7 @@ var DayGrid = FC.DayGrid = Grid.extend(DayTableMixin, {
 			html += this.view.buildGotoAnchorHtml(
 				date,
 				{ 'class': 'fc-day-number' },
-				date.format('DD-MMM') // inner HTML
+				date.format('DD MMM') // inner HTML
 			);
 		}
 
@@ -10064,7 +10067,7 @@ function Calendar_constructor(element, overrides) {
 	
 	function now() {
         currentView.updateNowIndicator();
-        date = t.getNow().clone().subtract(this.options['scrollOffsetMinutes'], 'minute');
+        date = (t.getNow().hours() < 1 ? t.getNow().clone() : t.getNow().clone().subtract(this.options['scrollOffsetMinutes'], 'minute'));
         if(currentView.timeGrid)
             currentView.forceScroll(currentView.timeGrid.computeDateTop(date, date));
         renderView();
@@ -12614,6 +12617,11 @@ var basicDayGridMethods = {
 	renderIntroHtml: function() {
 		var view = this.view;
 
+if (view.colWeekNumbersVisible) {
+			return '<td class="fc-week-number ' + view.widgetContentClass + '" ' +
+				view.weekNumberStyleAttr() + '></td>';
+		}
+        
 		return '';
 	}
 
@@ -13570,7 +13578,7 @@ fcViews.listDay = {
 	type: 'list',
 	duration: { days: 1 },
 	defaults: {
-		listDayFormat: 'dddd' // day-of-week is all we need. full date is probably in header
+		listDayFormat: 'DDD' // day-of-week is all we need. full date is probably in header
 	}
 };
 
