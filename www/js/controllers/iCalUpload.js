@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ICalUploadModalCtrl', function ($scope, $rootScope, MyEvents, settings, fileUpload, $timeout, ModalService) {
+    .controller('ICalUploadModalCtrl', function ($scope, $rootScope, MyItems, settings, fileUpload, $timeout, ModalService) {
         $scope.open = function () {
             $scope.successInfo = null;
             $scope.errorInfo = null;
@@ -19,17 +19,14 @@ angular.module('Schedulogy')
                 $scope.uploadFile();
         };
 
-        // For display purposes only.
-        $scope.weeksFromSettings = settings.weeks;
-
         $scope.uploadFile = function () {
             $rootScope.isLoading = true;
 
             // This is done through rootScope, because otherwise it somehow does not work. Not a big deal, but may be fixed.
             var file = $rootScope.icalFile;
 
-            fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {btime: MyEvents.getBTime().unix()}, function (data) {
-                MyEvents.tasksInResponseSuccessHandler(data, function () {
+            fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {btime: MyItems.getBTime().unix()}, function (data) {
+                MyItems.tasksInResponseSuccessHandler(data, function () {
                     $scope.successInfo = settings.iCalUploadSuccess;
                     $timeout(function () {
                         ModalService.closeModalInternal();
@@ -42,7 +39,7 @@ angular.module('Schedulogy')
             },
                 function (err) {
                     try {
-                        MyEvents.tasksInResponseErrorHandler(err, function () {
+                        MyItems.tasksInResponseErrorHandler(err, function () {
                             ModalService.closeModalInternal();
                             $scope.successInfo = null;
                             $scope.errorInfo = settings.iCalUploadError;

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('RemoveResourceModalCtrl', function (MyResources, $scope, settings, ModalService, MyEvents, MyUsers) {
+    .controller('RemoveResourceModalCtrl', function (MyResources, $scope, settings, ModalService, MyItems, MyUsers) {
         $scope.myResources = MyResources;
         $scope.currentResource = null;
         // This is for the case when we are actually deleting a user.
@@ -34,10 +34,9 @@ angular.module('Schedulogy')
             $scope.myResources.removeResource($scope.currentResource, resourceToReplaceCurrentWith, function () {
                 $scope.associatedUser && MyUsers.removeUser($scope.associatedUser);
 
-                ModalService.closeModalInternal(function () {
-                    MyEvents.refresh();
-                    $scope.resourceToReplaceCurrentWith = null;
-                });
+                ModalService.closeModalInternal();
+                MyItems.refresh();
+                $scope.resourceToReplaceCurrentWith = null;
             });
         };
 

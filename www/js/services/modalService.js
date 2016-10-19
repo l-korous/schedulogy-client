@@ -14,11 +14,12 @@ angular.module('Schedulogy')
             'termsOfService',
             'privacyPolicy',
             'iCalUpload',
-            'leftMenu',
             'removeAll',
             'resource',
             'resources',
             'task',
+            'event',
+            'reminder',
             'user',
             'users',
             'removeResource'
@@ -76,16 +77,25 @@ angular.module('Schedulogy')
         };
 
         // South API - close
-        _this.closeModalInternal = function (callback) {
-            _this.modals[_this.currentModal].modalInternal.hide().then(callback);
-            _this.currentModals.pop();
+        // Closing with a name is only for those cases, where callbacks have to be considered.
+        // - e.g.: when closing a taskModal, in some cases an errorModal has been put on top, so if we want to close
+        //   the taskModal, we have to specify that we do NOT want the top modal, but this particular one.
+        _this.closeModalInternal = function (modalName) {
+            if (modalName) {
+                _this.modals[modalName].modalInternal.hide();
+                _this.currentModals.splice(_this.currentModals.indexOf(modalName), 1);
+            }
+            else {
+                _this.modals[_this.currentModal].modalInternal.hide();
+                _this.currentModals.pop();
+            }
             if (_this.currentModals.length)
                 _this.currentModal = _this.currentModals[_this.currentModals.length - 1];
             else {
                 // Scroll to where I was before.
                 setTimeout(function () {
                     $('.fc-scroller').scrollTop(_this.scrollTop);
-                    $('.fc-scroller').attr("tabindex",-1).focus();
+                    $('.fc-scroller').attr("tabindex", -1).focus();
                 });
             }
         };

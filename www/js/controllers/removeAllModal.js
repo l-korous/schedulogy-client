@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('RemoveAllModalCtrl', function ($scope, MyEvents, ModalService) {
+    .controller('RemoveAllModalCtrl', function ($scope, MyItems, ModalService) {
         $scope.open = function () {
             ModalService.openModalInternal('removeAll');
         };
@@ -11,7 +11,7 @@ angular.module('Schedulogy')
         ModalService.initModal('removeAll', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
-            MyEvents.deleteAll(function () {
+            MyItems.deleteAll(function () {
                 ModalService.closeModalInternal();
             });
         };

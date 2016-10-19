@@ -1,0 +1,52 @@
+<ion-modal-view ng-controller="ReminderModalCtrl">
+    <ion-header-bar>
+        <h1 class="title">{{currentItem.title ? currentItem.title : 'New Reminder'}}{{currentItem.done ? ' (done)' : ''}}</h1>
+
+        <button class="button button-assertive button-outline icon-right" ng-click="remove();" ng-if="currentItem._id">
+            Delete
+        </button>
+    </ion-header-bar>
+    <ion-content>
+        <form name="$parent.form" novalidate>
+            <div class="list customFormErrorList">
+                <div ng-show="form.title.$error.required && !form.title.$pristine" class="item help-block">Please provide a valid title.</div>
+                <div ng-show="currentItem.error" class="item help-block">{{currentItem.error}}</div>
+            </div>
+            <div class="list" style="margin-bottom:0;">
+                <label class="item item-small bold item-no-wrap" ng-show="currentItem.done">This reminder is done and is disabled for changing. Unmark it as done to enable changes.</label>
+                
+                <ion-toggle ng-show="currentItem._id" ng-model="currentItem.done" ng-change="changeDone()" toggle-class="toggle-assertive">Done</ion-toggle>
+                
+                <label class="item item-input item-select" ng-if="currentItem.type !== 'floating'">
+                    <div class="input-label">
+                        Resource
+                    </div>
+                    <select ng-model="currentItem.resource" class="leftAlignedSelect" required name="resource" ng-disabled="currentItem.done"
+                            ng-options="resource._id as resource.name for resource in myResources.resources">
+                    </select>
+                </label>
+
+                <label class="item item-input" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
+                    <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="primaryInput" required name="title" ng-disabled="currentItem.done">
+                </label>
+                <label class="item item-input">
+                    <textarea placeholder="Description" ng-model="currentItem.desc" rows="5" id="taskModalTextarea" ng-disabled="currentItem.done"></textarea>
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="col-50 padding-horizontal padding-top">
+                    <button id="taskSave" class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine || currentItem.error" ng-click="save();">
+                        Save
+                    </button>
+
+                </div>
+                <div class="col-50 padding-horizontal padding-top">
+                    <button class="button button-block button-outline button-stable" ng-click="close();">
+                        Cancel
+                    </button>   
+                </div>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

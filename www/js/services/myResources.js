@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyResources', function (settings, DateUtils, Resource, $rootScope, MyEvents) {
+    .service('MyResources', function (settings, DateUtils, Resource, $rootScope, MyItems) {
         var _this = this;
         _this.resources = [];
 
@@ -51,7 +51,7 @@ angular.module('Schedulogy')
         _this.saveResource = function (passedResource, successCallback, errorCallback) {
             var resource = passedResource || _this.currentResource;
             $rootScope.isLoading = true;
-            resource.$save({btime: MyEvents.getBTime().unix()}, function (data) {
+            resource.$save({btime: MyItems.getBTime().unix()}, function (data) {
                 _this.importData(data.resourcesLocal);
                 successCallback && successCallback();
                 $rootScope.isLoading = false;
@@ -64,7 +64,7 @@ angular.module('Schedulogy')
 
         _this.removeResource = function (passedResource, replacementResourceId, successCallback, errorCallback) {
             var resource = passedResource || _this.currentResource;
-            resource.$remove({resourceId: resource._id, btime: MyEvents.getBTime().unix(), replacementResourceId: replacementResourceId}, function (data) {
+            resource.$remove({resourceId: resource._id, btime: MyItems.getBTime().unix(), replacementResourceId: replacementResourceId}, function (data) {
                 _this.importData(data.resourcesLocal);
                 successCallback && successCallback();
             }, function (err) {

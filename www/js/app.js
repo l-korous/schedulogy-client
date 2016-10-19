@@ -14,39 +14,35 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         },
         weeks: 26,
         defaultHourShiftFromNow: 24,
-        mobileWidth: 500,
-        mobileHeight: 500,
+        // This is recommended by ionic
+        smallScreen: 768,
         startHour: 0,
         endHour: 24,
         minuteGranularity: 30,
-        // This has to be exactly calculated using minGranularity
-        slotsPerHour: 2, // === (60 / minGranularity)
-        defaultTaskDuration: 4,
-        defaultTaskType: 'fixed',
+        // This has to be exactly calculated using minuteGranularity
+        slotsPerHour: 2, // === (60 / minuteGranularity)
+        // For 0 - is not all day, 1 - is all day
+        defaultTaskDuration: [4, 1],
+        defaultTaskType: 'event',
         defaultStateAfterLogin: 'main.calendar',
         noPrerequisitesToListMsg: 'No possible prerequisites to list. Possible prerequisites are any tasks that can end before the due date of this one.',
         noDependenciesToListMsg: 'No possible dependent tasks to list. Only floating tasks, that are due after this task can be completed, are possible dependent tasks.',
         shiftCalendar: {
             normal: 103,
-            mobileLow: 80,
-            mobileNarrow: 80
+            smallScreen: 80
         },
         minCalendarRowHeight: 45,
         checkNewVersion: false,
         dateFormat: 'MMM, Do',
         timeFormat: 'HH:mm',
-        eventColor: {
-            fixed: '#387ef5',
-            fixedAllDay: '#387ef5',
-            floating: '#ffa400'
+        itemColor: {
+            event: '#387ef5',
+            task: '#ffa400',
+            reminder: '#bd0000'
         },
-        maxEventDuration: {
-            fixed: 48,
-            fixedAllDay: 14,
-            // This needs to correspond to startHour -> endHour
-            floating: 48
-        },
-        eventBorderColor: '#111',
+        maxEventDuration: [48, 14],
+        itemBorderColor: '#111',
+        itemTextColor: '#fff',
         passwordResetErrorInfo: function (msg) {
             switch (msg) {
                 case '!existing':
@@ -132,6 +128,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
 
     // ionic configuration
     .config(function ($ionicConfigProvider, $compileProvider) {
+        $ionicConfigProvider.tabs.position('top');
         $ionicConfigProvider.views.maxCache(25);
         $ionicConfigProvider.views.forwardCache(true);
         $ionicConfigProvider.form.checkbox("square");
@@ -195,7 +192,10 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyEvents, MyResources, ModalService, Cordova, $cordovaNetwork) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyItems, MyResources, ModalService, Cordova, $cordovaNetwork) {
+        // Settings - so that they are accessible from anywhere.
+        $rootScope.settings = settings;
+
         // This must be defined here, when the $state is defined.
         $rootScope.goToLogin = function () {
             Auth.logout();
@@ -211,7 +211,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             Auth.tryPreauthenticate().then(function () {
                 $location.path('');
                 $location.search('');
-                MyEvents.refresh();
+                MyItems.refresh();
                 MyResources.refresh();
                 $state.go(settings.defaultStateAfterLogin, {}, {location: false});
             });
@@ -220,19 +220,17 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             Auth.processTokenStoreUser();
             $location.path('');
             $location.search('');
-            MyEvents.refresh();
+            MyItems.refresh();
             MyResources.refresh();
             $state.go(settings.defaultStateAfterLogin, {}, {location: false});
         }
         else
             $rootScope.goToLogin();
 
-        // Handle isMobile
-        $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
-        $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
+        // Handle smallScreen
+        $rootScope.smallScreen = ($window.innerWidth < settings.smallScreen);
         angular.element($window).bind('resize', function () {
-            $rootScope.isMobileNarrow = ($window.innerWidth < settings.mobileWidth);
-            $rootScope.isMobileLow = ($window.innerHeight < settings.mobileHeight);
+            $rootScope.smallScreen = ($window.innerWidth < settings.smallScreen);
         });
 
         // Controls display of 'loading'
@@ -293,18 +291,23 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             else if (keyCode === 27)
                 $rootScope.$broadcast('Esc');
             else if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-                if (keyCode === 67) {
-                    MyEvents.newCurrentEvent();
+                if (keyCode === 82) {
+                    MyItems.newCurrentItem('reminder');
+                    ModalService.openModal('reminder');
+                }
+                if (keyCode === 69) {
+                    MyItems.newCurrentItem('event');
+                    ModalService.openModal('event');
+                }
+                if (keyCode === 84) {
+                    MyItems.newCurrentItem('task');
                     ModalService.openModal('task');
                 }
-                else if (keyCode === 37) {
-                    if (!$rootScope.isMobileNarrow && !$rootScope.isMobileLow)
-                        $('#theOnlyCalendar').fullCalendar('prev');
-                }
-                else if (keyCode === 39) {
-                    if (!$rootScope.isMobileNarrow && !$rootScope.isMobileLow)
-                        $('#theOnlyCalendar').fullCalendar('next');
-                }
+                else if (keyCode === 37)
+                    $('#theOnlyCalendar').fullCalendar('prevLong');
+
+                else if (keyCode === 39)
+                    $('#theOnlyCalendar').fullCalendar('nextLong');
             }
         };
     });

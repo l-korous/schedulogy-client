@@ -50,7 +50,7 @@
                     <div class="input-label">
                         Start hour of the day
                     </div>
-                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="sinceTime" ng-model="currentResource.sinceTime" step="1" required/>
+                    <input type="range" min="0" max="{{24 * $root.settings.slotsPerHour}}" name="sinceTime" ng-model="currentResource.sinceTime" step="1" required/>
 
                     <div class="rangeInfo">
                         {{currentResource.sinceTimeText}}
@@ -61,7 +61,7 @@
                     <div class="input-label">
                         End hour of the day
                     </div>
-                    <input type="range" min="0" max="{{24 * settings.slotsPerHour}}" name="untilTime" ng-model="currentResource.untilTime" step="1" required/>
+                    <input type="range" min="0" max="{{24 * $root.settings.slotsPerHour}}" name="untilTime" ng-model="currentResource.untilTime" step="1" required/>
 
                     <div class="rangeInfo">
                         {{currentResource.untilTimeText}}

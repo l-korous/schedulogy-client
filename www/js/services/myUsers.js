@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyUsers', function (MyEvents, User, settings, $rootScope) {
+    .service('MyUsers', function (MyItems, User, settings, $rootScope) {
         var _this = this;
         _this.users = [];
 
@@ -9,7 +9,7 @@ angular.module('Schedulogy')
         };
 
         _this.refresh = function (callback) {
-            User.query({btime: MyEvents.getBTime().unix()}, function (data) {
+            User.query({btime: MyItems.getBTime().unix()}, function (data) {
                 _this.users = data.usersLocal;
                 callback && callback();
             }, function (err) {

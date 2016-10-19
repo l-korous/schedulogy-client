@@ -7354,9 +7354,13 @@
             },
             // Computes the new date when the user hits the prev button, given the current date
             computePrevDateLong: function (date) {
-                return this.massageCurrentDate(
+                if(date.diff(date.clone().startOf(this.intervalUnit), 'd') < 1)
+                    return this.massageCurrentDate(
                     date.clone().startOf(this.intervalUnit).subtract(this.intervalDuration), -1
                     );
+                else
+                    return this.massageCurrentDate(
+                    date.clone().startOf(this.intervalUnit));
             },
             // Computes the new date when the user hits the next button, given the current date
             computeNextDateLong: function (date) {
@@ -11364,9 +11368,13 @@
             },
             // Computes the new date when the user hits the prev button, given the current date
             computePrevDateLong: function (date) {
-                return this.massageCurrentDate(
-                    date.clone().subtract(this.intervalDuration), -1
+                if(date.diff(date.clone().startOf(this.intervalUnit), 'd') < 7)
+                    return this.massageCurrentDate(
+                    date.clone().startOf(this.intervalUnit).subtract(this.intervalDuration), -1
                     );
+                else
+                    return this.massageCurrentDate(
+                    date.clone().startOf(this.intervalUnit));
             },
             // Computes the new date when the user hits the next button, given the current date
             computeNextDateLong: function (date) {

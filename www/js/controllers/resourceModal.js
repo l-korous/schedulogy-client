@@ -1,6 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ResourceModalCtrl', function (MyResources, $scope, settings, ModalService, MyEvents, Resource) {
-        $scope.settings = settings;
+    .controller('ResourceModalCtrl', function (MyResources, $scope, ModalService, MyItems, Resource) {
         $scope.loading = true;
         $scope.currentResource = null;
 
@@ -29,9 +28,8 @@ angular.module('Schedulogy')
                 return;
             angular.extend(MyResources.currentResource, $scope.currentResource);
             MyResources.saveResource($scope.currentResource, function () {
-                ModalService.closeModalInternal(function () {
-                    MyEvents.refresh();
-                });
+                ModalService.closeModalInternal();
+                MyItems.refresh();
             });
         };
 

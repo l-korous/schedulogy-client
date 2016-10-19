@@ -1,21 +1,19 @@
 angular.module('Schedulogy')
-    .controller('CalendarCtrl', function ($scope, settings, MyEvents, FullCalendar, $rootScope, ModalService, $timeout, DateUtils) {
-        $scope.myEvents = MyEvents;
+    .controller('CalendarCtrl', function ($scope, settings, MyItems, FullCalendar, $rootScope, ModalService, Item) {
+        $scope.myItems = MyItems;
         FullCalendar.calculateCalendarRowHeight();
 
-        $scope.$on('MyEventsLoaded', function () {
+        $scope.$on('MyItemsLoaded', function () {
             $rootScope.isLoading = false;
         });
 
-        $scope.eventSources = [MyEvents.events];
-
         $scope.onSwipeLeft = function () {
-            if ($rootScope.isMobileNarrow || $rootScope.isMobileLow)
+            if ($rootScope.smallScreen)
                 $('#theOnlyCalendar').fullCalendar('next');
         };
 
         $scope.onSwipeRight = function () {
-            if ($rootScope.isMobileNarrow || $rootScope.isMobileLow)
+            if ($rootScope.smallScreen)
                 $('#theOnlyCalendar').fullCalendar('prev');
         };
 
@@ -23,22 +21,28 @@ angular.module('Schedulogy')
 
         $scope.myCalendar.setCallbacks({
             eventClick: function (event) {
-                MyEvents.setCurrentEvent(event._id);
-                ModalService.openModal('task');
+                MyItems.setCurrentItem(event._id);
+                ModalService.openModal(event.type);
             },
             select: function (start, end, jsEvent, view, resource) {
-                MyEvents.newCurrentEvent({
+                MyItems.newCurrentItem('event');
+
+                angular.extend(MyItems.currentItem, {
                     start: start,
                     end: end,
-                    type: (view.name === 'month' || !(start.hasTime() || end.hasTime())) ? 'fixedAllDay' : 'fixed',
+                    type: 'event',
+                    allDay: (view.name === 'month' || !(start.hasTime() || end.hasTime())),
                     dur: (view.name === 'month' || !(start.hasTime() || end.hasTime())) ? end.diff(start, 'd') : Math.ceil(end.diff(start, 'm') / settings.minuteGranularity)
                 });
+                Item.setStart(MyItems.currentItem);
+                Item.setEnd(MyItems.currentItem);
+                Item.setDur(MyItems.currentItem);
 
-                ModalService.openModal('task');
+                ModalService.openModal('event');
             },
             eventDrop: function (event, delta, revertFunc, jsEvent) {
-                MyEvents.currentEvent = event;
-                if (event.type === 'floating') {
+                MyItems.currentItem = event;
+                if (event.type === 'task') {
                     ModalService.openModal('floatToFixed');
                     ModalService.modals.floatToFixed.scope.setFloatToFixedData({
                         floatToFixedDelta: delta,
@@ -47,43 +51,43 @@ angular.module('Schedulogy')
                         floatToFixedRevertFunc: revertFunc
                     });
                 }
-                else if (MyEvents.currentEvent.type === 'fixed' && MyEvents.currentEvent.allDay) {
-                    MyEvents.currentEvent.type = 'fixedAllDay';
-                    MyEvents.processChangeOfEventType(MyEvents.currentEvent, 'fixed');
-                    MyEvents.imposeEventDurationBound();
-                    MyEvents.saveEvent();
-                }
+                else {
+                    // This means !allDay -> allDay
+                    if (MyItems.currentItem.type === 'event' && MyItems.currentItem.allDay && MyItems.currentItem.startTimeText) {
+                        Item.setStart(MyItems.currentItem);
+                        MyItems.currentItem.dur = settings.defaultTaskDuration[1];
+                        MyItems.processEventDuration(MyItems.currentItem);
+                    }
+                    // This means allDay -> !allDay
+                    else if (MyItems.currentItem.type === 'event' && !MyItems.currentItem.allDay && !MyItems.currentItem.startTimeText) {
+                        Item.setStart(MyItems.currentItem);
+                        MyItems.currentItem.dur = settings.defaultTaskDuration[0];
+                        MyItems.processEventDuration(MyItems.currentItem);
+                    }
 
-                else if (MyEvents.currentEvent.type === 'fixedAllDay' && !MyEvents.currentEvent.allDay) {
-                    MyEvents.currentEvent.type = 'fixed';
-                    MyEvents.processChangeOfEventType(MyEvents.currentEvent, 'fixedAllDay');
-                    MyEvents.currentEvent.start.add(delta._milliseconds, 'ms');
-                    MyEvents.imposeEventDurationBound();
-                    MyEvents.saveEvent();
+                    MyItems.saveItem();
                 }
-                else
-                    MyEvents.saveEvent();
             },
             eventResize: function (event, delta, revertFunc) {
-                MyEvents.currentEvent = event;
-                if (event.type === 'fixed') {
+                MyItems.currentItem = event;
+                if (event.type === 'event' && !event.allDay) {
                     event.dur += (delta._data.hours * settings.slotsPerHour);
                     event.dur += (delta._data.minutes / settings.minuteGranularity);
-                    MyEvents.imposeEventDurationBound();
-                    MyEvents.processEventDuration();
-                    if (!MyEvents.recalcEventConstraints())
-                        $scope.currentEvent.error = 'Impossible to schedule due to constraints';
-                    MyEvents.saveEvent();
+                    MyItems.imposeEventDurationBound();
+                    MyItems.processEventDuration();
+                    if (!MyItems.recalcEventConstraints())
+                        $scope.currentItem.error = 'Impossible to schedule due to constraints';
+                    MyItems.saveItem();
                 }
-                else if (event.type === 'fixedAllDay') {
+                else if (event.type === 'event' && event.allDay) {
                     event.dur += delta.days();
-                    MyEvents.imposeEventDurationBound();
-                    MyEvents.processEventDuration();
-                    if (!MyEvents.recalcEventConstraints())
-                        $scope.currentEvent.error = 'Impossible to schedule due to constraints';
-                    MyEvents.saveEvent();
+                    MyItems.imposeEventDurationBound();
+                    MyItems.processEventDuration();
+                    if (!MyItems.recalcEventConstraints())
+                        $scope.currentItem.error = 'Impossible to schedule due to constraints';
+                    MyItems.saveItem();
                 }
-                else if (event.type === 'floating') {
+                else if (event.type === 'task') {
                     ModalService.openModal('floatToFixed');
                     ModalService.modals.floatToFixed.scope.setFloatToFixedData({
                         floatToFixedDelta: delta,

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('UsersModalCtrl', function (MyUsers, $scope, ModalService, MyEvents, MyResources, $rootScope) {
+    .controller('UsersModalCtrl', function (MyUsers, $scope, ModalService, MyItems, MyResources, $rootScope) {
         $scope.myUsers = MyUsers;
         $scope.successInfo = null;
 
@@ -23,7 +23,7 @@ angular.module('Schedulogy')
         $scope.remove = function (user) {
             $scope.myUsers.removeUser(user, function () {
                 MyResources.refresh();
-                MyEvents.refresh();
+                MyItems.refresh();
             });
         };
 

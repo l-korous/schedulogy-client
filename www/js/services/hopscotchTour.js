@@ -24,7 +24,7 @@ angular.module('Schedulogy')
                 },
                 {
                     title: "Task type",
-                    content: "Here is where you can select task type. Select 'Fixed' now.",
+                    content: "Here is where you can select task type. Select 'event' now.",
                     target: "tasktypeselector",
                     delay: 1000,
                     placement: "bottom"
@@ -78,7 +78,7 @@ angular.module('Schedulogy')
                 },
                 {
                     title: "Task type",
-                    content: "Let us give floating tasks a go - select 'Floating'.",
+                    content: "Let us give floating tasks a go - select 'task'.",
                     target: "tasktypeselector",
                     placement: "bottom"
                 },

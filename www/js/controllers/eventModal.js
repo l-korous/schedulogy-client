@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyItems, Item, moment, ionicDatePicker, ionicTimePicker, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
+    .controller('EventModalCtrl', function (DateUtils, $scope, settings, MyItems, Item, moment, ionicDatePicker, ionicTimePicker, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
         $scope.myItems = MyItems;
         $scope.myResources = MyResources;
         $scope.popupOpen = false;
@@ -15,15 +15,29 @@ angular.module('Schedulogy')
 
             $scope.cachedDurValue = [0, 0];
 
-            ModalService.openModalInternal('task', function () {
+            ModalService.openModalInternal('event', function () {
                 $ionicScrollDelegate.scrollTop();
-                var primaryInput = $(ModalService.modals.task.modalInternal.modalEl).find('#primaryInput');
+                var primaryInput = $(ModalService.modals.event.modalInternal.modalEl).find('#primaryInput');
                 primaryInput.focus();
                 primaryInput.select();
 
                 $(function () {
                     $('#taskModalTextarea').autogrow();
                 });
+            });
+        };
+
+        $scope.close = function () {
+            ModalService.closeModalInternal();
+        };
+
+        ModalService.initModal('event', $scope, $scope.open, $scope.close);
+
+        $scope.save = function () {
+            $scope.myItems.saveItem($scope.currentItem, function () {
+                ModalService.closeModalInternal('event');
+            }, function () {
+                ModalService.closeModalInternal('event');
             });
         };
 
@@ -37,20 +51,6 @@ angular.module('Schedulogy')
             $scope.myItems.processEventDuration($scope.currentItem);
         };
 
-        $scope.close = function () {
-            ModalService.closeModalInternal();
-        };
-
-        ModalService.initModal('task', $scope, $scope.open, $scope.close);
-
-        $scope.save = function () {
-            $scope.myItems.saveItem($scope.currentItem, function () {
-                ModalService.closeModalInternal('task');
-            }, function () {
-                ModalService.closeModalInternal('task');
-            });
-        };
-
         $scope.processEventDuration = function () {
             if (!$scope.myItems.recalcEventConstraints($scope.currentItem))
                 $scope.currentItem.error = 'Impossible to schedule due to constraints';
@@ -62,9 +62,9 @@ angular.module('Schedulogy')
 
         $scope.remove = function () {
             $scope.myItems.deleteItemById($scope.myItems.currentItem._id, function () {
-                ModalService.closeModalInternal('task');
+                ModalService.closeModalInternal('event');
             }, function () {
-                ModalService.closeModalInternal('task');
+                ModalService.closeModalInternal('event');
             });
         };
 
@@ -72,12 +72,8 @@ angular.module('Schedulogy')
             if ($scope.currentItem && inspectedEvent._id === $scope.currentItem._id)
                 return false;
             var retVal = true;
-            if ($scope.currentItem && ($scope.currentItem.blocks || $scope.currentItem.needs)) {
+            if ($scope.currentItem && $scope.currentItem.blocks) {
                 $scope.currentItem.blocks && $scope.currentItem.blocks.forEach(function (other) {
-                    if (other === inspectedEvent._id)
-                        retVal = false;
-                });
-                $scope.currentItem.needs && $scope.currentItem.needs.forEach(function (other) {
                     if (other === inspectedEvent._id)
                         retVal = false;
                 });
@@ -99,18 +95,6 @@ angular.module('Schedulogy')
             return true;
         };
 
-        $scope.needsFilter = function (inspectedEvent) {
-            if (!$scope.commonFilter(inspectedEvent))
-                return false;
-            if ($scope.currentItem && inspectedEvent.constraint.start && $scope.currentItem.constraint.end) {
-                var latestPossibleStartOfCurrentEvent = Item.latestPossibleStart($scope.currentItem);
-                var earliestPossibleFinishOfInspectedEvent = Item.earliestPossibleFinish(inspectedEvent);
-                if (latestPossibleStartOfCurrentEvent.diff(earliestPossibleFinishOfInspectedEvent, 'm') < 0)
-                    return false;
-            }
-            return true;
-        };
-
         $scope.startValueForOrderingOfDependencies = function (event) {
             return event.start.unix();
         };
@@ -118,9 +102,10 @@ angular.module('Schedulogy')
         // Date & time picker
         $scope.datePicker = {
             callback: function (val) {
-                $scope.currentItem.due = DateUtils.pushDatePart(moment(val), $scope.currentItem.due);
+                $scope.currentItem.start = DateUtils.pushDatePart(moment(val), $scope.currentItem.start);
+                Item.setStart($scope.currentItem);
+                MyItems.processEventDuration($scope.currentItem);
 
-                Item.setDue($scope.currentItem);
                 if (!MyItems.recalcEventConstraints($scope.currentItem))
                     $scope.currentItem.error = 'Impossible to schedule due to constraints';
 
@@ -129,9 +114,9 @@ angular.module('Schedulogy')
         };
         $scope.timePicker = {
             callback: function (val) {
-                $scope.currentItem.due = DateUtils.pushTime(val, $scope.currentItem.due);
-                $scope.currentItem.dueTimeText = $scope.currentItem.due.format(settings.timeFormat);
-                $scope.currentItem.error = 'Impossible to schedule due to constraints';
+                $scope.currentItem.start = DateUtils.pushTime(val, $scope.currentItem.start);
+                $scope.currentItem.startTimeText = $scope.currentItem.start.format(settings.timeFormat);
+                MyItems.processEventDuration($scope.currentItem);
 
                 $scope.form.$setDirty();
             }
@@ -140,7 +125,7 @@ angular.module('Schedulogy')
         $scope.openDatePicker = function () {
             $scope.popupOpen = true;
 
-            $scope.datePicker.inputDate = $scope.currentItem ? $scope.currentItem.due.toDate() : MyItems.getBTime();
+            $scope.datePicker.inputDate = $scope.currentItem ? $scope.currentItem.start.toDate() : MyItems.getBTime();
             if ($scope.currentItem.constraint.start)
                 $scope.datePicker.from = $scope.currentItem.constraint.start.toDate();
             if ($scope.currentItem.constraint.end)
@@ -150,23 +135,27 @@ angular.module('Schedulogy')
         };
         $scope.openTimePicker = function () {
             $scope.popupOpen = true;
-            $scope.timePicker.inputTime = $scope.currentItem ? (DateUtils.toMinutes($scope.currentItem.due) * 60) : MyItems.getBTime();
 
-            var dueDateEqualsStartConstraint =
-                $scope.currentItem.constraint.start ? DateUtils.equalDays($scope.currentItem.due, $scope.currentItem.constraint.startDue) : false;
+            $scope.timePicker.inputTime = $scope.currentItem ? (DateUtils.toMinutes($scope.currentItem.start) * 60) : MyItems.getBTime();
 
-            var dueDateEqualsEndConstraint =
-                $scope.currentItem.constraint.end ? DateUtils.equalDays($scope.currentItem.due, $scope.currentItem.constraint.end) : false;
+            // here the event type is fixed, because allDay events do not have timePicker shown.
+            // This is for the 'start' time picker.
+            var startDateEqualsStartConstraint =
+                $scope.currentItem.constraint.start ? DateUtils.equalDays($scope.currentItem.start, $scope.currentItem.constraint.start) : false;
+
+            var startDateEqualsEndConstraint =
+                $scope.currentItem.constraint.end ? DateUtils.equalDays($scope.currentItem.start, $scope.currentItem.constraint.end) : false;
 
             $scope.timePicker.constraint = {
-                from: dueDateEqualsStartConstraint ? (DateUtils.toMinutes($scope.currentItem.constraint.startDue)) : settings.startHour * 60,
-                to: dueDateEqualsEndConstraint ? DateUtils.toMinutes($scope.currentItem.constraint.end) : settings.endHour * 60
+                from: startDateEqualsStartConstraint ? (DateUtils.toMinutes($scope.currentItem.constraint.start)) : 0,
+                to: startDateEqualsEndConstraint ? DateUtils.toMinutes($scope.currentItem.constraint.end) : 24 * 60
             };
+
             ionicTimePicker.openTimePicker($scope.timePicker);
         };
 
         $scope.$on('Esc', function () {
-            if (ModalService.currentModal === 'task') {
+            if (ModalService.currentModal === 'event') {
                 if ($scope.popupOpen) {
                     $timeout(function () {
                         $('.button_close').click();
@@ -180,6 +169,6 @@ angular.module('Schedulogy')
         });
 
         $scope.$on('$destroy', function () {
-            ModalService.modals.task.modal.remove();
+            ModalService.modals.event.modal.remove();
         });
     });

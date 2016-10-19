@@ -34,9 +34,8 @@ angular.module('Schedulogy')
                 return;
             angular.extend($scope.myUsers.currentUser, $scope.currentUser);
             $scope.myUsers.saveUser(function () {
-                ModalService.closeModalInternal(function () {
-                    ModalService.modals.users.scope.successInfo = settings.registrationSuccessInfo;
-                });
+                ModalService.closeModalInternal();
+                ModalService.modals.users.scope.successInfo = settings.registrationSuccessInfo;
             }, function (error) {
                 $scope.errorInfo = settings.registrationErrorInfo(error);
             });

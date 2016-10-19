@@ -1,6 +1,6 @@
 angular.module('Schedulogy')
-    .controller('FloatToFixedModalCtrl', function ($scope, settings, MyEvents, ModalService) {
-        $scope.myEvents = MyEvents;
+    .controller('FloatToFixedModalCtrl', function ($scope, settings, MyItems, ModalService) {
+        $scope.myItems = MyItems;
 
         $scope.open = function () {
             ModalService.openModalInternal('floatToFixed');
@@ -21,28 +21,28 @@ angular.module('Schedulogy')
         ModalService.initModal('floatToFixed', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
-            MyEvents.currentEvent = $scope.floatToFixedEvent;
-            MyEvents.currentEvent.type = 'fixed';
+            MyItems.currentItem = $scope.floatToFixedEvent;
+            MyItems.currentItem.type = 'event';
             if ($scope.floatToFixedMethod === 'resize') {
-                MyEvents.processChangeOfEventType(MyEvents.currentEvent, 'floating');
-                MyEvents.currentEvent.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
-                MyEvents.imposeEventDurationBound();
-                MyEvents.processEventDuration();
-                MyEvents.recalcEventConstraints();
-                if (!MyEvents.recalcEventConstraints()) {
-                    MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
+                MyItems.processChangeOfEventType(MyItems.currentItem, 'task');
+                MyItems.currentItem.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
+                MyItems.imposeEventDurationBound();
+                MyItems.processEventDuration();
+                MyItems.recalcEventConstraints();
+                if (!MyItems.recalcEventConstraints()) {
+                    MyItems.currentItem.error = 'Impossible to schedule due to constraints';
                     return;
                 }
             }
             else if ($scope.floatToFixedMethod === 'drop') {
-                MyEvents.processChangeOfEventType(MyEvents.currentEvent, 'floating');
-                MyEvents.processEventDuration();
-                if (!MyEvents.recalcEventConstraints()) {
-                    MyEvents.currentEvent.error = 'Impossible to schedule due to constraints';
+                MyItems.processChangeOfEventType(MyItems.currentItem, 'task');
+                MyItems.processEventDuration();
+                if (!MyItems.recalcEventConstraints()) {
+                    MyItems.currentItem.error = 'Impossible to schedule due to constraints';
                     return;
                 }
             }
-            MyEvents.saveEvent();
+            MyItems.saveItem();
             ModalService.closeModalInternal();
         };
 

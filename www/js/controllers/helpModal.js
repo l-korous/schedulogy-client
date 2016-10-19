@@ -33,16 +33,16 @@ angular.module('Schedulogy')
                     )
             },
             {
-                name: 'Task types',
+                name: 'Entry types',
                 icon: 'ion-paper-airplane',
                 content: $sce.trustAsHtml(
-                    '<h2 style="border-left:5px solid ' + settings.eventColor.fixed + '">Fixed</h2>' +
-                    '<p>Standard tasks, that have a fixed start (date &amp; time), and a fixed end (date &amp; time). The end is set up with help of task duration.</p>' +
-                    '<h2 style="border-left:5px solid ' + settings.eventColor.fixedAllDay + '">Fixed (all-day)</h2>' +
-                    '<p>Convenience type, similar to fixed tasks, with start, end and duration containing date part only (no specific time).</p>' +
-                    '<p>All fixed tasks can be concurrently in the calendar. There is no limit on the number of concurrent fixed tasks.</p>' +
-                    '<h2 style="border-left:5px solid ' + settings.eventColor.floating + '">Floating</h2>' +
-                    '<p class="bold">This task type does NOT have a fixed start and end, but has a fixed due date. SCHEDULOGY schedules these tasks so that these due dates (as well as dependencies - see later sections) are satisfied.</p>' +
+                    '<h2 style="border-left:5px solid ' + settings.itemColor.event + '">Event</h2>' +
+                    '<p>Standard events, that have a fixed start (date &amp; time), and a fixed end (date &amp; time). The end is set up with help of event duration.</p>' +
+                    '<h2 style="border-left:5px solid ' + settings.itemColor.event + '">Event (all-day)</h2>' +
+                    '<p>Convenience type, similar to events, with start, end and duration containing date part only (no specific time).</p>' +
+                    '<p>All events can be concurrently in the calendar. There is no limit on the number of concurrent events.</p>' +
+                    '<h2 style="border-left:5px solid ' + settings.itemColor.floating + '">Task</h2>' +
+                    '<p class="bold">This type ("floating" task) does NOT have a fixed start and end, but has a fixed due date. SCHEDULOGY schedules these tasks so that these due dates (as well as dependencies - see later sections) are satisfied.</p>' +
                     '<p>SCHEDULOGY makes sure that there is only one concurrent floating task in the calendar. There can be no fixed task concurrent with any floating task either.</p>'
                     )
             },

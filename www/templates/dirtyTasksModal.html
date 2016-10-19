@@ -12,7 +12,7 @@
                     When you edit any of these Tasks, a new attempt to schedule them will occur.
                 </p>
             </div>
-            <div class="item item-button-right" ng-repeat="event in myEvents.dirtyEvents" ng-click="myEvents.currentEvent = event;
+            <div class="item item-button-right" ng-repeat="event in myItems.dirtyItems" ng-click="myItems.currentItem = event;
                             modalService.openModal('task');">
                 {{event.shortInfo}}
                 <button class="button button-clear" ng-click="deleteEvent(event, $event);">

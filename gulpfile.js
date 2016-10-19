@@ -23,12 +23,12 @@ gulp.task('concat-js', function () {
         "www/js/directives/repeatPassword.js",
         "www/js/directives/fileModel.js",
         "www/js/services/dateUtils.js",
-        "www/js/services/event.js",
+        "www/js/services/item.js",
         "www/js/services/auth.js",
         "www/js/services/fileUpload.js",
         "www/js/services/notification.js",
         "www/js/services/cordovaUtilities.js",
-        "www/js/services/myEvents.js",
+        "www/js/services/myItems.js",
         "www/js/services/myUsers.js",
         "www/js/services/myResources.js",
         "www/js/services/fullCalendar.js",
@@ -44,13 +44,14 @@ gulp.task('concat-js', function () {
         "www/js/controllers/termsOfServiceModal.js",
         "www/js/controllers/iCalUpload.js",
         "www/js/controllers/taskModal.js",
+        "www/js/controllers/eventModal.js",
+        "www/js/controllers/reminderModal.js",
         "www/js/controllers/usersModal.js",
         "www/js/controllers/resourcesModal.js",
         "www/js/controllers/login.js",
         "www/js/controllers/registration.js",
         "www/js/controllers/passwordReset.js",
         "www/js/controllers/forgottenPassword.js",
-        "www/js/controllers/leftMenuModal.js",
         "www/js/controllers/errorModal.js",
         "www/js/controllers/dirtyTasksModal.js",
         "www/js/controllers/changeUsernameModal.js",
@@ -69,7 +70,7 @@ gulp.task('concat-js', function () {
         }))
         .pipe(replace("templateUrl: 'templates/", "templateUrl: 'templates-min/"))
         .pipe(replace("fromTemplateUrl('templates/", "fromTemplateUrl('templates-min/"))
-        .pipe(replace('currentEvent', 'axe'))
+        .pipe(replace('currentItem', 'axe'))
         .pipe(replace('getBTime', 'qaz'))
         .pipe(replace('fillBlocksAndNeedsForShow', 'clockId'))
         .pipe(replace('openUserMenuPopover', 'whatever'))
@@ -78,7 +79,7 @@ gulp.task('concat-js', function () {
         .pipe(replace('processEventDuration', 'gfa'))
         .pipe(replace('registrationSuccessInfo', 'bcya'))
         .pipe(replace('passwordResetSuccessInfo', 'bxya'))
-        .pipe(replace('myEvents', 'axuie'))
+        .pipe(replace('myItems', 'axuie'))
         .pipe(replace('successInfo', 'aaq'))
         .pipe(replace('errorInfo', 'aaw'))
         .pipe(replace('reinitDatePicker', 'fgra'))
@@ -123,12 +124,12 @@ gulp.task('html', function () {
 });
 gulp.task('template-bundle', function () {
     return gulp.src(['www/templates/*.html', 'www/templates/**/*.html'])
-        .pipe(replace('currentEvent', 'axe'))
+        .pipe(replace('currentItem', 'axe'))
         .pipe(replace('getBTime', 'qaz'))
         .pipe(replace('fillBlocksAndNeedsForShow', 'clockId'))
         .pipe(replace('openUserMenuPopover', 'whatever'))
         .pipe(replace('currentUser', 'uty'))
-        .pipe(replace('myEvents', 'axuie'))
+        .pipe(replace('myItems', 'axuie'))
         .pipe(replace('floatToFixedEvent', 'woopra'))
         .pipe(replace('processEventDuration', 'gfa'))
         .pipe(replace('registrationSuccessInfo', 'bcya'))

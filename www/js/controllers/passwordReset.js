@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller("PasswordResetCtrl", function ($scope, Auth, $location, settings, Hopscotch, $rootScope, MyEvents, MyResources, MyUsers, $timeout, $state) {
+    .controller("PasswordResetCtrl", function ($scope, Auth, $location, settings, Hopscotch, $rootScope, MyItems, MyResources, MyUsers, $timeout, $state) {
         $scope.successInfo = null;
         $scope.errorInfo = null;
         $scope.data = {};
@@ -40,13 +40,13 @@ angular.module('Schedulogy')
             Auth.activate($scope.data.password, $scope.userId, $scope.passwordResetHash).success(function (activateResponse) {
                 $rootScope.isLoading = false;
                 Auth.tryLogin({email: activateResponse.email, password: $scope.data.password}).then(function (loginResponse) {
-                    MyEvents.refresh();
+                    MyItems.refresh();
                     MyResources.refresh();
                     MyUsers.refresh();
                     $location.path('');
                     $location.search('');
                     $state.go(settings.defaultStateAfterLogin, {}, {location: false});
-                    if (loginResponse.runIntro && !$rootScope.isMobileNarrow && !$rootScope.isMobileLow)
+                    if (loginResponse.runIntro && !$rootScope.smallScreen)
                         Hopscotch.runTour(750);
                 }, function (msg) {
                     $scope.errorInfo = settings.loginErrorInfo(msg);

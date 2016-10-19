@@ -1,8 +1,14 @@
 angular.module('Schedulogy')
-    .controller('MainCtrl', function ($scope, settings, ModalService, MyEvents) {
+    .controller('MainCtrl', function ($scope, $ionicSideMenuDelegate, ModalService, MyItems, Hopscotch) {
         $scope.modalService = ModalService;
-        $scope.myEvents = MyEvents;
+        $scope.myItems = MyItems;
+        $scope.toggleMenu = function () {
+            $ionicSideMenuDelegate.toggleLeft();
+        };
+        
+        $ionicSideMenuDelegate.canDragContent(false);
 
-        // Could this be removed?
-        $scope.appVersion = settings.appVersion;
+        $scope.runTour = function () {
+            Hopscotch.runTour(0);
+        };
     });

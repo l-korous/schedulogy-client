@@ -5,7 +5,6 @@ angular.module('Schedulogy')
                 method: "GET",
                 url: settings.serverUrl + "/task",
                 params: {
-                    //userId: "@userId",
                     btime: '@btime'
                 }
             },
@@ -43,35 +42,67 @@ angular.module('Schedulogy')
             }
         });
 
-        Task.fromEvent = function (event) {
-            // Some cleanup.
-            // TODO - find out why these (null values in the arrays) are happening.
-            event.blocks = event.blocks.filter(function (e) {
-                return e ? true : false;
+        Task.toServer = function (task) {
+            // All types must have ids.
+            var toReturn = angular.extend(new Task, {
+                _id: task._id,
+                type: task.type
             });
-            event.needs = event.needs.filter(function (e) {
-                return e ? true : false;
-            });
-            var task = angular.extend(new Task, {
-                _id: event._id,
-                title: event.title,
-                start: (event.type === 'fixedAllDay' ? event.start.clone().utc().startOf('day') : event.start.clone().utc()).unix(),
-                dur: event.dur,
-                type: event.type,
-                resource: event.resource,
-                admissibleResources: event.admissibleResources,
-                iCalUid: event.iCalUid,
-                constraint: {
-                    start: event.constraint.start ? event.constraint.start.toISOString() : null,
-                    end: event.constraint.end ? event.constraint.end.toISOString() : null
-                },
-                desc: event.desc,
-                due: event.due ? event.due.unix() : null,
-                needs: event.type === 'floating' ? event.needs : [],
-                blocks: event.blocks || []
-            });
+            switch (task.type) {
+                case 'task':
+                    // Some cleanup.
+                    // TODO - find out why these (null values in the arrays) are happening.
+                    task.blocks = task.blocks.filter(function (e) {
+                        return e ? true : false;
+                    });
+                    task.needs = task.needs.filter(function (e) {
+                        return e ? true : false;
+                    });
 
-            return task;
+                    toReturn = angular.extend(toReturn, {
+                        title: task.title,
+                        start: (task.allDay ? task.start.clone().local().startOf('day').utc() : task.start.clone().utc()).unix(),
+                        dur: task.dur,
+                        allDay: task.allDay,
+                        admissibleResources: task.admissibleResources,
+                        constraint: {
+                            start: task.constraint.start ? task.constraint.start.toISOString() : null,
+                            end: task.constraint.end ? task.constraint.end.toISOString() : null
+                        },
+                        desc: task.desc,
+                        due: task.due.unix(),
+                        needs: event.needs || [],
+                        blocks: event.blocks || []
+                    });
+                    break;
+                case 'event':
+                    toReturn = angular.extend(toReturn, {
+                        title: task.title,
+                        start: (task.allDay ? task.start.clone().local().startOf('day') : task.start.clone()).unix(),
+                        end: task.end.clone().unix(),
+                        dur: task.dur,
+                        allDay: task.allDay,
+                        resource: task.resource,
+                        iCalUid: task.iCalUid,
+                        constraint: {
+                            end: task.constraint.end ? task.constraint.end.toISOString() : null
+                        },
+                        desc: task.desc,
+                        blocks: task.blocks || []
+                    });
+                    break;
+                case 'reminder':
+                    toReturn = angular.extend(toReturn, {
+                        title: task.title,
+                        desc: task.desc,
+                        resource: task.resource,
+                        start: task.done ? task.start.unix() : null,
+                        done: task.done
+                    });
+                    break;
+            }
+
+            return toReturn;
         };
 
         return Task;
