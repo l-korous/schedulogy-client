@@ -50,6 +50,10 @@ h2 {
     font-size:25px;
 }
 
+.button {
+    border-radius:0 ! important;
+}
+
 .smallPopover h2 {
     font-size:13px;
     margin:0;
@@ -453,7 +457,6 @@ td.fc-week-number a {
 .fc-event .fc-content .fc-title {
     text-align:left;
     margin-bottom:1px;
-    font-weight: bold;
     overflow: hidden;
     white-space: pre-line;
     text-overflow:ellipsis;
@@ -482,10 +485,9 @@ td.fc-week-number a {
 }
 
 .title span {
-    padding:1px 6px;
-    border-radius:3px;
-    background: #ffa400;
-    margin-left:4px;
+    color:#387ef5;
+    font-size:.75em;
+    padding: 0 5px 0 0;
 }
 
 .modal .range {
@@ -641,7 +643,7 @@ i.assertive {
 }
 
 .bar .title {
-    font-size:19px;
+    font-size:24px;
 }
 
 .fc-toolbar {
@@ -700,6 +702,10 @@ a.item-xsmall{
     background: rgba(0,0,0,.25);
 }
 
+textarea {
+    height:60px;
+}
+
 input[type=text]:focus, select:focus, textarea:focus {
     color:#387ef5;
 }
@@ -728,14 +734,20 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     top:0;
     left:0;
     margin:0;
-    width:100%;
     height:44px;
     padding:5px 0;
     text-align: center;
+    margin-left:246px;
 }
 
 .red {
     color:red ! important;
+}
+
+.fc-toolbar h2 {
+    font-size:20px;
+    position: relative;
+    top:3px;
 }
 
 @media(max-width:1000px) {
@@ -744,7 +756,7 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 }
 
-@media(max-width:950px) {
+@media(max-width:900px) {
     .fc-toolbar h2 {
         display:none;
     }
@@ -755,10 +767,6 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
         margin-bottom:10px;
     }
 
-    .fc-event .fc-content {
-        padding:3px;
-    }
-
     #theOnlyCalendar {
         padding-top:.3em;
     }
@@ -767,6 +775,7 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
 @media(max-width:768px) {
     .fc-toolbar h2 {
         font-size:18px;
+        display:block;
         position: relative;
         top:4px;
     }
@@ -774,69 +783,73 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     .fc-toolbar {
         margin-bottom:.3em;
     }
+
+    .fc-event .fc-content {
+        padding:2px;
+    }
 }
 
 @media(max-width:720px) {
     .fc-toolbar h2 {
         font-size:14px;
         position: relative;
-        top:6px;
+        top:8px;
+    }
+
+    .fc button {
+        padding: 0 .6em;
     }
 }
 
 
 @media(max-width:650px) {
-    #mainHeader .title {
+    .fc-left {
         display:none;
+    }
+
+    .fc-toolbar h2 {
+        font-size:18px;
+        display:block;
+        position: relative;
+        top:4px;
     }
 }
 
 @media(max-width:500px) {
-    .fc-toolbar h2 {
+    .simpleScreenWrapper {
+        padding:20px;
+    }
+
+    .fc-event .fc-content {
+        padding:1px;
+    }
+
+    #mainHeader .title {
         display:none;
     }
 
-    .simpleScreenWrapper {
-        padding:20px;
-    } 
+    .topLauncher {
+        margin-left:50px;
+        text-align:left;
+    }
 
     .marginSides3, .marginSides5 {
         margin-left:0 ! important;
         margin-right:0 ! important;
     }
 
-    .fc-event .fc-content {
-        padding:3px;
-    }   
-
     .fc-agendaWeek-view .fc-day-header {
         font-size:.8em;
     }
 
-    .fc button {
-        padding: 0 .45em;
-    }
-
     .fc-agendaWeek-view .fc-day-header {
         font-size:.8em;
-    }
-
-    .fc button {
-        padding: 0 .45em;
-    }
-
-    .fc-event .fc-content {
-        padding:1.5px;
-    }
-
-    #mainHeader .title {
-        display:none;
     }
 }
 
 @media(max-width:450px) {
     .fc button {
-        padding: 0 .3em;
+        padding: 0 .4em;
     }
 
     .fc-agendaWeek-view .fc-day-header {
@@ -846,7 +859,7 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
 
 @media(max-width:400px) {
     .fc button {
-        padding: 0 .25em;
+        padding: 0 .3em;
     }
 
     .fc-agendaWeek-view .fc-day-header {
@@ -854,19 +867,27 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 }
 
-@media(max-width:360px) {
+@media(max-width:380px) {
     .fc button {
         padding: 0 .2em;
     }
-
-    .fc-agendaWeek-view .fc-day-header {
-        font-size:.7em;
-    }
 }
 
 
+@media(max-width:370px) {
+    .fc button {
+        padding: 0 .1em;
+    }
+}
+
 @media(max-width:340px) {
     #button-customId-prevLong, #button-customId-prev, #button-customId-now, #button-customId-next, #button-customId-nextLong {
-        padding:0 .1em;
+        padding:0 .05em;
+    }
+}
+
+@media(max-width:325px) {
+    #button-customId-prevLong, #button-customId-prev, #button-customId-now, #button-customId-next, #button-customId-nextLong {
+        padding:0;
     }
 }

@@ -46,25 +46,61 @@
                     Unscheduled Tasks
                 </a>
 
-                <a id="newevent" class="item item-icon-left item-small" ng-click="toggleMenu();
+                <a id="newevent" class="item item-small" ng-if="!$root.smallScreen" ng-click="toggleMenu();
                     myItems.newCurrentItem('event');
                     modalService.openModal('event');">
-                    <i class="icon ion-plus positive"></i>
-                    New Event
+
+                    <span class="button button-assertive" style="background-color:#387ef5;padding:2px 20px;line-height: 20px;min-height:0;width:100%;">
+                        New Event
+                    </span>
                 </a>
 
-                <a id="newtask" class="item item-icon-left item-small" ng-click="toggleMenu();
+                <a id="newtask" class="item item-small" ng-if="!$root.smallScreen" ng-click="toggleMenu();
                     myItems.newCurrentItem('task');
                     modalService.openModal('task');">
-                    <i class="icon ion-plus positive" style="color:#ffa400"></i>
-                    New Task
+
+                    <span class="button button-assertive" style="background-color:#ffa400;padding:2px 20px;line-height: 20px;min-height:0;width:100%">
+                        New Task
+                    </span>
                 </a>
 
-                <a id="newreminder" class="item item-icon-left item-small" ng-click="toggleMenu();
+                <a id="newreminder" class="item item-small" ng-if="!$root.smallScreen"s ng-click="toggleMenu();
                     myItems.newCurrentItem('reminder');
                     modalService.openModal('reminder');">
-                    <i class="icon ion-plus" style="color:#bd0000"></i>
-                    New Reminder
+
+                    <span class="button button-assertive" style="background-color:#bd0000;padding:2px 20px;line-height: 20px;min-height:0;width:100%">
+                        New Reminder
+                    </span>
+                </a>
+
+                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                    switchToView('agendaDay');">
+                    <i class="icon ion-calendar"></i>
+                    Day
+                </a>
+
+                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                    switchToView('agenda3Day');">
+                    <i class="icon ion-more"></i>
+                    3 Days
+                </a>
+
+                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                    switchToView('agendaWeek');">
+                    <i class="icon ion-more"></i>
+                    Week
+                </a>
+
+                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                    switchToView('month');">
+                    <i class="icon ion-grid"></i>
+                    Month
+                </a>
+
+                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                    switchToView('listMonth');">
+                    <i class="icon ion-clipboard"></i>
+                    List
                 </a>
             </div>
 
@@ -94,7 +130,7 @@
             </div>
 
             <div class="list">
-                <a ng-if="!$root.smallScreen" class="item item-icon-left item-small" ng-click="toggleMenu();
+                <a ng-if="false" class="item item-icon-left item-small" ng-click="toggleMenu();
                     runTour();">
                     <i class="icon ion-university "></i>  
                     Tour
@@ -111,10 +147,8 @@
                     <i class="icon ion-mic-a dark"></i>
                     Send Feedback
                 </a>
-            </div>
-
-            <div class="list">
-                <a class="item item-icon-left item-small" ng-click="toggleMenu();
+                
+                <a ng-if="false" class="item item-icon-left item-small" ng-click="toggleMenu();
                     modalService.openModal('changeUsername');">
                     <i class="icon ion-person dark"></i>
                     Change Username
@@ -125,9 +159,7 @@
                     <i class="icon ion-locked dark"></i>
                     Change Password
                 </a>
-            </div>
-
-            <div class="list">
+                
                 <a class="item item-icon-left item-small" ng-click="toggleMenu();
                     $root.goToLogin()">
                     <i class="icon ion-log-out dark"></i>

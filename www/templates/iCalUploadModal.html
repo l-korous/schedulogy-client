@@ -6,6 +6,9 @@
         <div class="item help-block item-no-wrap">
             {{successInfo}}
         </div>
+        <button class="button button-block button-dark button-outline button-single" ng-click="close();">
+            Close
+        </button>
     </div>
     <ion-content ng-show="!successInfo">
         <form name="$parent.form" novalidate>

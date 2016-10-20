@@ -19,16 +19,22 @@
             </div>
             <div class="list">
                 <label class="item item-input">
-                    <textarea placeholder="Send us a message..." ng-model="data.feedbackText" rows="15" required id="primaryInput"></textarea>
+                    <textarea placeholder="Send us a message..." ng-model="data.feedbackText" required id="feedbackModalTextarea"></textarea>
                 </label>
             </div>
 
-            <button class="button button-block button-positive button-single marginTop3" ng-disabled="form.$invalid" ng-click="save();">
-                Send
-            </button>
-            <button class="button button-block button-outline button-dark button-single marginTop1" ng-click="close();">
-                Cancel
-            </button>
+            <div class="row">
+                <div class="col-50 padding-horizontal padding-top">
+                    <button class="button button-block button-positive" ng-disabled="form.$invalid" ng-click="save();">
+                        Send
+                    </button>
+                </div>
+                <div class="col-50 padding-horizontal padding-top">
+                    <button class="button button-block button-outline button-dark" ng-click="close();">
+                        Cancel
+                    </button>
+                </div>
+            </div>
         </form>
     </ion-content>
 </ion-modal-view>

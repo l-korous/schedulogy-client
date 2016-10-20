@@ -207,7 +207,7 @@ angular.module('Schedulogy')
                         item.textColor = settings.itemColor.reminder;
                     }
 
-                    var start = task.done ? moment.unix(task.start).local() : moment(new Date()).local().startOf('day');
+                    var start = task.done ? moment.unix(task.start).local() : this.btime.startOf('day');
                     this.setStart(item, start);
                     break;
             }

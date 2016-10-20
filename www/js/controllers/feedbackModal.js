@@ -7,7 +7,14 @@ angular.module('Schedulogy')
                 errorInfo: ''
             };
 
-            ModalService.openModalInternal('feedback');
+            ModalService.openModalInternal('feedback', function () {
+                var primaryInput = $(ModalService.modals.feedback.modalInternal.modalEl).find('#feedbackModalTextarea');
+                primaryInput.focus();
+                primaryInput.select();
+                $(function () {
+                    $('#feedbackModalTextarea').autogrow();
+                });
+            });
         };
 
         $scope.close = function () {

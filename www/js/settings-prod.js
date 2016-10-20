@@ -4,7 +4,7 @@ angular.module('Schedulogy')
         minPasswordGroups: 2,
         minPasswordLength: 8,
         loadingTemplate: 'Loading,<br />please wait...',
-        appVersion: '2.2.3-b',
+        appVersion: '2.3.0-b',
         applicationName: 'Schedulogy',
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
@@ -30,7 +30,7 @@ angular.module('Schedulogy')
             normal: 103,
             smallScreen: 80
         },
-        minCalendarRowHeight: 45,
+        minCalendarRowHeight: 30,
         checkNewVersion: false,
         dateFormat: 'MMM, Do',
         timeFormat: 'HH:mm',

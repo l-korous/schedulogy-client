@@ -18,7 +18,7 @@ angular.module('Schedulogy')
                 primaryInput.select();
 
                 $(function () {
-                    $('#taskModalTextarea').autogrow();
+                    $('#reminderModalTextarea').autogrow();
                 });
             });
         };

@@ -119,9 +119,6 @@ angular.module('Schedulogy')
             var style = document.createElement('style');
             style.type = 'text/css';
             style.innerHTML = '.fc-time-grid .fc-slats td { height: ' + row_height.toString() + 'px; }';
-            // Hiding the title on narrow mobile.
-            if ($rootScope.isMobileNarrow)
-                style.innerHTML += '.fc-center { display:none ! important; }';
             var list = document.getElementsByTagName('head')[0], item = document.getElementsByTagName('head')[0].lastElementChild;
             list.removeChild(item);
             list.appendChild(style);

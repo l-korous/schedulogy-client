@@ -119,8 +119,8 @@ angular.module('Schedulogy')
         $scope.datePicker = {
             callback: function (val) {
                 $scope.currentItem.due = DateUtils.pushDatePart(moment(val), $scope.currentItem.due);
-
                 Item.setDue($scope.currentItem);
+
                 if (!MyItems.recalcEventConstraints($scope.currentItem))
                     $scope.currentItem.error = 'Impossible to schedule due to constraints';
 
@@ -130,8 +130,10 @@ angular.module('Schedulogy')
         $scope.timePicker = {
             callback: function (val) {
                 $scope.currentItem.due = DateUtils.pushTime(val, $scope.currentItem.due);
-                $scope.currentItem.dueTimeText = $scope.currentItem.due.format(settings.timeFormat);
-                $scope.currentItem.error = 'Impossible to schedule due to constraints';
+                Item.setDue($scope.currentItem);
+                
+                if (!MyItems.recalcEventConstraints($scope.currentItem))
+                    $scope.currentItem.error = 'Impossible to schedule due to constraints';
 
                 $scope.form.$setDirty();
             }

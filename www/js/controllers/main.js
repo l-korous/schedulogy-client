@@ -5,7 +5,11 @@ angular.module('Schedulogy')
         $scope.toggleMenu = function () {
             $ionicSideMenuDelegate.toggleLeft();
         };
-        
+
+        $scope.switchToView = function (viewType) {
+            $('#theOnlyCalendar').fullCalendar('changeView', viewType);
+        };
+
         $ionicSideMenuDelegate.canDragContent(false);
 
         $scope.runTour = function () {

@@ -3,7 +3,11 @@ angular.module('Schedulogy')
         $scope.user = {name: $rootScope.currentUser ? $rootScope.currentUser.username : ''};
 
         $scope.open = function () {
-            ModalService.openModalInternal('changeUsername');
+            ModalService.openModalInternal('changeUsername', function () {
+                var primaryInput = $(ModalService.modals.changeUsername.modalInternal.modalEl).find('#primaryInput');
+                primaryInput.focus();
+                primaryInput.select();
+            });
         };
 
         $scope.close = function () {

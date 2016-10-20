@@ -14,7 +14,12 @@ angular.module('Schedulogy')
 
             $scope.successInfo = '';
             $scope.errorInfo = '';
-            ModalService.openModalInternal('changePassword');
+            
+            ModalService.openModalInternal('changePassword', function () {
+                var primaryInput = $(ModalService.modals.changePassword.modalInternal.modalEl).find('#primaryInput');
+                primaryInput.focus();
+                primaryInput.select();
+            });
         };
 
         $scope.close = function () {

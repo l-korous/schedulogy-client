@@ -22,7 +22,7 @@ angular.module('Schedulogy')
                 primaryInput.select();
 
                 $(function () {
-                    $('#taskModalTextarea').autogrow();
+                    $('#eventModalTextarea').autogrow();
                 });
             });
         };

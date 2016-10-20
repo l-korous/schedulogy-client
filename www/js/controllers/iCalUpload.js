@@ -28,10 +28,6 @@ angular.module('Schedulogy')
             fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {btime: MyItems.getBTime().unix()}, function (data) {
                 MyItems.tasksInResponseSuccessHandler(data, function () {
                     $scope.successInfo = settings.iCalUploadSuccess;
-                    $timeout(function () {
-                        ModalService.closeModalInternal();
-                        $scope.successInfo = null;
-                    }, 2000);
                     $rootScope.icalFile = null;
                     $scope.errorInfo = null;
                     $rootScope.isLoading = false;

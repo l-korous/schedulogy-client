@@ -5237,7 +5237,7 @@ var DayTableMixin = FC.DayTableMixin = {
         }
         // multiple days, so full single date string WON'T be in title text
         else if (this.colCnt > 1) {
-            return 'dddd DD MMM';//this.view.opt('dayOfMonthFormat'); // "Sat 12/10"
+            return ($(window).outerWidth() > 450 ? 'dddd DD MMM' : 'ddd DD MMM'); // "Sat"
         }
         // single day, so full single date string will probably be in title text
         else {
@@ -10307,7 +10307,7 @@ Calendar.mixin({
 Calendar.defaults = {
 
 	titleRangeSeparator: ' \u2013 ', // en dash
-	monthYearFormat: 'MMMM YYYY', // required for en. other locales rely on datepicker computable option
+	monthYearFormat: 'MMM YYYY', // required for en. other locales rely on datepicker computable option
 
 	defaultTimedEventDuration: '02:00:00',
 	defaultAllDayEventDuration: { days: 1 },
@@ -10510,7 +10510,7 @@ var dpComputableOptions = {
 	monthYearFormat: function(dpOptions) {
 		return dpOptions.showMonthAfterYear ?
 			'YYYY[' + dpOptions.yearSuffix + '] MMMM' :
-			'MMMM YYYY[' + dpOptions.yearSuffix + ']';
+			'MMM YYYY[' + dpOptions.yearSuffix + ']';
 	}
 
 };

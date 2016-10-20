@@ -35,10 +35,10 @@
                     <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="primaryInput" required name="title">
                 </label>
                 <label class="item item-input">
-                    <textarea placeholder="Description" ng-model="currentItem.desc" rows="5" id="taskModalTextarea"></textarea>
+                    <textarea placeholder="Description" ng-model="currentItem.desc" id="eventModalTextarea"></textarea>
                 </label>
 
-                <label class="item" ng-show="currentItem.constraint.endDateText && currentItem.constraint.end.year() < 2030">c
+                <label class="item item-no-wrap" ng-show="currentItem.constraint.endDateText && currentItem.constraint.end.year() < 2030">c
                     The latest this Event can end is on {{currentItem.constraint.endDateText}}, at {{currentItem.constraint.endTimeText}}.
                 </label>
 
