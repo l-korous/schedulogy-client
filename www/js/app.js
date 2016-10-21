@@ -128,8 +128,12 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             MyResources.refresh();
             $state.go(settings.defaultStateAfterLogin, {}, {location: false});
         }
-        else
-            $rootScope.goToLogin();
+        else {
+            $timeout(function () {
+                if (['login', 'registration', 'passwordReset'].indexOf($state.current.name) === -1)
+                    $rootScope.goToLogin();
+            }, 500);
+        }
 
         // Handle smallScreen
         $rootScope.smallScreen = ($window.innerWidth < settings.smallScreen);
@@ -139,7 +143,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
 
         // Controls display of 'loading'
         $rootScope.isLoading = true;
-        $timeout(function() {
+        $timeout(function () {
             $rootScope.isLoading = false;
         }, 1500);
 
