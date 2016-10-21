@@ -15,10 +15,10 @@ angular.module('Schedulogy')
             if (!$scope.form.$invalid) {
                 $rootScope.isLoading = true;
                 $scope.errorInfo = null;
-                Auth.register({email: $scope.data.email}).success(function () {
+                Auth.register({email: $scope.data.email}, function () {
                     $rootScope.isLoading = false;
                     $scope.successInfo = settings.registrationSuccessInfo;
-                }).error(function (errorResponse) {
+                }, function (errorResponse) {
                     $rootScope.isLoading = false;
                     $scope.errorInfo = settings.registrationErrorInfo(errorResponse.msg);
                 });

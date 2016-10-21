@@ -9,7 +9,7 @@ angular.module('Schedulogy')
             minGroups: settings.minPasswordGroups,
             minLength: settings.minPasswordLength
         };
-        
+
         $scope.userId = $location.search().user;
         $scope.passwordResetHash = $location.search().id;
         $rootScope.isLoading = true;
@@ -18,12 +18,12 @@ angular.module('Schedulogy')
             $scope.setPassword();
         });
 
-        Auth.checkPasswordResetLink($scope.userId, $scope.passwordResetHash).success(function () {
+        Auth.checkPasswordResetLink($scope.userId, $scope.passwordResetHash, function () {
             $rootScope.isLoading = false;
             $timeout(function () {
                 $scope.linkChecked = true;
             });
-        }).error(function (errorResponse) {
+        }, function (errorResponse) {
             $rootScope.isLoading = false;
             $timeout(function () {
                 $scope.linkChecked = true;
@@ -37,7 +37,7 @@ angular.module('Schedulogy')
                 return;
             $scope.errorInfo = null;
             $rootScope.isLoading = true;
-            Auth.activate($scope.data.password, $scope.userId, $scope.passwordResetHash).success(function (activateResponse) {
+            Auth.activate($scope.data.password, $scope.userId, $scope.passwordResetHash, function (activateResponse) {
                 $rootScope.isLoading = false;
                 Auth.tryLogin({email: activateResponse.email, password: $scope.data.password}).then(function (loginResponse) {
                     MyItems.refresh();
@@ -51,7 +51,7 @@ angular.module('Schedulogy')
                 }, function (msg) {
                     $scope.errorInfo = settings.loginErrorInfo(msg);
                 });
-            }).error(function (errorResponse) {
+            }, function (errorResponse) {
                 $rootScope.isLoading = false;
                 $scope.errorInfo = settings.passwordResetErrorInfo(errorResponse.msg);
             });

@@ -145,6 +145,7 @@ angular.module('Schedulogy')
         };
 
         this.runTour = function (timeout) {
+            return;
             $timeout(function () {
                 hopscotch.startTour(_this.tour, 0);
             }, timeout);

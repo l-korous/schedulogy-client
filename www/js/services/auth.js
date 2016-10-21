@@ -41,8 +41,8 @@ angular.module('Schedulogy')
                 $rootScope.currentUser = this.fromUtf({_id: payload.uid, email: payload.uem, username: (payload.uname && payload.uname.length > 1) ? payload.uname : payload.uem, role: payload.uro});
                 $window.localStorage.currentUserId = $rootScope.currentUser._id;
             },
-            register: function (user) {
-                return $http.post(settings.serverUrl + "/register", user);
+            register: function (user, successCallback, errorCallback) {
+                $http.post(settings.serverUrl + "/register", user).success(successCallback).error(errorCallback);
             },
             changeUsername: function (username) {
                 var _this = this, defer = $q.defer();
@@ -74,14 +74,14 @@ angular.module('Schedulogy')
                 });
                 return defer.promise;
             },
-            checkPasswordResetLink: function (userId, passwordResetHash) {
-                return $http.post(settings.serverUrl + "/password-reset-check", {userId: userId, passwordResetHash: passwordResetHash});
+            checkPasswordResetLink: function (userId, passwordResetHash, successCallback, errorCallback) {
+                $http.post(settings.serverUrl + "/password-reset-check", {userId: userId, passwordResetHash: passwordResetHash}).success(successCallback).error(errorCallback);
             },
-            activate: function (password, userId, passwordResetHash) {
-                return $http.post(settings.serverUrl + "/activate", {password: password, userId: userId, passwordResetHash: passwordResetHash});
+            activate: function (password, userId, passwordResetHash, successCallback, errorCallback) {
+                $http.post(settings.serverUrl + "/activate", {password: password, userId: userId, passwordResetHash: passwordResetHash}).success(successCallback).error(errorCallback);
             },
-            sendPasswordResetLink: function (email) {
-                return $http.post(settings.serverUrl + "/reset-password", {email: email});
+            sendPasswordResetLink: function (email, successCallback, errorCallback) {
+                $http.post(settings.serverUrl + "/reset-password", {email: email}).success(successCallback).error(errorCallback);
             },
             logout: function () {
                 delete $rootScope.currentUser;
