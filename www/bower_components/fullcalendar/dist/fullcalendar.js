@@ -2374,7 +2374,7 @@ var DragListener = FC.DragListener = Class.extend(ListenerMixin, MouseIgnorerMix
 
 	bindHandlers: function() {
 		var _this = this;
-		var touchStartIgnores = 1;
+		_this.touchStartIgnores = 1;
 
 		if (this.isTouch) {
 			this.listenTo($(document), {
