@@ -4,7 +4,7 @@ angular.module('Schedulogy')
         minPasswordGroups: 2,
         minPasswordLength: 8,
         loadingTemplate: 'Loading,<br />please wait...',
-        appVersion: '2.3.1-b',
+        appVersion: '2.3.2-b',
         applicationName: 'Schedulogy',
         // Fix datetime - has to correspond to the server !!!
         fixedBTime: {
