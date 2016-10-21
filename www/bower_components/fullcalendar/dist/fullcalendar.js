@@ -13193,7 +13193,7 @@ var agendaTimeGridMethods = {
 			return '' +
 				'<th class="fc-axis fc-week-number ' + view.widgetHeaderClass + '" ' + view.axisStyleAttr() + '>' +
 					view.buildGotoAnchorHtml( // aside from link, important for matchCellWidths
-						{ date: this.start, type: 'week', forceOff: this.colCnt > 1 },
+						{ date: this.start, type: 'week', forceOff: this.colCnt >= 7 },
 						htmlEscape(weekText) // inner HTML
 					) +
 				'</th>';
@@ -13274,6 +13274,12 @@ fcViews.agenda = {
 fcViews.agendaDay = {
 	type: 'agenda',
 	duration: { days: 1 }
+};
+
+fcViews.agenda3Day = {
+	type: 'agenda',
+	duration: { days: 3 },
+    buttonText: '3 days'
 };
 
 fcViews.agendaWeek = {

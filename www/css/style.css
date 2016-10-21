@@ -750,6 +750,16 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     top:3px;
 }
 
+.fc-state-default.fc-corner-left { /* non-theme */
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+.fc-state-default.fc-corner-right { /* non-theme */
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
 @media(max-width:1000px) {
     .fc-event .fc-content {
         padding:4px;

@@ -8,14 +8,7 @@ angular.module('Schedulogy')
 
         this.uiConfig = {
             calendar: {
-                defaultView: $rootScope.isMobileNarrow ? 'agenda3Day' : 'agendaWeek',
-                views: {
-                    agenda3Day: {
-                        type: 'agenda',
-                        duration: {days: 3},
-                        buttonText: '3 days'
-                    }
-                },
+                defaultView: $rootScope.smallScreen ? 'agenda3Day' : 'agendaWeek',
                 weekends: true,
                 navLinks: true,
                 weekNumbers: true,
