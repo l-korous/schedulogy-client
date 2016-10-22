@@ -75,13 +75,13 @@ angular.module('Schedulogy')
                 return defer.promise;
             },
             checkPasswordResetLink: function (userId, passwordResetHash, successCallback, errorCallback) {
-                $http.post(settings.serverUrl + "/password-reset-check", {userId: userId, passwordResetHash: passwordResetHash}).success(successCallback).error(errorCallback);
+                $http.post(settings.serverUrl + "/password-reset-check", {userId: userId, passwordResetHash: passwordResetHash}).success(successCallback ? successCallback : function() {}).error(errorCallback ? errorCallback : function() {});
             },
             activate: function (password, userId, passwordResetHash, successCallback, errorCallback) {
-                $http.post(settings.serverUrl + "/activate", {password: password, userId: userId, passwordResetHash: passwordResetHash}).success(successCallback).error(errorCallback);
+                $http.post(settings.serverUrl + "/activate", {password: password, userId: userId, passwordResetHash: passwordResetHash}).success(successCallback ? successCallback : function() {}).error(errorCallback ? errorCallback : function() {});
             },
             sendPasswordResetLink: function (email, successCallback, errorCallback) {
-                $http.post(settings.serverUrl + "/reset-password", {email: email}).success(successCallback).error(errorCallback);
+                $http.post(settings.serverUrl + "/reset-password", {email: email}).success(successCallback ? successCallback : function() {}).error(errorCallback ? errorCallback : function() {});
             },
             logout: function () {
                 delete $rootScope.currentUser;

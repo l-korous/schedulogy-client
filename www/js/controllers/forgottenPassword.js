@@ -8,7 +8,7 @@ angular.module('Schedulogy')
                 return;
             $rootScope.isLoading = true;
             $scope.errorInfo = null;
-            Auth.sendPasswordResetLink($scope.data.email).then(function () {
+            Auth.sendPasswordResetLink($scope.data.email, function () {
                 $scope.successInfo = settings.forgottenPasswordSuccessInfo;
                 $rootScope.isLoading = false;
             }, function (msg) {

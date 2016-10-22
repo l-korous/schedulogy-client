@@ -38,13 +38,13 @@ angular.module('Schedulogy')
             $scope.errorInfo = null;
             $rootScope.isLoading = true;
             Auth.activate($scope.data.password, $scope.userId, $scope.passwordResetHash, function (activateResponse) {
-                $rootScope.isLoading = false;
                 Auth.tryLogin({email: activateResponse.email, password: $scope.data.password}).then(function (loginResponse) {
                     MyItems.refresh();
                     MyResources.refresh();
                     MyUsers.refresh();
                     $location.path('');
                     $location.search('');
+                    $rootScope.isLoading = false;
                     $state.go(settings.defaultStateAfterLogin, {}, {location: false});
                     if (loginResponse.runIntro && !$rootScope.smallScreen)
                         Hopscotch.runTour(750);
