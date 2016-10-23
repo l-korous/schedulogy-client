@@ -21,7 +21,7 @@ angular.module('Schedulogy')
 
             var processArray = function (taskArray, itemArray) {
                 itemArray.splice(0, itemArray.length);
-                
+
                 // Very important - we need to set BTime for accurate calculation of constraints of all created Events.
                 Item.setBTime(_this.getBTime());
 
@@ -43,7 +43,7 @@ angular.module('Schedulogy')
             _this.items.forEach(function (item) {
                 _this.fillBlocksAndNeedsForShow(item);
             });
-            
+
             _this.dirtyItems.forEach(function (item) {
                 _this.fillBlocksAndNeedsForShow(item);
             });
@@ -131,17 +131,16 @@ angular.module('Schedulogy')
                         if (item._id === dep)
                             return true;
                     });
-                    if (depObject)
-                        item.blocksForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
-                    else {
+                    if (!depObject) {
                         depObject = _this.dirtyItems.find(function (item) {
                             if (item._id === dep)
                                 return true;
                         });
-                        item.blocksForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
-                        if (!depObject)
-                            console.log('Error: dependent task not exists: ' + dep);
                     }
+                    if (!depObject)
+                        console.log('Error: dependent task not exists: ' + dep);
+                    else
+                        item.blocksForShow.push({title: depObject.title, shortInfo: depObject.shortInfo, _id: depObject._id});
                 });
             }
 
@@ -152,17 +151,16 @@ angular.module('Schedulogy')
                         if (item._id === dep)
                             return true;
                     });
-                    if (depObject)
-                        item.needsForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
-                    else {
+                    if (!depObject) {
                         depObject = _this.dirtyItems.find(function (item) {
                             if (item._id === dep)
                                 return true;
                         });
-                        item.needsForShow.push({_id: depObject._id, title: depObject.title, type: depObject.type, startDateText: depObject.startDateText, startTimeText: depObject.startTimeText, dueDateText: depObject.dueDateText, dueTimeText: depObject.dueTimeText});
-                        if (!depObject)
-                            console.log('Error: prerequisite task not exists: ' + dep);
                     }
+                    if (!depObject)
+                        console.log('Error: prerequisite task not exists: ' + dep);
+                    else
+                        item.needsForShow.push({title: depObject.title, shortInfo: depObject.shortInfo, _id: depObject._id});
                 });
             }
         };
@@ -327,14 +325,12 @@ angular.module('Schedulogy')
 
             var item = itemPassed ? itemPassed : _this.currentItem;
 
+            item.blocks.push(dependencyId);
+            _this.fillBlocksAndNeedsForShow(item);
+            dependencyId = null;
+
             if (!_this.recalcEventConstraints(item))
                 item.error = 'Impossible to schedule due to constraints';
-
-            else {
-                item.blocks.push(dependencyId);
-                _this.fillBlocksAndNeedsForShow(item);
-                dependencyId = null;
-            }
         };
 
         _this.removeDependency = function (itemPassed, dependency) {
@@ -343,17 +339,15 @@ angular.module('Schedulogy')
 
             var item = itemPassed ? itemPassed : _this.currentItem;
 
-            if (!_this.recalcEventConstraints(item))
-                item.error = 'Impossible to schedule due to constraints';
-
-            else {
-                for (var i = item.blocks.length - 1; i >= 0; i--) {
-                    if (item.blocks[i] === dependency._id) {
-                        item.blocks.splice(i, 1);
-                        item.blocksForShow.splice(i, 1);
-                    }
+            for (var i = item.blocks.length - 1; i >= 0; i--) {
+                if (item.blocks[i] === dependency._id) {
+                    item.blocks.splice(i, 1);
+                    item.blocksForShow.splice(i, 1);
                 }
             }
+
+            if (!_this.recalcEventConstraints(item))
+                item.error = 'Impossible to schedule due to constraints';
         };
 
         _this.addPrerequisite = function (itemPassed, prerequisiteId) {
@@ -362,18 +356,15 @@ angular.module('Schedulogy')
 
             var item = itemPassed ? itemPassed : _this.currentItem;
 
+            if (!item.needs)
+                item.needs = [];
+
+            item.needs.push(prerequisiteId);
+            _this.fillBlocksAndNeedsForShow(item);
+            prerequisiteId = null;
+
             if (!_this.recalcEventConstraints(item))
                 item.error = 'Impossible to schedule due to constraints';
-
-            else {
-
-                if (!item.needs)
-                    item.needs = [];
-
-                item.needs.push(prerequisiteId);
-                _this.fillBlocksAndNeedsForShow(item);
-                prerequisiteId = null;
-            }
         };
 
         _this.removePrerequisite = function (itemPassed, prerequisite) {
@@ -382,17 +373,15 @@ angular.module('Schedulogy')
 
             var item = itemPassed ? itemPassed : _this.currentItem;
 
-            if (!_this.recalcEventConstraints(item))
-                item.error = 'Impossible to schedule due to constraints';
-
-            else {
-                for (var i = item.needs.length - 1; i >= 0; i--) {
-                    if (item.needs[i] === prerequisite._id) {
-                        item.needs.splice(i, 1);
-                        item.needsForShow.splice(i, 1);
-                    }
+            for (var i = item.needs.length - 1; i >= 0; i--) {
+                if (item.needs[i] === prerequisite._id) {
+                    item.needs.splice(i, 1);
+                    item.needsForShow.splice(i, 1);
                 }
             }
+
+            if (!_this.recalcEventConstraints(item))
+                item.error = 'Impossible to schedule due to constraints';
         };
 
         _this.processEventDuration = function (itemPassed) {

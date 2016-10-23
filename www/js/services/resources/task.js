@@ -63,6 +63,7 @@ angular.module('Schedulogy')
                         title: task.title,
                         start: (task.allDay ? task.start.clone().local().startOf('day').utc() : task.start.clone().utc()).unix(),
                         dur: task.dur,
+                        resource: task.resource ? task.resource : null,
                         allDay: task.allDay,
                         admissibleResources: task.admissibleResources,
                         constraint: {
@@ -71,8 +72,8 @@ angular.module('Schedulogy')
                         },
                         desc: task.desc,
                         due: task.due.unix(),
-                        needs: event.needs || [],
-                        blocks: event.blocks || []
+                        needs: task.needs ? task.needs : [],
+                        blocks: task.blocks ? task.blocks : []
                     });
                     break;
                 case 'event':
@@ -88,7 +89,7 @@ angular.module('Schedulogy')
                             end: task.constraint.end ? task.constraint.end.toISOString() : null
                         },
                         desc: task.desc,
-                        blocks: task.blocks || []
+                        blocks: task.blocks ? task.blocks : []
                     });
                     break;
                 case 'reminder':

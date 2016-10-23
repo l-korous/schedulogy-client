@@ -74,7 +74,7 @@
                     </div>
                     <div class="list nested-list" ng-show="currentItem.needsForShow.length > 0">
                         <div style="border:0;" class="item item-button-right" ng-repeat="event in currentItem.needsForShow| filter : {_id: event._id} : true">
-                            <span class="bold">{{event.title}}</span> due on {{event.dueDateText}} at {{event.dueTimeText}}
+                            <strong>{{event.title}}</strong>&nbsp;{{event.shortInfo}}
                             <button class="button button-clear" on-tap="myItems.removePrerequisite(currentItem, event); form.$setDirty();">
                                 <i class="icon ion-trash-b assertive"></i>
                             </button>
@@ -83,7 +83,7 @@
                 </label>
                 <label class="item item-select" >
                     <select ng-model="newPrerequisite" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
-                            ng-options="event._id as event.shortInfo for event in filteredPrerequisites = (myItems.events | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies)"
+                            ng-options="event._id as event.info for event in filteredPrerequisites = (myItems.items | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myItems.addPrerequisite(currentItem, newPrerequisite)">
                         <option ng-selected="true" value="">{{filteredPrerequisites.length === 0 ? 'no other possible Prerequisite Task, see Help for explanation' : 'select a prerequisite task'}}</option>
                     </select>
@@ -95,7 +95,7 @@
                     </div>
                     <div class="list nested-list" ng-show="currentItem.blocksForShow.length > 0">
                         <div style="border:0;" class="item item-button-right" ng-repeat="event in currentItem.blocksForShow| filter : {_id: event._id} : true">
-                            <span class="bold">{{event.title}}</span> due on {{event.dueDateText}} at {{event.dueTimeText}}
+                            <strong>{{event.title}}</strong>&nbsp;{{event.shortInfo}}
                             <button class="button button-clear" on-tap="myItems.removeDependency(currentItem, event); form.$setDirty();">
                                 <i class="icon ion-trash-b assertive"></i>
                             </button>
@@ -105,7 +105,7 @@
 
                 <label class="item item-select">
                     <select ng-model="newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
-                            ng-options="event._id as event.shortInfo for event in filteredDependencies = (myItems.events | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
+                            ng-options="event._id as event.info for event in filteredDependencies = (myItems.items | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myItems.addDependency(currentItem, newDependency)">
                         <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible Dependent Task, see Help for explanation' : 'select a dependent task'}}</option>
                     </select>

@@ -82,7 +82,7 @@
 
                 <label class="item item-select">
                     <select ng-model="newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
-                            ng-options="event._id as event.shortInfo for event in filteredDependencies = (myItems.events | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
+                            ng-options="event._id as event.info for event in filteredDependencies = (myItems.items | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myItems.addDependency(currentItem, newDependency)">
                         <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible Dependent Task, see Help for explanation' : 'select a dependent task'}}</option>
                     </select>

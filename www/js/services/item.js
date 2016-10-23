@@ -8,7 +8,7 @@ angular.module('Schedulogy')
             if (start)
                 item.start = start;
 
-            item.startDateText = item.start.format(settings.dateFormat);
+            item.startDateText = item.start.format(settings.dateFormatLong);
             if (item.allDay)
                 item.startTimeText = null;
             else
@@ -25,7 +25,7 @@ angular.module('Schedulogy')
             if (due)
                 item.due = due;
 
-            item.dueDateText = item.due.format(settings.dateFormat);
+            item.dueDateText = item.due.format(settings.dateFormatLong);
 
             if (item.allDay)
                 item.dueTimeText = null;
@@ -66,9 +66,9 @@ angular.module('Schedulogy')
                 item.constraint = angular.extend(item.constraint, {
                     start: constraintStart,
                     startDue: constraintStartDue,
-                    startDateText: constraintStart.format(settings.dateFormat),
+                    startDateText: constraintStart.format(settings.dateFormatLong),
                     startTimeText: constraintStart.format(settings.timeFormat),
-                    startDateDueText: constraintStartDue.format(settings.dateFormat),
+                    startDateDueText: constraintStartDue.format(settings.dateFormatLong),
                     startTimeDueText: constraintStartDue.format(settings.timeFormat)
                 });
             }
@@ -112,14 +112,14 @@ angular.module('Schedulogy')
                     var minDue = item.constraint.startDue;
                     if (item.due.diff(minDue, 'm') < 0) {
                         item.due = minDue;
-                        item.dueDateText = item.due.format(settings.dateFormat);
+                        item.dueDateText = item.due.format(settings.dateFormatLong);
                         item.dueTimeText = item.due.format(settings.timeFormat);
                     }
                     // Task is due later that it can be.
                     var maxDue = item.constraint.end;
                     if (item.due.diff(maxDue, 'm') > 0) {
                         item.due = maxDue;
-                        item.dueDateText = item.due.format(settings.dateFormat);
+                        item.dueDateText = item.due.format(settings.dateFormatLong);
                         item.dueTimeText = item.due.format(settings.timeFormat);
                     }
                 }
@@ -165,10 +165,19 @@ angular.module('Schedulogy')
                         constraint: task.constraint,
                         admissibleResources: task.admissibleResources,
                         blocksForShow: [],
-                        needsForShow: [],
-                        shortInfo: task.title + '\n' + start.format(settings.dateFormat) + (task.allDay ? '' : (' ' + start.format(settings.timeFormat)))
-                            + ', due: ' + due.format(settings.dateFormat) + (task.allDay ? '' : (' ' + due.format(settings.timeFormat)))
+                        needsForShow: []
                     });
+
+                    if (task.allDay) {
+                        item = angular.extend(item, {
+                            shortInfo: '(due ' + due.format(settings.dateFormat) + ')'
+                        });
+                    }
+                    else {
+                        item = angular.extend(item, {
+                            shortInfo: '(due ' + due.format(settings.dateFormat) + ', ' + due.format(settings.timeFormat) + ')'
+                        });
+                    }
 
                     this.setStart(item, start);
                     this.setDue(item, due);
@@ -185,14 +194,33 @@ angular.module('Schedulogy')
                         allDay: (task.allDay),
                         blocks: task.blocks,
                         constraint: task.constraint,
-                        blocksForShow: [],
-                        shortInfo: task.title + '\n' + start.format(settings.dateFormat) + (task.allDay ? '' : (' ' + start.format(settings.timeFormat))) + ' - '
-                            + end.format(settings.dateFormat) + (task.allDay ? '' : (' ' + end.format(settings.timeFormat)))
+                        blocksForShow: []
                     });
 
                     this.setStart(item, start);
                     this.setEnd(item, end);
                     this.setDur(item, task.dur);
+                    
+                    if (task.allDay) {
+                        if (item.end.diff(item.start, 'd') === 1)
+                            item = angular.extend(item, {
+                                shortInfo: '(' + start.format(settings.dateFormat) + ')'
+                            });
+                        else
+                            item = angular.extend(item, {
+                                shortInfo: '(' + start.format(settings.dateFormat) + ' - ' + end.format(settings.dateFormat) + ')'
+                            });
+                    }
+                    else {
+                        if (item.end.format('dd') === item.start.format('dd'))
+                            item = angular.extend(item, {
+                                shortInfo: '(' + start.format(settings.dateFormat) + ', ' + start.format(settings.timeFormat) + ' - ' + end.format(settings.timeFormat) + ')'
+                            });
+                        else
+                            item = angular.extend(item, {
+                                shortInfo: '(' + start.format(settings.dateFormat) + ', ' + start.format(settings.timeFormat) + ' - ' + end.format(settings.dateFormat) + ', ' + end.format(settings.timeFormat) + ')'
+                            });
+                    }
                     break;
                 case 'reminder':
                     var item = angular.extend(item, {
@@ -200,7 +228,7 @@ angular.module('Schedulogy')
                         editable: false,
                         done: task.done,
                         className: task.done ? 'doneReminder' : '',
-                        shortInfo: task.title + (task.done ? ' (done)' : '')
+                        shortInfo: (task.done ? ' (done)' : '(not done)')
                     });
                     if (task.done) {
                         item.color = '#ddd';
@@ -211,6 +239,9 @@ angular.module('Schedulogy')
                     this.setStart(item, start);
                     break;
             }
+            angular.extend(item, {
+               info: item.title + ' ' + item.shortInfo 
+            });
             return this.processConstraint(item, item.constraint, this.btime);
         };
         this.earliestPossibleFinish = function (item) {
