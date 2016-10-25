@@ -108,32 +108,32 @@
 
                 <a class="item item-icon-left item-small" ng-click="toggleMenu();
                     modalService.openModal('iCalUpload');">
-                    <i class="icon ion-upload positive"></i>
+                    <i class="icon ion-upload"></i>
                     Import from iCal
                 </a>
 
                 <a class="item item-icon-left item-small" ng-click="toggleMenu();
                     modalService.openModal('removeAll');">
-                    <i class="icon ion-trash-b dark"></i>  
+                    <i class="icon ion-trash-b"></i>  
                     Delete all Tasks
                 </a>
                 <a class="item item-icon-left item-small" ng-click="toggleMenu();
                     modalService.openModal('users');">
-                    <i class="icon ion-person-stalker positive"></i>
+                    <i class="icon ion-person-stalker"></i>
                     Manage Users
                 </a>
                 <a class="item item-icon-left item-small" ng-click="toggleMenu();
                     modalService.openModal('resources');">
-                    <i class="icon ion-levels positive"></i>
+                    <i class="icon ion-levels"></i>
                     Manage Resources
                 </a>
             </div>
 
             <div class="list">
-                <a ng-if="false" class="item item-icon-left item-small" ng-click="toggleMenu();
-                    runTour();">
-                    <i class="icon ion-university "></i>  
-                    Tour
+                <a class="item item-icon-left item-small" ng-click="toggleMenu();
+                    modalService.openModal('tutorial');">
+                    <i class="icon ion-university" style="color:#12aa41"></i>  
+                    Tutorial
                 </a>
 
                 <a id="helplink" class="item item-icon-left item-small" ng-click="toggleMenu();

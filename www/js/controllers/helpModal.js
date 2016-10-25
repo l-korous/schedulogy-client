@@ -30,7 +30,7 @@ angular.module('Schedulogy')
                     '<p>SCHEDULOGY aims to be the most efficient and smooth task &amp; time management tool there is.</p>' +
                     '<p>We are working hard to achieve that goal. The basic functionality is there, and a lot more is coming.</p>' + 
                     '<p>Some of the coming features that you can look forward to are:</p>' + 
-                    '<ul>' +
+                    '<ul style="margin-left:20px;list-style:square;">' +
                     '<li>Social logings<ul><li>Log in through using your Google, Facebook, or Twitter account.</li></ul></li>' +
                     '<li>Long-term projects<ul><li>Add a project without a due date, that will fill your free time slots - maybe you want to start a side business, maybe you just want to get in shape in the gym, all such things can be entered as projects.</li></ul></li>' +
                     '<li>Search bars<ul><li>Not sure when exactly is a meeting occuring, or what is the name of a prerequisite task? Search bars will help you finding what you need.</li></ul></li>' +
@@ -48,7 +48,7 @@ angular.module('Schedulogy')
                     '<p>Standard events, that have a fixed start (date &amp; time), and a fixed end (date &amp; time). The end is set up with help of event duration.</p>' +
                     '<p>All events can be concurrently in the calendar. There is no limit on the number of concurrent events.</p>' +
                     '<h2 style="border-left:5px solid ' + settings.itemColor.task + '">Task</h2>' +
-                    '<p class="bold">This type ("floating" Task) does NOT have a fixed start and end, but has a fixed due date. SCHEDULOGY schedules these tasks so that these due dates (as well as dependencies - see later sections) are satisfied.</p>' +
+                    '<p class="bold">This type ("floating" Task) does NOT have a fixed start and end, but has a fixed due date. SCHEDULOGY schedules these Tasks so that these due dates (as well as dependencies - see later sections) are satisfied.</p>' +
                     '<p>SCHEDULOGY makes sure that there is only one concurrent Task in the calendar. There can be no Event concurrent with any Task either.</p>' + 
                     '<h2 style="border-left:5px solid ' + settings.itemColor.reminder + '">Reminder</h2>' +
                     '<p>A simple reminder, that keeps moving to the current day, until it is marked as done - at which point it stays at the day when it was marked as done.</p>' +
@@ -64,11 +64,11 @@ angular.module('Schedulogy')
                     '<h2>Description</h2><p>Longer description of the entry.</p>' +
                     '<h2>Resource</h2><p>Only relevant for Events / Reminders. Which Resource (e.g. person) is this Event / Reminder for.</p>' +
                     '<h2>Admissible Resources</h2><p>Only relevant for Tasks. Which Resources (e.g. people) are able to perform this Task - which Resource can this Task be assigned to.</p>' +
-                    '<h2>All-Day</h2><p>Whether this entry consumes the entire day. See entry types section for explanation.</p>' +
+                    '<h2>All-Day</h2><p>Whether this entry consumes one or more entire daysand does not start at a particular hour. See entry types section for explanation.</p>' +
                     '<h2>Start Date / Time</h2><p>Only relevant for Events. Marks the exact date &amp; time when this Event begins. Setting of Start may be constrained by dependencies - see the section on dependencies.</p>' +
                     '<h2>Due Date / Time</h2><p>Only relevant for Tasks. Marks the exact date &amp; time when work on this Task has to be finished.</p>' +
-                    '<h2>Duration</h2><p>Duration (= how much time this Task / Event takes to finish). Setting of Due may be constrained by dependencies - see the section on dependencies.</p>' +
-                    '<h2>Prerequisites / Dependent Tasks</h2><p>See the section on dependencies.</p>'
+                    '<h2>Duration</h2><p>Duration (= how much time this Task / Event takes to finish). Setting of Duration may be constrained by dependencies - see the section on dependencies.</p>' +
+                    '<h2>Prerequisities / Dependent Tasks</h2><p>See the section on dependencies.</p>'
             },
             {
                 name: 'Resources',
@@ -104,9 +104,18 @@ angular.module('Schedulogy')
                 name: 'Upload from iCal file',
                 icon: 'ion-upload',
                 content:
-                    '<p>This feature enables you to upload an iCal file for example from your Outlook, Google Calendar, or any other calendar application capable of exporting to iCal format..</p>' +
+                    '<p>This feature enables you to upload an iCal file for example from your Outlook, Google Calendar, or any other calendar application capable of exporting to iCal format.</p>' +
                     '<p>All items in your calendar are imported as Events.</p>' +
                     '<p>Recurring events are supported.</p>'
+            },
+            {
+                name: 'Keyboard shortcuts',
+                icon: 'ion-android-laptop',
+                content:
+                    '<h3>Left, right arrows</h3><p>Navigate in the view left and right.</p>' +
+                    '<h3>t, T</h3><p>Opens the "New Task" dialog.</p>' +
+                    '<h3>e, E</h3><p>Opens the "New Event" dialog.</p>' +
+                    '<h3>r, R</h3><p>Opens the "New Resource" dialog.</p>'
             }
         ];
 

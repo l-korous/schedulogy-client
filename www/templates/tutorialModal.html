@@ -1,0 +1,26 @@
+<ion-modal-view ng-controller="TutorialModalCtrl">
+    <ion-header-bar>
+        <h1 class="title">Tutorial</h1>
+    </ion-header-bar>
+    <ion-content  style="margin-bottom:1em;" id="tutorialDiv">
+        <ion-list>
+            <ion-item class="item-stable help-item" class="active" ng-if="$root.smallScreen">
+                <h2>How to view this tutorial</h2>
+                <p>This tutorial is usable also on a your small screen, but live examples using popup bubbles are only present on larger screens.</p>
+                <p>The easiest way to see those is to use your browser on any device with larger screen and navigate to <strong>schedulogy.com</strong> to be able to get the most out of this tutorial</p>.
+            </ion-item>
+            <div ng-repeat="group in groups">
+                <ion-item class="item-stable help-item" ng-click="toggleGroup(group)"
+                          ng-class="{active: group.shown}">
+                    <i class="icon" ng-class="group.shown ? 'ion-minus' : group.icon" style="color:{{group.color || 'black'}}">
+                    &nbsp;
+                    {{group.name}}</i>
+                    <div ng-bind-html="group.content" ng-show="group.shown"></div>
+                </ion-item>
+            </div>
+        </ion-list>
+        <button class="button button-block button-dark button-outline button-single" ng-click="close();">
+            Close
+        </button>
+    </ion-content>
+</ion-modal-view>

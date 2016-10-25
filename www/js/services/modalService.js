@@ -20,6 +20,7 @@ angular.module('Schedulogy')
             'task',
             'event',
             'reminder',
+            'tutorial',
             'user',
             'users',
             'removeResource'
