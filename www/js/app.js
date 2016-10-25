@@ -96,7 +96,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyItems, MyResources, ModalService, Cordova, $cordovaNetwork, $timeout) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyItems, MyResources, ModalService, Cordova, $cordovaNetwork, $timeout, $interval) {
         // Settings - so that they are accessible from anywhere.
         $rootScope.settings = settings;
 
@@ -190,7 +190,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         }
 
         // Update now indicator periodically.
-        setInterval(function () {
+        $interval(function () {
             $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
         }, 60000);
 

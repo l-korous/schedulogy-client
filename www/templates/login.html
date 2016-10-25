@@ -27,7 +27,7 @@
                                ng-class="{ 'has-error' : beingSubmitted && form.password.$error.required && !form.password.$pristine }">
                     </label>
                 </div>
-                <button class="button button-block button-positive button-single" ng-disabled="form.$invalid" ng-click="login()">
+                <button id="loginButton" class="button button-block button-positive button-single" ng-disabled="form.$invalid" ng-click="login()">
                     Login
                 </button>
 

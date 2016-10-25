@@ -33,6 +33,7 @@ angular.module('Schedulogy')
         minCalendarRowHeight: 30,
         checkNewVersion: false,
         dateFormat: 'MMM, Do',
+        dateFormatLong: 'MMMM, Do',
         timeFormat: 'HH:mm',
         itemColor: {
             event: '#387ef5',

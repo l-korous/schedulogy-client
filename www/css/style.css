@@ -357,6 +357,7 @@ h2 {
 
 .fc-event {
     line-height:1;
+    border-radius:0;
 }
 
 .fc-event .fc-bg {
@@ -438,7 +439,7 @@ td.fc-week-number a {
 }
 
 .fc-event .fc-content {
-    padding:5px;
+    padding:3px;
     height:100%;
     text-align: left;
 }
@@ -758,12 +759,6 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
 .fc-state-default.fc-corner-right { /* non-theme */
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
-}
-
-@media(max-width:1000px) {
-    .fc-event .fc-content {
-        padding:4px;
-    }
 }
 
 @media(max-width:900px) {

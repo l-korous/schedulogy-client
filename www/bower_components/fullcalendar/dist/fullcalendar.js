@@ -9407,6 +9407,7 @@ function Calendar_constructor(element, overrides) {
 	t.nextYear = nextYear;
 	t.today = today;
     t.now = now;
+    t.updateNowIndicator = updateNowIndicator;
     t.setHeader = setHeader;
 	t.gotoDate = gotoDate;
 	t.incrementDate = incrementDate;
