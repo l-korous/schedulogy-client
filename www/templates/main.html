@@ -73,31 +73,31 @@
                     </span>
                 </a>
 
-                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                <a class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
                     switchToView('agendaDay');">
                     <i class="icon ion-calendar"></i>
                     Day
                 </a>
 
-                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                <a class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
                     switchToView('agenda3Day');">
                     <i class="icon ion-more"></i>
                     3 Days
                 </a>
 
-                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                <a class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
                     switchToView('agendaWeek');">
                     <i class="icon ion-more"></i>
                     Week
                 </a>
 
-                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                <a class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
                     switchToView('month');">
                     <i class="icon ion-grid"></i>
                     Month
                 </a>
 
-                <a id="day" class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
+                <a class="item item-icon-left item-small" ng-if="$root.smallScreen" ng-click="toggleMenu();
                     switchToView('listMonth');">
                     <i class="icon ion-clipboard"></i>
                     List
@@ -122,7 +122,7 @@
                     <i class="icon ion-person-stalker"></i>
                     Manage Users
                 </a>
-                <a class="item item-icon-left item-small" ng-click="toggleMenu();
+                <a id="resourcesLink" class="item item-icon-left item-small" ng-click="toggleMenu();
                     modalService.openModal('resources');">
                     <i class="icon ion-levels"></i>
                     Manage Resources
@@ -131,9 +131,9 @@
 
             <div class="list">
                 <a class="item item-icon-left item-small" ng-click="toggleMenu();
-                    modalService.openModal('tutorial');">
-                    <i class="icon ion-university" style="color:#12aa41"></i>  
-                    Tutorial
+                    modalService.openModal('tutorial');" style="background-color: #fcf8e3">
+                    <i class="icon ion-university"></i>  
+                    <strong>Tutorial</strong>
                 </a>
 
                 <a id="helplink" class="item item-icon-left item-small" ng-click="toggleMenu();

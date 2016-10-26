@@ -13,7 +13,7 @@ angular.module('Schedulogy')
 
             ModalService.openModalInternal('reminder', function () {
                 $ionicScrollDelegate.scrollTop();
-                var primaryInput = $(ModalService.modals.reminder.modalInternal.modalEl).find('#primaryInput');
+                var primaryInput = $(ModalService.modals.reminder.modalInternal.modalEl).find('#reminderPrimaryInput');
                 primaryInput.focus();
                 primaryInput.select();
 

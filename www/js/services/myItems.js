@@ -6,12 +6,15 @@ angular.module('Schedulogy')
         _this.dirtyItems = [];
 
         _this.refresh = function () {
+            $rootScope.isLoading = true;
             Task.query({btime: _this.getBTime().unix()}, function (data) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
+                $rootScope.isLoading = false;
             }, function (err) {
                 if (err.data && err.data.tasks && err.data.dirtyTasks) {
                     _this.importFromTasks(err.data.tasks, err.data.dirtyTasks);
                 }
+                $rootScope.isLoading = false;
             });
         };
 

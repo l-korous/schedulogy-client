@@ -17,7 +17,7 @@ angular.module('Schedulogy')
 
             ModalService.openModalInternal('task', function () {
                 $ionicScrollDelegate.scrollTop();
-                var primaryInput = $(ModalService.modals.task.modalInternal.modalEl).find('#primaryInput');
+                var primaryInput = $(ModalService.modals.task.modalInternal.modalEl).find('#taskPrimaryInput');
                 primaryInput.focus();
                 primaryInput.select();
 

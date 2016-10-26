@@ -8,7 +8,7 @@ angular.module('Schedulogy')
             MyResources.updateAllTexts($scope.currentResource);
 
             var focusPrimaryInputAndSetPristine = function () {
-                var primaryInput = $(ModalService.modals.resource.modalInternal.modalEl).find('#primaryInput');
+                var primaryInput = $(ModalService.modals.resource.modalInternal.modalEl).find('#resourcePrimaryInput');
                 primaryInput.focus();
                 primaryInput.select();
                 $scope.form.$setPristine();

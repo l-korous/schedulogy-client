@@ -13,7 +13,7 @@
                 <div ng-show="currentItem.error" class="item help-block">{{currentItem.error}}</div>
             </div>
             <div class="list" style="margin-bottom:0;">
-                <label class="item item-small bold item-no-wrap" ng-show="currentItem.done">This reminder is done and is disabled for changing. Unmark it as done to enable changes.</label>
+                <label class="item item-small bold item-no-wrap" ng-show="currentItem.done">This reminder is done and is disabled for changing. Un-mark it as done to enable changes.</label>
                 
                 <ion-toggle ng-show="currentItem._id" ng-model="currentItem.done" ng-change="changeDone()" toggle-class="toggle-assertive">Done</ion-toggle>
                 
@@ -27,7 +27,7 @@
                 </label>
 
                 <label class="item item-input" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
-                    <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="primaryInput" required name="title" ng-disabled="currentItem.done">
+                    <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="reminderPrimaryInput" required name="title" ng-disabled="currentItem.done">
                 </label>
                 <label class="item item-input">
                     <textarea placeholder="Description" ng-model="currentItem.desc" id="reminderModalTextarea" ng-disabled="currentItem.done"></textarea>
@@ -36,7 +36,7 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button id="taskSave" class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine || currentItem.error" ng-click="save();">
+                    <button id="reminderSave" class="button button-block button-red" ng-disabled="form.$invalid || form.$pristine || currentItem.error" ng-click="save();">
                         Save
                     </button>
 

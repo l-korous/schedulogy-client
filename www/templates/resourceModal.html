@@ -14,7 +14,7 @@
                     <div class="input-label">
                         Name
                     </div>
-                    <input type="text" ng-model="currentResource.name" id="primaryInput" required name="name">
+                    <input type="text" ng-model="currentResource.name" id="resourcePrimaryInput" required name="name">
                 </label>
                 
                 <label class="item item-input" ng-if="currentResource.type === 'artificial'">
@@ -24,7 +24,7 @@
                     <input type="email" ng-model="currentResource.email" required name="email">
                 </label>
 
-                <label class="item item-input range">
+                <label class="item item-input range" id="resourceSetupDetail">
                     <div class="input-label">
                         Start day of the week
                     </div>

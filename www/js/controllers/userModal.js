@@ -14,7 +14,7 @@ angular.module('Schedulogy')
             $scope.currentUser = angular.extend(new User, $scope.myUsers.currentUser);
 
             var focusPrimaryInput = function () {
-                var primaryInput = $(ModalService.modals.user.modalInternal.modalEl).find('#primaryInput');
+                var primaryInput = $(ModalService.modals.user.modalInternal.modalEl).find('#userPrimaryInput');
                 primaryInput.focus();
                 primaryInput.select();
             };

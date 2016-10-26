@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller("PasswordResetCtrl", function ($scope, Auth, $location, settings, $rootScope, MyItems, MyResources, MyUsers, $timeout, $state) {
+    .controller("PasswordResetCtrl", function ($scope, Auth, $location, settings, $rootScope, MyItems, MyResources, MyUsers, $timeout, $state, ModalService) {
         $scope.successInfo = null;
         $scope.errorInfo = null;
         $scope.data = {};
@@ -46,6 +46,8 @@ angular.module('Schedulogy')
                     $location.search('');
                     $rootScope.isLoading = false;
                     $state.go(settings.defaultStateAfterLogin, {}, {location: false});
+                    if (loginResponse.runIntro)
+                        ModalService.openModal('tutorial');
                 }, function (msg) {
                     $scope.errorInfo = settings.loginErrorInfo(msg);
                 });

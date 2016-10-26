@@ -3,7 +3,7 @@
         <h1 class="title">Resources</h1>
     </ion-header-bar>
     <ion-content has-bouncing="false" ng-show="!$root.isLoading">
-        <div class="list">
+        <div class="list" style="margin-bottom: 0;border-bottom: 0">
             <div class="item item-no-wrap item-intro" ng-if="$root.currentUser.role === 'admin'">
                 <span>
                     Here you can view all resources of your tenant account. You can click on a resource to see the resource time constraints.
@@ -23,6 +23,8 @@
                     Only tenant account administrators can create / modify / delete resources.
                 </span>
             </div>
+        </div>
+        <div class="list" id="resourceList">
             <div class="item item-icon-left item-button-right" ng-repeat="resource in myResources.resources" ng-click="openDetail(resource);">
                 <i class="icon ion-person" ng-if="resource.type === 'user'"></i>
                 <i class="icon ion-wrench" ng-if="resource.type === 'artificial'"></i>

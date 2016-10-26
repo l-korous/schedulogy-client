@@ -10,10 +10,9 @@
         <form name="$parent.form" novalidate>
             <div class="list customFormErrorList">
                 <div ng-show="form.title.$error.required && !form.title.$pristine" class="item help-block">Please provide a valid title.</div>
-                <div ng-show="form.floatingDueDate.$error.required" class="item help-block">Please provide a valid date.</div>
-                <div ng-show="form.floatingDueTime.$error.required" class="item help-block">Please provide a valid time.</div>
-                <div ng-show="form.floatingDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
-                <div ng-show="form.resource.$error.required" class="item help-block">Please provide a valid resource.</div>
+                <div ng-show="form.dueDate.$error.required" class="item help-block">Please provide a valid date.</div>
+                <div ng-show="form.dueTime.$error.required" class="item help-block">Please provide a valid time.</div>
+                <div ng-show="form.duration.$error.required" class="item help-block">Please provide a valid duration.</div>
                 <div ng-show="form.resources.$error.required" class="item help-block">Please provide valid resources.</div>
                 <div ng-show="currentItem.error" class="item help-block">{{currentItem.error}}</div>
             </div>
@@ -27,10 +26,10 @@
                     </select>
                 </label>
 
-                <ion-toggle ng-model="currentItem.allDay" ng-change="switchAllDay()" toggle-class="toggle-assertive">All-Day</ion-toggle>
+                <ion-toggle ng-model="currentItem.allDay" ng-change="switchAllDay()" toggle-class="toggle-gold">All-Day</ion-toggle>
 
                 <label class="item item-input" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
-                    <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="primaryInput" required name="title">
+                    <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="taskPrimaryInput" required name="title">
                 </label>
                 <label class="item item-input">
                     <textarea placeholder="Description" ng-model="currentItem.desc" id="taskModalTextarea"></textarea>
@@ -47,7 +46,7 @@
                     <div class="input-label">
                         Due Date
                     </div>
-                    <input readonly="true" type="text" ng-model="currentItem.dueDateText" ng-click="openDatePicker('due');" name="floatingDueDate" id="floatingDueDate"
+                    <input readonly="true" type="text" ng-model="currentItem.dueDateText" ng-click="openDatePicker('due');" name="dueDate" id="dueDate"
                            required/>
                 </label>
 
@@ -55,13 +54,13 @@
                     <div class="input-label">
                         Due Time
                     </div>
-                    <input readonly="true" type="text" ng-model="currentItem.dueTimeText" ng-click="openTimePicker('due');" name="floatingDueTime" id="floatingDueTime"
+                    <input readonly="true" type="text" ng-model="currentItem.dueTimeText" ng-click="openTimePicker('due');" name="dueTime" id="dueTime"
                            ng-required="!currentItem.allDay"/>
                 </label>
 
                 <label class="item item-input range" ng-class="{ 'has-error' : form.floatingDuration.$invalid && !form.floatingDuration.$pristine }">
                     <input type="range" min="1" max="{{$root.settings.maxEventDuration[currentItem.allDay ? 1 : 0]}}" ng-model="currentItem.dur" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
-                           name="floatingDuration" step="1" required id="floatingDuration"/>
+                           name="duration" step="1" required id="taskDuration"/>
 
                     <div class="rangeInfo">
                         Duration: {{currentItem.durText}}
@@ -82,7 +81,7 @@
                     </div>
                 </label>
                 <label class="item item-select" >
-                    <select ng-model="newPrerequisite" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
+                    <select id="taskPrerequisites" ng-model="newPrerequisite" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
                             ng-options="event._id as event.info for event in filteredPrerequisites = (myItems.items | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myItems.addPrerequisite(currentItem, newPrerequisite)">
                         <option ng-selected="true" value="">{{filteredPrerequisites.length === 0 ? 'no other possible Prerequisite Task, see Help for explanation' : 'select a prerequisite task'}}</option>
@@ -104,7 +103,7 @@
                 </label>
 
                 <label class="item item-select">
-                    <select ng-model="newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
+                    <select id="taskDependencies" ng-model="newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
                             ng-options="event._id as event.info for event in filteredDependencies = (myItems.items | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myItems.addDependency(currentItem, newDependency)">
                         <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible Dependent Task, see Help for explanation' : 'select a dependent task'}}</option>
@@ -114,7 +113,7 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button id="taskSave" class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine || currentItem.error" ng-click="save();">
+                    <button id="taskSave" class="button button-block button-gold" ng-disabled="form.$invalid || form.$pristine || currentItem.error" ng-click="save();">
                         Save
                     </button>
 

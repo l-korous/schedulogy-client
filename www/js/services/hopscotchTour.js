@@ -1,202 +1,535 @@
 angular.module('Schedulogy')
-    .service('Hopscotch', function ($timeout) {
+    .service('Hopscotch', function ($timeout, ModalService, settings, $sce, MyItems) {
         var _this = this;
         this.tours = {
-            default: {
-                id: "default",
-                steps: [
-                    {
-                        title: "Menu",
-                        content: "Let's start with opening the menu.",
-                        target: "menuOpener",
-                        placement: "bottom",
-                        arrowOffset: -1,
-                        nextOnTargetClick: true,
-                        showNextButton: false
-                    },
-                    {
-                        title: "New Task",
-                        content: "Let's go create a new task.",
-                        target: "newtask",
-                        yOffset: -10,
-                        placement: "right",
-                        nextOnTargetClick: true,
-                        showNextButton: false
-                    },
-                    {
-                        title: "Task type",
-                        content: "Here is where you can select task type. Select 'event' now.",
-                        target: "tasktypeselector",
-                        delay: 1000,
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Task title",
-                        content: "Insert a title, e.g. 'Meeting with Adam'.",
-                        target: "primaryInput",
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Task start date",
-                        content: "Let us leave this as it is now. Note that the time selected by default is the next 'slot'.",
-                        target: "fixedStartDate",
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Task start time",
-                        content: "Let us leave this as it is now. Note that the time selected by default is the next 'slot'.",
-                        target: "fixedStartTime",
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Task duration",
-                        content: "Let us leave this as it is now. Later, you can create a task with any duration by selecting slots directly in the calendar.",
-                        target: "fixedDuration",
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Save the task",
-                        content: "Save the task by pressing the 'Save' button.",
-                        target: "taskSave",
-                        placement: "top",
-                        nextOnTargetClick: true,
-                        showNextButton: false
-                    },
-                    {
-                        title: "Move to next day/week/month",
-                        content: "Move to next day/week/month by using the arrows in the top right corner.",
-                        target: "button-customId-next",
-                        placement: "left",
-                        yOffset: -17,
-                        nextOnTargetClick: true,
-                        showNextButton: false
-                    },
-                    {
-                        title: "Create a task by dragging",
-                        content: "Select several 'slots' in the calendar by dragging. This will open a New Task dialog.",
-                        target: "fc-time-grid-container",
-                        placement: "top"
-                    },
-                    {
-                        title: "Task type",
-                        content: "Let us give floating tasks a go - select 'task'.",
-                        target: "tasktypeselector",
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Task title",
-                        content: "Insert a title of the floating task - e.g. 'Prepare the meeting agenda'.",
-                        target: "primaryInput",
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Task due date",
-                        content: "This is the date (later we will set the time) when the task needs to be completed. Let us leave this as it is now.",
-                        target: "floatingDueDate",
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Task due time",
-                        content: "Let us leave this as it is now. It is the exact time when this task needs to be completed.",
-                        target: "floatingDueTime",
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Task duration",
-                        content: "Let us leave this as it is now. You can see that by default, duration equals to the length of your calendar selection.",
-                        target: "floatingDuration",
-                        placement: "bottom"
-                    },
-                    {
-                        title: "Save the task",
-                        content: "Save the task by pressing the 'Save' button.",
-                        target: "taskSave",
-                        placement: "top",
-                        nextOnTargetClick: true,
-                        showNextButton: false
-                    },
-                    {
-                        title: "Success",
-                        delay: 1000,
-                        content: "The scheduling backend now successfully scheduled your task. You can look to which slot it has been scheduled.",
-                        width: 400,
-                        target: "fc-time-grid-container",
-                        placement: "top"
-                    },
-                    {
-                        title: "Menu",
-                        content: "Let's go back to the menu.",
-                        target: "menuOpener",
-                        placement: "bottom",
-                        arrowOffset: -1,
-                        nextOnTargetClick: true,
-                        showNextButton: false
-                    },
-                    {
-                        title: "More help",
-                        content: "There are more help articles explaining the workings of SCHEDULOGY available under this link.",
-                        target: "helplink",
-                        yOffset: -10,
-                        placement: "right"
-                    }
-                ]
-            },
             reminder: {
                 id: "reminder",
                 steps: [
                     {
                         title: "New Reminder",
-                        content: "This button here pops up the 'New Reminder' modal window.",
+                        content: "This button here pops up the 'New Reminder' modal window. Please click it.",
                         target: "newreminder",
                         yOffset: -10,
                         placement: "right",
-                        nextOnTargetClick: false,
-                        showNextButton: false,
-                        showCTAButton: true,
-                        ctaLabel: "Okay",
-                        onCTA: function () {
-                            hopscotch.endTour();
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "Title",
+                        content: "Insert a title, e.g. \"Book a hotel in Paris for the weekend\". Click on \"Next\" afterwards.",
+                        target: "reminderPrimaryInput",
+                        xOffset: 10,
+                        placement: "bottom",
+                        delay: 500,
+                        onNext: function () {
+                            $('#reminderModalTextarea').focus();
                         }
+                    },
+                    {
+                        title: "Description",
+                        content: "Insert a description, e.g. \"Near Rue des Barres if possible\". Click on \"Next\" afterwards.",
+                        target: "reminderModalTextarea",
+                        xOffset: 10,
+                        placement: "bottom",
+                        delay: 300
+                    },
+                    {
+                        title: "Save",
+                        content: "Click on \"Save\" to save the Reminder.",
+                        target: "reminderSave",
+                        nextOnTargetClick: true,
+                        placement: "top",
+                        xOffset: 10,
+                        delay: 300
+                    },
+                    {
+                        title: "Finish",
+                        width: 200,
+                        content: "You see the Reminder you just created in the calendar. Click on \"Done\" to get back to Tutorial.",
+                        target: "theOnlyCalendar",
+                        placement: "left",
+                        xOffset: 150,
+                        yOffset: 100,
+                        delay: 500
                     }
-                ]
+                ],
+                onEnd: function () {
+                    ModalService.closeModal();
+                    ModalService.openModal('tutorial');
+                }
             },
             event: {
                 id: "event",
                 steps: [
                     {
                         title: "New Event",
-                        content: "This button here pops up the 'New Event' modal window.",
+                        content: "This button here pops up the 'New Event' modal window. Please click it.",
                         target: "newevent",
                         yOffset: -10,
                         placement: "right",
-                        nextOnTargetClick: false,
-                        showNextButton: false,
-                        showCTAButton: true,
-                        ctaLabel: "Okay",
-                        onCTA: function () {
-                            hopscotch.endTour();
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "Title",
+                        content: "Insert a title, e.g. \"Product Team Meeting\". Click on \"Next\" afterwards.",
+                        target: "eventPrimaryInput",
+                        placement: "bottom",
+                        xOffset: 10,
+                        delay: 500,
+                        onNext: function () {
+                            $('#eventModalTextarea').focus();
                         }
+                    },
+                    {
+                        title: "Description",
+                        content: "Insert a description, e.g. \"Agenda will be provided later.\". Click on \"Next\" afterwards.",
+                        target: "eventModalTextarea",
+                        xOffset: 10,
+                        placement: "bottom",
+                        delay: 300
+                    },
+                    {
+                        title: "Start date",
+                        content: "Select the start date. You can leave the default selection - 24 hours in future.",
+                        target: "eventStartDate",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Start time",
+                        content: "Select the start time. You can leave the default selection - 24 hours in future.",
+                        target: "eventStartTime",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Duration",
+                        content: "Select the duration. You can leave the default selection - " + parseInt(settings.defaultTaskDuration[0] * settings.minuteGranularity) + " minutes.",
+                        target: "eventDuration",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Save",
+                        content: "Click on \"Save\".",
+                        target: "eventSave",
+                        nextOnTargetClick: true,
+                        showNextButton: false,
+                        placement: "top",
+                        xOffset: 10,
+                        delay: 300
+                    },
+                    {
+                        title: "Finish",
+                        width: 200,
+                        content: "You see the Event you just created in the calendar. Click on \"Done\" to get back to Tutorial.",
+                        target: "theOnlyCalendar",
+                        placement: "left",
+                        xOffset: 150,
+                        yOffset: 100,
+                        delay: 500
                     }
-                ]
+                ],
+                onEnd: function () {
+                    ModalService.closeModal();
+                    ModalService.openModal('tutorial');
+                }
+            },
+            allDay: {
+                id: "allDay",
+                steps: [
+                    {
+                        title: "New Event",
+                        content: "This button here pops up the 'New Event' modal window. Please click it.",
+                        target: "newevent",
+                        yOffset: -10,
+                        placement: "right",
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "All-Day switch",
+                        content: "Please click the switch on the right for this Event to be an All-Day Event. Note that the Start time attribute disappears.",
+                        target: "eventAllDay",
+                        xOffset: 10,
+                        placement: "bottom",
+                        nextOnTargetClick: true,
+                        showNextButton: false,
+                        delay: 500,
+                        onNext: function () {
+                            $('#eventPrimaryInput').focus();
+                        }
+                    },
+                    {
+                        title: "Title",
+                        content: "Insert a title, e.g. \"Work from home\". Click on \"Next\" afterwards.",
+                        target: "eventPrimaryInput",
+                        xOffset: 10,
+                        placement: "bottom",
+                        delay: 500
+                    },
+                    {
+                        title: "Start date",
+                        content: "Select the start date.",
+                        target: "eventStartDate",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Duration",
+                        content: "Select the duration. You can leave the default selection - " + parseInt(settings.defaultTaskDuration[1]) + " days.",
+                        target: "eventDuration",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Save",
+                        content: "Click on \"Save\".",
+                        target: "eventSave",
+                        nextOnTargetClick: true,
+                        xOffset: 10,
+                        showNextButton: false,
+                        placement: "top",
+                        delay: 300
+                    },
+                    {
+                        title: "Finish",
+                        width: 200,
+                        content: "You see the Event you just created in the calendar. Click on \"Done\" to get back to Tutorial.",
+                        target: "theOnlyCalendar",
+                        placement: "left",
+                        xOffset: 150,
+                        yOffset: 100,
+                        delay: 500
+                    }
+                ],
+                onEnd: function () {
+                    ModalService.closeModal();
+                    ModalService.openModal('tutorial');
+                }
             },
             task: {
                 id: "task",
                 steps: [
                     {
                         title: "New Task",
-                        content: "This button here pops up the 'New Task' modal window.",
+                        content: "This button here pops up the 'New Task' modal window. Please click it.",
                         target: "newtask",
                         yOffset: -10,
                         placement: "right",
-                        nextOnTargetClick: false,
-                        showNextButton: false,
-                        showCTAButton: true,
-                        ctaLabel: "Okay",
-                        onCTA: function () {
-                            hopscotch.endTour();
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "Title",
+                        content: "Insert a title, e.g. \"Prepare the roadmap for the Alpha Project\". Click on \"Next\" afterwards.",
+                        target: "taskPrimaryInput",
+                        xOffset: 10,
+                        placement: "bottom",
+                        delay: 500,
+                        onNext: function () {
+                            $('#taskModalTextarea').focus();
                         }
+                    },
+                    {
+                        title: "Description",
+                        content: "Insert a description, e.g. \"Use the data collected the stakeholders.\". Click on \"Next\" afterwards.",
+                        target: "taskModalTextarea",
+                        placement: "bottom",
+                        xOffset: 10,
+                        delay: 300
+                    },
+                    {
+                        title: "Due date",
+                        content: "Select the due date. For this tutorial leave the default selection - 24 hours in future.",
+                        target: "dueDate",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Due time",
+                        content: "Select the due time. For this tutorial leave the default selection - 24 hours in future.",
+                        target: "dueTime",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Duration",
+                        content: "Select the duration. You can leave the default selection - " + parseInt(settings.defaultTaskDuration[0] * settings.minuteGranularity) + " minutes.",
+                        target: "taskDuration",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Save",
+                        content: "Click on \"Save\".",
+                        target: "taskSave",
+                        nextOnTargetClick: true,
+                        showNextButton: false,
+                        xOffset: 10,
+                        placement: "top",
+                        delay: 300
+                    },
+                    {
+                        title: "Finish",
+                        width: 200,
+                        content: "You see the Task you just created in the calendar. Click on \"Done\" to get back to Tutorial.",
+                        target: "theOnlyCalendar",
+                        placement: "left",
+                        xOffset: 150,
+                        yOffset: 100,
+                        delay: 500
                     }
-                ]
+                ],
+                onEnd: function () {
+                    ModalService.closeModal();
+                    ModalService.openModal('tutorial');
+                }
+            },
+            edit: {
+                id: "edit",
+                onStart: function () {
+                    $('#theOnlyCalendar').fullCalendar('changeView', 'agenda3Day');
+                    $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
+                },
+                steps: [
+                    {
+                        title: "Edit / Select",
+                        content: "You can edit existing entries in the calendar and directly create Events by selecting required slots. Click on \"Next\".",
+                        target: "theOnlyCalendar",
+                        xOffset: 200,
+                        yOffset: 200,
+                        width: 300,
+                        placement: "left"
+                    },
+                    {
+                        title: "Edit / Select",
+                        content: $sce.trustAsHtml("Now try:<br />1 - selecting free slots in the calendar (opens \"New Event\" dialog),<br />2 - selecting existing items with a short tap (opens item's detail),<br />3 - selecting existing items with a long tap (lets you move and resize the item)."),
+                        xOffset: 250,
+                        yOffset: 200,
+                        width: 400,
+                        target: "theOnlyCalendar",
+                        placement: "left",
+                        delay: 200
+                    }
+                ],
+                onEnd: function () {
+                    ModalService.closeModal();
+                    ModalService.openModal('tutorial');
+                }
+            },
+            depOnEvent: {
+                id: "depOnEvent",
+                steps: [
+                    {
+                        title: "New Event",
+                        content: "This button here pops up the 'New Event' modal window. Please click it.",
+                        target: "newevent",
+                        yOffset: -10,
+                        placement: "right",
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "Title",
+                        content: "Insert a title, e.g. \"Management meeting\". Click on \"Next\" afterwards.",
+                        target: "eventPrimaryInput",
+                        placement: "bottom",
+                        xOffset: 10,
+                        delay: 500,
+                        onNext: function () {
+                            $('#eventModalTextarea').focus();
+                        }
+                    },
+                    {
+                        title: "Description",
+                        content: "Insert a description, e.g. \"Constraints for the roadmap will be presented.\". Click on \"Next\" afterwards.",
+                        target: "eventModalTextarea",
+                        xOffset: 10,
+                        placement: "bottom",
+                        delay: 300
+                    },
+                    {
+                        title: "Save",
+                        content: "Let us leave the rest. Click on \"Save\".",
+                        target: "eventSave",
+                        nextOnTargetClick: true,
+                        showNextButton: false,
+                        placement: "top",
+                        delay: 300
+                    },
+                    {
+                        title: "New Task",
+                        content: "Now let us go create the Task.",
+                        target: "newtask",
+                        delay: 800,
+                        yOffset: -10,
+                        placement: "right",
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "Title",
+                        content: "Insert a title, e.g. \"Work on the roadmap\". Click on \"Next\" afterwards.",
+                        target: "taskPrimaryInput",
+                        xOffset: 10,
+                        placement: "bottom",
+                        delay: 500
+                    },
+                    {
+                        title: "Due date",
+                        content: "We have to select the due date. Select 3 days from now - " + MyItems.getBTime().clone().add(3, 'd').format(settings.dateFormatLong) + ".",
+                        target: "dueDate",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Due time",
+                        content: "We have to select the due time. Select any time 3 days from now - " + MyItems.getBTime().clone().add(3, 'd').format(settings.dateFormatLong) + ".",
+                        target: "dueTime",
+                        placement: "bottom"
+                    },
+                    {
+                        title: "Dependency",
+                        content: "Now we will mark the Event we had created as a prerequisite. Select it from the drop-down.",
+                        target: "taskPrerequisites",
+                        xOffset: 10,
+                        placement: "top"
+                    },
+                    {
+                        title: "Save",
+                        content: "Click on \"Save\".",
+                        target: "taskSave",
+                        nextOnTargetClick: true,
+                        xOffset: 10,
+                        showNextButton: false,
+                        placement: "top",
+                        delay: 300
+                    },
+                    {
+                        title: "Finish",
+                        content: "You see the Task you just created in the calendar depending on the previously created Event. Click on \"Done\" to get back to Tutorial.",
+                        target: "theOnlyCalendar",
+                        placement: "left",
+                        xOffset: 150,
+                        yOffset: 100,
+                        delay: 500
+                    }
+                ],
+                onEnd: function () {
+                    ModalService.closeModal();
+                    ModalService.openModal('tutorial');
+                }
+            },
+            depOnTask: {
+                id: "depOnTask",
+                steps: [
+                    {
+                        title: "New Task",
+                        content: "Let us create a Task.",
+                        target: "newtask",
+                        yOffset: -10,
+                        placement: "right",
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "Title",
+                        content: "Insert a title, e.g. \"Test the new software\". Click on \"Next\" afterwards.",
+                        target: "taskPrimaryInput",
+                        xOffset: 10,
+                        placement: "bottom",
+                        delay: 500
+                    },
+                    {
+                        title: "Save",
+                        content: "Let us leave everything else now. Click on \"Save\".",
+                        target: "taskSave",
+                        nextOnTargetClick: true,
+                        showPrevButton: true,
+                        xOffset: 10,
+                        showNextButton: false,
+                        placement: "top",
+                        delay: 300
+                    },
+                    {
+                        title: "New Task",
+                        content: "Let us create another Task that is blocking the first one.",
+                        target: "newtask",
+                        delay: 800,
+                        yOffset: -10,
+                        placement: "right",
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "Title",
+                        content: "Insert a title, e.g. \"Install the new software\". Click on \"Next\" afterwards.",
+                        target: "taskPrimaryInput",
+                        xOffset: 10,
+                        placement: "bottom",
+                        delay: 500
+                    },
+                    {
+                        title: "Dependency",
+                        content: "Now we will add the first Task as being dependent on this one. Select it from the drop-down.",
+                        target: "taskDependencies",
+                        xOffset: 10,
+                        placement: "top"
+                    },
+                    {
+                        title: "Save",
+                        content: "Let us leave everything else now. Click on \"Save\".",
+                        target: "taskSave",
+                        nextOnTargetClick: true,
+                        showNextButton: false,
+                        xOffset: 10,
+                        placement: "top",
+                        delay: 300
+                    },
+                    {
+                        title: "Finish",
+                        content: "You see the two Tasks now scheduled in the order you specified. Click on \"Done\" to get back to Tutorial.",
+                        target: "theOnlyCalendar",
+                        placement: "left",
+                        xOffset: 150,
+                        yOffset: 100,
+                        delay: 500
+                    }
+                ],
+                onEnd: function () {
+                    ModalService.closeModal();
+                    ModalService.openModal('tutorial');
+                }
+            },
+            resources: {
+                id: "resources",
+                steps: [
+                    {
+                        title: "Resource Management",
+                        content: "Select this item to open the dialog with management of Resources.",
+                        target: "resourcesLink",
+                        yOffset: -10,
+                        placement: "right",
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "Select a Resource",
+                        content: "Select a Resource. By default there is only one - for your user.",
+                        target: "resourceList",
+                        placement: "top",
+                        xOffset: 10,
+                        delay: 500,
+                        nextOnTargetClick: true,
+                        showNextButton: false
+                    },
+                    {
+                        title: "Resource Setup",
+                        content: "Here you can set the hours / days where SCHEDULOGY will be scheduling Tasks. You can still create Events (with fixed start) with any start time. Click on \"Done\" to go back to Tutorial.",
+                        target: "resourceSetupDetail",
+                        xOffset: 10,
+                        placement: "top",
+                        delay: 500
+                    }
+                ],
+                onEnd: function () {
+                    ModalService.closeModal();
+                    ModalService.closeModal();
+                    ModalService.openModal('tutorial');
+                }
             }
         };
 

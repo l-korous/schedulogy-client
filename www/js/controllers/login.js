@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('LoginCtrl', function (settings, $scope, Auth, $state, $rootScope, MyItems, MyResources, MyUsers) {
+    .controller('LoginCtrl', function (settings, $scope, Auth, $state, ModalService, MyItems, MyResources, MyUsers) {
         $scope.data = {};
         $scope.goToRegistration = function () {
             $state.go("registration", {}, {location: false});
@@ -17,6 +17,8 @@ angular.module('Schedulogy')
                 MyResources.refresh();
                 MyUsers.refresh();
                 $state.go(settings.defaultStateAfterLogin, {}, {location: false});
+                if (data.runIntro)
+                    ModalService.openModal('tutorial');
             }, function (msg) {
                 $scope.errorInfo = settings.loginErrorInfo(msg);
             });

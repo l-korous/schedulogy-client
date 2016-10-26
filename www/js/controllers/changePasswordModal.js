@@ -16,7 +16,7 @@ angular.module('Schedulogy')
             $scope.errorInfo = '';
             
             ModalService.openModalInternal('changePassword', function () {
-                var primaryInput = $(ModalService.modals.changePassword.modalInternal.modalEl).find('#primaryInput');
+                var primaryInput = $(ModalService.modals.changePassword.modalInternal.modalEl).find('#changePasswordPrimaryInput');
                 primaryInput.focus();
                 primaryInput.select();
             });

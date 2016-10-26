@@ -11,12 +11,9 @@
             <div class="list customFormErrorList">
                 <div ng-show="form.title.$error.required && !form.title.$pristine" class="item help-block">Please provide a valid title.</div>
                 <div ng-show="form.startDate.$error.required" class="item help-block">Please provide a valid date.</div>
-                <div ng-show="form.fixedStartTime.$error.required" class="item help-block">Please provide a valid time.</div>
-                <div ng-show="form.fixedDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
-                <div ng-show="form.fixedAllDayStartDate.$error.required" class="item help-block">Please provide a valid date.</div>
-                <div ng-show="form.fixedAllDayDuration.$error.required" class="item help-block">Please provide a valid duration.</div>
+                <div ng-show="form.startTime.$error.required" class="item help-block">Please provide a valid time.</div>
+                <div ng-show="form.duration.$error.required" class="item help-block">Please provide a valid duration.</div>
                 <div ng-show="form.resource.$error.required" class="item help-block">Please provide a valid resource.</div>
-                <div ng-show="form.resources.$error.required" class="item help-block">Please provide valid resources.</div>
                 <div ng-show="currentItem.error" class="item help-block">{{currentItem.error}}</div>
             </div>
             <div class="list" style="margin-bottom:0;">
@@ -29,16 +26,16 @@
                     </select>
                 </label>
 
-                <ion-toggle ng-model="currentItem.allDay" ng-change="switchAllDay()" toggle-class="toggle-assertive">All-Day</ion-toggle>
+                <ion-toggle id="eventAllDay" ng-model="currentItem.allDay" ng-change="switchAllDay()" toggle-class="toggle-positive">All-Day</ion-toggle>
                 
                 <label class="item item-input" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
-                    <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="primaryInput" required name="title">
+                    <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="eventPrimaryInput" required name="title">
                 </label>
                 <label class="item item-input">
                     <textarea placeholder="Description" ng-model="currentItem.desc" id="eventModalTextarea"></textarea>
                 </label>
 
-                <label class="item item-no-wrap" ng-show="currentItem.constraint.endDateText && currentItem.constraint.end.year() < 2030">c
+                <label class="item item-no-wrap" ng-show="currentItem.constraint.endDateText && currentItem.constraint.end.year() < 2030">
                     The latest this Event can end is on {{currentItem.constraint.endDateText}}, at {{currentItem.constraint.endTimeText}}.
                 </label>
 
@@ -47,20 +44,19 @@
                         Start Date
                     </div>
                     <input readonly="true" type="text" ng-model="currentItem.startDateText" ng-click="openDatePicker();"
-                           name="startDate" required id="startDate"/>
+                           name="startDate" required id="eventStartDate"/>
                 </label>
 
-                <label class="item item-input" ng-show="!currentItem.allDay" ng-class="{ 'has-error' : form.fixedStartTime.$invalid && !form.fixedStartTime.$pristine }">
+                <label class="item item-input" ng-show="!currentItem.allDay" ng-class="{ 'has-error' : form.startTime.$invalid && !form.startTime.$pristine }">
                     <div class="input-label">
                         Start Time
                     </div>
-                    <input readonly="true" type="text" ng-model="currentItem.startTimeText" ng-click="openTimePicker('start');" name="fixedStartTime" id="fixedStartTime"
-                           ng-required="!currentItem.allDay"/>
+                    <input readonly="true" type="text" ng-model="currentItem.startTimeText" ng-click="openTimePicker('start');" name="startTime" id="eventStartTime" ng-required="!currentItem.allDay"/>
                 </label>
 
                 <label class="item item-input range" ng-class="{ 'has-error' : form.duration.$invalid && !form.duration.$pristine }">
                     <input type="range" min="1" max="{{$root.settings.maxEventDuration[currentItem.allDay ? 1 : 0]}}" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
-                           name="fixedDuration" ng-model="currentItem.dur" step="1" required id="duration"/>
+                           name="duration" ng-model="currentItem.dur" step="1" required id="eventDuration"/>
                     <div class="rangeInfo">
                         End Time [duration]: {{currentItem.endTimeText}} ({{currentItem.endDateText}}) [ {{currentItem.durText}} ]
                     </div>
@@ -72,7 +68,7 @@
                     </div>
                     <div class="list nested-list" ng-show="currentItem.blocksForShow.length > 0">
                         <div style="border:0;" class="item item-button-right" ng-repeat="event in currentItem.blocksForShow| filter : {_id: event._id} : true">
-                            <span class="bold">{{event.title}}</span> on {{event.startDateText}} at {{event.startTimeText}}
+                            <span class="bold">{{event.title}} </span> {{event.shortInfo}}
                             <button class="button button-clear" on-tap="myItems.removeDependency(currentItem, event); form.$setDirty();">
                                 <i class="icon ion-trash-b assertive"></i>
                             </button>
@@ -81,7 +77,7 @@
                 </label>
 
                 <label class="item item-select">
-                    <select ng-model="newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
+                    <select id="eventDependencies" ng-model="newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
                             ng-options="event._id as event.info for event in filteredDependencies = (myItems.items | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myItems.addDependency(currentItem, newDependency)">
                         <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible Dependent Task, see Help for explanation' : 'select a dependent task'}}</option>
@@ -91,7 +87,7 @@
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button id="taskSave" class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine || currentItem.error" ng-click="save();">
+                    <button id="eventSave" class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine || currentItem.error" ng-click="save();">
                         Save
                     </button>
 
