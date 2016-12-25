@@ -257,7 +257,7 @@ angular.module('Schedulogy')
                 item.resource = item.admissibleResources[0];
                 Item.setDue(item);
             }
-            item.color = settings.itemColor[item.type];
+            item.color = settings.itemColor(item.type, item.allDay);
         };
 
         _this.tasksInResponseSuccessHandler = function (data, successCallback) {

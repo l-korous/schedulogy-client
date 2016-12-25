@@ -44,15 +44,15 @@ angular.module('Schedulogy')
                 name: 'Entry types',
                 icon: 'ion-paper-airplane',
                 content: $sce.trustAsHtml(
-                    '<h2 style="border-left:5px solid ' + settings.itemColor.event + '">Event</h2>' +
+                    '<h2 style="border-left:5px solid ' + settings.itemColor('event', false) + '">Event</h2>' +
                     '<p>Standard events, that have a fixed start (date &amp; time), and a fixed end (date &amp; time). The end is set up with help of event duration.</p>' +
                     '<p>All events can be concurrently in the calendar. There is no limit on the number of concurrent events.</p>' +
-                    '<h2 style="border-left:5px solid ' + settings.itemColor.task + '">Task</h2>' +
+                    '<h2 style="border-left:5px solid ' + settings.itemColor('task', false) + '">Task</h2>' +
                     '<p class="bold">This type ("floating" Task) does NOT have a fixed start and end, but has a fixed due date. SCHEDULOGY schedules these Tasks so that these due dates (as well as dependencies - see later sections) are satisfied.</p>' +
                     '<p>SCHEDULOGY makes sure that there is only one concurrent Task in the calendar. There can be no Event concurrent with any Task either.</p>' + 
-                    '<h2 style="border-left:5px solid ' + settings.itemColor.reminder + '">Reminder</h2>' +
+                    '<h2 style="border-left:5px solid ' + settings.itemColor('reminder', false) + '">Reminder</h2>' +
                     '<p>A simple reminder, that keeps moving to the current day, until it is marked as done - at which point it stays at the day when it was marked as done.</p>' +
-                    '<h2 style="border-left:5px solid black">All-Day Events / Tasks</h2>' +
+                    '<h2 style="border-left:5px solid ' + settings.itemColor('event', true) + '">All-Day Events / Tasks</h2>' +
                     '<p>Convenience types, similar to Events &amp; Tasks, that do not start, end, or are due at a specific hour. Instead their start, end &amp; due date attributes, as well as duration contain dates only and the entries consume entire day.</p>'
                     )
             },

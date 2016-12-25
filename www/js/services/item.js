@@ -147,7 +147,7 @@ angular.module('Schedulogy')
                 resourceName: task.resourceName,
                 // Some technicality
                 stick: true,
-                color: settings.itemColor[task.type],
+                color: settings.itemColor(task.type, task.allDay),
                 borderColor: settings.itemBorderColor
             };
             switch (task.type) {
@@ -232,7 +232,7 @@ angular.module('Schedulogy')
                     });
                     if (task.done) {
                         item.color = '#ddd';
-                        item.textColor = settings.itemColor.reminder;
+                        item.textColor = settings.itemColor('reminder', false);
                     }
 
                     var start = task.done ? moment.unix(task.start).local() : this.btime.startOf('day');

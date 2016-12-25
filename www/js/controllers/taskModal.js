@@ -69,7 +69,9 @@ angular.module('Schedulogy')
         };
 
         $scope.commonFilter = function (inspectedEvent) {
-            if ($scope.currentItem && inspectedEvent._id === $scope.currentItem._id)
+            if (inspectedEvent.type === 'reminder')
+                return false;
+            if ($scope.currentItem && (inspectedEvent._id === $scope.currentItem._id))
                 return false;
             var retVal = true;
             if ($scope.currentItem && ($scope.currentItem.blocks || $scope.currentItem.needs)) {

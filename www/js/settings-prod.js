@@ -35,10 +35,19 @@ angular.module('Schedulogy')
         dateFormat: 'MMM, Do',
         dateFormatLong: 'MMMM, Do',
         timeFormat: 'HH:mm',
-        itemColor: {
-            event: '#387ef5',
-            task: '#ffa400',
-            reminder: '#bd0000'
+        itemColor: function (type, allDay) {
+            if (allDay) {
+                if (type === 'event')
+                return '#0652D4';
+            if (type === 'task')
+                return '#C67F00';
+            }
+            if (type === 'event')
+                return '#387ef5';
+            if (type === 'task')
+                return '#ffa400';
+            if (type === 'reminder')
+                return '#bd0000';
         },
         maxEventDuration: [48, 14],
         itemBorderColor: '#111',
