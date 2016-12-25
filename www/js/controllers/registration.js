@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller("RegistrationCtrl", function ($scope, Auth, settings, $timeout, $state, $rootScope) {
+    .controller("RegistrationCtrl", function ($scope, Auth, settings, $timeout, $state, $rootScope, moment) {
         $scope.successInfo = null;
         $scope.errorInfo = null;
         $scope.beingSubmitted = false;
@@ -15,7 +15,7 @@ angular.module('Schedulogy')
             if (!$scope.form.$invalid) {
                 $rootScope.isLoading = true;
                 $scope.errorInfo = null;
-                Auth.register({email: $scope.data.email}, function () {
+                Auth.register({email: $scope.data.email, timezone: moment.tz.guess()}, function () {
                     $rootScope.isLoading = false;
                     $scope.successInfo = settings.registrationSuccessInfo;
                 }, function (errorResponse) {

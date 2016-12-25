@@ -35,6 +35,7 @@ angular.module('Schedulogy')
             return angular.extend({}, {
                 _id: resource._id,
                 type: resource.type,
+                timeZone: resource.timeZone,
                 user: resource.type === 'user' ? resource.user : null,
                 email: resource.type === 'artificial' ? resource.email : null,
                 name: resource.name,

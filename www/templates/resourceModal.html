@@ -8,6 +8,7 @@
             <div class="list customFormErrorList">
                 <div ng-show="form.name.$error.required" class="item help-block">Please provide a valid name.</div>
                 <div ng-show="form.email.$error.required || form.email.$error.email" class="item help-block">Please provide a valid email.</div>
+                <div ng-show="form.timezone.$error.required || form.timezone.$error.email" class="item help-block">Please select a time zone.</div>
             </div>
             <div class="list">
                 <label class="item item-input" ng-if="currentResource.type === 'artificial'">
@@ -22,6 +23,14 @@
                         E-mail (for notifications)
                     </div>
                     <input type="email" ng-model="currentResource.email" required name="email">
+                </label>
+                
+                <label class="item item-select" >
+                    <div class="input-label">
+                        Select time zone
+                    </div>
+                    <select ng-model="currentResource.timeZone" ng-options="zone as zone for zone in timeZones">
+                    </select>
                 </label>
 
                 <label class="item item-input range" id="resourceSetupDetail">

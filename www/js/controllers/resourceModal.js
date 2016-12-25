@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ResourceModalCtrl', function (MyResources, $scope, ModalService, MyItems, Resource) {
+    .controller('ResourceModalCtrl', function (MyResources, $scope, ModalService, MyItems, Resource, moment) {
         $scope.loading = true;
         $scope.currentResource = null;
 
@@ -20,6 +20,8 @@ angular.module('Schedulogy')
         $scope.close = function () {
             ModalService.closeModalInternal();
         };
+        
+        $scope.timeZones = moment.tz.names();
 
         ModalService.initModal('resource', $scope, $scope.open, $scope.close);
 

@@ -79,7 +79,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 request: function (config) {
                     config.headers.Authorization = $window.localStorage.token ? $window.localStorage.token : '';
                     config.headers.Xuser = $window.localStorage.currentUserId ? $window.localStorage.currentUserId : '';
-                    config.headers.utcOffset = moment().utcOffset();
                     return config;
                 },
                 responseError: function (response) {
@@ -194,6 +193,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
 
         // Update now indicator periodically.
         $interval(function () {
+            $('#theOnlyCalendar').fullCalendar('option', 'now', MyItems.getBTime);
             $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
         }, 60000);
 
@@ -205,6 +205,10 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             else if (keyCode === 27)
                 $rootScope.$broadcast('Esc');
             else if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                // On login etc. screens we do not support anything.
+                if (['login', 'registration', 'passwordReset'].indexOf($state.current.name) > -1)
+                    return;
+                
                 if (keyCode === 82) {
                     MyItems.newCurrentItem('reminder');
                     ModalService.openModal('reminder');
