@@ -5,21 +5,12 @@
 
     <ion-content has-bouncing="false">
         <form name="$parent.form" novalidate>
-            <div class="list customFormErrorList">
-                    <div ng-show="beingSubmitted && (form.email.$error.required || form.email.$error.email) && !form.email.$pristine" class="item help-block item-no-wrap">
-                        Please provide a valid email.
-                    </div>
-
-                    <div ng-show="errorInfo" class="item help-block help-block-error item-no-wrap">
-                        {{errorInfo}}
-                    </div>
-                </div>
             <div class="list">
                 <label class="item item-input">
                     <div class="input-label">
                         E-mail
                     </div>
-                    <input type="email" ng-model="currentUser.email" id="userPrimaryInput" ng-disabled="(currentUser._id) || ($root.currentUser.role !== 'admin')" required name="email">
+                    <input type="email" ng-model="currentUser.email" id="userPrimaryInput" disabled name="email">
                 </label>
 
                 <ion-checkbox ng-disabled="($root.currentUser.role !== 'admin') || (currentUser._id === $root.currentUser._id)" ng-model="currentUser.admin" name="admin">

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('TaskModalCtrl', function (DateUtils, $scope, settings, MyItems, Item, moment, ionicDatePicker, ionicTimePicker, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
+    .controller('TaskModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, ionicDatePicker, ionicTimePicker, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
         $scope.myItems = MyItems;
         $scope.myResources = MyResources;
         $scope.popupOpen = false;
@@ -33,7 +33,7 @@ angular.module('Schedulogy')
             if ($scope.cachedDurValue[$scope.currentItem.allDay ? 1 : 0])
                 $scope.currentItem.dur = $scope.cachedDurValue[$scope.currentItem.allDay ? 1 : 0];
             else
-                $scope.currentItem.dur = settings.defaultTaskDuration[$scope.currentItem.allDay ? 1 : 0];
+                $scope.currentItem.dur = constants.defaultTaskDuration[$scope.currentItem.allDay ? 1 : 0];
             $scope.myItems.processEventDuration($scope.currentItem);
         };
 
@@ -163,8 +163,8 @@ angular.module('Schedulogy')
                 $scope.currentItem.constraint.end ? DateUtils.equalDays($scope.currentItem.due, $scope.currentItem.constraint.end) : false;
 
             $scope.timePicker.constraint = {
-                from: dueDateEqualsStartConstraint ? (DateUtils.toMinutes($scope.currentItem.constraint.startDue)) : settings.startHour * 60,
-                to: dueDateEqualsEndConstraint ? DateUtils.toMinutes($scope.currentItem.constraint.end) : settings.endHour * 60
+                from: dueDateEqualsStartConstraint ? (DateUtils.toMinutes($scope.currentItem.constraint.startDue)) : constants.startHour * 60,
+                to: dueDateEqualsEndConstraint ? DateUtils.toMinutes($scope.currentItem.constraint.end) : constants.endHour * 60
             };
             ionicTimePicker.openTimePicker($scope.timePicker);
         };

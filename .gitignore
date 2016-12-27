@@ -3,3 +3,14 @@
 /platforms
 /www/templates-min
 /www/css-min
+*.apk
+/plugins
+/test-output
+/test
+www/bower_components/angular-jwt
+www/bower_components/angular-lock
+www/bower_components/auth0-angular
+www/bower_components/auth0-lock
+www/bower_components/auth0.js
+www/bower_components/fullcalendar
+!www/bower_components/fullcalendar/dist/fullcalendar.js

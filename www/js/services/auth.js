@@ -1,94 +1,89 @@
-// This factory is project-independent. Has to have corresponding socket/http based server part.
 angular.module('Schedulogy')
-    .factory('Auth', function ($http, settings, $rootScope, $window, $q, $rootScope, User) {
-        var Auth = {
-            fromUtf: function (user) {
-                if (user.email)
-                    user.email = decodeURIComponent(escape(user.email));
-                if (user.username)
-                    user.username = decodeURIComponent(escape(user.username));
-                return user;
-            },
-            isAuthenticated: function () {
-                if ($rootScope.currentUser) {
-                    return true;
-                }
-                if ($window.localStorage.token) {
-                    return true;
-                }
-                return false;
-            },
-            tryLogin: function (user) {
+    .service('Auth', function ($http, settings, $rootScope, $window, $q, $rootScope, moment, lock, authManager, $timeout, jwtHelper, ModalService, $state, constants, $cookies) {
+        var _this = this;
+
+        _this.showLoginLock = function () {
+            lock.show();
+        };
+
+        _this.logout = function () {
+            $window.localStorage.removeItem('idToken');
+            $window.localStorage.removeItem('profile');
+            $window.localStorage.removeItem('token');
+            $window.localStorage.removeItem('currentUser');
+            authManager.unauthenticate();
+            $rootScope.isAuthenticated = false;
+            $cookies.put('schedulogyAppAccessed', '1',
+                {
+                    path: '/',
+                    domain: '.schedulogy.com',
+                    expires: 'Thu, 01 Jan 1970 00:00:01 GMT'
+                });
+            $cookies.remove('JSESSIONID');
+        };
+
+        _this.processToken = function (token) {
+            $window.localStorage.setItem('token', token);
+
+            var payload = JSON.parse($window.atob($window.localStorage.token.split('.')[1].replace(/-/g, "+").replace(/_/g, "/")));
+
+            $rootScope.currentUser = {
+                _id: payload.uid,
+                email: decodeURIComponent(escape(payload.uem)),
+                role: payload.uro,
+                tenantId: payload.tid,
+                originalTenantId: payload.otid
+            };
+
+            $window.localStorage.setItem('currentUser', JSON.stringify($rootScope.currentUser));
+        };
+
+        _this.registerAuthenticationListener = function () {
+            lock.on('authenticated', function (authResult) {
+                var defer = $q.defer();
+                $window.localStorage.setItem('idToken', authResult.idToken);
                 delete $rootScope.currentUser;
-                var _this = this, defer = $q.defer();
-                $http.post(settings.serverUrl + '/login', user)
+                $http.post(settings.serverUrl + '/loginSocial', {authOToken: authResult.idToken, timeZone: moment.tz.guess()})
                     .success(function (data) {
-                        $window.localStorage.token = data.token;
-                        _this.processTokenStoreUser();
-                        if ($rootScope.currentUser)
-                            defer.resolve(data);
-                        else
-                            defer.reject('malformedToken');
+                        _this.processToken(data.token);
+
+                        authManager.authenticate();
+
+                        $state.go(constants.defaultStateAfterLogin, {}, {location: false});
+
+                        if (data.runIntro)
+                            ModalService.openModal('tutorial');
+
+                        defer.resolve(data);
                     })
                     .error(function (data) {
                         _this.logout();
                         defer.reject(data.msg);
                     });
+
+                $timeout(function () {
+                    lock.hide();
+                }, 2000);
+
                 return defer.promise;
-            },
-            processTokenStoreUser: function () {
-                var payload = JSON.parse($window.atob($window.localStorage.token.split('.')[1].replace(/-/g, "+").replace(/_/g, "/")));
-                $rootScope.currentUser = this.fromUtf({_id: payload.uid, email: payload.uem, username: (payload.uname && payload.uname.length > 1) ? payload.uname : payload.uem, role: payload.uro});
-                $window.localStorage.currentUserId = $rootScope.currentUser._id;
-            },
-            register: function (user, successCallback, errorCallback) {
-                $http.post(settings.serverUrl + "/register", user).success(successCallback).error(errorCallback);
-            },
-            changeUsername: function (username) {
-                var _this = this, defer = $q.defer();
-                User.saveUsername({username: username}, function (data) {
-                    $window.localStorage.token = data.token;
-                    _this.processTokenStoreUser();
-                    defer.resolve();
-                }, function () {
-                    defer.reject();
-                });
-                return defer.promise;
-            },
-            changePassword: function (password) {
-                var defer = $q.defer();
-                User.savePassword({password: password}, function (data) {
-                    defer.resolve();
-                }, function () {
-                    defer.reject();
-                });
-                return defer.promise;
-            },
-            tryPreauthenticate: function () {
-                var _this = this, defer = $q.defer();
-                $http.post(settings.serverUrl + "/authenticate").success(function () {
-                    _this.processTokenStoreUser();
-                    defer.resolve();
-                }).error(function () {
-                    defer.reject();
-                });
-                return defer.promise;
-            },
-            checkPasswordResetLink: function (userId, passwordResetHash, successCallback, errorCallback) {
-                $http.post(settings.serverUrl + "/password-reset-check", {userId: userId, passwordResetHash: passwordResetHash}).success(successCallback ? successCallback : function() {}).error(errorCallback ? errorCallback : function() {});
-            },
-            activate: function (password, userId, passwordResetHash, successCallback, errorCallback) {
-                $http.post(settings.serverUrl + "/activate", {password: password, userId: userId, passwordResetHash: passwordResetHash}).success(successCallback ? successCallback : function() {}).error(errorCallback ? errorCallback : function() {});
-            },
-            sendPasswordResetLink: function (email, successCallback, errorCallback) {
-                $http.post(settings.serverUrl + "/reset-password", {email: email}).success(successCallback ? successCallback : function() {}).error(errorCallback ? errorCallback : function() {});
-            },
-            logout: function () {
-                delete $rootScope.currentUser;
-                $window.localStorage.token && delete $window.localStorage.token;
-                $window.localStorage.currentUserId && delete $window.localStorage.currentUserId;
-                document.cookie = 'schedulogyAppAccessed=1; domain=.schedulogy.com; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-            }
+            });
         };
-        return Auth;
+
+        _this.isAuthenticated = function () {
+            if (!authManager.isAuthenticated())
+                return false;
+
+            if (!$window.localStorage.currentUser)
+                return false;
+
+            if (!$window.localStorage.token)
+                return false;
+
+            if (jwtHelper.decodeToken($window.localStorage.token).exp < moment().unix())
+                return false;
+
+            if (!$rootScope.currentUser)
+                $rootScope.currentUser = JSON.parse($window.localStorage.currentUser);
+            return true;
+        };
     });

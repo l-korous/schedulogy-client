@@ -55,7 +55,7 @@
                 </label>
 
                 <label class="item item-input range" ng-class="{ 'has-error' : form.duration.$invalid && !form.duration.$pristine }">
-                    <input type="range" min="1" max="{{$root.settings.maxEventDuration[currentItem.allDay ? 1 : 0]}}" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
+                    <input type="range" min="1" max="{{$root.constants.maxEventDuration[currentItem.allDay ? 1 : 0]}}" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
                            name="duration" ng-model="currentItem.dur" step="1" required id="eventDuration"/>
                     <div class="rangeInfo">
                         End Time [duration]: {{currentItem.endTimeText}} ({{currentItem.endDateText}}) [ {{currentItem.durText}} ]

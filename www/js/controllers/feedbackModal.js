@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('FeedbackModalCtrl', function ($scope, settings, $http, ModalService, $rootScope) {
+    .controller('FeedbackModalCtrl', function ($scope, settings, $http, ModalService, $rootScope, constants) {
         $scope.open = function () {
             $scope.data = {
                 feedbackText: '',
@@ -25,7 +25,6 @@ angular.module('Schedulogy')
         ModalService.initModal('feedback', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
-            $scope.beingSubmitted = true;
             if ($scope.form.$invalid)
                 return;
 
@@ -33,13 +32,12 @@ angular.module('Schedulogy')
             $http.post(settings.serverUrl + '/msg', {msg: $scope.data.feedbackText})
                 .success(function () {
                     $rootScope.isLoading = false;
-                    $scope.successInfo = settings.feedbackSuccessInfo;
+                    $scope.data.successInfo = constants.feedbackSuccessInfo;
                 })
                 .error(function (errorResponse) {
                     $rootScope.isLoading = false;
-                    $scope.errorInfo = settings.feedbackErrorInfo(errorResponse.msg);
+                    $scope.data.errorInfo = errorResponse.msg;
                 });
-            ModalService.closeModalInternal();
         };
 
         $scope.$on('Esc', function () {

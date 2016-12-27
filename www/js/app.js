@@ -1,35 +1,23 @@
-angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker', 'ngLodash', 'ngCordova'])
-    .config(['$stateProvider', '$urlRouterProvider', 'settings', function ($stateProvider, $urlRouterProvider, settings) {
-            $stateProvider
-                .state('main', {
-                    templateUrl: 'templates/main.html',
-                    controller: 'MainCtrl',
-                    abstract: true})
-                .state('main.calendar',
-                    {
-                        name: 'calendar',
-                        parent: 'main',
-                        templateUrl: 'templates/calendar.html',
-                        controller: 'CalendarCtrl'
-                    })
-                .state('login', {
-                    url: '/login',
-                    templateUrl: 'templates/login.html'
+angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker', 'ngLodash', 'ngCordova', 'ngCookies', 'auth0', 'auth0.lock', 'angular-jwt'])
+    .config(function ($stateProvider) {
+        $stateProvider
+            .state('main', {
+                templateUrl: 'templates/main.html',
+                controller: 'MainCtrl',
+                abstract: true})
+            .state('main.calendar',
+                {
+                    name: 'calendar',
+                    parent: 'main',
+                    templateUrl: 'templates/calendar.html',
+                    controller: 'CalendarCtrl'
                 })
-                .state('registration', {
-                    url: '/registration',
-                    templateUrl: 'templates/registration.html'
-                })
-                .state('forgottenPassword', {
-                    url: '/forgotten-password',
-                    templateUrl: 'templates/forgottenPassword.html'
-                })
-                .state('passwordReset', {
-                    url: '/password-reset',
-                    templateUrl: 'templates/passwordReset.html'
+            .state('empty',
+                {
+                    name: 'empty',
+                    templateUrl: 'templates/empty.html'
                 });
-        }])
-
+    })
     // ionic configuration
     .config(function ($ionicConfigProvider, $compileProvider) {
         $ionicConfigProvider.tabs.position('top');
@@ -46,7 +34,39 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         // Ionic gesture workaround
         ionic.Gestures.gestures.Hold.defaults.hold_threshold = 1;
     })
-    .config(function (ionicDatePickerProvider, settings, moment) {
+    .config(function (lockProvider, settings, jwtOptionsProvider) {
+        lockProvider.init({
+            clientID: settings.AUTH0_CLIENT_ID,
+            domain: settings.AUTH0_DOMAIN,
+            options: {
+                auth: {
+                    redirect: false,
+                    sso: true,
+                    connectionScopes: {
+                        'google-oauth2': ['openid', 'email', 'profile'],
+                        'linkedin': []
+                    }
+                },
+                autoclose: true,
+                closable: false,
+                theme: {
+                    labeledSubmitButton: false,
+                    logo: "img/icon72.png",
+                    primaryColor: "#387ef5"
+                },
+                languageDictionary: {
+                    title: "SCHEDULOGY"
+                }
+            }
+        });
+
+        jwtOptionsProvider.config({
+            tokenGetter: function () {
+                return localStorage.getItem('idToken');
+            }
+        });
+    })
+    .config(function (ionicDatePickerProvider, ionicTimePickerProvider, constants, moment) {
         var datePickerObj = {
             setLabel: 'Set',
             todayLabel: 'Today',
@@ -55,18 +75,17 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
             templateType: 'popup',
             from: new Date(2012, 8, 1),
-            to: moment(new Date()).add(settings.weeks, 'w').toDate(),
+            to: moment(new Date()).add(constants.weeks, 'w').toDate(),
             showTodayButton: false,
             dateFormat: 'dd MMMM yyyy',
             closeOnSelect: true,
             disableWeekdays: []
         };
         ionicDatePickerProvider.configDatePicker(datePickerObj);
-    })
-    .config(function (ionicTimePickerProvider, settings) {
+
         var timePickerObj = {
             format: 24,
-            step: settings.minuteGranularity,
+            step: constants.minuteGranularity,
             setLabel: 'Set',
             closeLabel: 'Close'
         };
@@ -74,90 +93,54 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
     })
     .config(function ($httpProvider) {
         $httpProvider.defaults.withCredentials = true;
-        $httpProvider.interceptors.push(function ($rootScope, $q, $window, $timeout, $state, moment) {
+        $httpProvider.interceptors.push(function ($rootScope, $q, $window) {
             return {
                 request: function (config) {
                     config.headers.Authorization = $window.localStorage.token ? $window.localStorage.token : '';
-                    config.headers.Xuser = $window.localStorage.currentUserId ? $window.localStorage.currentUserId : '';
+                    config.headers.Xuser = $rootScope.currentUser ? $rootScope.currentUser._id : '';
                     return config;
                 },
                 responseError: function (response) {
                     if (response.status === 401 || response.status === 403) {
-                        delete $window.localStorage.token;
-                        delete $window.localStorage.currentUserId;
-                        $timeout(function () {
-                            if (['login', 'registration', 'passwordReset'].indexOf($state.current.name) === -1)
-                                $rootScope.goToLogin();
-                        }, 500);
+                        $rootScope.goToLogin(true);
                     }
                     return $q.reject(response);
                 }
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyItems, MyResources, ModalService, Cordova, $cordovaNetwork, $timeout, $interval) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyItems, ModalService, Cordova, $cordovaNetwork, $timeout, $interval, lock, authManager, constants) {
         // Settings - so that they are accessible from anywhere.
         $rootScope.settings = settings;
+        $rootScope.constants = constants;
+        $rootScope.isAuthenticated = false;
+        Auth.registerAuthenticationListener();
+        lock.interceptHash();
+        authManager.checkAuthOnRefresh();
 
         // This must be defined here, when the $state is defined.
-        $rootScope.goToLogin = function () {
+        $rootScope.goToLogin = function (forceReload) {
             Auth.logout();
-            $location.path('');
-            $location.search('');
-            if ($state.current.name !== 'login') {
-                $state.go("login", {}, {location: false, reload: true});
-            }
+            if (forceReload)
+                $window.location.reload();
+
+            Auth.showLoginLock();
         };
 
-        // Preauthentication - only on browser
-        if (!Cordova.isBrowser()) {
-            Auth.tryPreauthenticate().then(function () {
-                $location.path('');
-                $location.search('');
-                MyItems.refresh();
-                MyResources.refresh();
-                $state.go(settings.defaultStateAfterLogin, {}, {location: false});
-            });
-        }
-        else if (Auth.isAuthenticated()) {
-            Auth.processTokenStoreUser();
+        if (Auth.isAuthenticated()) {
+            $rootScope.isAuthenticated = true;
             $location.path('');
             $location.search('');
-            MyItems.refresh();
-            MyResources.refresh();
-            $state.go(settings.defaultStateAfterLogin, {}, {location: false});
+            $state.go(constants.defaultStateAfterLogin, {}, {location: false});
         }
         else {
-            $timeout(function () {
-                if (['login', 'registration', 'passwordReset'].indexOf($state.current.name) === -1)
-                    $rootScope.goToLogin();
-            }, 500);
+            $rootScope.goToLogin();
         }
 
         // Handle smallScreen
-        $rootScope.smallScreen = ($window.innerWidth < settings.smallScreen);
+        $rootScope.smallScreen = ($window.innerWidth < constants.smallScreen);
         angular.element($window).bind('resize', function () {
-            $rootScope.smallScreen = ($window.innerWidth < settings.smallScreen);
-        });
-
-        // Controls display of 'loading'
-        $rootScope.isLoading = true;
-        $timeout(function () {
-            $rootScope.isLoading = false;
-        }, 1500);
-
-        // Check stuff when changing state.
-        $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-            $location.path('');
-            $location.search('');
-            if ((['login', 'registration', 'passwordReset'].indexOf(toState.name) === -1) && !Auth.isAuthenticated()) {
-                // User isn’t authenticated
-                $rootScope.goToLogin();
-                event.preventDefault();
-            } else if (toState.name === 'login' && Auth.isAuthenticated()) {
-                if (fromState.name !== '')
-                    event.preventDefault();
-            }
+            $rootScope.smallScreen = ($window.innerWidth < constants.smallScreen);
         });
 
         // Online / offline handlers.
@@ -198,33 +181,52 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         }, 60000);
 
         // Key bindings.
-        $rootScope.keyUpHandler = function (keyCode) {
+        $rootScope.keyUpHandler = function (keyCode, ctrlKey) {
+
             if (keyCode === 13 && document.activeElement.tagName !== 'TEXTAREA') {
                 $rootScope.$broadcast('Enter');
             }
             else if (keyCode === 27)
                 $rootScope.$broadcast('Esc');
             else if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-                // On login etc. screens we do not support anything.
-                if (['login', 'registration', 'passwordReset'].indexOf($state.current.name) > -1)
+                // On login screen we do not support anything.
+                if ($state.current.name === 'empty')
                     return;
-                
-                if (keyCode === 82) {
+
+                if (keyCode === 72 && !ctrlKey) {
+                    ModalService.openModal('help');
+                }
+
+                if (keyCode === 82 && !ctrlKey) {
                     MyItems.newCurrentItem('reminder');
                     ModalService.openModal('reminder');
                 }
-                if (keyCode === 69) {
+                if (keyCode === 69 && !ctrlKey) {
                     MyItems.newCurrentItem('event');
                     ModalService.openModal('event');
                 }
-                if (keyCode === 84) {
+                if (keyCode === 84 && !ctrlKey) {
                     MyItems.newCurrentItem('task');
                     ModalService.openModal('task');
                 }
-                else if (keyCode === 37)
-                    $('#theOnlyCalendar').fullCalendar('prevLong');
+                if ($('#theOnlyCalendar').fullCalendar('getView').name === 'month' || $('#theOnlyCalendar').fullCalendar('getView').name === 'list') {
+                    if (keyCode === 38 && !ctrlKey)
+                        $('#theOnlyCalendar').fullCalendar('prev');
+                    if (keyCode === 40 && !ctrlKey)
+                        $('#theOnlyCalendar').fullCalendar('next');
+                    if (keyCode === 38 && ctrlKey)
+                        $('#theOnlyCalendar').fullCalendar('prevLong');
+                    if (keyCode === 40 && ctrlKey)
+                        $('#theOnlyCalendar').fullCalendar('nextLong');
+                }
 
-                else if (keyCode === 39)
+                if (keyCode === 37 && !ctrlKey)
+                    $('#theOnlyCalendar').fullCalendar('prev');
+                if (keyCode === 39 && !ctrlKey)
+                    $('#theOnlyCalendar').fullCalendar('next');
+                if (keyCode === 37 && ctrlKey)
+                    $('#theOnlyCalendar').fullCalendar('prevLong');
+                if (keyCode === 39 && ctrlKey)
                     $('#theOnlyCalendar').fullCalendar('nextLong');
             }
         };

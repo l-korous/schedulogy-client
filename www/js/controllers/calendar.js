@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('CalendarCtrl', function ($scope, settings, MyItems, FullCalendar, $rootScope, ModalService, Item) {
+    .controller('CalendarCtrl', function ($scope, constants, MyItems, MyResources, MyUsers, FullCalendar, $rootScope, ModalService, Item, $timeout) {
         $scope.myItems = MyItems;
         FullCalendar.calculateCalendarRowHeight();
 
@@ -28,7 +28,7 @@ angular.module('Schedulogy')
                     end: end,
                     type: 'event',
                     allDay: (view.name === 'month' || !(start.hasTime() || end.hasTime())),
-                    dur: (view.name === 'month' || !(start.hasTime() || end.hasTime())) ? end.diff(start, 'd') : Math.ceil(end.diff(start, 'm') / settings.minuteGranularity)
+                    dur: (view.name === 'month' || !(start.hasTime() || end.hasTime())) ? end.diff(start, 'd') : Math.ceil(end.diff(start, 'm') / constants.minuteGranularity)
                 });
                 Item.setStart(MyItems.currentItem);
                 Item.setEnd(MyItems.currentItem);
@@ -51,13 +51,13 @@ angular.module('Schedulogy')
                     // This means !allDay -> allDay
                     if (MyItems.currentItem.type === 'event' && MyItems.currentItem.allDay && MyItems.currentItem.startTimeText) {
                         Item.setStart(MyItems.currentItem);
-                        MyItems.currentItem.dur = settings.defaultTaskDuration[1];
+                        MyItems.currentItem.dur = constants.defaultTaskDuration[1];
                         MyItems.processEventDuration(MyItems.currentItem);
                     }
                     // This means allDay -> !allDay
                     else if (MyItems.currentItem.type === 'event' && !MyItems.currentItem.allDay && !MyItems.currentItem.startTimeText) {
                         Item.setStart(MyItems.currentItem);
-                        MyItems.currentItem.dur = settings.defaultTaskDuration[0];
+                        MyItems.currentItem.dur = constants.defaultTaskDuration[0];
                         MyItems.processEventDuration(MyItems.currentItem);
                     }
 
@@ -67,8 +67,8 @@ angular.module('Schedulogy')
             eventResize: function (event, delta, revertFunc) {
                 MyItems.currentItem = event;
                 if (event.type === 'event' && !event.allDay) {
-                    event.dur += (delta._data.hours * settings.slotsPerHour);
-                    event.dur += (delta._data.minutes / settings.minuteGranularity);
+                    event.dur += (delta._data.hours * constants.slotsPerHour);
+                    event.dur += (delta._data.minutes / constants.minuteGranularity);
                     MyItems.imposeEventDurationBound();
                     MyItems.processEventDuration();
                     if (!MyItems.recalcEventConstraints())
@@ -93,5 +93,11 @@ angular.module('Schedulogy')
                     });
                 }
             }
+        });
+
+        $timeout(function () {
+            MyItems.refresh();
+            MyResources.refresh();
+            MyUsers.refresh();
         });
     });

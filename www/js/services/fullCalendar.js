@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('FullCalendar', function (moment, settings, MyItems, $window, $timeout, uiCalendarConfig, $rootScope) {
+    .service('FullCalendar', function (moment, settings, constants, MyItems, $window, $timeout, uiCalendarConfig, $rootScope) {
         var _this = this;
 
         this.setCallbacks = function (toSet) {
@@ -15,8 +15,8 @@ angular.module('Schedulogy')
                 timezone: 'local',
                 timeFormat: 'H:mm',
                 // We move to some user-friendly slot 1 slot before the current one.
-                scrollTime: (MyItems.getBTime().hours() < 1 ? MyItems.getBTime().clone() : MyItems.getBTime().clone().subtract(settings.minuteGranularity, 'minute')).format('HH:mm:ss'),
-                scrollOffsetMinutes: settings.minuteGranularity,
+                scrollTime: (MyItems.getBTime().hours() < 1 ? MyItems.getBTime().clone() : MyItems.getBTime().clone().subtract(constants.minuteGranularity, 'minute')).format('HH:mm:ss'),
+                scrollOffsetMinutes: constants.minuteGranularity,
                 slotLabelFormat: 'H:mm',
                 eventBackgroundColor: '#387ef5',
                 eventBorderColor: '#000',
@@ -24,7 +24,7 @@ angular.module('Schedulogy')
                 axisFormat: 'H:mm',
                 selectConstraint: {
                     start: MyItems.getBTime().clone().subtract(1, 'second'),
-                    end: MyItems.getBTime().clone().add(settings.weeks, 'weeks')
+                    end: MyItems.getBTime().clone().add(constants.weeks, 'weeks')
                 },
                 slotDuration: '00:30:00',
                 defaultDate: settings.fixedBTime.on ? moment(settings.fixedBTime.date) : MyItems.getBTime(),
@@ -38,16 +38,16 @@ angular.module('Schedulogy')
                     center: 'title',
                     right: 'prevLong,prev,now,next,nextLong'
                 },
-                minTime: settings.startHour + ':00:00',
-                maxTime: settings.endHour + ':00:00',
+                minTime: constants.startHour + ':00:00',
+                maxTime: constants.endHour + ':00:00',
                 selectable: true,
                 eventConstraint: {
                     start: MyItems.getBTime(),
-                    end: MyItems.getBTime().clone().add(settings.weeks, 'weeks')
+                    end: MyItems.getBTime().clone().add(constants.weeks, 'weeks')
                 },
                 businessHours: {
-                    start: settings.startHour + ':00:00',
-                    end: settings.endHour + ':00:00'
+                    start: constants.startHour + ':00:00',
+                    end: constants.endHour + ':00:00'
                 },
                 eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
                     _this.callbacks.eventResize(event, delta, revertFunc, jsEvent);
@@ -108,7 +108,7 @@ angular.module('Schedulogy')
         };
 
         this.calculateCalendarRowHeight = function () {
-            var row_height = settings.minCalendarRowHeight;
+            var row_height = constants.minCalendarRowHeight;
             var style = document.createElement('style');
             style.type = 'text/css';
             style.innerHTML = '.fc-time-grid .fc-slats td { height: ' + row_height.toString() + 'px; }';
@@ -116,7 +116,7 @@ angular.module('Schedulogy')
             list.removeChild(item);
             list.appendChild(style);
             $timeout(function () {
-                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - settings.shiftCalendar[$rootScope.smallScreen ? 'smallScreen' : 'normal']);
+                uiCalendarConfig.calendars['theOnlyCalendar'].fullCalendar('option', 'contentHeight', $window.innerHeight - constants.shiftCalendar[$rootScope.smallScreen ? 'smallScreen' : 'normal']);
             });
         };
 

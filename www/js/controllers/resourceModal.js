@@ -37,8 +37,8 @@ angular.module('Schedulogy')
 
         $scope.$watch('currentResource.sinceDay', function (newValue, oldValue) {
             if (oldValue || (oldValue === 0)) {
-                if (newValue > MyResources.currentResource.untilDay)
-                    MyResources.currentResource.sinceDay = oldValue;
+                if (parseInt(newValue) > parseInt($scope.currentResource.untilDay))
+                    $scope.currentResource.sinceDay = oldValue;
                 else
                     MyResources.updateText($scope.currentResource, 'sinceDay');
             }
@@ -46,8 +46,8 @@ angular.module('Schedulogy')
 
         $scope.$watch('currentResource.untilDay', function (newValue, oldValue) {
             if (oldValue || (oldValue === 0)) {
-                if (MyResources.currentResource.sinceDay > newValue)
-                    MyResources.currentResource.untilDay = oldValue;
+                if (parseInt($scope.currentResource.sinceDay) > parseInt(newValue))
+                    $scope.currentResource.untilDay = oldValue;
                 else
                     MyResources.updateText($scope.currentResource, 'untilDay');
             }
@@ -55,8 +55,8 @@ angular.module('Schedulogy')
 
         $scope.$watch('currentResource.sinceTime', function (newValue, oldValue) {
             if (oldValue || (oldValue === 0)) {
-                if (newValue > MyResources.currentResource.untilTime)
-                    MyResources.currentResource.sinceTime = oldValue;
+                if (parseInt(newValue) > parseInt($scope.currentResource.untilTime))
+                    $scope.currentResource.sinceTime = oldValue;
                 else
                     MyResources.updateText($scope.currentResource, 'sinceTime');
             }
@@ -64,9 +64,8 @@ angular.module('Schedulogy')
 
         $scope.$watch('currentResource.untilTime', function (newValue, oldValue) {
             if (oldValue || (oldValue === 0)) {
-                if (MyResources.currentResource.sinceTime > newValue)
-                    MyResources.currentResource.untilTime = oldValue;
-
+                if (parseInt($scope.currentResource.sinceTime) > parseInt(newValue))
+                    $scope.currentResource.untilTime = oldValue;
                 else
                     MyResources.updateText($scope.currentResource, 'untilTime');
             }

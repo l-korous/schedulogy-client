@@ -1,44 +1,49 @@
 <ion-modal-view ng-controller="UsersModalCtrl">
     <ion-header-bar>
-        <h1 class="title">Users</h1>
+        <h1 class="title">Tenant</h1>
     </ion-header-bar>
     <ion-content has-bouncing="false" ng-show="!$root.isLoading">
-        <div class="list">
-            <div class="item item-no-wrap item-intro" ng-if="$root.currentUser.role === 'admin'">
+        <div class="list" style="margin-bottom:0;">
+            <div class="item item-no-wrap item-intro" style="border-bottom:none;border-top:none;">
+                <div style="text-align: center">
+                    <div style="margin:auto;border:1px solid #ddd;padding:5px 10px; text-align: center; display:inline-block; margin-bottom:1em;font-size:1.4em;">
+                        <p>Tenant code:</p>
+                        <span><strong>{{myUsers.tenantCode}}</strong></span>
+                    </div>
+                </div>
                 <span>
-                    When you register for SCHEDULOGY, you get a tenant (account) automatically create for you and you become an admin of the tenant account.
+                    <ul><li style="list-style:square;margin-left:15px;">This is your Tenant (Account). By default, you are the only User in your Tenant.</li></ul>
                 </span>
                 <span>
-                    You can add additional users to your tenant account. These users by default do not have the admin role and cannot create or delete users.
+                    <ul><li style="list-style:square;margin-left:15px;">You can invite other people (using their e-mail) to use your Tenant and to schedule tasks among yourselves.</li></ul>
                 </span>
                 <span>
-                    As an admin, you have the option to create and delete users, as well as give the admin role to new or existing users.
+                    <ul><li style="list-style:square;margin-left:15px;">Invitation contains the Tenant code, that the invited person needs to insert. The invited User will receive instructions to select <strong class="assertive">Switch Tenant</strong> on this very screen.</li></ul>
                 </span>
                 <span>
                     <i class="icon ion-alert assertive"></i>
-                    &nbsp; Be careful with the admin role, as all admins can delete all other admins, including the first (default) one.
+                    &nbsp; Only Admins can send out invitations and assign Admin roles.
                 </span>
+                <div style="text-align: center;margin-top:15px;">
+                    <button class="button button-assertive" ng-click="openSwitchTenantDetail();">
+                        Switch Tenant
+                    </button>
+                    
+                    <button class="button button-positive" ng-click="openResetTenantDetail();" style="margin-left:20px" ng-show="$root.currentUser.tenantId !== $root.currentUser.originalTenantId">
+                        Reset to default Tenant
+                    </button>
+                </div>
             </div>
-            <div class="item item-no-wrap item-intro" ng-if="$root.currentUser.role !== 'admin'">
-                <span>
-                    When an admin of an existing tenant account registers you for SCHEDULOGY, you can see all users in the tenant account.
-                </span>
-                <span>
-                    However, you cannot create new user accounts, or modify / delete existing user accounts without admin role.
-                </span>
-                <span>
-                    Your account admin can give you this role.
-                </span>
-            </div>
-            <div class="item item-no-wrap help-block" ng-if="successInfo">
-                {{successInfo}}
+        </div>
+        <div class="list">
+            <div class="item">
+                <h2>Users</h2>
             </div>
             <div class="item item-icon-left item-button-right" ng-repeat="user in myUsers.users" ng-click="openDetail(user);">
-                <i class="icon ion-person"  ng-class="{'inactive': !user.active}"></i>
-                <span ng-if="!user.active" class="inactive">(inactive)</span>
-                <span ng-class="{'inactive': !user.active}">{{user.email}}{{user.username ? ' / ' + user.username : ''}}</span>
-                <span ng-if="user.role === 'admin' && user._id !== $root.currentUser._id">(admin)</span>
-                <span ng-if="user.role === 'admin' && user._id === $root.currentUser._id">(You, admin)</span>
+                <i class="icon ion-person"></i>
+                <span><strong>{{user.email}}</strong></span>
+                <span ng-if="user.role === 'admin' && user._id !== $root.currentUser._id">(Admin)</span>
+                <span ng-if="user.role === 'admin' && user._id === $root.currentUser._id">(You, Admin)</span>
                 <span ng-if="user.role !== 'admin' && user._id === $root.currentUser._id">(You)</span>
 
                 <button ng-if="$root.currentUser.role === 'admin' && user._id !== $root.currentUser._id" class="button button-clear" ng-click="openRemoveDetail(user);
@@ -50,10 +55,9 @@
 
         <div class="row">
             <div ng-if="$root.currentUser.role === 'admin'" class="col-50 padding-horizontal padding-top">
-                <button class="button button-block button-positive" ng-click="openDetail();">
-                    Create New
+                <button class="button button-block button-positive" ng-click="openInvitationDetail();">
+                    Invite Users to your Tenant
                 </button>
-
             </div>
             <div class="padding-horizontal padding-top" ng-class="{'col-50': $root.currentUser.role === 'admin', 'col': $root.currentUser.role !== 'admin'}">
                 <button class="button button-block button-dark button-outline" ng-click="close();">

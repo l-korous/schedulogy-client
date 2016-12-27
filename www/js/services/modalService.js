@@ -4,8 +4,6 @@ angular.module('Schedulogy')
 
         // List of names of ALL modals.
         var modalNames = [
-            'changePassword',
-            'changeUsername',
             'dirtyTasks',
             'error',
             'feedback',
@@ -21,6 +19,9 @@ angular.module('Schedulogy')
             'event',
             'reminder',
             'tutorial',
+            'switchTenant',
+            'resetTenant',
+            'invitation',
             'user',
             'users',
             'removeResource'

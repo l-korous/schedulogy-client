@@ -24,23 +24,27 @@
         <script src="bower_components/angular-resource/angular-resource.js"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-        <script type="text/javascript" src="bower_components/angular-ui-calendar/src/calendar.js"></script>
-        <script type="text/javascript" src="bower_components/fullcalendar/dist/fullcalendar.js"></script>
-        <script type="text/javascript" src="bower_components/fullcalendar/dist/gcal.js"></script>
+        <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
+        <script src="bower_components/fullcalendar/dist/fullcalendar.js"></script>
+        <script src="bower_components/fullcalendar/dist/gcal.js"></script>
         <script src="bower_components/ionic-datepicker/dist/ionic-datepicker.bundle.min.js"></script>
         <script src="bower_components/ionic-timepicker/dist/ionic-timepicker.bundle.min.js"></script>
         <script src="bower_components/hopscotch/dist/js/hopscotch.js"></script>
         <script src="bower_components/ng-cordova/ng-cordova.min.js"></script>
         <script src="js/common/textareaAutogrow.js"></script>
+        <script src="bower_components/auth0-lock/build/lock.js"></script>
+        <script src="bower_components/angular-lock/dist/angular-lock.js"></script>
+        <script src="bower_components/angular-jwt/dist/angular-jwt.js"></script>
+        <script src="bower_components/auth0.js/build/auth0.min.js"></script>
+        <script src="bower_components/auth0-angular/build/auth0-angular.min.js"></script>
 
         <!-- cordova script (this will be a 404 during development) -->
         <script src="cordova.js"></script>
 
         <script src="js/app.js"></script>
         <script src="js/settings.js"></script>
+        <script src="js/constants.js"></script>
         <script src="js/directives/select.js"></script>
-        <script src="js/directives/complexPassword.js"></script>
-        <script src="js/directives/repeatPassword.js"></script>
         <script src="js/directives/fileModel.js"></script>
         <script src="js/services/dateUtils.js"></script>
         <script src="js/services/item.js"></script>
@@ -68,15 +72,12 @@
         <script src="js/controllers/taskModal.js"></script>
         <script src="js/controllers/eventModal.js"></script>
         <script src="js/controllers/reminderModal.js"></script>
+        <script src="js/controllers/invitationModal.js"></script>
+        <script src="js/controllers/switchTenantModal.js"></script>
+        <script src="js/controllers/resetTenantModal.js"></script>
         <script src="js/controllers/resourcesModal.js"></script>
-        <script src="js/controllers/login.js"></script>
-        <script src="js/controllers/registration.js"></script>
-        <script src="js/controllers/passwordReset.js"></script>
-        <script src="js/controllers/forgottenPassword.js"></script>
         <script src="js/controllers/errorModal.js"></script>
         <script src="js/controllers/dirtyTasksModal.js"></script>
-        <script src="js/controllers/changeUsernameModal.js"></script>
-        <script src="js/controllers/changePasswordModal.js"></script>
         <script src="js/controllers/resourceModal.js"></script>
         <script src="js/controllers/feedbackModal.js"></script>
         <script src="js/controllers/floatToFixedModal.js"></script>
@@ -85,7 +86,7 @@
         <script src="js/controllers/removeResourceModal.js"></script>
 
     </head>
-    <body ng-app="Schedulogy" ng-keyup="$root.keyUpHandler($event.keyCode);">
+    <body ng-app="Schedulogy" ng-keyup="$root.keyUpHandler($event.keyCode, $event.ctrlKey);">
         <div ui-view></div>
     </body>
 </html>

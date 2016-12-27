@@ -27,7 +27,7 @@
         <script src="bower_components/ng-cordova/ng-cordova.min.js"></script>
         <script src="js-min/app.min.js"></script>
     </head>
-    <body ng-app="Schedulogy" ng-keyup="$root.keyUpHandler($event.keyCode);">
+    <body ng-app="Schedulogy" ng-keyup="$root.keyUpHandler($event.keyCode, $event.ctrlKey);">
         <div ui-view></div>
     </body>
 </html>

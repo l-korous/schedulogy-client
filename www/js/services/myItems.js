@@ -1,20 +1,17 @@
 angular.module('Schedulogy')
-    .service('MyItems', function (moment, settings, Item, Task, ModalService, DateUtils, $rootScope, $timeout, $q) {
+    .service('MyItems', function (moment, settings, constants, Item, Task, ModalService, DateUtils, $rootScope, $timeout, $q) {
         var _this = this;
         _this.items = [];
         _this.calendarItems = [_this.items];
         _this.dirtyItems = [];
 
         _this.refresh = function () {
-            $rootScope.isLoading = true;
             Task.query({btime: _this.getBTime().unix()}, function (data) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
-                $rootScope.isLoading = false;
             }, function (err) {
                 if (err.data && err.data.tasks && err.data.dirtyTasks) {
                     _this.importFromTasks(err.data.tasks, err.data.dirtyTasks);
                 }
-                $rootScope.isLoading = false;
             });
         };
 
@@ -77,9 +74,9 @@ angular.module('Schedulogy')
 
             switch (type) {
                 case 'event':
-                    var startTime = _this.getBTime().clone().add(settings.defaultHourShiftFromNow, 'h');
-                    var endTime = startTime.clone().add(settings.defaultTaskDuration / settings.minuteGranularity, 'm');
-                    var dur = settings.defaultTaskDuration[0];
+                    var startTime = _this.getBTime().clone().add(constants.defaultHourShiftFromNow, 'h');
+                    var endTime = startTime.clone().add(constants.defaultTaskDuration / constants.minuteGranularity, 'm');
+                    var dur = constants.defaultTaskDuration[0];
                     _this.currentItem = angular.extend(_this.currentItem, {
                         resource: $rootScope.myResourceId,
                         blocks: [],
@@ -95,9 +92,9 @@ angular.module('Schedulogy')
                     Item.setEnd(_this.currentItem, endTime);
                     break;
                 case 'task':
-                    var startTime = _this.getBTime().clone().add(settings.defaultHourShiftFromNow, 'h');
-                    var endTime = startTime.clone().add(settings.defaultTaskDuration / settings.minuteGranularity, 'm');
-                    var dur = settings.defaultTaskDuration[0];
+                    var startTime = _this.getBTime().clone().add(constants.defaultHourShiftFromNow, 'h');
+                    var endTime = startTime.clone().add(constants.defaultTaskDuration / constants.minuteGranularity, 'm');
+                    var dur = constants.defaultTaskDuration[0];
                     _this.currentItem = angular.extend(_this.currentItem, {
                         admissibleResources: [$rootScope.myResourceId],
                         blocks: [],
@@ -235,8 +232,8 @@ angular.module('Schedulogy')
         _this.imposeEventDurationBound = function (passedItem) {
             var item = passedItem || _this.currentItem;
 
-            if (item.dur > settings.maxEventDuration[item.type])
-                item.dur = settings.maxEventDuration[item.type];
+            if (item.dur > constants.maxEventDuration[item.type])
+                item.dur = constants.maxEventDuration[item.type];
         };
 
         // (!!!) Might change duration and start.
@@ -247,17 +244,17 @@ angular.module('Schedulogy')
                 var dueMinutes = DateUtils.toMinutes(item.due);
                 if (!dueMinutes)
                     dueMinutes = 1440;
-                var startHourOffset = (dueMinutes - item.dur * settings.minuteGranularity) - (settings.startHour * 60);
+                var startHourOffset = (dueMinutes - item.dur * constants.minuteGranularity) - (constants.startHour * 60);
                 if (startHourOffset < 0)
                     item.due.add(-startHourOffset, 'm');
-                var endHourOffset = (settings.endHour * 60) - (dueMinutes - item.dur * settings.minuteGranularity);
+                var endHourOffset = (constants.endHour * 60) - (dueMinutes - item.dur * constants.minuteGranularity);
                 if (endHourOffset < 0)
                     item.due.add(endHourOffset, 'm');
 
                 item.resource = item.admissibleResources[0];
                 Item.setDue(item);
             }
-            item.color = settings.itemColor(item.type, item.allDay);
+            item.color = constants.itemColor(item.type, item.allDay);
         };
 
         _this.tasksInResponseSuccessHandler = function (data, successCallback) {
@@ -393,7 +390,7 @@ angular.module('Schedulogy')
             Item.setDur(item);
 
             if (item.type === 'event') {
-                var toAddMinutes = (item.allDay ? 1440 : settings.minuteGranularity) * item.dur;
+                var toAddMinutes = (item.allDay ? 1440 : constants.minuteGranularity) * item.dur;
                 Item.setEnd(item, item.start.clone().add(toAddMinutes, 'minutes'));
             }
         };
@@ -403,8 +400,8 @@ angular.module('Schedulogy')
                 return moment(settings.fixedBTime.date);
 
             var toReturn = moment(new Date());
-            for (var i = 0; i < (60 / settings.minuteGranularity); i++) {
-                var thisPart = (settings.minuteGranularity * (i + 1));
+            for (var i = 0; i < (60 / constants.minuteGranularity); i++) {
+                var thisPart = (constants.minuteGranularity * (i + 1));
                 if (toReturn.minute() < thisPart) {
                     toReturn.minute(thisPart);
                     break;
@@ -412,14 +409,14 @@ angular.module('Schedulogy')
             }
 
             // Move to next day.
-            if ((toReturn.hours() * 60 + toReturn.minute()) > settings.endHour * 60) {
-                toReturn.hours(settings.startHour);
+            if ((toReturn.hours() * 60 + toReturn.minute()) > constants.endHour * 60) {
+                toReturn.hours(constants.startHour);
                 toReturn.minutes(0);
                 toReturn.day(toReturn.day() + 1);
             }
             // Move to startHour (the same day).
-            if (toReturn.hours() < settings.startHour) {
-                toReturn.hours(settings.startHour);
+            if (toReturn.hours() < constants.startHour) {
+                toReturn.hours(constants.startHour);
                 toReturn.minutes(0);
             }
 

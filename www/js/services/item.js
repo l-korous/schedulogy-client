@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('Item', function (moment, settings, DateUtils) {
+    .service('Item', function (moment, constants, DateUtils) {
         this.btime = null;
         this.setBTime = function (btime) {
             this.btime = btime;
@@ -8,11 +8,11 @@ angular.module('Schedulogy')
             if (start)
                 item.start = start;
 
-            item.startDateText = item.start.format(settings.dateFormatLong);
+            item.startDateText = item.start.format(constants.dateFormatLong);
             if (item.allDay)
                 item.startTimeText = null;
             else
-                item.startTimeText = item.start.format(settings.timeFormat);
+                item.startTimeText = item.start.format(constants.timeFormat);
 
             if (item.start.diff(new Date(), "day") === 0)
                 item.startDateText += ' (today)';
@@ -25,12 +25,12 @@ angular.module('Schedulogy')
             if (due)
                 item.due = due;
 
-            item.dueDateText = item.due.format(settings.dateFormatLong);
+            item.dueDateText = item.due.format(constants.dateFormatLong);
 
             if (item.allDay)
                 item.dueTimeText = null;
             else
-                item.dueTimeText = item.due.format(settings.timeFormat);
+                item.dueTimeText = item.due.format(constants.timeFormat);
         };
         this.setDur = function (item, dur) {
             if (dur)
@@ -48,12 +48,12 @@ angular.module('Schedulogy')
             // For fixedAllDay, we deduct one day from what we present as the 'end'.
             if (item.allDay) {
                 var custom_end = item.end.clone().add(-1, 'days');
-                item.endDateText = custom_end.format(settings.dateFormat);
+                item.endDateText = custom_end.format(constants.dateFormat);
                 item.endTimeText = null;
             }
             else {
-                item.endDateText = item.end.format(settings.dateFormat);
-                item.endTimeText = item.end.format(settings.timeFormat);
+                item.endDateText = item.end.format(constants.dateFormat);
+                item.endTimeText = item.end.format(constants.timeFormat);
             }
         };
         this.processConstraint = function (item, constraint) {
@@ -62,14 +62,14 @@ angular.module('Schedulogy')
             // But no problem, what we do is that we treat it as having no constraint - it is a fixed task after all.
             if (item.type === 'task' && resConstraint && resConstraint.start) {
                 var constraintStart = moment(resConstraint.start).local();
-                var constraintStartDue = constraintStart.clone().add(item.dur * settings.minuteGranularity, 'm');
+                var constraintStartDue = constraintStart.clone().add(item.dur * constants.minuteGranularity, 'm');
                 item.constraint = angular.extend(item.constraint, {
                     start: constraintStart,
                     startDue: constraintStartDue,
-                    startDateText: constraintStart.format(settings.dateFormatLong),
-                    startTimeText: constraintStart.format(settings.timeFormat),
-                    startDateDueText: constraintStartDue.format(settings.dateFormatLong),
-                    startTimeDueText: constraintStartDue.format(settings.timeFormat)
+                    startDateText: constraintStart.format(constants.dateFormatLong),
+                    startTimeText: constraintStart.format(constants.timeFormat),
+                    startDateDueText: constraintStartDue.format(constants.dateFormatLong),
+                    startTimeDueText: constraintStartDue.format(constants.timeFormat)
                 });
             }
             else if (item.type === 'event') {
@@ -89,8 +89,8 @@ angular.module('Schedulogy')
                 var constraintEnd = moment(resConstraint.end).local();
                 item.constraint = angular.extend(item.constraint, {
                     end: constraintEnd,
-                    endDateText: constraintEnd.format(settings.dateFormat),
-                    endTimeText: constraintEnd.format(settings.timeFormat)
+                    endDateText: constraintEnd.format(constants.dateFormat),
+                    endTimeText: constraintEnd.format(constants.timeFormat)
                 });
             }
             else if (item.constraint) {
@@ -101,7 +101,7 @@ angular.module('Schedulogy')
                 });
             }
             // This is the case when task can't be scheduled in such a duration and due date because of constraints.
-            if (item.constraint && (item.dur * (item.allDay ? 1440 : settings.minuteGranularity)) > item.constraint.end.diff(item.constraint.start, 'm')) {
+            if (item.constraint && (item.dur * (item.allDay ? 1440 : constants.minuteGranularity)) > item.constraint.end.diff(item.constraint.start, 'm')) {
                 console.log('Problem with duration:');
                 console.log(item);
                 return false;
@@ -112,15 +112,15 @@ angular.module('Schedulogy')
                     var minDue = item.constraint.startDue;
                     if (item.due.diff(minDue, 'm') < 0) {
                         item.due = minDue;
-                        item.dueDateText = item.due.format(settings.dateFormatLong);
-                        item.dueTimeText = item.due.format(settings.timeFormat);
+                        item.dueDateText = item.due.format(constants.dateFormatLong);
+                        item.dueTimeText = item.due.format(constants.timeFormat);
                     }
                     // Task is due later that it can be.
                     var maxDue = item.constraint.end;
                     if (item.due.diff(maxDue, 'm') > 0) {
                         item.due = maxDue;
-                        item.dueDateText = item.due.format(settings.dateFormatLong);
-                        item.dueTimeText = item.due.format(settings.timeFormat);
+                        item.dueDateText = item.due.format(constants.dateFormatLong);
+                        item.dueTimeText = item.due.format(constants.timeFormat);
                     }
                 }
                 else if (item.type === 'event') {
@@ -129,8 +129,8 @@ angular.module('Schedulogy')
                     var maxEnd = item.constraint.end;
                     if (item.end.diff(maxEnd, 'm') > 0) {
                         item.end = maxEnd;
-                        item.endDateText = (item.allDay ? item.end.startOf('day') : item.end).format(settings.dateFormat);
-                        item.endTimeText = (item.allDay ? item.end.startOf('day') : item.end).format(settings.timeFormat);
+                        item.endDateText = (item.allDay ? item.end.startOf('day') : item.end).format(constants.dateFormat);
+                        item.endTimeText = (item.allDay ? item.end.startOf('day') : item.end).format(constants.timeFormat);
                     }
                 }
             }
@@ -147,14 +147,14 @@ angular.module('Schedulogy')
                 resourceName: task.resourceName,
                 // Some technicality
                 stick: true,
-                color: settings.itemColor(task.type, task.allDay),
-                borderColor: settings.itemBorderColor
+                color: constants.itemColor(task.type, task.allDay),
+                borderColor: constants.itemBorderColor
             };
             switch (task.type) {
                 case 'task':
                     var start = moment.unix(task.start).local();
                     start = (task.allDay ? start.startOf('day') : start);
-                    var toAddMinutes = (task.allDay ? 1440 : settings.minuteGranularity) * task.dur;
+                    var toAddMinutes = (task.allDay ? 1440 : constants.minuteGranularity) * task.dur;
                     var end = start.clone().add(toAddMinutes, 'm');
                     var due = moment.unix(task.due);
 
@@ -170,12 +170,12 @@ angular.module('Schedulogy')
 
                     if (task.allDay) {
                         item = angular.extend(item, {
-                            shortInfo: '(due ' + due.format(settings.dateFormat) + ')'
+                            shortInfo: '(due ' + due.format(constants.dateFormat) + ')'
                         });
                     }
                     else {
                         item = angular.extend(item, {
-                            shortInfo: '(due ' + due.format(settings.dateFormat) + ', ' + due.format(settings.timeFormat) + ')'
+                            shortInfo: '(due ' + due.format(constants.dateFormat) + ', ' + due.format(constants.timeFormat) + ')'
                         });
                     }
 
@@ -187,7 +187,7 @@ angular.module('Schedulogy')
                 case 'event':
                     var start = moment.unix(task.start).local();
                     start = (task.allDay ? start.startOf('day') : start);
-                    var toAddMinutes = (task.allDay ? 1440 : settings.minuteGranularity) * task.dur;
+                    var toAddMinutes = (task.allDay ? 1440 : constants.minuteGranularity) * task.dur;
                     var end = start.clone().add(toAddMinutes, 'm');
 
                     var item = angular.extend(item, {
@@ -204,21 +204,21 @@ angular.module('Schedulogy')
                     if (task.allDay) {
                         if (item.end.diff(item.start, 'd') === 1)
                             item = angular.extend(item, {
-                                shortInfo: '(' + start.format(settings.dateFormat) + ')'
+                                shortInfo: '(' + start.format(constants.dateFormat) + ')'
                             });
                         else
                             item = angular.extend(item, {
-                                shortInfo: '(' + start.format(settings.dateFormat) + ' - ' + end.format(settings.dateFormat) + ')'
+                                shortInfo: '(' + start.format(constants.dateFormat) + ' - ' + end.format(constants.dateFormat) + ')'
                             });
                     }
                     else {
                         if (item.end.format('dd') === item.start.format('dd'))
                             item = angular.extend(item, {
-                                shortInfo: '(' + start.format(settings.dateFormat) + ', ' + start.format(settings.timeFormat) + ' - ' + end.format(settings.timeFormat) + ')'
+                                shortInfo: '(' + start.format(constants.dateFormat) + ', ' + start.format(constants.timeFormat) + ' - ' + end.format(constants.timeFormat) + ')'
                             });
                         else
                             item = angular.extend(item, {
-                                shortInfo: '(' + start.format(settings.dateFormat) + ', ' + start.format(settings.timeFormat) + ' - ' + end.format(settings.dateFormat) + ', ' + end.format(settings.timeFormat) + ')'
+                                shortInfo: '(' + start.format(constants.dateFormat) + ', ' + start.format(constants.timeFormat) + ' - ' + end.format(constants.dateFormat) + ', ' + end.format(constants.timeFormat) + ')'
                             });
                     }
                     break;
@@ -232,7 +232,7 @@ angular.module('Schedulogy')
                     });
                     if (task.done) {
                         item.color = '#ddd';
-                        item.textColor = settings.itemColor('reminder', false);
+                        item.textColor = constants.itemColor('reminder', false);
                     }
 
                     var start = task.done ? moment.unix(task.start).local() : this.btime.startOf('day');
@@ -245,7 +245,7 @@ angular.module('Schedulogy')
             return this.processConstraint(item, item.constraint, this.btime);
         };
         this.earliestPossibleFinish = function (item) {
-            var toAddMinutes = (item.allDay ? 1440 : settings.minuteGranularity) * item.dur;
+            var toAddMinutes = (item.allDay ? 1440 : constants.minuteGranularity) * item.dur;
             if (item.type === 'task')
                 return item.constraint.start.clone().add(toAddMinutes, 'm');
             else if (item.type === 'event') {
@@ -258,7 +258,7 @@ angular.module('Schedulogy')
             }
         };
         this.latestPossibleStart = function (item) {
-            var toSubtractMinutes = (item.allDay ? 1440 : settings.minuteGranularity) * item.dur;
+            var toSubtractMinutes = (item.allDay ? 1440 : constants.minuteGranularity) * item.dur;
             if (item.type === 'task')
                 return item.due.clone().add(-toSubtractMinutes, 'm');
             else if (item.type === 'event') {

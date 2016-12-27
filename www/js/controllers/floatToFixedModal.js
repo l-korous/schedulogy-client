@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('FloatToFixedModalCtrl', function ($scope, settings, MyItems, ModalService) {
+    .controller('FloatToFixedModalCtrl', function ($scope, constants, MyItems, ModalService) {
         $scope.myItems = MyItems;
 
         $scope.open = function () {
@@ -25,7 +25,7 @@ angular.module('Schedulogy')
             MyItems.currentItem.type = 'event';
             if ($scope.floatToFixedMethod === 'resize') {
                 MyItems.processChangeOfEventType(MyItems.currentItem, 'task');
-                MyItems.currentItem.dur += ($scope.floatToFixedDelta.minutes() / settings.minuteGranularity);
+                MyItems.currentItem.dur += ($scope.floatToFixedDelta.minutes() / constants.minuteGranularity);
                 MyItems.imposeEventDurationBound();
                 MyItems.processEventDuration();
                 MyItems.recalcEventConstraints();

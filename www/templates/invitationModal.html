@@ -1,0 +1,55 @@
+<ion-modal-view ng-controller="InvitationModalCtrl">
+    <ion-header-bar>
+        <h1 class="title">Invite Users to your Tenant</h1>
+    </ion-header-bar>
+    <ion-content has-bouncing="false">
+        <div class="list" ng-show="data.successInfo">
+            <div class="item item-no-wrap item-thanks">
+                {{data.successInfo}}
+            </div>
+            <button class="button button-block button-outline button-positive button-single marginTop1" ng-click="close();">
+                Close
+            </button>
+        </div>
+        <form name="$parent.form" ng-show="!data.successInfo" novalidate>
+            <div class="list customFormErrorList">
+                <div ng-show="data.errorInfo" class="item help-block help-block-error item-no-wrap">
+                    {{data.errorInfo}}
+                </div>
+            </div>
+            <div class="list">
+                <div class="item item-no-wrap item-intro" style="border-bottom:none;border-top:none;">
+                    <span>
+                        <ul><li style="list-style:square;margin-left:15px;">The recipient that you state below will get an e-mail with instructions how to connect to your Tenant account.</li></ul>
+                    </span>
+                    <span>
+                        <ul><li style="list-style:square;margin-left:15px;">If the person with this e-mail address has not yet used SCHEDULOGY, a new User will be created in the process. Otherwise, the existing User will be moved to your Tenant.</li></ul>
+                    </span>
+                    <span>
+                        <ul><li style="list-style:square;margin-left:15px;">The invitation does not force the recipient to perform any action, all is purely voluntary.</li></ul>
+                    </span>
+                    <span>
+                        <i class="icon ion-alert assertive"></i>
+                        &nbsp; <strong>Please do not spam!</strong></li></ul>
+                    </span>
+                </div>
+                <label class="item item-input">
+                    <input type="email" placeholder="E-mail" ng-model="data.inviteeEmail" required id="inviteModalEmail" />
+                </label>
+            </div>
+
+            <div class="row">
+                <div class="col-50 padding-horizontal padding-top">
+                    <button class="button button-block button-positive" ng-disabled="form.$invalid" ng-click="invite();">
+                        Send
+                    </button>
+                </div>
+                <div class="col-50 padding-horizontal padding-top">
+                    <button class="button button-block button-outline button-dark" ng-click="close();">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </ion-content>
+</ion-modal-view>

@@ -10308,7 +10308,7 @@ Calendar.mixin({
 Calendar.defaults = {
 
 	titleRangeSeparator: ' \u2013 ', // en dash
-	monthYearFormat: 'MMM YYYY', // required for en. other locales rely on datepicker computable option
+	monthYearFormat: 'MMM DD, YYYY', // required for en. other locales rely on datepicker computable option
 
 	defaultTimedEventDuration: '02:00:00',
 	defaultAllDayEventDuration: { days: 1 },

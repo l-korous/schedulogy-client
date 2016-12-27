@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('MyResources', function (settings, DateUtils, Resource, $rootScope, MyItems, moment) {
+    .service('MyResources', function (constants, DateUtils, Resource, $rootScope, MyItems, moment) {
         var _this = this;
         _this.resources = [];
 
@@ -79,7 +79,7 @@ angular.module('Schedulogy')
                 sinceDay: 1,
                 untilDay: 7,
                 sinceTime: 0,
-                untilTime: 24 * settings.slotsPerHour,
+                untilTime: 24 * constants.slotsPerHour,
                 timeZone: moment.tz.guess()
             });
             _this.updateAllTexts();

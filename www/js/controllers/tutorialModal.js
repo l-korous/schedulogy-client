@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('TutorialModalCtrl', function ($scope, settings, $sce, ModalService, Hopscotch, $rootScope) {
+    .controller('TutorialModalCtrl', function ($scope, constants, $sce, ModalService, Hopscotch, $rootScope) {
         $scope.open = function () {
             ModalService.openModalInternal('tutorial');
         };
@@ -19,10 +19,10 @@ angular.module('Schedulogy')
             {
                 name: 'Create a Reminder',
                 icon: 'ion-android-alarm-clock',
-                color: settings.itemColor('reminder', false),
+                color: constants.itemColor('reminder', false),
                 id: 'reminder',
                 content: $sce.trustAsHtml(
-                    '<h2 style="border-left:5px solid ' + settings.itemColor('reminder', false) + '">Reminder</h2>' +
+                    '<h2 style="border-left:5px solid ' + constants.itemColor('reminder', false) + '">Reminder</h2>' +
                     '<p>A simple reminder, that keeps moving to the current day, until it is marked as done - at which point it stays at the day when it was marked as done.</p>' +
                     '<h2>Reminder attributes</h2>' +
                     '<p class="lowp"><strong>Title</strong> - A (short) identifier of the Reminder.</p>' +
@@ -30,7 +30,7 @@ angular.module('Schedulogy')
                     '<p class="lowp"><strong>Resource</strong> - Which Resource (in most cases which \'person\') is this Reminder for.</p>' +
                     '<p><strong>In order to create a new Reminder, select "New Reminder" from either the left menu (on large screen), or from the top menu (on small screen).</strong></p>' +
                     ($rootScope.smallScreen ? '' : '<div class="row"><div class="col-50 padding-horizontal padding-bottom">') +
-                    ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" style="background-color:' + settings.itemColor('reminder', false) + '" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'reminder\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
+                    ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" style="background-color:' + constants.itemColor('reminder', false) + '" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'reminder\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
                     ($rootScope.smallScreen ? '' : '</div><div class="col-50 padding-horizontal padding-bottom">') +
                     '<button class="button button-block button-dark button-outline" onclick="angular.element($(\'#tutorialDiv\')).scope().toggleGroupById(\'reminder\');event.stopPropagation();">Hide</button>' +
                     ($rootScope.smallScreen ? '' : '</div></div>')
@@ -40,9 +40,9 @@ angular.module('Schedulogy')
                 name: 'Create an Event',
                 id: 'event',
                 icon: 'ion-calendar',
-                color: settings.itemColor('event', false),
+                color: constants.itemColor('event', false),
                 content: $sce.trustAsHtml(
-                    '<h2 style="border-left:5px solid ' + settings.itemColor('event', false) + '">Event</h2>' +
+                    '<h2 style="border-left:5px solid ' + constants.itemColor('event', false) + '">Event</h2>' +
                     '<p>Standard events, that have a fixed start (date &amp; time), and a fixed end (date &amp; time). The end is set up with help of Event duration.</p>' +
                     '<h2>Event attributes</h2>' +
                     '<p class="lowp"><strong>Title</strong> - A (short) identifier of the Event.</p>' +
@@ -54,7 +54,7 @@ angular.module('Schedulogy')
                     '<p class="lowp"><strong>Prerequisities / Dependent Tasks</strong> - See the section on dependencies.</p>' +
                     '<p><strong>In order to create a new Event, select "New Event" from either the left menu (on large screen), or from the top menu (on small screen).</strong></p>' +
                     ($rootScope.smallScreen ? '' : '<div class="row"><div class="col-50 padding-horizontal padding-bottom">') +
-                    ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" style="background-color:' + settings.itemColor('event', false) + '" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'event\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
+                    ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" style="background-color:' + constants.itemColor('event', false) + '" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'event\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
                     ($rootScope.smallScreen ? '' : '</div><div class="col-50 padding-horizontal padding-bottom">') +
                     '<button class="button button-block button-dark button-outline" onclick="angular.element($(\'#tutorialDiv\')).scope().toggleGroupById(\'event\');event.stopPropagation();">Hide</button>' +
                     ($rootScope.smallScreen ? '' : '</div></div>')
@@ -68,8 +68,8 @@ angular.module('Schedulogy')
                     '<h2 style="border-left:5px solid black">Editing</h2>' +
                     '<p>In order to edit existing Reminders / Events / Tasks, just select them with mouse or touch in the calendar.</p>' +
                     '<p>It opens the same dialog as when you are creating an entry. A change is the added <strong>"Delete"</strong> button in the top-right corner.</p>' +
-                    '<p><strong><i class="icon ion-alert" style="color:' + settings.itemColor('reminder', false) + '"></i>&nbsp;&nbsp;Also</strong>, you can easily select an Event for direct editing by a <strong>long tap</strong>. After you select it, you can move it (by dragging it) &amp; change the duration (by dragging the top/bottom edge).</p>' +
-                    '<p><strong><i class="icon ion-alert" style="color:' + settings.itemColor('reminder', false) + '"></i>&nbsp;&nbsp;Additionally</strong>, clicking on any free <strong>future</strong> slot in the calendar, it opens the same dialog again, this time pre-filling it with the selection you made.</p>' +
+                    '<p><strong><i class="icon ion-alert" style="color:' + constants.itemColor('reminder', false) + '"></i>&nbsp;&nbsp;Also</strong>, you can easily select an Event for direct editing by a <strong>long tap</strong>. After you select it, you can move it (by dragging it) &amp; change the duration (by dragging the top/bottom edge).</p>' +
+                    '<p><strong><i class="icon ion-alert" style="color:' + constants.itemColor('reminder', false) + '"></i>&nbsp;&nbsp;Additionally</strong>, clicking on any free <strong>future</strong> slot in the calendar, it opens the same dialog again, this time pre-filling it with the selection you made.</p>' +
                     ($rootScope.smallScreen ? '' : '<div class="row"><div class="col-50 padding-horizontal padding-bottom">') +
                     ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'edit\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
                     ($rootScope.smallScreen ? '' : '</div><div class="col-50 padding-horizontal padding-bottom">') +
@@ -81,14 +81,14 @@ angular.module('Schedulogy')
                 name: 'Create an All-Day Event',
                 id: 'allday',
                 icon: 'ion-calendar',
-                color: settings.itemColor('event', true),
+                color: constants.itemColor('event', true),
                 content: $sce.trustAsHtml(
-                    '<h2 style="border-left:5px solid ' + settings.itemColor('event', true) + '">All-Day entries</h2>' +
+                    '<h2 style="border-left:5px solid ' + constants.itemColor('event', true) + '">All-Day entries</h2>' +
                     '<p>The All-Day entries (Events, Tasks) are identified by the attribute <strong>All-Day</strong> - this switch controls whether an Event / a Task takes entire day(s) instead of a number of slots (hours).</p>' +
                     '<p>The same approach that applies to <strong>Events</strong> also applies to <strong>Tasks</strong>.</p>' +
                     '<p>In order to create an All-Day Event, we need to create an Event and use the All-Day switch in the dialog.</p>' +
                     ($rootScope.smallScreen ? '' : '<div class="row"><div class="col-50 padding-horizontal padding-bottom">') +
-                    ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" style="background-color:' + settings.itemColor('event', true) + '" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'allDay\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
+                    ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" style="background-color:' + constants.itemColor('event', true) + '" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'allDay\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
                     ($rootScope.smallScreen ? '' : '</div><div class="col-50 padding-horizontal padding-bottom">') +
                     '<button class="button button-block button-dark button-outline" onclick="angular.element($(\'#tutorialDiv\')).scope().toggleGroupById(\'allDay\');event.stopPropagation();">Hide</button>' +
                     ($rootScope.smallScreen ? '' : '</div></div>')
@@ -98,9 +98,9 @@ angular.module('Schedulogy')
                 name: 'Create a Task',
                 id: 'task',
                 icon: 'ion-compose',
-                color: settings.itemColor('task', false),
+                color: constants.itemColor('task', false),
                 content: $sce.trustAsHtml(
-                    '<h2 style="border-left:5px solid ' + settings.itemColor('task', false) + '">Task</h2>' +
+                    '<h2 style="border-left:5px solid ' + constants.itemColor('task', false) + '">Task</h2>' +
                     '<p>This type ("floating" Task) does NOT have a fixed start and end, but has a fixed due date. SCHEDULOGY schedules these Tasks so that these due dates (as well as dependencies - see later sections) are satisfied.</p>' +
                     '<p>SCHEDULOGY makes sure that there is only one concurrent Task in the calendar. There can be no Event concurrent with any Task either.</p>' +
                     '<h2>Task attributes</h2>' +
@@ -114,7 +114,7 @@ angular.module('Schedulogy')
                     '<p class="lowp"><strong>Prerequisities / Dependent Tasks</strong> - See the section on dependencies.</p>' +
                     '<p><strong>In order to create a new Task, select "New Task" from either the left menu (on large screen), or from the top menu (on small screen).</strong></p>' +
                     ($rootScope.smallScreen ? '' : '<div class="row"><div class="col-50 padding-horizontal padding-bottom">') +
-                    ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" style="background-color:' + settings.itemColor('task', false) + '" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'task\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
+                    ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" style="background-color:' + constants.itemColor('task', false) + '" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'task\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
                     ($rootScope.smallScreen ? '' : '</div><div class="col-50 padding-horizontal padding-bottom">') +
                     '<button class="button button-block button-dark button-outline" onclick="angular.element($(\'#tutorialDiv\')).scope().toggleGroupById(\'task\');event.stopPropagation();">Hide</button>' +
                     ($rootScope.smallScreen ? '' : '</div></div>')

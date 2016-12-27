@@ -1,5 +1,5 @@
 <ion-header-bar align-title="left" class="bar bar-header bar-light" id="mainHeader">
-    <button id="menuOpener" class="button ion-navicon button-icon" ng-if="$root.currentUser && $root.smallScreen" ng-click="toggleMenu()"
+    <button id="menuOpener" class="button ion-navicon button-icon" ng-if="$root.smallScreen" ng-click="toggleMenu()"
             ng-class="{'red': myItems.dirtyItems.length}" ></button>
     <div class="h1 title " ng-class="{'margin-left-menu' : $root.smallScreen, 'padding-horizontal' : $root.smallScreen}">
         SCHEDULOGY <span>BETA</span>
@@ -33,12 +33,12 @@
 
 <ion-side-menus>
     <!-- Left menu -->
-    <ion-side-menu side="left" expose-aside-when="(min-width:{{$root.settings.smallScreen}}px)">
+    <ion-side-menu side="left" expose-aside-when="(min-width:{{$root.constants.smallScreen}}px)">
         <ion-content class="leftMenu">
             <div class="list">
                 <span class="item item-small" style="border-top:0;text-align:center;font-size:0.85em;color:#aaa;">
                     Logged-in as:<br />
-                    <span>{{$root.currentUser.username}}</span>
+                    <span>{{$root.currentUser.email}}</span>
                 </span>
                 <a class="item item-icon-left item-small" ng-if="myItems.dirtyItems.length" ng-click="toggleMenu();
                     modalService.openModal('dirtyTasks');">
@@ -120,7 +120,7 @@
                 <a class="item item-icon-left item-small" ng-click="toggleMenu();
                     modalService.openModal('users');">
                     <i class="icon ion-person-stalker"></i>
-                    Manage Users
+                    Manage Tenant
                 </a>
                 <a id="resourcesLink" class="item item-icon-left item-small" ng-click="toggleMenu();
                     modalService.openModal('resources');">
@@ -148,20 +148,8 @@
                     Send Feedback
                 </a>
                 
-                <a ng-if="false" class="item item-icon-left item-small" ng-click="toggleMenu();
-                    modalService.openModal('changeUsername');">
-                    <i class="icon ion-person dark"></i>
-                    Change Username
-                </a>
-
                 <a class="item item-icon-left item-small" ng-click="toggleMenu();
-                    modalService.openModal('changePassword');">
-                    <i class="icon ion-locked dark"></i>
-                    Change Password
-                </a>
-                
-                <a class="item item-icon-left item-small" ng-click="toggleMenu();
-                    $root.goToLogin()">
+                    $root.goToLogin(true)">
                     <i class="icon ion-log-out dark"></i>
                     Logout
                 </a>

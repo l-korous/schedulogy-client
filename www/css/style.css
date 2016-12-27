@@ -1,4 +1,4 @@
-    @font-face {
+@font-face {
     font-family: "FontAwesome-web";
     src: url("../fonts/fontawesome-webfont.ttf") format('truetype');
 }
@@ -130,6 +130,14 @@ h2 {
     font-size:98%;
     margin-left:15px;
     list-style-type: square;
+}
+
+.item-thanks {
+    background-color:#fff;
+    text-align: center;
+    font-size:150%;
+    padding:15%;
+    border-top:3px solid #7ac142;
 }
 
 .simpleScreenWrapper {
@@ -756,22 +764,22 @@ p.lowp {
     margin-bottom: 0;
 }
 
-input[type=text]:focus, select:focus, textarea:focus {
+input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus {
     color:#387ef5;
 }
 
-input[type=text]:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+input[type=text]:focus::-webkit-input-placeholder, input[type=email]:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color:#387ef5;
 }
-input[type=text]:focus:-moz-placeholder, textarea:focus:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color:#387ef5;
-    opacity:  1;
-}
-input[type=text]:focus::-moz-placeholder, textarea:focus::-moz-placeholder { /* Mozilla Firefox 19+ */
+input[type=text]:focus:-moz-placeholder, input[type=email]:focus:-moz-placeholder, textarea:focus:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
     color:#387ef5;
     opacity:  1;
 }
-input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placeholder { /* Internet Explorer 10-11 */
+input[type=text]:focus::-moz-placeholder, input[type=email]:focus::-moz-placeholder, textarea:focus::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:#387ef5;
+    opacity:  1;
+}
+input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placeholder { /* Internet Explorer 10-11 */
     color:#387ef5;
 }
 
@@ -810,9 +818,34 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     border-bottom-right-radius: 0px;
 }
 
+@media(max-width:1100px) {
+    .fc-toolbar h2 {
+        font-size:18px;
+    }
+
+    .fc button {
+        padding: 0 .3em;
+    }
+}
+
+@media(max-width:1000px) {
+    .fc-toolbar h2 {
+        font-size:17px;
+        position: relative;
+        top:4px;
+        white-space: nowrap;
+        overflow:hidden;
+        text-overflow: ellipsis;
+    }
+}
+
 @media(max-width:900px) {
     .fc-toolbar h2 {
         display:none;
+    }
+
+    .fc button {
+        padding: 0 .6em;
     }
 }
 
@@ -826,12 +859,12 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 }
 
-@media(max-width:768px) {
+@media(max-width:767px) {
     .fc-toolbar h2 {
-        font-size:18px;
+        font-size:16px;
         display:block;
         position: relative;
-        top:4px;
+        top:5px;
     }
 
     .fc-toolbar {
@@ -851,7 +884,7 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 
     .fc button {
-        padding: 0 .6em;
+        padding: 0 .5em;
     }
 }
 
@@ -862,14 +895,19 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
     }
 
     .fc-toolbar h2 {
-        font-size:18px;
+        font-size:17px;
         display:block;
         position: relative;
-        top:4px;
+        top:5px;
     }
 }
 
 @media(max-width:500px) {
+    .fc-toolbar h2 {
+        font-size:14px;
+        top:8px;
+    }
+
     .simpleScreenWrapper {
         padding:20px;
     }
@@ -943,5 +981,15 @@ input[type=text]:focus:-ms-input-placeholder, textarea:focus:-ms-input-placehold
 @media(max-width:325px) {
     #button-customId-prevLong, #button-customId-prev, #button-customId-now, #button-customId-next, #button-customId-nextLong {
         padding:0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .auth0-lock.auth0-lock.auth0-lock-opened .auth0-lock-widget {
+        top: 15% ! important;
+    }
+
+    .auth0-lock.auth0-lock.auth0-lock-opened .auth0-lock-content {
+        vertical-align: top ! important;
     }
 }

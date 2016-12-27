@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .factory('DateUtils', function (moment, settings) {
+    .factory('DateUtils', function (moment, constants) {
         return {
             pushDatePart: function (src, dst) {
                 if (!dst) {
@@ -35,14 +35,14 @@ angular.module('Schedulogy')
                 return ((momentTime.hour() * 60) + momentTime.minute());
             },
             toMinutesPlusDuration: function (momentTime, addedDuration) {
-                return ((momentTime.hour() * 60) + momentTime.minute() + (addedDuration * settings.minuteGranularity));
+                return ((momentTime.hour() * 60) + momentTime.minute() + (addedDuration * constants.minuteGranularity));
             },
             equalDays: function (momentTime1, momentTime2) {
                 return (momentTime1.format("YYYY-MM-DD") === momentTime2.format("YYYY-MM-DD"));
             },
             getTimeFromSlotCount: function (slotCount) {
-                var hours = Math.floor(slotCount / settings.slotsPerHour);
-                var minutes = (slotCount % settings.slotsPerHour) * settings.minuteGranularity;
+                var hours = Math.floor(slotCount / constants.slotsPerHour);
+                var minutes = (slotCount % constants.slotsPerHour) * constants.minuteGranularity;
                 return (hours.toString().length > 1 ? '' : '0') + hours + ':' + (minutes.toString().length > 1 ? '' : '0') + minutes;
             }
         };

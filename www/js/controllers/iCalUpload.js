@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ICalUploadModalCtrl', function ($scope, $rootScope, MyItems, settings, fileUpload, $timeout, ModalService) {
+    .controller('ICalUploadModalCtrl', function ($scope, $rootScope, MyItems, settings, fileUpload, constants, ModalService) {
         $scope.open = function () {
             $scope.successInfo = null;
             $scope.errorInfo = null;
@@ -27,29 +27,28 @@ angular.module('Schedulogy')
 
             fileUpload.uploadFileToUrl(file, settings.serverUrl + '/ical', {btime: MyItems.getBTime().unix()}, function (data) {
                 MyItems.tasksInResponseSuccessHandler(data, function () {
-                    $scope.successInfo = settings.iCalUploadSuccess;
+                    $scope.successInfo = constants.iCalUploadSuccess;
                     $rootScope.icalFile = null;
                     $scope.errorInfo = null;
                     $rootScope.isLoading = false;
                 });
-            },
-                function (err) {
-                    try {
-                        MyItems.tasksInResponseErrorHandler(err, function () {
-                            ModalService.closeModalInternal();
-                            $scope.successInfo = null;
-                            $scope.errorInfo = settings.iCalUploadError;
-                            $rootScope.icalFile = null;
-                            $rootScope.isLoading = false;
-                        });
-                    }
-                    catch (e) {
+            }, function (err) {
+                try {
+                    MyItems.tasksInResponseErrorHandler(err, function () {
+                        ModalService.closeModalInternal();
                         $scope.successInfo = null;
-                        $scope.errorInfo = settings.iCalUploadError;
+                        $scope.errorInfo = constants.iCalUploadError;
                         $rootScope.icalFile = null;
                         $rootScope.isLoading = false;
-                    }
-                });
+                    });
+                }
+                catch (e) {
+                    $scope.successInfo = null;
+                    $scope.errorInfo = constants.iCalUploadError;
+                    $rootScope.icalFile = null;
+                    $rootScope.isLoading = false;
+                }
+            });
         };
 
         $scope.$on('Esc', function () {

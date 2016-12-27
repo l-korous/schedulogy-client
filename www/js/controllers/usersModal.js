@@ -35,12 +35,24 @@ angular.module('Schedulogy')
             ModalService.openModal('user');
         };
 
+        $scope.openInvitationDetail = function () {
+            ModalService.openModal('invitation');
+        };
+
+        $scope.openSwitchTenantDetail = function () {
+            ModalService.openModal('switchTenant');
+        };
+
+        $scope.openResetTenantDetail = function () {
+            ModalService.openModal('resetTenant');
+        };
+        
         $scope.openRemoveDetail = function (user) {
             MyResources.currentResource = MyResources.getResourceByUserId(user._id);
             ModalService.openModal('removeResource');
             ModalService.modals.removeResource.scope.setAssociatedUser(user);
         };
-        
+
         $scope.$on('Esc', function () {
             if (ModalService.currentModal === 'users')
                 $scope.close();

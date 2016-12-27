@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .factory('Resource', function ($resource, settings, $http) {
+    .factory('Resource', function ($resource, settings, $http, constants) {
         var Resource = $resource(settings.serverUrl + "/resource", {}, {
             query: {
                 method: "GET",
@@ -57,7 +57,7 @@ angular.module('Schedulogy')
                 sinceDay: resource.constraints ? parseInt(resource.constraints[0].value_since) : 1,
                 untilDay: resource.constraints ? parseInt(resource.constraints[0].value_until) : 7,
                 sinceTime: resource.constraints ? parseInt(resource.constraints[1].value_since) : 0,
-                untilTime: resource.constraints ? parseInt(resource.constraints[1].value_until) : 24 * settings.slotsPerHour
+                untilTime: resource.constraints ? parseInt(resource.constraints[1].value_until) : 24 * constants.slotsPerHour
             });
         }
         function unserializeArray(resourceArray) {

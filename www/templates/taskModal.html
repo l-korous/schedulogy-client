@@ -59,7 +59,7 @@
                 </label>
 
                 <label class="item item-input range" ng-class="{ 'has-error' : form.floatingDuration.$invalid && !form.floatingDuration.$pristine }">
-                    <input type="range" min="1" max="{{$root.settings.maxEventDuration[currentItem.allDay ? 1 : 0]}}" ng-model="currentItem.dur" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
+                    <input type="range" min="1" max="{{$root.constants.maxEventDuration[currentItem.allDay ? 1 : 0]}}" ng-model="currentItem.dur" ng-mouseup="processEventDuration();" ng-change="renderEventDuration();"
                            name="duration" step="1" required id="taskDuration"/>
 
                     <div class="rangeInfo">

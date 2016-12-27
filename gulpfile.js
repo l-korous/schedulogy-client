@@ -17,11 +17,15 @@ gulp.task('concat-js', function () {
         "www/bower_components/angular-ui-calendar/src/calendar.js",
         "www/bower_components/fullcalendar/dist/fullcalendar.js",
         "www/bower_components/fullcalendar/dist/gcal.js",
+        "www/bower_components/auth0-lock/build/lock.js",
+        "www/bower_components/angular-lock/dist/angular-lock.js",
+        "www/bower_components/angular-jwt/dist/angular-jwt.js",
+        "www/bower_components/auth0.js/build/auth0.min.js",
+        "www/bower_components/auth0-angular/build/auth0-angular.min.js",
         "www/js/app.js",
         "www/js/settings.js",
+        "www/js/constants.js",
         "www/js/directives/select.js",
-        "www/js/directives/complexPassword.js",
-        "www/js/directives/repeatPassword.js",
         "www/js/directives/fileModel.js",
         "www/js/services/dateUtils.js",
         "www/js/services/item.js",
@@ -50,14 +54,11 @@ gulp.task('concat-js', function () {
         "www/js/controllers/reminderModal.js",
         "www/js/controllers/usersModal.js",
         "www/js/controllers/resourcesModal.js",
-        "www/js/controllers/login.js",
-        "www/js/controllers/registration.js",
-        "www/js/controllers/passwordReset.js",
-        "www/js/controllers/forgottenPassword.js",
+        "www/js/controllers/invitationModal.js",
+        "www/js/controllers/switchTenantModal.js",
+        "www/js/controllers/resetTenantModal.js",
         "www/js/controllers/errorModal.js",
         "www/js/controllers/dirtyTasksModal.js",
-        "www/js/controllers/changeUsernameModal.js",
-        "www/js/controllers/changePasswordModal.js",
         "www/js/controllers/resourceModal.js",
         "www/js/controllers/feedbackModal.js",
         "www/js/controllers/floatToFixedModal.js",
@@ -79,8 +80,6 @@ gulp.task('concat-js', function () {
         .pipe(replace('currentUser', 'uty'))
         .pipe(replace('floatToFixedEvent', 'woopra'))
         .pipe(replace('processEventDuration', 'gfa'))
-        .pipe(replace('registrationSuccessInfo', 'bcya'))
-        .pipe(replace('passwordResetSuccessInfo', 'bxya'))
         .pipe(replace('myItems', 'axuie'))
         .pipe(replace('successInfo', 'aaq'))
         .pipe(replace('errorInfo', 'aaw'))
@@ -134,8 +133,6 @@ gulp.task('template-bundle', function () {
         .pipe(replace('myItems', 'axuie'))
         .pipe(replace('floatToFixedEvent', 'woopra'))
         .pipe(replace('processEventDuration', 'gfa'))
-        .pipe(replace('registrationSuccessInfo', 'bcya'))
-        .pipe(replace('passwordResetSuccessInfo', 'bxya'))
         .pipe(replace('successInfo', 'aaq'))
         .pipe(replace('errorInfo', 'aaw'))
         .pipe(replace('reinitDatePicker', 'fgra'))

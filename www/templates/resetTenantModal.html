@@ -1,6 +1,6 @@
-<ion-modal-view ng-controller="FeedbackModalCtrl">
+<ion-modal-view ng-controller="ResetTenantModalCtrl">
     <ion-header-bar>
-        <h1 class="title">Feedback</h1>
+        <h1 class="title">Reset Tenant</h1>
     </ion-header-bar>
     <ion-content has-bouncing="false">
         <div class="list" ng-show="data.successInfo">
@@ -18,15 +18,24 @@
                 </div>
             </div>
             <div class="list">
-                <label class="item item-input">
-                    <textarea placeholder="Send us a message..." ng-model="data.feedbackText" required id="feedbackModalTextarea"></textarea>
-                </label>
+                <div class="item item-no-wrap item-intro" style="border-bottom:none;border-top:none;">
+                    <p>When you reset to your default (personal) Tenant, the following will happen:</p>
+                    <span>
+                        <ul><li style="list-style:square;margin-left:15px;">all dependencies between Events & Tasks will be deleted</li></ul>
+                    </span>
+                    <span>
+                        <ul><li style="list-style:square;margin-left:15px;">all Tasks where you are an admissible Resource will be deleted</li></ul>
+                    </span>
+                    <span>
+                        <ul><li style="list-style:square;margin-left:15px;">you will be an Admin in your Tenant</li></ul>
+                    </span>
+                </div>
             </div>
 
             <div class="row">
                 <div class="col-50 padding-horizontal padding-top">
-                    <button class="button button-block button-positive" ng-disabled="form.$invalid" ng-click="save();">
-                        Send
+                    <button class="button button-block button-assertive" ng-click="reset();">
+                        Reset
                     </button>
                 </div>
                 <div class="col-50 padding-horizontal padding-top">

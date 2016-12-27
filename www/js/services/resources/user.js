@@ -16,19 +16,9 @@ angular.module('Schedulogy')
                 url: settings.serverUrl + "/user/:userId",
                 transformResponse: $http.defaults.transformResponse.concat([unserializeArray])
             },
-            saveUsername: {
+            loginSocial: {
                 method: "POST",
-                url: settings.serverUrl + "/user/set-username",
-                params: {
-                    username: "@username"
-                }
-            },
-            savePassword: {
-                method: "POST",
-                url: settings.serverUrl + "/user/set-password",
-                params: {
-                    password: "@password"
-                }
+                url: settings.serverUrl + "/loginSocial"
             },
             remove: {
                 method: "DELETE",

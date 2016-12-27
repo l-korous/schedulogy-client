@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('EventModalCtrl', function (DateUtils, $scope, settings, MyItems, Item, moment, ionicDatePicker, ionicTimePicker, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
+    .controller('EventModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, ionicDatePicker, ionicTimePicker, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
         $scope.myItems = MyItems;
         $scope.myResources = MyResources;
         $scope.popupOpen = false;
@@ -47,7 +47,7 @@ angular.module('Schedulogy')
             if ($scope.cachedDurValue[$scope.currentItem.allDay ? 1 : 0])
                 $scope.currentItem.dur = $scope.cachedDurValue[$scope.currentItem.allDay ? 1 : 0];
             else
-                $scope.currentItem.dur = settings.defaultTaskDuration[$scope.currentItem.allDay ? 1 : 0];
+                $scope.currentItem.dur = constants.defaultTaskDuration[$scope.currentItem.allDay ? 1 : 0];
             $scope.myItems.processEventDuration($scope.currentItem);
         };
 
@@ -115,7 +115,7 @@ angular.module('Schedulogy')
         $scope.timePicker = {
             callback: function (val) {
                 $scope.currentItem.start = DateUtils.pushTime(val, $scope.currentItem.start);
-                $scope.currentItem.startTimeText = $scope.currentItem.start.format(settings.timeFormat);
+                $scope.currentItem.startTimeText = $scope.currentItem.start.format(constants.timeFormat);
                 MyItems.processEventDuration($scope.currentItem);
 
                 $scope.form.$setDirty();

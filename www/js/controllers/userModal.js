@@ -1,13 +1,10 @@
 angular.module('Schedulogy')
-    .controller('UserModalCtrl', function (MyUsers, $scope, settings, ModalService, User) {
+    .controller('UserModalCtrl', function (MyUsers, $scope, ModalService, User) {
         $scope.myUsers = MyUsers;
         $scope.loading = true;
         $scope.currentUser = null;
-        $scope.newUser = true;
 
         $scope.open = function () {
-            $scope.errorInfo = null;
-
             if (!$scope.myUsers.currentUser)
                 $scope.myUsers.emptyCurrentUser();
 
@@ -29,15 +26,11 @@ angular.module('Schedulogy')
         ModalService.initModal('user', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
-            $scope.beingSubmitted = true;
             if ($scope.form.$invalid)
                 return;
             angular.extend($scope.myUsers.currentUser, $scope.currentUser);
             $scope.myUsers.saveUser(function () {
                 ModalService.closeModalInternal();
-                ModalService.modals.users.scope.successInfo = settings.registrationSuccessInfo;
-            }, function (error) {
-                $scope.errorInfo = settings.registrationErrorInfo(error);
             });
         };
 

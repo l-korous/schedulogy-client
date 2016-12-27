@@ -22,14 +22,14 @@
                     <div class="input-label">
                         E-mail (for notifications)
                     </div>
-                    <input type="email" ng-model="currentResource.email" required name="email">
+                    <input type="email" ng-model="currentResource.email" required name="email" ng-disabled="!($root.currentUser.role === 'admin')">
                 </label>
                 
                 <label class="item item-select" >
                     <div class="input-label">
                         Select time zone
                     </div>
-                    <select ng-model="currentResource.timeZone" ng-options="zone as zone for zone in timeZones">
+                    <select ng-model="currentResource.timeZone" ng-options="zone as zone for zone in timeZones" ng-disabled="!($root.currentUser.role === 'admin' || (currentResource.type === 'user' && currentResource.user === $root.currentUser._id))">
                     </select>
                 </label>
 
@@ -37,7 +37,7 @@
                     <div class="input-label">
                         Start day of the week
                     </div>
-                    <input type="range" min="1" max="7" name="sinceDay" ng-model="currentResource.sinceDay" step="1" required/>
+                    <input type="range" min="1" max="7" name="sinceDay" ng-model="currentResource.sinceDay" step="1" required ng-disabled="!($root.currentUser.role === 'admin' || (currentResource.type === 'user' && currentResource.user === $root.currentUser._id))"/>
 
                     <div class="rangeInfo">
                         {{currentResource.sinceDayText}}
@@ -48,7 +48,7 @@
                     <div class="input-label">
                         End day of the week
                     </div>
-                    <input type="range" min="1" max="7" name="untilDay" ng-model="currentResource.untilDay" step="1" required/>
+                    <input type="range" min="1" max="7" name="untilDay" ng-model="currentResource.untilDay" step="1" required ng-disabled="!($root.currentUser.role === 'admin' || (currentResource.type === 'user' && currentResource.user === $root.currentUser._id))"/>
 
                     <div class="rangeInfo">
                         {{currentResource.untilDayText}}
@@ -59,7 +59,7 @@
                     <div class="input-label">
                         Start hour of the day
                     </div>
-                    <input type="range" min="0" max="{{24 * $root.settings.slotsPerHour}}" name="sinceTime" ng-model="currentResource.sinceTime" step="1" required/>
+                    <input type="range" min="0" max="{{24 * $root.constants.slotsPerHour}}" name="sinceTime" ng-model="currentResource.sinceTime" step="1" required ng-disabled="!($root.currentUser.role === 'admin' || (currentResource.type === 'user' && currentResource.user === $root.currentUser._id))"/>
 
                     <div class="rangeInfo">
                         {{currentResource.sinceTimeText}}
@@ -70,7 +70,7 @@
                     <div class="input-label">
                         End hour of the day
                     </div>
-                    <input type="range" min="0" max="{{24 * $root.settings.slotsPerHour}}" name="untilTime" ng-model="currentResource.untilTime" step="1" required/>
+                    <input type="range" min="0" max="{{24 * $root.constants.slotsPerHour}}" name="untilTime" ng-model="currentResource.untilTime" step="1" required ng-disabled="!($root.currentUser.role === 'admin' || (currentResource.type === 'user' && currentResource.user === $root.currentUser._id))"/>
 
                     <div class="rangeInfo">
                         {{currentResource.untilTimeText}}
@@ -78,13 +78,13 @@
                 </label>
 
                 <div class="row">
-                    <div ng-if="$root.currentUser.role === 'admin'" class="col-50 padding-horizontal padding-top">
+                    <div ng-disabled="!($root.currentUser.role === 'admin' || (currentResource.type === 'user' && currentResource.user === $root.currentUser._id))" class="col-50 padding-horizontal padding-top">
                         <button id="taskSave" class="button button-block button-positive" ng-disabled="form.$invalid || form.$pristine" ng-click="save()">
                             Save
                         </button>
 
                     </div>
-                    <div class="padding-horizontal padding-top" ng-class="{'col-50': $root.currentUser.role === 'admin', 'col': $root.currentUser.role !== 'admin'}">
+                    <div class="col-50 padding-horizontal padding-top">
                         <button class="button button-block button-outline button-stable" ng-click="close()">
                             Cancel
                         </button>   

@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('Hopscotch', function ($timeout, ModalService, settings, $sce, MyItems) {
+    .service('Hopscotch', function ($timeout, ModalService, constants, $sce, MyItems) {
         var _this = this;
         this.tours = {
             reminder: {
@@ -103,7 +103,7 @@ angular.module('Schedulogy')
                     },
                     {
                         title: "Duration",
-                        content: "Select the duration. You can leave the default selection - " + parseInt(settings.defaultTaskDuration[0] * settings.minuteGranularity) + " minutes.",
+                        content: "Select the duration. You can leave the default selection - " + parseInt(constants.defaultTaskDuration[0] * constants.minuteGranularity) + " minutes.",
                         target: "eventDuration",
                         placement: "bottom"
                     },
@@ -174,7 +174,7 @@ angular.module('Schedulogy')
                     },
                     {
                         title: "Duration",
-                        content: "Select the duration. You can leave the default selection - " + parseInt(settings.defaultTaskDuration[1]) + " days.",
+                        content: "Select the duration. You can leave the default selection - " + parseInt(constants.defaultTaskDuration[1]) + " days.",
                         target: "eventDuration",
                         placement: "bottom"
                     },
@@ -249,7 +249,7 @@ angular.module('Schedulogy')
                     },
                     {
                         title: "Duration",
-                        content: "Select the duration. You can leave the default selection - " + parseInt(settings.defaultTaskDuration[0] * settings.minuteGranularity) + " minutes.",
+                        content: "Select the duration. You can leave the default selection - " + parseInt(constants.defaultTaskDuration[0] * constants.minuteGranularity) + " minutes.",
                         target: "taskDuration",
                         placement: "bottom"
                     },
@@ -371,13 +371,13 @@ angular.module('Schedulogy')
                     },
                     {
                         title: "Due date",
-                        content: "We have to select the due date. Select 3 days from now - " + MyItems.getBTime().clone().add(3, 'd').format(settings.dateFormatLong) + ".",
+                        content: "We have to select the due date. Select 3 days from now - " + MyItems.getBTime().clone().add(3, 'd').format(constants.dateFormatLong) + ".",
                         target: "dueDate",
                         placement: "bottom"
                     },
                     {
                         title: "Due time",
-                        content: "We have to select the due time. Select any time 3 days from now - " + MyItems.getBTime().clone().add(3, 'd').format(settings.dateFormatLong) + ".",
+                        content: "We have to select the due time. Select any time 3 days from now - " + MyItems.getBTime().clone().add(3, 'd').format(constants.dateFormatLong) + ".",
                         target: "dueTime",
                         placement: "bottom"
                     },
