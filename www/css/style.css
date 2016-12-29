@@ -340,6 +340,14 @@ h2 {
     padding: 6px 16px 12px 16px;
 }
 
+.item-nested-list .list{
+    width:100%;
+}
+
+.item-nested-list .list .item{
+    border:0;
+}
+
 .nested-list .item {
     padding:8px 16px;
     margin:0;

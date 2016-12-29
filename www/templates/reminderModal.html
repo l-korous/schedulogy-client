@@ -14,10 +14,10 @@
             </div>
             <div class="list" style="margin-bottom:0;">
                 <label class="item item-small bold item-no-wrap" ng-show="currentItem.done">This reminder is done and is disabled for changing. Un-mark it as done to enable changes.</label>
-                
+
                 <ion-toggle ng-show="currentItem._id" ng-model="currentItem.done" ng-change="changeDone()" toggle-class="toggle-assertive">Done</ion-toggle>
-                
-                <label class="item item-input item-select" ng-if="currentItem.type !== 'floating'">
+
+                <label class="item item-input item-select">
                     <div class="input-label">
                         Resource
                     </div>
@@ -26,11 +26,42 @@
                     </select>
                 </label>
 
-                <label class="item item-input" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
+                <label class="item item-input" ng-class="{'has-error' : form.title.$invalid && !form.title.$pristine }">
                     <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="reminderPrimaryInput" required name="title" ng-disabled="currentItem.done">
                 </label>
                 <label class="item item-input">
                     <textarea placeholder="Description" ng-model="currentItem.desc" id="reminderModalTextarea" ng-disabled="currentItem.done"></textarea>
+                </label>
+
+                <label class="item item-input" ng-class="{'has-error' : form.startDate.$invalid && !form.startDate.$pristine }">
+                    <div class="input-label">
+                        Start Date
+                    </div>
+                    <input readonly="true" type="text" ng-model="currentItem.startDateText" ng-click="openDatePicker('start');" name="startDate" required id="reminderStartDate"/>
+                </label>
+
+                <ion-toggle ng-model="data.showRepetition" ng-change="switchRepetition()" toggle-class="toggle-assertive">Repetition</ion-toggle>
+
+                <label class="item item-input item-nested-list" ng-show="currentItem.repetition">
+                    <div class="list nested-list" style="margin-bottom:0;">
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                Frequency
+                            </div>
+                            <select ng-model="currentItem.repetition.frequency" class="leftAlignedSelect" name="frequency">
+                                <option value ='Daily'>Daily</option>
+                                <option value ='Weekly'>Weekly</option>
+                                <option value ='Monthly'>Monthly</option>
+                            </select>
+                        </label>
+
+                        <label class="item item-input">
+                            <div class="input-label">
+                                End Date
+                            </div>
+                            <input readonly="true" type="text" ng-model="currentItem.repetition.endDateText" ng-click="openDatePicker('repetitionEnd');" name="endDate"/>
+                        </label>
+                    </div>
                 </label>
             </div>
 

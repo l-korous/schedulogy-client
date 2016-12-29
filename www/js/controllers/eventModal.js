@@ -112,15 +112,6 @@ angular.module('Schedulogy')
                 $scope.form.$setDirty();
             }
         };
-        $scope.timePicker = {
-            callback: function (val) {
-                $scope.currentItem.start = DateUtils.pushTime(val, $scope.currentItem.start);
-                $scope.currentItem.startTimeText = $scope.currentItem.start.format(constants.timeFormat);
-                MyItems.processEventDuration($scope.currentItem);
-
-                $scope.form.$setDirty();
-            }
-        };
 
         $scope.openDatePicker = function () {
             $scope.popupOpen = true;
@@ -133,6 +124,17 @@ angular.module('Schedulogy')
 
             ionicDatePicker.openDatePicker($scope.datePicker);
         };
+        
+        $scope.timePicker = {
+            callback: function (val) {
+                $scope.currentItem.start = DateUtils.pushTime(val, $scope.currentItem.start);
+                $scope.currentItem.startTimeText = $scope.currentItem.start.format(constants.timeFormat);
+                MyItems.processEventDuration($scope.currentItem);
+
+                $scope.form.$setDirty();
+            }
+        };
+        
         $scope.openTimePicker = function () {
             $scope.popupOpen = true;
 

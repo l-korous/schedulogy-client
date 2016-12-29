@@ -21,6 +21,9 @@ angular.module('Schedulogy')
             if (item.start.diff(new Date(), "day") === 1)
                 item.startDateText += ' (tomorrow)';
         };
+        this.setRepetitionEnd = function (item) {
+            item.repetition.endDateText = item.repetition.end.format(constants.dateFormatLong);
+        };
         this.setDue = function (item, due) {
             if (due)
                 item.due = due;
@@ -193,6 +196,7 @@ angular.module('Schedulogy')
                     var item = angular.extend(item, {
                         allDay: (task.allDay),
                         blocks: task.blocks,
+                        repetition: task.repetition,
                         constraint: task.constraint,
                         blocksForShow: []
                     });
@@ -227,6 +231,7 @@ angular.module('Schedulogy')
                         allDay: true,
                         editable: false,
                         done: task.done,
+                        repetition: task.repetition,
                         className: task.done ? 'doneReminder' : '',
                         shortInfo: (task.done ? ' (done)' : '(not done)')
                     });
@@ -235,8 +240,12 @@ angular.module('Schedulogy')
                         item.textColor = constants.itemColor('reminder', false);
                     }
 
-                    var start = task.done ? moment.unix(task.start).local() : this.btime.startOf('day');
+                    var start = task.done ? moment.unix(task.start).local() : moment.unix(Math.max(this.btime.unix(), task.start)).local();
                     this.setStart(item, start);
+                    if(item.repetition) {
+                        item.repetition.end = moment.unix(task.repetition.end).local();
+                        this.setRepetitionEnd(item);
+                    }
                     break;
             }
             angular.extend(item, {

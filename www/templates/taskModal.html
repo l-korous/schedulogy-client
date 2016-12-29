@@ -72,7 +72,7 @@
                         Prerequisites
                     </div>
                     <div class="list nested-list" ng-show="currentItem.needsForShow.length > 0">
-                        <div style="border:0;" class="item item-button-right" ng-repeat="event in currentItem.needsForShow| filter : {_id: event._id} : true">
+                        <div class="item item-button-right" ng-repeat="event in currentItem.needsForShow| filter : {_id: event._id} : true">
                             <strong>{{event.title}}</strong>&nbsp;{{event.shortInfo}}
                             <button class="button button-clear" on-tap="myItems.removePrerequisite(currentItem, event); form.$setDirty();">
                                 <i class="icon ion-trash-b assertive"></i>
@@ -93,7 +93,7 @@
                         Dependent Tasks
                     </div>
                     <div class="list nested-list" ng-show="currentItem.blocksForShow.length > 0">
-                        <div style="border:0;" class="item item-button-right" ng-repeat="event in currentItem.blocksForShow| filter : {_id: event._id} : true">
+                        <div  class="item item-button-right" ng-repeat="event in currentItem.blocksForShow| filter : {_id: event._id} : true">
                             <strong>{{event.title}}</strong>&nbsp;{{event.shortInfo}}
                             <button class="button button-clear" on-tap="myItems.removeDependency(currentItem, event); form.$setDirty();">
                                 <i class="icon ion-trash-b assertive"></i>

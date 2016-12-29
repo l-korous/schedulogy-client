@@ -7,6 +7,13 @@ angular.module('Schedulogy')
         startHour: 0,
         endHour: 24,
         minuteGranularity: 30,
+        defaultRepetition: function (btime) {
+            return {
+                frequency: 'Weekly',
+                end: btime.add(3, 'months')
+            };
+        }
+        ,
         // This has to be exactly calculated using minuteGranularity
         slotsPerHour: 2, // === (60 / minuteGranularity)
         weeks: 26,
@@ -28,9 +35,9 @@ angular.module('Schedulogy')
         itemColor: function (type, allDay) {
             if (allDay) {
                 if (type === 'event')
-                return '#0652D4';
-            if (type === 'task')
-                return '#C67F00';
+                    return '#0652D4';
+                if (type === 'task')
+                    return '#C67F00';
             }
             if (type === 'event')
                 return '#387ef5';

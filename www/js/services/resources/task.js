@@ -97,8 +97,12 @@ angular.module('Schedulogy')
                         title: task.title,
                         desc: task.desc,
                         resource: task.resource,
-                        start: task.done ? task.start.unix() : null,
-                        done: task.done
+                        start: task.start.unix(),
+                        done: task.done,
+                        repetition: task.repetition ? {
+                            end: task.repetition.end.unix(),
+                            frequency: task.repetition.frequency
+                        } : null
                     });
                     break;
             }
