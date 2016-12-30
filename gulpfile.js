@@ -64,6 +64,7 @@ gulp.task('concat-js', function () {
         "www/js/controllers/floatToFixedModal.js",
         "www/js/controllers/userModal.js",
         "www/js/controllers/removeAllModal.js",
+        "www/js/controllers/singleOrRepetitionModal.js",
         "www/js/controllers/removeResourceModal.js"
     ])
         .pipe(concat('app.min.js'))
@@ -71,27 +72,6 @@ gulp.task('concat-js', function () {
         .pipe(ngAnnotate({
             add: true
         }))
-        .pipe(replace("templateUrl: 'templates/", "templateUrl: 'templates-min/"))
-        .pipe(replace("fromTemplateUrl('templates/", "fromTemplateUrl('templates-min/"))
-        .pipe(replace('currentItem', 'axe'))
-        .pipe(replace('getBTime', 'qaz'))
-        .pipe(replace('fillBlocksAndNeedsForShow', 'clockId'))
-        .pipe(replace('openUserMenuPopover', 'whatever'))
-        .pipe(replace('currentUser', 'uty'))
-        .pipe(replace('floatToFixedEvent', 'woopra'))
-        .pipe(replace('processEventDuration', 'gfa'))
-        .pipe(replace('myItems', 'axuie'))
-        .pipe(replace('successInfo', 'aaq'))
-        .pipe(replace('errorInfo', 'aaw'))
-        .pipe(replace('reinitDatePicker', 'fgra'))
-        .pipe(replace('minuteGranularity', 'concurrentCount'))
-        .pipe(replace('defaultTaskDuration', 'oop'))
-        .pipe(replace('startHour', '_limit'))
-        .pipe(replace('endHour', '_skip'))
-        .pipe(replace('FullCalendar', 'TheCalendar'))
-        .pipe(replace('fullCalendar', 'theCalendar'))
-        .pipe(replace('tryPreauthenticate', 'sendNow'))
-        .pipe(replace('TaskType', 'uuida'))
         .pipe(uglify({mangle: true, compress: {
                 sequences: true,
                 dead_code: true,
@@ -125,25 +105,6 @@ gulp.task('html', function () {
 });
 gulp.task('template-bundle', function () {
     return gulp.src(['www/templates/*.html', 'www/templates/**/*.html'])
-        .pipe(replace('currentItem', 'axe'))
-        .pipe(replace('getBTime', 'qaz'))
-        .pipe(replace('fillBlocksAndNeedsForShow', 'clockId'))
-        .pipe(replace('openUserMenuPopover', 'whatever'))
-        .pipe(replace('currentUser', 'uty'))
-        .pipe(replace('myItems', 'axuie'))
-        .pipe(replace('floatToFixedEvent', 'woopra'))
-        .pipe(replace('processEventDuration', 'gfa'))
-        .pipe(replace('successInfo', 'aaq'))
-        .pipe(replace('errorInfo', 'aaw'))
-        .pipe(replace('reinitDatePicker', 'fgra'))
-        .pipe(replace('minuteGranularity', 'concurrentCount'))
-        .pipe(replace('defaultTaskDuration', 'oop'))
-        .pipe(replace('startHour', '_limit'))
-        .pipe(replace('endHour', '_skip'))
-        .pipe(replace('FullCalendar', 'TheCalendar'))
-        .pipe(replace('fullCalendar', 'theCalendar'))
-        .pipe(replace('tryPreauthenticate', 'sendNow'))
-        .pipe(replace('TaskType', 'uuida'))
         .pipe(replace('\\r\\n', ''))
         .pipe(replace('\\r', ''))
         .pipe(replace('\\n', ''))

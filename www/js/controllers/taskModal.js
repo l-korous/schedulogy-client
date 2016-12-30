@@ -44,7 +44,7 @@ angular.module('Schedulogy')
         ModalService.initModal('task', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
-            $scope.myItems.saveItem($scope.currentItem, function () {
+            $scope.myItems.processSaveRequest($scope.currentItem, function () {
                 ModalService.closeModalInternal('task');
             }, function () {
                 ModalService.closeModalInternal('task');
@@ -61,7 +61,7 @@ angular.module('Schedulogy')
         };
 
         $scope.remove = function () {
-            $scope.myItems.deleteItemById($scope.myItems.currentItem._id, function () {
+            $scope.myItems.processDeleteRequest($scope.myItems.currentItem._id, function () {
                 ModalService.closeModalInternal('task');
             }, function () {
                 ModalService.closeModalInternal('task');

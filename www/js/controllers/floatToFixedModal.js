@@ -42,7 +42,7 @@ angular.module('Schedulogy')
                     return;
                 }
             }
-            MyItems.saveItem();
+            MyItems.processSaveRequest();
             ModalService.closeModalInternal();
         };
 

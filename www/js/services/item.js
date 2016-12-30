@@ -197,6 +197,7 @@ angular.module('Schedulogy')
                         allDay: (task.allDay),
                         blocks: task.blocks,
                         repetition: task.repetition,
+                        repetition: task.repetition,
                         constraint: task.constraint,
                         blocksForShow: []
                     });
@@ -224,6 +225,11 @@ angular.module('Schedulogy')
                             item = angular.extend(item, {
                                 shortInfo: '(' + start.format(constants.dateFormat) + ', ' + start.format(constants.timeFormat) + ' - ' + end.format(constants.dateFormat) + ', ' + end.format(constants.timeFormat) + ')'
                             });
+                    }
+                    
+                    if(item.repetition) {
+                        item.repetition.end = moment.unix(task.repetition.end).local();
+                        this.setRepetitionEnd(item);
                     }
                     break;
                 case 'reminder':

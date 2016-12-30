@@ -89,12 +89,16 @@ angular.module('Schedulogy')
                         return;
                     else {
                         var newdiv1 = $('<i class="icon itemDeleter" title="Delete">X</i>');
-
-                        $(jsEvent.currentTarget).append(newdiv1);
+                        
+                        console.log($(jsEvent.currentTarget).children().last());
+                        if (view.name === 'listMonth')
+                            $(jsEvent.currentTarget).children().last().append(newdiv1);
+                        else
+                            $(jsEvent.currentTarget).append(newdiv1);
 
                         $('.itemDeleter').click(function (evt) {
                             evt.stopPropagation();
-                            MyItems.deleteItemById(event._id);
+                            MyItems.processDeleteRequest(event._id);
                         });
                     }
                 },

@@ -1001,3 +1001,7 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
         vertical-align: top ! important;
     }
 }
+
+.fc-list-table td {
+    position:relative;
+}

@@ -13,8 +13,8 @@ angular.module('Schedulogy')
 
         ModalService.initModal('dirtyTasks', $scope, $scope.open, $scope.close);
 
-        $scope.deleteEvent = function (event, jsEvent) {
-            $scope.myItems.deleteItemById(event._id);
+        $scope.deleteItem = function (event, jsEvent) {
+            $scope.myItems.processDeleteRequest(event._id);
             jsEvent.stopPropagation();
         };
 

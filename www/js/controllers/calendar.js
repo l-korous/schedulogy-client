@@ -61,7 +61,7 @@ angular.module('Schedulogy')
                         MyItems.processEventDuration(MyItems.currentItem);
                     }
 
-                    MyItems.saveItem();
+                    MyItems.processSaveRequest();
                 }
             },
             eventResize: function (event, delta, revertFunc) {
@@ -73,7 +73,7 @@ angular.module('Schedulogy')
                     MyItems.processEventDuration();
                     if (!MyItems.recalcEventConstraints())
                         $scope.currentItem.error = 'Impossible to schedule due to constraints';
-                    MyItems.saveItem();
+                    MyItems.processSaveRequest();
                 }
                 else if (event.type === 'event' && event.allDay) {
                     event.dur += delta.days();
@@ -81,7 +81,7 @@ angular.module('Schedulogy')
                     MyItems.processEventDuration();
                     if (!MyItems.recalcEventConstraints())
                         $scope.currentItem.error = 'Impossible to schedule due to constraints';
-                    MyItems.saveItem();
+                    MyItems.processSaveRequest();
                 }
                 else if (event.type === 'task') {
                     ModalService.openModal('floatToFixed');

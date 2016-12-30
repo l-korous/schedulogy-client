@@ -10,7 +10,7 @@ angular.module('Schedulogy')
 
             $scope.currentItem = angular.extend({}, MyItems.currentItem);
 
-            $scope.data.showRepetition = false;
+            $scope.data.showRepetition = !(!($scope.currentItem.repetition));
 
             $scope.form.$setPristine();
 
@@ -37,7 +37,7 @@ angular.module('Schedulogy')
         ModalService.initModal('reminder', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
-            $scope.myItems.saveItem($scope.currentItem, function () {
+            $scope.myItems.processSaveRequest($scope.currentItem, function () {
                 ModalService.closeModalInternal('reminder');
             }, function () {
                 ModalService.closeModalInternal('reminder');
@@ -65,7 +65,7 @@ angular.module('Schedulogy')
                 callback: function (val) {
                     $scope.currentItem.repetition.end = DateUtils.pushDatePart(moment(val), $scope.currentItem.repetition.end);
                     Item.setRepetitionEnd($scope.currentItem);
-                    $scope.form.$setDirty();
+                    $scope.form.endDate.$setDirty();
                 }
             }
         };
@@ -73,18 +73,17 @@ angular.module('Schedulogy')
         $scope.openDatePicker = function (which) {
             $scope.popupOpen = true;
 
-            if (which === 'start') {
+            if (which === 'start')
                 $scope.datePicker.start.inputDate = $scope.currentItem ? $scope.currentItem.start.toDate() : MyItems.getBTime();
-                ionicDatePicker.openDatePicker($scope.datePicker[which]);
-            }
-            if (which === 'repetitionEnd') {
+
+            if (which === 'repetitionEnd')
                 $scope.datePicker.repetitionEnd.inputDate = $scope.currentItem ? $scope.currentItem.repetition.end.toDate() : MyItems.getBTime().clone().add(constants.defaultMonthsUntil, 'months');
-                ionicDatePicker.openDatePicker($scope.datePicker[which]);
-            }
+
+            ionicDatePicker.openDatePicker($scope.datePicker[which]);
         };
 
         $scope.remove = function () {
-            $scope.myItems.deleteItemById($scope.myItems.currentItem._id, function () {
+            $scope.myItems.processDeleteRequest($scope.myItems.currentItem._id, function () {
                 ModalService.closeModalInternal('reminder');
             }, function () {
                 ModalService.closeModalInternal('reminder');

@@ -36,6 +36,13 @@ angular.module('Schedulogy')
                     btime: '@btime'
                 }
             },
+            removeByRepetitionId: {
+                method: "DELETE",
+                url: settings.serverUrl + "/task/removeAllInRepetition",
+                params: {
+                    repetitionId: '@repetitionId'
+                }
+            },
             deleteAll: {
                 method: "DELETE",
                 url: settings.serverUrl + "/task"
@@ -85,6 +92,11 @@ angular.module('Schedulogy')
                         allDay: task.allDay,
                         resource: task.resource,
                         iCalUid: task.iCalUid,
+                        repetition: task.repetition ? {
+                            end: task.repetition.end.unix(),
+                            frequency: task.repetition.frequency,
+                            _id: task.repetition._id
+                        } : null,
                         constraint: {
                             end: task.constraint.end ? task.constraint.end.toISOString() : null
                         },
@@ -101,7 +113,8 @@ angular.module('Schedulogy')
                         done: task.done,
                         repetition: task.repetition ? {
                             end: task.repetition.end.unix(),
-                            frequency: task.repetition.frequency
+                            frequency: task.repetition.frequency,
+                            _id: task.repetition._id
                         } : null
                     });
                     break;

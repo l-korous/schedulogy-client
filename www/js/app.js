@@ -209,7 +209,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     MyItems.newCurrentItem('task');
                     ModalService.openModal('task');
                 }
-                if ($('#theOnlyCalendar').fullCalendar('getView').name === 'month' || $('#theOnlyCalendar').fullCalendar('getView').name === 'list') {
+                if ($('#theOnlyCalendar').fullCalendar('getView').name === 'month' || $('#theOnlyCalendar').fullCalendar('getView').name === 'listMonth') {
                     if (keyCode === 38 && !ctrlKey)
                         $('#theOnlyCalendar').fullCalendar('prev');
                     if (keyCode === 40 && !ctrlKey)

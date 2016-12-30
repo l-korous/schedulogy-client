@@ -182,28 +182,6 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.deleteEvent = function (passedItem, successCallback, errorCallback) {
-            var itemToDelete = passedItem || _this.currentItem;
-
-            _this.shouldShowLoading = true;
-            $timeout(function () {
-                if (_this.shouldShowLoading)
-                    $rootScope.isLoading = true;
-            }, 500);
-
-            Task.toServer(itemToDelete).$remove({btime: _this.getBTime().unix(), taskId: itemToDelete._id}, function (data, headers) {
-                _this.importFromTasks(data.tasks, data.dirtyTasks);
-                _this.shouldShowLoading = false;
-                $rootScope.isLoading = false;
-                successCallback && successCallback();
-            }, function (err) {
-                _this.shouldShowLoading = false;
-                $rootScope.isLoading = false;
-                errorCallback && errorCallback();
-                console.log(err);
-            });
-        };
-
         _this.deleteAll = function (successCallback, errorCallback) {
             _this.shouldShowLoading = true;
             $timeout(function () {
@@ -225,8 +203,61 @@ angular.module('Schedulogy')
             });
         };
 
-        _this.deleteItemById = function (passedItemId, successCallback, errorCallback) {
-            _this.deleteEvent(this.findEventById(passedItemId), successCallback, errorCallback);
+        _this.processDeleteRequest = function (passedItemId, successCallback, errorCallback) {
+            var itemToDelete = this.findEventById(passedItemId);
+            if (!itemToDelete.repetition)
+                _this.deleteItem(itemToDelete, successCallback, errorCallback);
+            else {
+                ModalService.openModal('singleOrRepetition');
+                ModalService.modals.singleOrRepetition.scope.setCallback(function (resolution) {
+                    if (resolution === 'single') {
+                        _this.deleteItem(itemToDelete, successCallback, errorCallback);
+                    }
+                    else if (resolution === 'repetition') {
+                        _this.deleteItemsByRepetitionId(itemToDelete.repetition._id, successCallback, errorCallback);
+                    }
+                });
+            }
+        };
+        
+        _this.deleteItemsByRepetitionId = function (repetitionId, successCallback, errorCallback) {
+            _this.shouldShowLoading = true;
+            $timeout(function () {
+                if (_this.shouldShowLoading)
+                    $rootScope.isLoading = true;
+            }, 500);
+
+            Task.removeByRepetitionId({repetitionId: repetitionId}, function (data, headers) {
+                _this.importFromTasks(data.tasks, data.dirtyTasks);
+                _this.shouldShowLoading = false;
+                $rootScope.isLoading = false;
+                successCallback && successCallback();
+            }, function (err) {
+                _this.shouldShowLoading = false;
+                $rootScope.isLoading = false;
+                errorCallback && errorCallback();
+                console.log(err);
+            });
+        };
+
+        _this.deleteItem = function (itemToDelete, successCallback, errorCallback) {
+            _this.shouldShowLoading = true;
+            $timeout(function () {
+                if (_this.shouldShowLoading)
+                    $rootScope.isLoading = true;
+            }, 500);
+
+            Task.toServer(itemToDelete).$remove({btime: _this.getBTime().unix(), taskId: itemToDelete._id}, function (data, headers) {
+                _this.importFromTasks(data.tasks, data.dirtyTasks);
+                _this.shouldShowLoading = false;
+                $rootScope.isLoading = false;
+                successCallback && successCallback();
+            }, function (err) {
+                _this.shouldShowLoading = false;
+                $rootScope.isLoading = false;
+                errorCallback && errorCallback();
+                console.log(err);
+            });
         };
 
         _this.imposeEventDurationBound = function (passedItem) {
@@ -269,14 +300,31 @@ angular.module('Schedulogy')
             errorCallback && errorCallback();
         };
 
-        _this.saveItem = function (passedItem, successCallback, errorCallback) {
+        _this.processSaveRequest = function (passedItem, successCallback, errorCallback) {
+            var itemToSave = passedItem || _this.currentItem;
+            if (!itemToSave.repetition || !itemToSave._id)
+                _this.saveItem(itemToSave, 0, successCallback, errorCallback);
+            else {
+                ModalService.openModal('singleOrRepetition');
+                ModalService.modals.singleOrRepetition.scope.setCallback(function (resolution) {
+                    if (resolution === 'single') {
+                        _this.saveItem(itemToSave, 0, successCallback, errorCallback);
+                    }
+                    else if (resolution === 'repetition') {
+                       _this.saveItem(itemToSave, 1, successCallback, errorCallback);
+                    }
+                });
+            }
+        };
+
+        _this.saveItem = function (passedItem, updateAllOccurences, successCallback, errorCallback) {
             var itemToSave = passedItem || _this.currentItem;
             _this.shouldShowLoading = true;
             $timeout(function () {
                 if (_this.shouldShowLoading)
                     $rootScope.isLoading = true;
             }, 500);
-            Task.toServer(itemToSave).$save({btime: _this.getBTime().unix()}, function (data) {
+            Task.toServer(itemToSave).$save({btime: _this.getBTime().unix(), updateAllOccurences: updateAllOccurences}, function (data) {
                 _this.tasksInResponseSuccessHandler(data, function () {
                     successCallback && successCallback();
                     _this.shouldShowLoading = false;

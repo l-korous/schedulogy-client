@@ -5,11 +5,14 @@ angular.module('Schedulogy')
         $scope.popupOpen = false;
         $scope.currentItem = null;
         $scope.cachedDurValue = [0, 0];
+        $scope.data = {showRepetition: false};
 
         $scope.open = function () {
             $scope.myResources.refresh();
 
             $scope.currentItem = angular.extend({}, MyItems.currentItem);
+
+            $scope.data.showRepetition = !(!($scope.currentItem.repetition));
 
             $scope.form.$setPristine();
 
@@ -34,7 +37,7 @@ angular.module('Schedulogy')
         ModalService.initModal('event', $scope, $scope.open, $scope.close);
 
         $scope.save = function () {
-            $scope.myItems.saveItem($scope.currentItem, function () {
+            $scope.myItems.processSaveRequest($scope.currentItem, function () {
                 ModalService.closeModalInternal('event');
             }, function () {
                 ModalService.closeModalInternal('event');
@@ -61,7 +64,7 @@ angular.module('Schedulogy')
         };
 
         $scope.remove = function () {
-            $scope.myItems.deleteItemById($scope.myItems.currentItem._id, function () {
+            $scope.myItems.processDeleteRequest($scope.myItems.currentItem._id, function () {
                 ModalService.closeModalInternal('event');
             }, function () {
                 ModalService.closeModalInternal('event');
@@ -99,32 +102,55 @@ angular.module('Schedulogy')
             return event.start.unix();
         };
 
-        // Date & time picker
-        $scope.datePicker = {
-            callback: function (val) {
-                $scope.currentItem.start = DateUtils.pushDatePart(moment(val), $scope.currentItem.start);
-                Item.setStart($scope.currentItem);
-                MyItems.processEventDuration($scope.currentItem);
-
-                if (!MyItems.recalcEventConstraints($scope.currentItem))
-                    $scope.currentItem.error = 'Impossible to schedule due to constraints';
-
-                $scope.form.$setDirty();
+        $scope.switchRepetition = function () {
+            if ($scope.currentItem.repetition)
+                $scope.currentItem.repetition = null;
+            else {
+                $scope.currentItem.repetition = constants.defaultRepetition(MyItems.getBTime().clone());
+                Item.setRepetitionEnd($scope.currentItem);
             }
         };
 
-        $scope.openDatePicker = function () {
+        $scope.datePicker = {
+            start: {
+                callback: function (val) {
+                    $scope.currentItem.start = DateUtils.pushDatePart(moment(val), $scope.currentItem.start);
+                    Item.setStart($scope.currentItem);
+                    MyItems.processEventDuration($scope.currentItem);
+
+                    if (!MyItems.recalcEventConstraints($scope.currentItem))
+                        $scope.currentItem.error = 'Impossible to schedule due to constraints';
+
+                    $scope.form.$setDirty();
+                }
+            },
+            repetitionEnd: {
+                callback: function (val) {
+                    $scope.currentItem.repetition.end = DateUtils.pushDatePart(moment(val), $scope.currentItem.repetition.end);
+                    Item.setRepetitionEnd($scope.currentItem);
+                    $scope.form.endDate.$setDirty();
+                }
+            }
+        };
+
+        $scope.openDatePicker = function (which) {
             $scope.popupOpen = true;
 
-            $scope.datePicker.inputDate = $scope.currentItem ? $scope.currentItem.start.toDate() : MyItems.getBTime();
-            if ($scope.currentItem.constraint.start)
-                $scope.datePicker.from = $scope.currentItem.constraint.start.toDate();
-            if ($scope.currentItem.constraint.end)
-                $scope.datePicker.to = $scope.currentItem.constraint.end.toDate();
+            if (which === 'start') {
+                $scope.datePicker.inputDate = $scope.currentItem ? $scope.currentItem.start.toDate() : MyItems.getBTime();
+                if ($scope.currentItem.constraint.start)
+                    $scope.datePicker.from = $scope.currentItem.constraint.start.toDate();
+                if ($scope.currentItem.constraint.end)
+                    $scope.datePicker.to = $scope.currentItem.constraint.end.toDate();
 
-            ionicDatePicker.openDatePicker($scope.datePicker);
+                ionicDatePicker.openDatePicker($scope.datePicker);
+            }
+            if (which === 'repetitionEnd')
+                $scope.datePicker.repetitionEnd.inputDate = $scope.currentItem ? $scope.currentItem.repetition.end.toDate() : MyItems.getBTime().clone().add(constants.defaultMonthsUntil, 'months');
+
+            ionicDatePicker.openDatePicker($scope.datePicker[which]);
         };
-        
+
         $scope.timePicker = {
             callback: function (val) {
                 $scope.currentItem.start = DateUtils.pushTime(val, $scope.currentItem.start);
@@ -134,7 +160,7 @@ angular.module('Schedulogy')
                 $scope.form.$setDirty();
             }
         };
-        
+
         $scope.openTimePicker = function () {
             $scope.popupOpen = true;
 

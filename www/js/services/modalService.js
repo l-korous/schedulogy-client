@@ -24,7 +24,8 @@ angular.module('Schedulogy')
             'invitation',
             'user',
             'users',
-            'removeResource'
+            'removeResource',
+            'singleOrRepetition'
         ];
 
         // This is filled by the init method and the actual modals.

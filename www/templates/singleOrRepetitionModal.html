@@ -1,0 +1,23 @@
+<ion-modal-view ng-controller="SingleOrRepetitionAllModalCtrl">
+    <ion-header-bar style="background:white;border:0">
+    </ion-header-bar>
+    <ion-content>
+        <h2 class="title">Perform the action for:</h2>
+
+        <div style="text-align: center;margin-top:25px;">
+            <button class="button button-positive" ng-click="selectSingle();">
+                Only this occurence
+            </button>
+            <br />
+            <br />
+            <button class="button button-positive" ng-click="selectRepetition();">
+                All occurences
+            </button>
+            <br />
+            <br />
+            <button class="button button-outline button-stable" ng-click="close();">
+                Cancel
+            </button>
+        </div>
+    </ion-content>
+</ion-modal-view>

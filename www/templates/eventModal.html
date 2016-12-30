@@ -43,7 +43,7 @@
                     <div class="input-label">
                         Start Date
                     </div>
-                    <input readonly="true" type="text" ng-model="currentItem.startDateText" ng-click="openDatePicker();"
+                    <input readonly="true" type="text" ng-model="currentItem.startDateText" ng-click="openDatePicker('start');"
                            name="startDate" required id="eventStartDate"/>
                 </label>
 
@@ -59,6 +59,33 @@
                            name="duration" ng-model="currentItem.dur" step="1" required id="eventDuration"/>
                     <div class="rangeInfo">
                         End Time [duration]: {{currentItem.endTimeText}} ({{currentItem.endDateText}}) [ {{currentItem.durText}} ]
+                    </div>
+                </label>
+                
+                <ion-toggle ng-model="data.showRepetition" ng-change="switchRepetition()" toggle-class="toggle-assertive">Repetition</ion-toggle>
+
+                <label class="item item-input item-nested-list" ng-show="currentItem.repetition">
+                    <div class="list nested-list" style="margin-bottom:0;">
+                        <label class="item item-text item-no-wrap" ng-show="currentItem._id && (form.endDate.$dirty || form.frequency.$dirty)">
+                            You are changing the repetition, if you save this Event, all existing occurences will be overwritten.
+                        </label>
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                Frequency
+                            </div>
+                            <select ng-model="currentItem.repetition.frequency" class="leftAlignedSelect" name="frequency">
+                                <option value ='Daily'>Daily</option>
+                                <option value ='Weekly'>Weekly</option>
+                                <option value ='Monthly'>Monthly</option>
+                            </select>
+                        </label>
+
+                        <label class="item item-input">
+                            <div class="input-label">
+                                End Date
+                            </div>
+                            <input readonly="true" type="text" ng-model="currentItem.repetition.endDateText" ng-click="openDatePicker('repetitionEnd');" name="endDate"/>
+                        </label>
                     </div>
                 </label>
                 
