@@ -9092,7 +9092,10 @@ var Scroller = FC.Scroller = Class.extend({
 
 
 	getScrollTop: function() {
-		return this.scrollEl.scrollTop();
+        if(this.scrollEl)
+            return this.scrollEl.scrollTop();
+        else
+            return 0;
 	},
 
 

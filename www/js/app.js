@@ -166,11 +166,13 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $rootScope.isOffline = !$cordovaNetwork.isOnline();
 
                 document.addEventListener("resume", function () {
-                    $timeout(function () {
-                        $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
-                        MyItems.refresh();
-                    });
-                }, false);
+                    if (Auth.isAuthenticated()) {
+                        $timeout(function () {
+                            $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
+                            MyItems.refresh();
+                        });
+                    }
+                });
             });
         }
 

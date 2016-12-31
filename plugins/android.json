@@ -7,6 +7,9 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         },
@@ -17,9 +20,6 @@
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         },
         "de.appplant.cordova.plugin.local-notification": {
-            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
-        },
-        "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         }
     },
