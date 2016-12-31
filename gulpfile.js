@@ -68,6 +68,8 @@ gulp.task('concat-js', function () {
         .pipe(ngAnnotate({
             add: true
         }))
+        .pipe(replace("templateUrl: 'templates/", "templateUrl: 'templates-min/"))
+        .pipe(replace("fromTemplateUrl('templates/", "fromTemplateUrl('templates-min/"))
         .pipe(uglify({mangle: true, compress: {
                 sequences: true,
                 dead_code: true,
@@ -127,7 +129,7 @@ gulp.task('minify-css-ionic', function () {
     return gulp.src([
         "www/bower_components/ionic/release/css/ionic.css"
     ])
-    .pipe(concat('ionic.min.css'))
+        .pipe(concat('ionic.min.css'))
         .pipe(replace('\\r\\n', ''))
         .pipe(replace('\\r', ''))
         .pipe(replace('\\n', ''))
