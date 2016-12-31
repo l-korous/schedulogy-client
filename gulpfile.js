@@ -119,8 +119,6 @@ gulp.task('minify-css', function () {
         "www/css/style.css"
     ])
         .pipe(concat('style.min.css'))
-        .pipe(replace('FullCalendar', 'TheCalendar'))
-        .pipe(replace('fullCalendar', 'theCalendar'))
         .pipe(cleanCss())
         .pipe(gulp.dest('www/css-min'));
 });
