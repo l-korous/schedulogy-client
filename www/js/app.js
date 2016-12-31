@@ -5,7 +5,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 templateUrl: 'templates/main.html',
                 controller: 'MainCtrl',
                 abstract: true})
-            .state('main.calendar',
+            .state('calendar',
                 {
                     name: 'calendar',
                     parent: 'main',
