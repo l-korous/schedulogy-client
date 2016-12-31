@@ -31,4 +31,8 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <engine name="android" spec="~5.2.2" />
+    <feature name="InAppBrowser">
+        <param name="ios-package" value="CDVInAppBrowser" />
+        <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
+    </feature>
 </widget>

@@ -992,16 +992,6 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
     }
 }
 
-@media screen and (max-width: 480px) {
-    .auth0-lock.auth0-lock.auth0-lock-opened .auth0-lock-widget {
-        top: 15% ! important;
-    }
-
-    .auth0-lock.auth0-lock.auth0-lock-opened .auth0-lock-content {
-        vertical-align: top ! important;
-    }
-}
-
 .fc-list-table td {
     position:relative;
 }

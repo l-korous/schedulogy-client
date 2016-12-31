@@ -18,6 +18,9 @@
         },
         "de.appplant.cordova.plugin.local-notification": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         }
     },
     "dependent_plugins": {
