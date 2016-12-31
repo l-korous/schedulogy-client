@@ -21,7 +21,7 @@ angular.module('Schedulogy')
         // For 0 - is not all day, 1 - is all day
         defaultTaskDuration: [4, 1],
         defaultTaskType: 'event',
-        defaultStateAfterLogin: 'main.calendar',
+        defaultStateAfterLogin: 'calendar',
         noPrerequisitesToListMsg: 'No possible prerequisites to list. Possible prerequisites are any tasks that can end before the due date of this one.',
         noDependenciesToListMsg: 'No possible dependent tasks to list. Only floating tasks, that are due after this task can be completed, are possible dependent tasks.',
         shiftCalendar: {

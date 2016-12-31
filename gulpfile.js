@@ -17,6 +17,7 @@ gulp.task('concat-js', function () {
         "www/bower_components/angular-ui-calendar/src/calendar.js",
         "www/bower_components/fullcalendar/dist/fullcalendar.js",
         "www/bower_components/fullcalendar/dist/gcal.js",
+        "www/js/common/moment-timezone-with-data-2010-2020.min.js",
         "www/js/app.js",
         "www/js/settings.js",
         "www/js/constants.js",
