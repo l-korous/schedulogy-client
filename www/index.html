@@ -9,11 +9,8 @@
         <link rel="icon" href="favicon.ico" type="image/x-icon">
 
         <link href="bower_components/hopscotch/dist/css/hopscotch.min.css" rel="stylesheet"/>
-        <link href="bower_components/ionic/release/css/ionic.css" rel="stylesheet">
-        <link rel="stylesheet" href="bower_components/fullcalendar/dist/fullcalendar.css"/>
-        <link href="css/animate.min.css" type="text/css" rel="stylesheet">
-        <link href="css/modalAnimations.css" type="text/css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link href="bower_components/ionic/release/css/ionic.min.css" rel="stylesheet">
+        <link href="css-min/style.min.css" rel="stylesheet">
 
         <script src="bower_components/ionic/release/js/ionic.bundle.min.js"></script>
         <script src="bower_components/ng-lodash/build/ng-lodash.min.js"></script>
@@ -23,69 +20,16 @@
         <script src="bower_components/angular-resource/angular-resource.js"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-        <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
-        <script src="bower_components/fullcalendar/dist/fullcalendar.js"></script>
-        <script src="bower_components/fullcalendar/dist/gcal.js"></script>
         <script src="bower_components/ionic-datepicker/dist/ionic-datepicker.bundle.min.js"></script>
         <script src="bower_components/ionic-timepicker/dist/ionic-timepicker.bundle.min.js"></script>
-        <script src="bower_components/hopscotch/dist/js/hopscotch.js"></script>
+        <script src="bower_components/hopscotch/dist/js/hopscotch.min.js"></script>
         <script src="bower_components/ng-cordova/ng-cordova.min.js"></script>
-        <script src="js/common/textareaAutogrow.js"></script>
-        <script src="bower_components/auth0-lock/build/lock.js"></script>
-        <script src="bower_components/angular-lock/dist/angular-lock.js"></script>
-        <script src="bower_components/angular-jwt/dist/angular-jwt.js"></script>
+        <script src="bower_components/auth0-lock/build/lock.min.js"></script>
+        <script src="bower_components/angular-lock/dist/angular-lock.min.js"></script>
+        <script src="bower_components/angular-jwt/dist/angular-jwt.min.js"></script>
         <script src="bower_components/auth0.js/build/auth0.min.js"></script>
         <script src="bower_components/auth0-angular/build/auth0-angular.min.js"></script>
-
-        <!-- cordova script (this will be a 404 during development) -->
-        <script src="cordova.js"></script>
-        
-        <script src="js/common/moment-timezone-with-data-2010-2020.min.js"></script>
-        <script src="js/app.js"></script>
-        <script src="js/settings.js"></script>
-        <script src="js/constants.js"></script>
-        <script src="js/directives/select.js"></script>
-        <script src="js/directives/fileModel.js"></script>
-        <script src="js/services/dateUtils.js"></script>
-        <script src="js/services/item.js"></script>
-        <script src="js/services/auth.js"></script>
-        <script src="js/services/fileUpload.js"></script>
-        <script src="js/services/cordovaUtilities.js"></script>
-        <script src="js/services/myItems.js"></script>
-        <script src="js/services/myUsers.js"></script>
-        <script src="js/services/myResources.js"></script>
-        <script src="js/services/hopscotchTour.js"></script>
-        <script src="js/services/fullCalendar.js"></script>
-        <script src="js/services/modalService.js"></script>
-        <script src="js/services/notification.js"></script>
-        <script src="js/services/resources/task.js"></script>
-        <script src="js/services/resources/resource.js"></script>
-        <script src="js/services/resources/user.js"></script>
-        <script src="js/controllers/main.js"></script>
-        <script src="js/controllers/calendar.js"></script>
-        <script src="js/controllers/helpModal.js"></script>
-        <script src="js/controllers/tutorialModal.js"></script>
-        <script src="js/controllers/privacyPolicyModal.js"></script>
-        <script src="js/controllers/termsOfServiceModal.js"></script>
-        <script src="js/controllers/usersModal.js"></script>
-        <script src="js/controllers/iCalUpload.js"></script>
-        <script src="js/controllers/taskModal.js"></script>
-        <script src="js/controllers/eventModal.js"></script>
-        <script src="js/controllers/reminderModal.js"></script>
-        <script src="js/controllers/invitationModal.js"></script>
-        <script src="js/controllers/switchTenantModal.js"></script>
-        <script src="js/controllers/resetTenantModal.js"></script>
-        <script src="js/controllers/resourcesModal.js"></script>
-        <script src="js/controllers/errorModal.js"></script>
-        <script src="js/controllers/dirtyTasksModal.js"></script>
-        <script src="js/controllers/resourceModal.js"></script>
-        <script src="js/controllers/feedbackModal.js"></script>
-        <script src="js/controllers/floatToFixedModal.js"></script>
-        <script src="js/controllers/userModal.js"></script>
-        <script src="js/controllers/removeAllModal.js"></script>
-        <script src="js/controllers/singleOrRepetitionModal.js"></script>
-        <script src="js/controllers/removeResourceModal.js"></script>
-
+        <script src="js-min/app.min.js"></script>
     </head>
     <body ng-app="Schedulogy" ng-keyup="$root.keyUpHandler($event.keyCode, $event.ctrlKey);">
         <div ui-view></div>
