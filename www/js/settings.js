@@ -1,6 +1,6 @@
 angular.module('Schedulogy')
     .constant('settings', {
-        serverUrl: 'https://www.schedulogy.com/api',
+        serverUrl: 'http://localhost:8080/api',
         AUTH0_CLIENT_ID: 'hq0XyOBL2u40XepMg7ZyHT4X2NsrkKt0',
         AUTH0_DOMAIN: 'schedulogy.eu.auth0.com',
         appVersion: '2.4.0',

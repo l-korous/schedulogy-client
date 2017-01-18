@@ -995,3 +995,7 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
 .fc-list-table td {
     position:relative;
 }
+
+.showOffline {
+    display:block ! important;
+}

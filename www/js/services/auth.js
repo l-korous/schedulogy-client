@@ -46,14 +46,11 @@ angular.module('Schedulogy')
                 $http.post(settings.serverUrl + '/loginSocial', {authOToken: authResult.idToken, timeZone: moment.tz.guess()})
                     .success(function (data) {
                         _this.processToken(data.token);
-
                         authManager.authenticate();
-
                         $state.go(constants.defaultStateAfterLogin, {}, {location: false});
-
+                        $rootScope.$broadcast('authenticated');
                         if (data.runIntro)
                             ModalService.openModal('tutorial');
-
                         defer.resolve(data);
                     })
                     .error(function (data) {
@@ -70,9 +67,6 @@ angular.module('Schedulogy')
         };
 
         _this.isAuthenticated = function () {
-            if (!authManager.isAuthenticated())
-                return false;
-
             if (!$window.localStorage.currentUser)
                 return false;
 

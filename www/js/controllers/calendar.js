@@ -94,10 +94,4 @@ angular.module('Schedulogy')
                 }
             }
         });
-
-        $timeout(function () {
-            MyItems.refresh();
-            MyResources.refresh();
-            MyUsers.refresh();
-        });
     });
