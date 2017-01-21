@@ -996,7 +996,7 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
     position:relative;
 }
 
-.showOffline {
+.showCustom {
     display:block ! important;
 }
 

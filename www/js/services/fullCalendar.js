@@ -84,12 +84,15 @@ angular.module('Schedulogy')
                             break;
                     }
                 },
+                eventAfterAllRender: function () {
+                    $rootScope.$broadcast('calendarRendered');
+                },
                 eventMouseover: function (event, jsEvent, view) {
                     if ($rootScope.smallScreen)
                         return;
                     else {
                         var newdiv1 = $('<i class="icon itemDeleter" title="Delete">X</i>');
-                        
+
                         console.log($(jsEvent.currentTarget).children().last());
                         if (view.name === 'listMonth')
                             $(jsEvent.currentTarget).children().last().append(newdiv1);
