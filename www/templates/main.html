@@ -106,7 +106,7 @@
 
             <div class="list">
 
-                <a class="item item-icon-left item-small" ng-click="toggleMenu();
+                <a class="item item-icon-left item-small" ng-if="$root.browser" ng-click="toggleMenu();
                     modalService.openModal('iCalUpload');">
                     <i class="icon ion-upload"></i>
                     Import from iCal

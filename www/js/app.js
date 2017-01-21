@@ -248,6 +248,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
 
             // Handle smallScreen
             $rootScope.smallScreen = ($window.innerWidth < constants.smallScreen);
+            $rootScope.browser = Cordova.isBrowser();
             angular.element($window).bind('resize', function () {
                 $rootScope.smallScreen = ($window.innerWidth < constants.smallScreen);
             });
