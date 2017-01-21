@@ -134,6 +134,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                         $("#isOffline").addClass('showOffline');
                 } else {
                     document.addEventListener("deviceready", function () {
+                        Cordova.plugins.backgroundMode.enable();
+                        
                         $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
                             $rootScope.isOffline = false;
                             $("#isOffline").removeClass('showOffline');

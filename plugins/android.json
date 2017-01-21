@@ -9,6 +9,9 @@
     "installed_plugins": {
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
+        "cordova-plugin-background-mode": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         }
     },
     "dependent_plugins": {
@@ -16,6 +19,9 @@
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         },
         "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
+        "cordova-plugin-device": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         }
     }
