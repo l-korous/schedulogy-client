@@ -137,13 +137,11 @@ angular.module('Schedulogy')
             $scope.popupOpen = true;
 
             if (which === 'start') {
-                $scope.datePicker.inputDate = $scope.currentItem ? $scope.currentItem.start.toDate() : MyItems.getBTime();
+                $scope.datePicker.start.inputDate = $scope.currentItem ? $scope.currentItem.start.toDate() : MyItems.getBTime();
                 if ($scope.currentItem.constraint.start)
-                    $scope.datePicker.from = $scope.currentItem.constraint.start.toDate();
+                    $scope.datePicker.start.from = $scope.currentItem.constraint.start.toDate();
                 if ($scope.currentItem.constraint.end)
-                    $scope.datePicker.to = $scope.currentItem.constraint.end.toDate();
-
-                ionicDatePicker.openDatePicker($scope.datePicker);
+                    $scope.datePicker.start.to = $scope.currentItem.constraint.end.toDate();
             }
             if (which === 'repetitionEnd')
                 $scope.datePicker.repetitionEnd.inputDate = $scope.currentItem ? $scope.currentItem.repetition.end.toDate() : MyItems.getBTime().clone().add(constants.defaultMonthsUntil, 'months');

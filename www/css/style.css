@@ -999,3 +999,12 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
 .showOffline {
     display:block ! important;
 }
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
