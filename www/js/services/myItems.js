@@ -82,6 +82,7 @@ angular.module('Schedulogy')
                         blocks: [],
                         allDay: false,
                         blocksForShow: [],
+                        notifications:[],
                         constraint: {
                             start: null,
                             end: null
@@ -100,6 +101,7 @@ angular.module('Schedulogy')
                         blocks: [],
                         blocksForShow: [],
                         allDay: false,
+                        notifications:[],
                         needs: [],
                         needsForShow: [],
                         constraint: {

@@ -79,6 +79,7 @@ angular.module('Schedulogy')
                         },
                         desc: task.desc,
                         due: task.due.unix(),
+                        notifications:task.notifications,
                         needs: task.needs ? task.needs : [],
                         blocks: task.blocks ? task.blocks : []
                     });
@@ -91,6 +92,7 @@ angular.module('Schedulogy')
                         dur: task.dur,
                         allDay: task.allDay,
                         resource: task.resource,
+                        notifications:task.notifications,
                         iCalUid: task.iCalUid,
                         repetition: task.repetition ? {
                             end: task.repetition.end.unix(),

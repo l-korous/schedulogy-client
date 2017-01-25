@@ -66,6 +66,36 @@
                         Duration: {{currentItem.durText}}
                     </div>
                 </label>
+                
+                <ion-toggle ng-model="data.showCustomNotifications" ng-change="switchCustomNotifications()" toggle-class="toggle-gold">Custom Notifications</ion-toggle>
+
+                <label class="item item-nested-list no-top-border" style="padding-bottom:0;border-bottom:0" ng-show="data.showCustomNotifications">
+                    <div class="list nested-list" ng-show="currentItem.notifications.length > 0">
+                        <div class="item item-button-right" ng-repeat="notification in currentItem.notifications| filter : {_id: event._id} : true">
+                            <span class="bold">{{notification.amount}} </span> {{notification.timeUnit}}
+                            <button class="button button-clear" on-tap="removeNotification($index); form.$setDirty();">
+                                <i class="icon ion-trash-b assertive"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="list nested-list">
+                        <div class="item" ng-show="currentItem.notifications.length === 0">
+                            No notifications
+                        </div>
+
+                        <div class="item">
+                            <input type="number" min="0" max="999" step="1" ng-model="data.newNotification.amount" class="inlineNumberInput" ng-change="processNotificationAmountChange()"/>
+                            <select ng-model="data.newNotification.timeUnit" class="inlineSelect">
+                                <option value="minutes">Minutes</option>
+                                <option value="hours">Hours</option>
+                                <option value="days">Days</option>
+                            </select>
+                            <button on-tap="addNotification();" class="button button-small inlineAddButton">
+                                <i class="icon ion-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </label>
 
                 <label class="item item-nested-list"  style="padding-bottom:0;border-bottom:0">
                     <div class="input-label">

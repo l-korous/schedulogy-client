@@ -1000,11 +1000,39 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
     display:block ! important;
 }
 
-input[type='number'] {
+input[type='number'].asText {
     -moz-appearance:textfield;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
+}
+
+.no-top-border {
+    border-top:0;
+}
+
+.inlineNumberInput {
+    display:inline-block ! important;
+    border: 1px solid #ddd ! important;
+    vertical-align: baseline ! important;
+    padding:0 10px ! important;
+    text-align: right;
+    width:30%;
+    max-width: 60px;
+}
+
+.inlineSelect {
+    min-height:34px ! important;
+    border: 1px solid #ddd ! important;
+    width:50%;
+    max-width: 120px;
+}
+
+.inlineAddButton {
+    min-height:34px ! important;
+    border: 1px solid #ddd ! important;
+    background:#33cd5f;
+    color:white ! important;
 }

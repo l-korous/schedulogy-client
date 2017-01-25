@@ -27,7 +27,7 @@
                 </label>
 
                 <ion-toggle id="eventAllDay" ng-model="currentItem.allDay" ng-change="switchAllDay()" toggle-class="toggle-positive">All-Day</ion-toggle>
-                
+
                 <label class="item item-input" ng-class="{ 'has-error' : form.title.$invalid && !form.title.$pristine }">
                     <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="eventPrimaryInput" required name="title">
                 </label>
@@ -61,10 +61,10 @@
                         End Time [duration]: {{currentItem.endTimeText}} ({{currentItem.endDateText}}) [ {{currentItem.durText}} ]
                     </div>
                 </label>
-                
-                <ion-toggle ng-model="data.showRepetition" ng-change="switchRepetition()" toggle-class="toggle-assertive">Repetition</ion-toggle>
 
-                <label class="item item-input item-nested-list" ng-show="currentItem.repetition">
+                <ion-toggle ng-model="data.showRepetition" ng-change="switchRepetition()" toggle-class="toggle-positive">Repetition</ion-toggle>
+
+                <label class="item item-input item-nested-list no-top-border" ng-show="currentItem.repetition">
                     <div class="list nested-list" style="margin-bottom:0;">
                         <label class="item item-text item-no-wrap" ng-show="currentItem._id && (form.endDate.$dirty || form.frequency.$dirty)">
                             You are changing the repetition, if you save this Event, all existing occurences will be overwritten.
@@ -88,7 +88,37 @@
                         </label>
                     </div>
                 </label>
-                
+
+                <ion-toggle ng-model="data.showCustomNotifications" ng-change="switchCustomNotifications()" toggle-class="toggle-positive">Custom Notifications</ion-toggle>
+
+                <label class="item item-nested-list no-top-border" style="padding-bottom:0;border-bottom:0" ng-show="data.showCustomNotifications">
+                    <div class="list nested-list" ng-show="currentItem.notifications.length > 0">
+                        <div class="item item-button-right" ng-repeat="notification in currentItem.notifications| filter : {_id: event._id} : true">
+                            <span class="bold">{{notification.amount}} </span> {{notification.timeUnit}}
+                            <button class="button button-clear" on-tap="removeNotification($index); form.$setDirty();">
+                                <i class="icon ion-trash-b assertive"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="list nested-list">
+                        <div class="item" ng-show="currentItem.notifications.length === 0">
+                            No notifications
+                        </div>
+
+                        <div class="item">
+                            <input type="number" min="0" max="999" step="1" ng-model="data.newNotification.amount" class="inlineNumberInput" ng-change="processNotificationAmountChange()"/>
+                            <select ng-model="data.newNotification.timeUnit" class="inlineSelect">
+                                <option value="minutes">Minutes</option>
+                                <option value="hours">Hours</option>
+                                <option value="days">Days</option>
+                            </select>
+                            <button on-tap="addNotification();" class="button button-small inlineAddButton">
+                                <i class="icon ion-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </label>
+
                 <label class="item item-nested-list" style="padding-bottom:0;border-bottom:0">
                     <div class="input-label">
                         Dependent Tasks
@@ -105,7 +135,7 @@
 
                 <label class="item item-select">
                     <select id="eventDependencies" ng-model="newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
-                            ng-options="event._id as event.info for event in filteredDependencies = (myItems.items | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
+                            ng-options="event._id as event.info for event in filteredDependencies = (myItems.items| filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
                             ng-change="myItems.addDependency(currentItem, newDependency)">
                         <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible Dependent Task, see Help for explanation' : 'select a dependent task'}}</option>
                     </select>
