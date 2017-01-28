@@ -5,12 +5,12 @@ angular.module('Schedulogy')
 
         $scope.onSwipeLeft = function () {
             if ($rootScope.smallScreen)
-                $('#theOnlyCalendar').fullCalendar('nextLong');
+                $('#theOnlyCalendar').fullCalendar('next');
         };
 
         $scope.onSwipeRight = function () {
             if ($rootScope.smallScreen)
-                $('#theOnlyCalendar').fullCalendar('prevLong');
+                $('#theOnlyCalendar').fullCalendar('prev');
         };
 
         $scope.myCalendar = FullCalendar;
