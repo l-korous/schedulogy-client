@@ -62,6 +62,9 @@ angular.module('Schedulogy')
                     if (jsEvent)
                         _this.callbacks.select(start, end, jsEvent, view, resource);
                 },
+                refreshOnNow: function() {
+                    $rootScope.refreshStuff();
+                },
                 viewRender: function (view, element) {
                     switch (view.name) {
                         case 'listMonth':

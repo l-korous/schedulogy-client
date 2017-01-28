@@ -118,11 +118,11 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         lock.interceptHash();
         authManager.checkAuthOnRefresh();
 
-        function refreshStuff() {
+        $rootScope.refreshStuff = function() {
             MyItems.refresh();
             MyResources.refresh();
             MyUsers.refresh();
-        }
+        };
 
         function initStuff() {
             ModalService.init();
@@ -139,7 +139,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $rootScope.firstLoad = true;
                 $rootScope.$on('calendarRendered', function () {
                     if ($rootScope.firstLoad) {
-                        refreshStuff();
+                        $rootScope.refreshStuff();
                         $("#isLoading").removeClass('showCustom');
                     }
                     $rootScope.firstLoad = false;
@@ -159,7 +159,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         $window.addEventListener("online", function (e) {
             $rootScope.isOffline = false;
             $("#isOffline").removeClass('showCustom');
-            refreshStuff();
+            $rootScope.refreshStuff();
         }, false);
         $window.addEventListener("offline", function (e) {
             $rootScope.isOffline = true;
@@ -174,7 +174,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
                     $rootScope.isOffline = false;
                     $("#isOffline").removeClass('showCustom');
-                    refreshStuff();
+                    $rootScope.refreshStuff();
                 });
                 $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
                     $rootScope.isOffline = true;
@@ -193,7 +193,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                             $rootScope.focusedEl = $(':focus');
                             $('#theOnlyCalendar').fullCalendar('option', 'now', MyItems.getBTime);
                             $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
-                            MyItems.refresh();
+                            $rootScope.refreshStuff();
                             $timeout(function () {
                                 $rootScope.focusedEl.focus();
                             });

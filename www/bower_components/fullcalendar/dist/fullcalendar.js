@@ -10071,6 +10071,7 @@ function Calendar_constructor(element, overrides) {
 	
 	function now() {
         currentView.updateNowIndicator();
+        t.options.refreshOnNow();
         date = (t.getNow().hours() < 1 ? t.getNow().clone() : t.getNow().clone().subtract(this.options['scrollOffsetMinutes'], 'minute'));
         if(currentView.timeGrid)
             currentView.forceScroll(currentView.timeGrid.computeDateTop(date, date));
@@ -10362,7 +10363,7 @@ Calendar.defaults = {
 		month: 'month',
 		week: 'week',
 		day: 'day',
-        now: 'now'
+        now: "<i class='ion-load-c icon' style='color:#387ef5;margin-left:10px;margin-right:10px'></i>"
 	},
 
 	buttonIcons: {
