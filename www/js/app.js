@@ -119,9 +119,11 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         authManager.checkAuthOnRefresh();
 
         $rootScope.refreshStuff = function () {
-            MyItems.refresh();
-            MyResources.refresh();
-            MyUsers.refresh();
+			if(Auth.isAuthenticated()) {
+				MyItems.refresh();
+				MyResources.refresh();
+				MyUsers.refresh();
+			}
         };
 
         function initStuff() {
