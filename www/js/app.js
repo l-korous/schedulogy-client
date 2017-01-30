@@ -118,8 +118,10 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         lock.interceptHash();
         authManager.checkAuthOnRefresh();
 
+		$rootScope.refreshedOnStartup = false;
         $rootScope.refreshStuff = function () {
 			if(Auth.isAuthenticated()) {
+				$rootScope.refreshedOnStartup = true;
 				MyItems.refresh();
 				MyResources.refresh();
 				MyUsers.refresh();
@@ -140,6 +142,8 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 initStuff();
                 $rootScope.refreshStuff();
                 $rootScope.calendarRenderedListener = $rootScope.$on('calendarRendered', function () {
+					if(!$rootScope.refreshedOnStartup)
+						$rootScope.refreshStuff();
                     $("#isLoading").removeClass('showCustom');
                     $rootScope.calendarRenderedListener();
                 });
