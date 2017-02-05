@@ -100,16 +100,34 @@ h2 {
     z-index: 55;
     position: absolute;
     top: 0px;
-    padding:1px 5px 2px 5px;
+    padding:0px 5px 1px 5px;
     right: 0px;
-    font-size: 12px;
+    font-size: 15px;
+    font-weight:bold;
     background:black;
-    color:#ccc;
+    color:#f00;
     cursor:pointer;
     border-radius:0 0 0 4px;
 }
 
 .itemDeleter:hover {
+    color: #fff;
+}
+
+.itemMarkAsDone {
+    z-index: 55;
+    position: absolute;
+    top: 0px;
+    padding:1px 5px 2px 5px;
+    right: 20px;
+    font-size: 13px;
+    background:black;
+    color:#0f0;
+    cursor:pointer;
+    border-radius:0 0 4px 4px;
+}
+
+.itemMarkAsDone:hover {
     color: #fff;
 }
 

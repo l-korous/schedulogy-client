@@ -62,7 +62,7 @@ angular.module('Schedulogy')
                     if (jsEvent)
                         _this.callbacks.select(start, end, jsEvent, view, resource);
                 },
-                refreshOnNow: function() {
+                refreshOnNow: function () {
                     $rootScope.refreshStuff();
                 },
                 viewRender: function (view, element) {
@@ -94,25 +94,41 @@ angular.module('Schedulogy')
                     if ($rootScope.smallScreen)
                         return;
                     else {
-                        var newdiv1 = $('<i class="icon itemDeleter" title="Delete">X</i>');
+                        var itemDeleter = $('<i class="icon itemDeleter" title="Delete">&times;</i>');
 
-                        console.log($(jsEvent.currentTarget).children().last());
                         if (view.name === 'listMonth')
-                            $(jsEvent.currentTarget).children().last().append(newdiv1);
+                            $(jsEvent.currentTarget).children().last().append(itemDeleter);
                         else
-                            $(jsEvent.currentTarget).append(newdiv1);
+                            $(jsEvent.currentTarget).append(itemDeleter);
 
                         $('.itemDeleter').click(function (evt) {
                             evt.stopPropagation();
                             MyItems.processDeleteRequest(event._id);
                         });
+
+                        if (event.type === 'reminder') {
+                            var markAsDone = $('<i class="icon itemMarkAsDone" title="Mark as Done">&#10004;</i>');
+
+                            if (view.name === 'listMonth')
+                                $(jsEvent.currentTarget).children().last().append(markAsDone);
+                            else
+                                $(jsEvent.currentTarget).append(markAsDone);
+
+                            $('.itemMarkAsDone').click(function (evt) {
+                                evt.stopPropagation();
+                                event.done = true;
+                                MyItems.processSaveRequest(event);
+                            });
+                        }
                     }
                 },
                 eventMouseout: function (event, jsEvent, view) {
                     if ($rootScope.smallScreen)
                         return;
-                    else
+                    else {
                         $('i').remove(".itemDeleter");
+                        $('i').remove(".itemMarkAsDone");
+                    }
                 }
             }
         };

@@ -1,7 +1,8 @@
 angular.module('Schedulogy')
-    .controller('ReminderModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, Notification, MyResources, ModalService, $ionicScrollDelegate, ionicDatePicker) {
+    .controller('ReminderModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, Notification, MyResources, ModalService, $ionicScrollDelegate, ionicDatePicker, $timeout) {
         $scope.myItems = MyItems;
         $scope.myResources = MyResources;
+        $scope.popupOpen = false;
         $scope.currentItem = null;
         $scope.data = {showRepetition: false};
 
@@ -59,6 +60,10 @@ angular.module('Schedulogy')
                     $scope.currentItem.start = DateUtils.pushDatePart(moment(val), $scope.currentItem.start);
                     Item.setStart($scope.currentItem);
                     $scope.form.$setDirty();
+                    $scope.popupOpen = false;
+                },
+                closeCallback: function () {
+                    $scope.popupOpen = false;
                 }
             },
             repetitionEnd: {
@@ -66,6 +71,10 @@ angular.module('Schedulogy')
                     $scope.currentItem.repetition.end = DateUtils.pushDatePart(moment(val), $scope.currentItem.repetition.end);
                     Item.setRepetitionEnd($scope.currentItem);
                     $scope.form.endDate.$setDirty();
+                    $scope.popupOpen = false;
+                },
+                closeCallback: function () {
+                    $scope.popupOpen = false;
                 }
             }
         };
@@ -96,7 +105,13 @@ angular.module('Schedulogy')
 
         $scope.$on('Esc', function () {
             if (ModalService.currentModal === 'reminder') {
-                $scope.close();
+                if ($scope.popupOpen) {
+                    $timeout(function () {
+                        $('.button_close').click();
+                    });
+                } else {
+                    $scope.close();
+                }
             }
         });
 
