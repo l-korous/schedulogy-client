@@ -67,8 +67,9 @@ angular.module('Schedulogy')
             eventResize: function (event, delta, revertFunc) {
                 MyItems.currentItem = event;
                 if (event.type === 'event' && !event.allDay) {
-                    event.dur += (delta._data.hours * constants.slotsPerHour);
-                    event.dur += (delta._data.minutes / constants.minuteGranularity);
+                    event.dur += (parseInt(delta._data.days) * constants.slotsPerHour * 24);
+                    event.dur += (parseInt(delta._data.hours) * constants.slotsPerHour);
+                    event.dur += (parseInt(delta._data.minutes) / constants.minuteGranularity);
                     MyItems.imposeEventDurationBound();
                     MyItems.processEventDuration();
                     if (!MyItems.recalcEventConstraints())
