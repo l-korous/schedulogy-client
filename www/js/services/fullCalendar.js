@@ -10,6 +10,7 @@ angular.module('Schedulogy')
             calendar: {
                 defaultView: $rootScope.smallScreen ? 'agenda3Day' : 'agendaWeek',
                 weekends: true,
+                smallScreen: $rootScope.smallScreen,
                 navLinks: true,
                 weekNumbers: true,
                 timezone: 'local',

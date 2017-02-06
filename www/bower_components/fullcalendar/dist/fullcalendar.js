@@ -9806,7 +9806,8 @@ function Calendar_constructor(element, overrides) {
 					updateTodayButton();
                     setTimeout(function () {
                         currentView.updateNowIndicator();
-                        $('.fc-scroller').attr("tabindex",-1).focus();
+                        if(!t.options.smallScreen)
+                            $('.fc-scroller').attr("tabindex",-1).focus();
                     });
 					getAndRenderEvents();
 				}
