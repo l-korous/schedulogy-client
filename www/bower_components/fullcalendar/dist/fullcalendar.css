@@ -1,7 +1,7 @@
 /*!
- * FullCalendar v3.0.1 Stylesheet
- * Docs & License: http://fullcalendar.io/
- * (c) 2016 Adam Shaw
+ * FullCalendar v3.2.0 Stylesheet
+ * Docs & License: https://fullcalendar.io/
+ * (c) 2017 Adam Shaw
  */
 
 
@@ -49,7 +49,7 @@ body .fc { /* extra precedence to overcome jqui */
 	color: #666;
 }
 
-.fc-unthemed .fc-today {
+.fc-unthemed td.fc-today {
 	background: #fcf8e3;
 }
 
@@ -181,13 +181,13 @@ NOTE: use percentage font sizes or else old IE chokes
 }
 
 .fc-state-default.fc-corner-left { /* non-theme */
-	border-top-left-radius: 0px;
-	border-bottom-left-radius: 0px;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
 }
 
 .fc-state-default.fc-corner-right { /* non-theme */
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
 /* icons in buttons */
@@ -811,7 +811,14 @@ a.fc-more:hover {
 
 .fc-toolbar {
 	text-align: center;
+}
+
+.fc-toolbar.fc-header-toolbar {
 	margin-bottom: 1em;
+}
+
+.fc-toolbar.fc-footer-toolbar {
+	margin-top: 1em;
 }
 
 .fc-toolbar .fc-left {
@@ -981,7 +988,7 @@ a.fc-more:hover {
 
 .fc .fc-axis { /* .fc to overcome default cell styles */
 	vertical-align: middle;
-	padding: 0 4px ! important;
+	padding: 0 4px;
 	white-space: nowrap;
 }
 
