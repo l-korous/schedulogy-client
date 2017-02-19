@@ -9965,10 +9965,10 @@
                 }
 
                 function now() {
-                    currentView.updateNowIndicator();
                     date = (t.getNow().hours() < 1 ? t.getNow().clone() : t.getNow().clone().subtract(this.options['scrollOffsetMinutes'], 'minute'));
                     if (currentView.timeGrid)
-                        currentView.forceScroll(currentView.timeGrid.computeDateTop(date, date));
+                        currentView.forceScroll({top: currentView.timeGrid.computeDateTop(date, date)});
+                    renderView();
                 }
 
                 function updateNowIndicator() {
