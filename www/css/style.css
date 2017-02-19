@@ -832,6 +832,11 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
     font-size:20px;
     position: relative;
     top:3px;
+    margin:auto ! important;
+}
+
+.fc-toolbar .fc-center, .fc-toolbar .fc-right {
+    display:flex;
 }
 
 .fc-state-default.fc-corner-left { /* non-theme */
@@ -894,7 +899,7 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
     }
 
     .fc-toolbar {
-        margin-bottom:.3em;
+        margin-bottom:.3em ! important;
     }
 
     .fc-event .fc-content {
@@ -923,6 +928,7 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
     .fc-toolbar h2 {
         font-size:17px;
         display:block;
+        padding-right:3px;
         position: relative;
         top:5px;
     }
@@ -977,36 +983,11 @@ input[type=text]:focus:-ms-input-placeholder, input[type=email]:focus:-ms-input-
 
 @media(max-width:400px) {
     .fc button {
-        padding: 0 .3em;
+        padding: 0 .35em;
     }
 
     .fc-agendaWeek-view .fc-day-header {
         font-size:.7em;
-    }
-}
-
-@media(max-width:380px) {
-    .fc button {
-        padding: 0 .2em;
-    }
-}
-
-
-@media(max-width:370px) {
-    .fc button {
-        padding: 0 .1em;
-    }
-}
-
-@media(max-width:340px) {
-    #button-customId-prevLong, #button-customId-prev, #button-customId-now, #button-customId-next, #button-customId-nextLong {
-        padding:0 .05em;
-    }
-}
-
-@media(max-width:325px) {
-    #button-customId-prevLong, #button-customId-prev, #button-customId-now, #button-customId-next, #button-customId-nextLong {
-        padding:0;
     }
 }
 
