@@ -13,13 +13,13 @@
                 <div ng-show="form.startDate.$error.required" class="item help-block">Please provide a valid date.</div>
                 <div ng-show="form.startTime.$error.required" class="item help-block">Please provide a valid time.</div>
                 <div ng-show="form.duration.$error.required" class="item help-block">Please provide a valid duration.</div>
-                <div ng-show="form.resource.$error.required" class="item help-block">Please provide a valid resource.</div>
+                <div ng-show="form.resource.$error.required" class="item help-block">Please provide a valid Calendar.</div>
                 <div ng-show="currentItem.error" class="item help-block">{{currentItem.error}}</div>
             </div>
             <div class="list" style="margin-bottom:0;">
                 <label class="item item-input item-select">
                     <div class="input-label">
-                        Resource
+                        Calendar
                     </div>
                     <select ng-model="currentItem.resource" class="leftAlignedSelect" required name="resource"
                             ng-options="resource._id as resource.name for resource in myResources.resources">

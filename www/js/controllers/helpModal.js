@@ -36,7 +36,7 @@ angular.module('Schedulogy')
                     '<li>Search bars<ul><li>Not sure when exactly is a meeting occuring, or what is the name of a prerequisite task? Search bars will help you finding what you need.</li></ul></li>' +
                     '<li>Device notifications<ul><li>Sometimes an e-mail notification is not enough. We will add device notifications for your cellphones, tablets, etc..</li></ul></li>' +
                     '<li>Fluid UX<ul><li>Right now you can swipe to navigate within views, but in steps (not continuously), also you cannot zoom, both these will be added.</li></ul></li>' +
-                    '<li>Multi-resource Events / Tasks<ul><li>Some Events / Tasks must be done by multiple people, or other resources at the same time, support for this will be added.</li></ul></li>' +
+                    '<li>Multi-calendar Events / Tasks<ul><li>Some Events / Tasks must be done by multiple people, or other calendars at the same time, support for this will be added in future.</li></ul></li>' +
                     '</ul>'
                     )
             },
@@ -62,8 +62,8 @@ angular.module('Schedulogy')
                 content:
                     '<h2>Title</h2><p>A (short) identifier of the entry.</p>' +
                     '<h2>Description</h2><p>Longer description of the entry.</p>' +
-                    '<h2>Resource</h2><p>Only relevant for Events / Reminders. Which Resource (e.g. person) is this Event / Reminder for.</p>' +
-                    '<h2>Admissible Resources</h2><p>Only relevant for Tasks. Which Resources (e.g. people) are able to perform this Task - which Resource can this Task be assigned to.</p>' +
+                    '<h2>Calendar</h2><p>Only relevant for Events / Reminders. Which Calendar (e.g. person) is this Event / Reminder for.</p>' +
+                    '<h2>Admissible Calendars</h2><p>Only relevant for Tasks. Which Calendars (e.g. people) are able to perform this Task - which Calendar can this Task be assigned to.</p>' +
                     '<h2>All-Day</h2><p>Whether this entry consumes one or more entire daysand does not start at a particular hour. See entry types section for explanation.</p>' +
                     '<h2>Start Date / Time</h2><p>Only relevant for Events. Marks the exact date &amp; time when this Event begins. Setting of Start may be constrained by dependencies - see the section on dependencies.</p>' +
                     '<h2>Due Date / Time</h2><p>Only relevant for Tasks. Marks the exact date &amp; time when work on this Task has to be finished.</p>' +
@@ -71,13 +71,13 @@ angular.module('Schedulogy')
                     '<h2>Prerequisities / Dependent Tasks</h2><p>See the section on dependencies.</p>'
             },
             {
-                name: 'Resources',
+                name: 'Calendars',
                 icon: 'ion-levels',
                 content:
-                    '<h2>Resource</h2><p>Only relevant for Events / Reminders. Which Resource (e.g. person) is this Event / Reminder for.</p>' +
-                    '<p>A Resource is an individual person / a group of people / any other entity to which we can assign Tasks / Events / Reminders.</p>' +
-                    '<p>One Resource which is created by default represents you (your user, yourself). This will be the default Resource to which all entries in the calendar are assigned.</p>' +
-                    '<p>In regular calendar apps, a Resource has a rough equivalent as a "calendar". Usually you may also put items in a calendar app to more than one "calendars".</p>'
+                    '<h2>Calendar</h2><p>Only relevant for Events / Reminders. Which Calendar (e.g. person) is this Event / Reminder for.</p>' +
+                    '<p>A Calendar is an individual person / a group of people / any other entity to which we can assign Tasks / Events / Reminders.</p>' +
+                    '<p>One Calendar which is created by default represents you (your user, yourself). This will be the default Calendar to which all entries in the calendar are assigned.</p>' +
+                    '<p>In regular calendar apps, a Calendar has a rough equivalent as a "calendar". Usually you may also put items in a calendar app to more than one "calendars".</p>'
             },
             {
                 name: 'Entry notifications',
@@ -116,7 +116,7 @@ angular.module('Schedulogy')
                     '<h3>Ctrl + left, right arrows</h3><p>Navigate in the view left and right by a large unit (e.g. Week / Month).</p>' +
                     '<h3>t, T</h3><p>Opens the "New Task" dialog.</p>' +
                     '<h3>e, E</h3><p>Opens the "New Event" dialog.</p>' +
-                    '<h3>r, R</h3><p>Opens the "New Resource" dialog.</p>' +
+                    '<h3>r, R</h3><p>Opens the "New Calendar" dialog.</p>' +
                     '<h3>h, H</h3><p>Opens this Help.</p>'
             }
         ];

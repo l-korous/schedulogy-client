@@ -54,5 +54,5 @@ angular.module('Schedulogy')
         switchTenantSuccessInfo: 'Tenant switched successfully.',
         iCalUploadError: 'File upload failed. Please check that you only upload valid iCal files.',
         iCalUploadSuccess: 'File uploaded successfully.',
-        resourceSaveSuccessInfo: 'Resource saved successfully.'
+        resourceSaveSuccessInfo: 'Calendar saved successfully.'
     });

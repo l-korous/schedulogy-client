@@ -7,13 +7,13 @@
         <div class="list">
             <div class="item item-no-wrap item-intro">
                 <span>
-                    In order to remove a Resource, you need to either select the Resource that all Tasks for the deleted Resource will transfer to, or you can select to remove the Resource with all associated Tasks.
+                    In order to remove a Calendar, you need to either select the Calendar that all Tasks for the deleted Calendar will transfer to, or you can select to remove the Calendar with all associated Tasks.
                 </span>
             </div>
             <label class="item" style="border-bottom:0;">
                 <select ng-model="resourceToReplaceCurrentWith" style="width:100%;" data-ng-attr-size="{{myResources.resources.length}}" name="resourceToReplace"
                         ng-options="resource._id as resource.name for resource in myResources.resources | filter: {_id : '!' + currentResource._id}" class="noScrollbarSelect">
-                    <option value="">Select a replacement resource</option>
+                    <option value="">Select a replacement Calendar</option>
                 </select>
             </label>
             <label class="item" style="border-top:0;padding-top:0;">
@@ -24,7 +24,7 @@
             
             <label class="item">
                 <span>
-                    This removes all Tasks that were assigned to this Resource.
+                    This removes all Tasks that were assigned to this Calendar.
                 </span>
                 <button class="button button-block button-assertive" ng-click="removeResource();">
                     Delete without transferring Tasks

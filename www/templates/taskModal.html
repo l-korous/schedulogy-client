@@ -13,13 +13,13 @@
                 <div ng-show="form.dueDate.$error.required" class="item help-block">Please provide a valid date.</div>
                 <div ng-show="form.dueTime.$error.required" class="item help-block">Please provide a valid time.</div>
                 <div ng-show="form.duration.$error.required" class="item help-block">Please provide a valid duration.</div>
-                <div ng-show="form.resources.$error.required" class="item help-block">Please provide valid resources.</div>
+                <div ng-show="form.resources.$error.required" class="item help-block">Please provide valid Calendar pool.</div>
                 <div ng-show="currentItem.error" class="item help-block">{{currentItem.error}}</div>
             </div>
             <div class="list" style="margin-bottom:0;">
                 <label class="item item-input item-select">
                     <div class="input-label">
-                        Resources Pool
+                        Calendar pool
                     </div>
                     <select multiple ng-model="currentItem.admissibleResources" class="leftAlignedSelect noScrollbarSelect" data-ng-attr-size="{{myResources.resources.length}}" required name="resources"
                             ng-options="resource._id as resource.name for resource in myResources.resources">

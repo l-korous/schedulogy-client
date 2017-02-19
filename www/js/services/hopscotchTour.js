@@ -498,8 +498,8 @@ angular.module('Schedulogy')
                 id: "resources",
                 steps: [
                     {
-                        title: "Resource Management",
-                        content: "Select this item to open the dialog with management of Resources.",
+                        title: "Calendar Management",
+                        content: "Select this item to open the dialog with management of Calendars.",
                         target: "resourcesLink",
                         yOffset: -10,
                         placement: "right",
@@ -507,8 +507,8 @@ angular.module('Schedulogy')
                         showNextButton: false
                     },
                     {
-                        title: "Select a Resource",
-                        content: "Select a Resource. By default there is only one - for your user.",
+                        title: "Select a Calendar",
+                        content: "Select a Calendar. By default there is only one - for your user.",
                         target: "resourceList",
                         placement: "top",
                         xOffset: 10,
@@ -517,7 +517,7 @@ angular.module('Schedulogy')
                         showNextButton: false
                     },
                     {
-                        title: "Resource Setup",
+                        title: "Calendar Setup",
                         content: "Here you can set the hours / days where SCHEDULOGY will be scheduling Tasks. You can still create Events (with fixed start) with any start time. Click on \"Done\" to go back to Tutorial.",
                         target: "resourceSetupDetail",
                         xOffset: 10,

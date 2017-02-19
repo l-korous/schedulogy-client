@@ -27,7 +27,7 @@ angular.module('Schedulogy')
                     '<h2>Reminder attributes</h2>' +
                     '<p class="lowp"><strong>Title</strong> - A (short) identifier of the Reminder.</p>' +
                     '<p class="lowp"><strong>Description</strong> - Longer description of the Reminder.</p>' +
-                    '<p class="lowp"><strong>Resource</strong> - Which Resource (in most cases which \'person\') is this Reminder for.</p>' +
+                    '<p class="lowp"><strong>Calendar</strong> - Which Calendar (in most cases which \'person\') is this Reminder for.</p>' +
                     '<p><strong>In order to create a new Reminder, select "New Reminder" from either the left menu (on large screen), or from the top menu (on small screen).</strong></p>' +
                     ($rootScope.smallScreen ? '' : '<div class="row"><div class="col-50 padding-horizontal padding-bottom">') +
                     ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" style="background-color:' + constants.itemColor('reminder', false) + '" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'reminder\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
@@ -47,7 +47,7 @@ angular.module('Schedulogy')
                     '<h2>Event attributes</h2>' +
                     '<p class="lowp"><strong>Title</strong> - A (short) identifier of the Event.</p>' +
                     '<p class="lowp"><strong>Description</strong> - Longer description of the Event.</p>' +
-                    '<p class="lowp"><strong>Resource</strong> - Which Resource (in most cases which \'person\') is this Event for.</p>' +
+                    '<p class="lowp"><strong>Calendar</strong> - Which Calendar (in most cases which \'person\') is this Event for.</p>' +
                     '<p class="lowp"><strong>All-Day</strong> - Whether this Event consumes one or more entire days and does not start at a particular hour.</p>' +
                     '<p class="lowp"><strong>Start Date / Time</strong> - Marks the exact date &amp; time when this Event begins. Setting of Start may be constrained by dependencies - see the section on dependencies.</p>' +
                     '<p class="lowp"><strong>Duration</strong> - Duration (= how much time this Event takes to finish). Setting of Duration may be constrained by dependencies - see the section on dependencies.</p>' +
@@ -106,7 +106,7 @@ angular.module('Schedulogy')
                     '<h2>Task attributes</h2>' +
                     '<p class="lowp"><strong>Title</strong> - A (short) identifier of the Task.</p>' +
                     '<p class="lowp"><strong>Description</strong> - Longer description of the Task.</p>' +
-                    '<p class="lowp"><strong>Admissible Resources</strong> - Which Resources (e.g. people) are able to perform this Task - which Resource can this Task be assigned to.</p>' +
+                    '<p class="lowp"><strong>Admissible Calendars</strong> - Which Calendars (e.g. people) are able to perform this Task - which Calendar can this Task be assigned to.</p>' +
                     '<p class="lowp"><strong>All-Day</strong> - Whether this Task consumes one or more entire days and will not be scheduled to start at a particular hour.</p>' +
                     '<p class="lowp"><strong>Start Date / Time</strong> - Marks the exact date &amp; time when this Task begins. Setting of Start may be constrained by dependencies - see the section on dependencies.</p>' +
                     '<p class="lowp"><strong>Due Date / Time</strong> - Only relevant for Tasks. Marks the exact date &amp; time when work on this Task has to be finished.</p>' +
@@ -153,15 +153,15 @@ angular.module('Schedulogy')
                     )
             },
             {
-                name: 'Setup SCHEDULOGY Resources',
+                name: 'Setup SCHEDULOGY Calendars',
                 id: 'resources',
                 icon: 'ion-levels',
                 content: $sce.trustAsHtml(
-                    '<h2>Resources</h2>' +
-                    '<p>Resources represent any entity (e.g. people) capable of performing Tasks</p>' +
-                    '<p>For an <strong>Event</strong>, the attribute <strong>"Resource"</strong> specifies which Resource (in most cases which \'person\') is this Event for.</p>' +
-                    '<p>For a <strong>Task</strong>, the attribute <strong>"Admissible Resources"</strong> specifies which Resources (e.g. people) are able to perform this Task - which Resource can this Task be assigned to.</p>' +
-                    '<p>To setup the Resource(s) that you have, select "Manage Resources" in the left menu.</p>' +
+                    '<h2>Calendars</h2>' +
+                    '<p>Calendars represent any entity (e.g. people) capable of performing Tasks</p>' +
+                    '<p>For an <strong>Event</strong>, the attribute <strong>"Calendar"</strong> specifies which Calendar (in most cases which \'person\') is this Event for.</p>' +
+                    '<p>For a <strong>Task</strong>, the attribute <strong>"Admissible Calendars"</strong> specifies which Calendars (e.g. people) are able to perform this Task - which Calendar can this Task be assigned to.</p>' +
+                    '<p>To setup the Calendar(s) that you have, select "Manage Calendars" in the left menu.</p>' +
                     ($rootScope.smallScreen ? '' : '<div class="row"><div class="col-50 padding-horizontal padding-bottom">') +
                     ($rootScope.smallScreen ? '' : '<button class="button button-block button-dark" onclick="angular.element($(\'#tutorialDiv\')).scope().runTour(\'resources\');event.stopPropagation();angular.element($(\'#tutorialDiv\')).scope().close();">Show me</button>') +
                     ($rootScope.smallScreen ? '' : '</div><div class="col-50 padding-horizontal padding-bottom">') +
