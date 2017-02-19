@@ -17,7 +17,6 @@
 })(function ($, moment) {
 
     ;
-    ;
 
     var FC = $.fullCalendar = {
         version: "3.2.0",
@@ -27,7 +26,6 @@
         internalApiVersion: 8
     };
     var fcViews = FC.views = {};
-
 
     $.fn.fullCalendar = function (options) {
         var args = Array.prototype.slice.call(arguments, 1); // for a possible method call
@@ -61,7 +59,6 @@
         return res;
     };
 
-
     var complexOptions = [// names of options that are objects whose properties should be combined
         'header',
         'footer',
@@ -70,13 +67,11 @@
         'themeButtonIcons'
     ];
 
-
 // Merges an array of option objects into a single object
     function mergeOptions(optionObjs) {
         return mergeProps(optionObjs, complexOptions);
     }
 
-    ;
     ;
 
 // exports
@@ -89,10 +84,8 @@
     FC.proxy = proxy;
     FC.capitaliseFirstLetter = capitaliseFirstLetter;
 
-
     /* FullCalendar-specific DOM Utilities
      ----------------------------------------------------------------------------------------------------------------------*/
-
 
 // Given the scrollbar widths of some other container, create borders/margins on rowEls in order to match the left
 // and right space that was offset by the scrollbars. A 1-pixel border first, then margin beyond that.
@@ -111,7 +104,6 @@
         }
     }
 
-
 // Undoes compensateScroll and restores all borders/margins
     function uncompensateScroll(rowEls) {
         rowEls.css({
@@ -122,18 +114,15 @@
         });
     }
 
-
 // Make the mouse cursor express that an event is not allowed in the current area
     function disableCursor() {
         $('body').addClass('fc-not-allowed');
     }
 
-
 // Returns the mouse cursor to its original look
     function enableCursor() {
         $('body').removeClass('fc-not-allowed');
     }
-
 
 // Given a total available height to fill, have `els` (essentially child rows) expand to accomodate.
 // By default, all elements that are shorter than the recommended height are expanded uniformly, not considering
@@ -190,12 +179,10 @@
         });
     }
 
-
 // Undoes distrubuteHeight, restoring all els to their natural height
     function undistributeHeight(els) {
         els.height('');
     }
-
 
 // Given `els`, a jQuery set of <td> cells, find the cell with the largest natural width and set the widths of all the
 // cells to be that width.
@@ -217,7 +204,6 @@
         return maxInnerWidth;
     }
 
-
 // Given one element that resides inside another,
 // Subtracts the height of the inner element from the outer element.
     function subtractInnerElHeight(outerEl, innerEl) {
@@ -235,7 +221,6 @@
         return diff;
     }
 
-
     /* Element Geom Utilities
      ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -243,7 +228,6 @@
     FC.getClientRect = getClientRect;
     FC.getContentRect = getContentRect;
     FC.getScrollbarWidths = getScrollbarWidths;
-
 
 // borrowed from https://github.com/jquery/jquery-ui/blob/1.11.0/ui/core.js#L51
     function getScrollParent(el) {
@@ -257,7 +241,6 @@
 
         return position === 'fixed' || !scrollParent.length ? $(el[0].ownerDocument || document) : scrollParent;
     }
-
 
 // Queries the outer bounding area of a jQuery element.
 // Returns a rectangle with absolute coordinates: left, right (exclusive), top, bottom (exclusive).
@@ -274,7 +257,6 @@
             bottom: top + el.outerHeight()
         };
     }
-
 
 // Queries the area within the margin/border/scrollbars of a jQuery element. Does not go within the padding.
 // Returns a rectangle with absolute coordinates: left, right (exclusive), top, bottom (exclusive).
@@ -294,7 +276,6 @@
         };
     }
 
-
 // Queries the area within the margin/border/padding of a jQuery element. Assumed not to have scrollbars.
 // Returns a rectangle with absolute coordinates: left, right (exclusive), top, bottom (exclusive).
 // Origin is optional.
@@ -312,7 +293,6 @@
             bottom: top + el.height()
         };
     }
-
 
 // Returns the computed left/right/top/bottom scrollbar widths for the given jQuery element.
 // NOTE: should use clientLeft/clientTop, but very unreliable cross-browser.
@@ -336,7 +316,6 @@
         return widths;
     }
 
-
 // The scrollbar width computations in getScrollbarWidths are sometimes flawed when it comes to
 // retina displays, rounding, and IE11. Massage them into a usable value.
     function sanitizeScrollbarWidth(width) {
@@ -344,7 +323,6 @@
         width = Math.round(width);
         return width;
     }
-
 
 // Logic for determining if, when the element is right-to-left, the scrollbar appears on the left side
 
@@ -375,25 +353,21 @@
         return res;
     }
 
-
 // Retrieves a jQuery element's computed CSS value as a floating-point number.
 // If the queried value is non-numeric (ex: IE can return "medium" for border width), will just return zero.
     function getCssFloat(el, prop) {
         return parseFloat(el.css(prop)) || 0;
     }
 
-
     /* Mouse / Touch Utilities
      ----------------------------------------------------------------------------------------------------------------------*/
 
     FC.preventDefault = preventDefault;
 
-
 // Returns a boolean whether this was a left mouse click and no ctrl key (which means right click on Mac)
     function isPrimaryMouseButton(ev) {
         return ev.which == 1 && !ev.ctrlKey;
     }
-
 
     function getEvX(ev) {
         var touches = ev.originalEvent.touches;
@@ -407,7 +381,6 @@
         return ev.pageX;
     }
 
-
     function getEvY(ev) {
         var touches = ev.originalEvent.touches;
 
@@ -420,29 +393,24 @@
         return ev.pageY;
     }
 
-
     function getEvIsTouch(ev) {
         return /^touch/.test(ev.type);
     }
-
 
     function preventSelection(el) {
         el.addClass('fc-unselectable')
             .on('selectstart', preventDefault);
     }
 
-
     function allowSelection(el) {
         el.removeClass('fc-unselectable')
             .off('selectstart', preventDefault);
     }
 
-
 // Stops a mouse/touch event from doing it's native browser action
     function preventDefault(ev) {
         ev.preventDefault();
     }
-
 
     /* General Geometry Utils
      ----------------------------------------------------------------------------------------------------------------------*/
@@ -464,7 +432,6 @@
         return false;
     }
 
-
 // Returns a new point that will have been moved to reside within the given rectangle
     function constrainPoint(point, rect) {
         return {
@@ -472,7 +439,6 @@
             top: Math.min(Math.max(point.top, rect.top), rect.bottom)
         };
     }
-
 
 // Returns a point that is the center of the given rectangle
     function getRectCenter(rect) {
@@ -482,7 +448,6 @@
         };
     }
 
-
 // Subtracts point2's coordinates from point1's coordinates, returning a delta
     function diffPoints(point1, point2) {
         return {
@@ -491,7 +456,6 @@
         };
     }
 
-
     /* Object Ordering by Field
      ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -499,7 +463,6 @@
     FC.compareByFieldSpecs = compareByFieldSpecs;
     FC.compareByFieldSpec = compareByFieldSpec;
     FC.flexibleCompare = flexibleCompare;
-
 
     function parseFieldSpecs(input) {
         var specs = [];
@@ -534,7 +497,6 @@
         return specs;
     }
 
-
     function compareByFieldSpecs(obj1, obj2, fieldSpecs) {
         var i;
         var cmp;
@@ -549,7 +511,6 @@
         return 0;
     }
 
-
     function compareByFieldSpec(obj1, obj2, fieldSpec) {
         if (fieldSpec.func) {
             return fieldSpec.func(obj1, obj2);
@@ -557,7 +518,6 @@
         return flexibleCompare(obj1[fieldSpec.field], obj2[fieldSpec.field]) *
             (fieldSpec.order || 1);
     }
-
 
     function flexibleCompare(a, b) {
         if (!a && !b) {
@@ -575,10 +535,8 @@
         return a - b;
     }
 
-
     /* FullCalendar-specific Misc Utilities
      ----------------------------------------------------------------------------------------------------------------------*/
-
 
 // Computes the intersection of the two ranges. Will return fresh date clones in a range.
 // Returns undefined if no intersection.
@@ -621,7 +579,6 @@
         }
     }
 
-
     /* Date Utilities
      ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -634,7 +591,6 @@
     var dayIDs = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
     var intervalUnits = ['year', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond'];
 
-
 // Diffs the two moments into a Duration where full-days are recorded first, then the remaining time.
 // Moments will have their timezones normalized.
     function diffDayTime(a, b) {
@@ -644,14 +600,12 @@
         });
     }
 
-
 // Diffs the two moments via their start-of-day (regardless of timezone). Produces whole-day durations.
     function diffDay(a, b) {
         return moment.duration({
             days: a.clone().stripTime().diff(b.clone().stripTime(), 'days')
         });
     }
-
 
 // Diffs two moments, producing a duration, made of a whole-unit-increment of the given unit. Uses rounding.
     function diffByUnit(a, b, unit) {
@@ -660,7 +614,6 @@
             unit
             );
     }
-
 
 // Computes the unit name of the largest whole-unit period of time.
 // For example, 48 hours will be "days" whereas 49 hours will be "hours".
@@ -681,7 +634,6 @@
         return unit; // will be "milliseconds" if nothing else matches
     }
 
-
 // Computes the number of units (like "hours") in the given range.
 // Range can be a {start,end} object, separate start/end args, or a Duration.
 // Results are based on Moment's .as() and .diff() methods, so results can depend on internal handling
@@ -699,7 +651,6 @@
         }
     }
 
-
 // Intelligently divides a range (specified by a start/end params) by a duration
     function divideRangeByDuration(start, end, dur) {
         var months;
@@ -713,7 +664,6 @@
         }
         return end.diff(start, 'days', true) / dur.asDays();
     }
-
 
 // Intelligently divides one duration by another
     function divideDurationByDuration(dur1, dur2) {
@@ -733,7 +683,6 @@
         return dur1.asDays() / dur2.asDays();
     }
 
-
 // Intelligently multiplies a duration by a number
     function multiplyDuration(dur, n) {
         var months;
@@ -748,23 +697,19 @@
         return moment.duration({days: dur.asDays() * n});
     }
 
-
 // Returns a boolean about whether the given duration has any time parts (hours/minutes/seconds/ms)
     function durationHasTime(dur) {
         return Boolean(dur.hours() || dur.minutes() || dur.seconds() || dur.milliseconds());
     }
 
-
     function isNativeDate(input) {
         return  Object.prototype.toString.call(input) === '[object Date]' || input instanceof Date;
     }
-
 
 // Returns a boolean about whether the given input is a time string, like "06:40:00" or "06:00"
     function isTimeString(str) {
         return /^\d+\:\d+(?:\:\d+\.?(?:\d{3})?)?$/.test(str);
     }
-
 
     /* Logging and Debug
      ----------------------------------------------------------------------------------------------------------------------*/
@@ -788,12 +733,10 @@
         }
     };
 
-
     /* General Utilities
      ----------------------------------------------------------------------------------------------------------------------*/
 
     var hasOwnPropMethod = {}.hasOwnProperty;
-
 
 // Merges an array of objects into a single object.
 // The second argument allows for an array of property names who's object values will be merged together.
@@ -843,7 +786,6 @@
         return dest;
     }
 
-
 // Create an object that has the given prototype. Just like Object.create
     function createObject(proto) {
         var f = function () {
@@ -853,7 +795,6 @@
     }
     FC.createObject = createObject;
 
-
     function copyOwnProps(src, dest) {
         for (var name in src) {
             if (hasOwnProp(src, name)) {
@@ -862,17 +803,14 @@
         }
     }
 
-
     function hasOwnProp(obj, name) {
         return hasOwnPropMethod.call(obj, name);
     }
-
 
 // Is the given value a non-object non-function value?
     function isAtomic(val) {
         return /undefined|null|boolean|number|string/.test($.type(val));
     }
-
 
     function applyAll(functions, thisObj, args) {
         if ($.isFunction(functions)) {
@@ -888,7 +826,6 @@
         }
     }
 
-
     function firstDefined() {
         for (var i = 0; i < arguments.length; i++) {
             if (arguments[i] !== undefined) {
@@ -896,7 +833,6 @@
             }
         }
     }
-
 
     function htmlEscape(s) {
         return (s + '').replace(/&/g, '&amp;')
@@ -907,11 +843,9 @@
             .replace(/\n/g, '<br />');
     }
 
-
     function stripHtmlEntities(text) {
         return text.replace(/&.*?;/g, '');
     }
-
 
 // Given a hash of CSS properties, returns a string of CSS.
 // Uses property names as-is (no camel-case conversion). Will not make statements for null/undefined values.
@@ -927,7 +861,6 @@
         return statements.join(';');
     }
 
-
 // Given an object hash of HTML attribute names to values,
 // generates a string that can be injected between < > in HTML
     function attrsToStr(attrs) {
@@ -942,21 +875,17 @@
         return parts.join(' ');
     }
 
-
     function capitaliseFirstLetter(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
-
 
     function compareNumbers(a, b) { // for .sort()
         return a - b;
     }
 
-
     function isInt(n) {
         return n % 1 === 0;
     }
-
 
 // Returns a method bound to the given object context.
 // Just like one of the jQuery.proxy signatures, but without the undesired behavior of treating the same method with
@@ -968,7 +897,6 @@
             return method.apply(obj, arguments);
         };
     }
-
 
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
@@ -1009,7 +937,6 @@
     }
 
     ;
-    ;
 
     /*
      GENERAL NOTE on moments throughout the *entire rest* of the codebase:
@@ -1029,7 +956,6 @@
     momentProperties.push('_fullCalendar');
     momentProperties.push('_ambigTime');
     momentProperties.push('_ambigZone');
-
 
 // Creating
 // -------------------------------------------------------------------------------------------------
@@ -1126,10 +1052,8 @@
         return mom;
     }
 
-
 // Week Number
 // -------------------------------------------------------------------------------------------------
-
 
 // Returns the week number, considering the locale's custom week number calcuation
 // `weeks` is an alias for `week`
@@ -1145,7 +1069,6 @@
 
         return oldMomentProto.week.apply(this, arguments); // local getter/setter
     };
-
 
 // Time-of-day
 // -------------------------------------------------------------------------------------------------
@@ -1228,7 +1151,6 @@
         return !this._ambigTime;
     };
 
-
 // Timezone
 // -------------------------------------------------------------------------------------------------
 
@@ -1260,7 +1182,6 @@
         return !this._ambigZone;
     };
 
-
 // implicitly marks a zone
     newMomentProto.local = function (keepLocalTime) {
 
@@ -1276,7 +1197,6 @@
         return this; // for chaining
     };
 
-
 // implicitly marks a zone
     newMomentProto.utc = function (keepLocalTime) {
 
@@ -1290,7 +1210,6 @@
         return this;
     };
 
-
 // implicitly marks a zone (will probably get called upon .utc() and .local())
     newMomentProto.utcOffset = function (tzo) {
 
@@ -1303,7 +1222,6 @@
 
         return oldMomentProto.utcOffset.apply(this, arguments);
     };
-
 
 // Formatting
 // -------------------------------------------------------------------------------------------------
@@ -1330,9 +1248,6 @@
         }
         return oldMomentProto.toISOString.apply(this, arguments);
     };
-
-    ;
-    ;
     (function () {
 
 // exports
@@ -1340,7 +1255,6 @@
         FC.formatRange = formatRange;
         FC.oldMomentFormat = oldMomentFormat;
         FC.queryMostGranularFormatUnit = queryMostGranularFormatUnit;
-
 
 // Config
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1391,7 +1305,6 @@
             d: {value: 4, unit: 'day'} // day of week
         };
 
-
 // Single Date Formatting
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -1411,7 +1324,6 @@
         function oldMomentFormat(mom, formatStr) {
             return oldMomentProto.format.call(mom, formatStr); // oldMomentProto defined in moment-ext.js
         }
-
 
 // Date Range Formatting
 // -------------------------------------------------------------------------------------------------
@@ -1511,7 +1423,6 @@
                 leftStr + middleStr + rightStr
                 );
         }
-
 
 // Format String Parsing
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1656,7 +1567,6 @@
             return units;
         }
 
-
 // Rendering to text
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -1710,7 +1620,6 @@
             });
         }
 
-
 // Misc Utils
 // -------------------------------------------------------------------------------------------------
 
@@ -1751,15 +1660,11 @@
     var formatRange = FC.formatRange;
     var oldMomentFormat = FC.oldMomentFormat;
 
-    ;
-    ;
-
     FC.Class = Class; // export
 
 // Class that all other classes will inherit from
     function Class() {
     }
-
 
 // Called on a class to create a subclass.
 // Last argument contains instance methods. Any argument before the last are considered mixins.
@@ -1778,13 +1683,11 @@
         return extendClass(this, members || {}); // members will be undefined if no arguments
     };
 
-
 // Adds new member variables/methods to the class's prototype.
 // Can be called with another class, or a plain object hash containing new members.
     Class.mixin = function (members) {
         mixIntoClass(this, members);
     };
-
 
     function extendClass(superClass, members) {
         var subClass;
@@ -1811,11 +1714,9 @@
         return subClass;
     }
 
-
     function mixIntoClass(theClass, members) {
         copyOwnProps(members, theClass.prototype);
     }
-    ;
     ;
 
     /*
@@ -1874,7 +1775,6 @@
 
     Promise.immediate = true;
 
-
     Promise.resolve = function (value) {
         if (value && typeof value.resolve === 'function') {
             return value.promise();
@@ -1903,11 +1803,9 @@
         }
     };
 
-
     Promise.reject = function () {
         return $.Deferred().reject().promise();
     };
-
 
     Promise.all = function (inputs) {
         var hasAllValues = false;
@@ -1943,9 +1841,6 @@
             });
         }
     };
-
-    ;
-    ;
 
 // TODO: write tests and clean up code
 
@@ -2013,12 +1908,10 @@
      */
 
     ;
-    ;
 
     var EmitterMixin = FC.EmitterMixin = {
         // jQuery-ification via $(this) allows a non-DOM object to have
         // the same event handling capabilities (including namespaces).
-
 
         on: function (types, handler) {
             $(this).on(types, this._prepareIntercept(handler));
@@ -2073,9 +1966,6 @@
         }
 
     };
-
-    ;
-    ;
 
     /*
      Utility methods for easily listening to events on another object,
@@ -2133,8 +2023,6 @@
         };
         return ListenerMixin;
     })();
-    ;
-    ;
 
     /* A rectangular panel that is absolutely positioned over other content
      ------------------------------------------------------------------------------------------------------------------------
@@ -2155,7 +2043,6 @@
         options: null,
         el: null, // the container element for the popover. generated by this object
         margin: 10, // the space required between the popover and the edges of the scroll container
-
 
         constructor: function (options) {
             this.options = options || {};
@@ -2286,9 +2173,6 @@
         }
 
     });
-
-    ;
-    ;
 
     /*
      A cache for the left/right/top/bottom/width/height values for one or more elements.
@@ -2505,9 +2389,6 @@
 
     });
 
-    ;
-    ;
-
     /* Tracks a drag's mouse movement, firing various handlers
      ----------------------------------------------------------------------------------------------------------------------*/
 // TODO: use Emitter
@@ -2536,7 +2417,6 @@
         },
         // Interaction (high-level)
         // -----------------------------------------------------------------------------------------------------------------
-
 
         startInteraction: function (ev, extraOptions) {
             var isTouch = getEvIsTouch(ev);
@@ -2609,7 +2489,6 @@
         // Binding To DOM
         // -----------------------------------------------------------------------------------------------------------------
 
-
         bindHandlers: function () {
             // some browsers (Safari in iOS 10) don't allow preventDefault on touch events that are bound after touchstart,
             // so listen to the GlobalEmitter singleton, which is always bound, instead of the document directly.
@@ -2639,7 +2518,6 @@
         },
         // Drag (high-level)
         // -----------------------------------------------------------------------------------------------------------------
-
 
         // extraOptions ignored if drag already started
         startDrag: function (ev, extraOptions) {
@@ -2687,7 +2565,6 @@
         // Delay
         // -----------------------------------------------------------------------------------------------------------------
 
-
         startDelay: function (initialEv) {
             var _this = this;
 
@@ -2710,7 +2587,6 @@
         // Distance
         // -----------------------------------------------------------------------------------------------------------------
 
-
         handleDistanceSurpassed: function (ev) {
             this.isDistanceSurpassed = true;
 
@@ -2720,7 +2596,6 @@
         },
         // Mouse / Touch
         // -----------------------------------------------------------------------------------------------------------------
-
 
         handleTouchMove: function (ev) {
 
@@ -2737,7 +2612,6 @@
         // Scrolling (unrelated to auto-scroll)
         // -----------------------------------------------------------------------------------------------------------------
 
-
         handleTouchScroll: function (ev) {
             // if the drag is being initiated by touch, but a scroll happens before
             // the drag-initiating delay is over, cancel the drag
@@ -2747,7 +2621,6 @@
         },
         // Utils
         // -----------------------------------------------------------------------------------------------------------------
-
 
         // Triggers a callback. Calls a function in the option hash of the same name.
         // Arguments beyond the first `name` are forwarded on.
@@ -2761,11 +2634,7 @@
             }
         }
 
-
     });
-
-    ;
-    ;
     /*
      this.scrollEl is set in DragListener
      */
@@ -2780,7 +2649,6 @@
         scrollSensitivity: 30, // pixels from edge for scrolling to start
         scrollSpeed: 200, // pixels per second, at maximum speed
         scrollIntervalMs: 50, // millisecond wait between scroll increment
-
 
         initAutoScroll: function () {
             var scrollEl = this.scrollEl;
@@ -2931,8 +2799,6 @@
         }
 
     });
-    ;
-    ;
 
     /* Tracks mouse movements over a component and raises events about which hit the mouse is over.
      ------------------------------------------------------------------------------------------------------------------------
@@ -2948,7 +2814,6 @@
         origHit: null, // the hit the mouse was over when listening started
         hit: null, // the hit the mouse is over
         coordAdjust: null, // delta that will be added to the mouse coordinates when computing collisions
-
 
         constructor: function (component, options) {
             DragListener.call(this, options); // call the super-constructor
@@ -3093,7 +2958,6 @@
 
     });
 
-
 // Returns `true` if the hits are identically equal. `false` otherwise. Must be from the same component.
 // Two null values will be considered equal, as two "out of the component" states are the same.
     function isHitsEqual(hit0, hit1) {
@@ -3111,7 +2975,6 @@
         return false;
     }
 
-
 // Returns true if all of subHit's non-standard properties are within superHit
     function isHitPropsWithin(subHit, superHit) {
         for (var propName in subHit) {
@@ -3124,7 +2987,6 @@
         return true;
     }
 
-    ;
     ;
 
     /*
@@ -3288,14 +3150,12 @@
 
     });
 
-
 // Singleton
 // ---------------------------------------------------------------------------------------------------------------------
 
     (function () {
         var globalEmitter = null;
         var neededCount = 0;
-
 
         // gets the singleton
         GlobalEmitter.get = function () {
@@ -3308,13 +3168,11 @@
             return globalEmitter;
         };
 
-
         // called when an object knows it will need a GlobalEmitter in the near future.
         GlobalEmitter.needed = function () {
             GlobalEmitter.get(); // ensures globalEmitter
             neededCount++;
         };
-
 
         // called when the object that originally called needed() doesn't need a GlobalEmitter anymore.
         GlobalEmitter.unneeded = function () {
@@ -3327,9 +3185,6 @@
         };
 
     })();
-
-    ;
-    ;
 
     /* Creates a clone of an element and lets it track the mouse as it moves
      ----------------------------------------------------------------------------------------------------------------------*/
@@ -3502,9 +3357,6 @@
 
     });
 
-    ;
-    ;
-
     /* An abstract class comprised of a "grid" of areas that each represent a specific datetime
      ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -3546,7 +3398,6 @@
         /* Options
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Generates the format string used for event time text, if not explicitly defined by 'timeFormat'
         computeEventTimeFormat: function () {
             return this.view.opt('smallTimeFormat');
@@ -3562,7 +3413,6 @@
         },
         /* Dates
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Tells the grid about what period of time to display.
         // Any date-related internal data should be generated.
@@ -3653,7 +3503,6 @@
         /* Rendering
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Sets the container element that the grid should render inside of.
         // Does other DOM-related initializations.
         setElement: function (el) {
@@ -3715,7 +3564,6 @@
         },
         /* Handlers
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Binds DOM handlers to elements that reside outside the grid, such as the document
         bindGlobalHandlers: function () {
@@ -3876,7 +3724,6 @@
          ------------------------------------------------------------------------------------------------------------------*/
         // TODO: should probably move this to Grid.events, like we did event dragging / resizing
 
-
         // Renders a mock event at the given event location, which contains zoned start/end properties.
         // Returns all mock event elements.
         renderEventLocationHelper: function (eventLocation, sourceSeg) {
@@ -3917,7 +3764,6 @@
         /* Selection
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Renders a visual indication of a selection. Will highlight by default but can be overridden by subclasses.
         // Given a span (unzoned start/end and other misc data)
         renderSelection: function (span) {
@@ -3952,7 +3798,6 @@
         /* Highlight
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Renders an emphasis on the given date range. Given a span (unzoned start/end and other misc data)
         renderHighlight: function (span) {
             this.renderFill('highlight', this.spanToSegs(span));
@@ -3968,14 +3813,12 @@
         /* Business Hours
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderBusinessHours: function () {
         },
         unrenderBusinessHours: function () {
         },
         /* Now Indicator
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         getNowIndicatorUnit: function () {
         },
@@ -3987,7 +3830,6 @@
          --------------------------------------------------------------------------------------------------------------------
          TODO: remove this system. like we did in TimeGrid
          */
-
 
         // Renders a set of rectangles over the given segments of time.
         // MUST RETURN a subset of segs, the segs that were actually rendered.
@@ -4049,7 +3891,6 @@
         },
         fillSegTag: 'div', // subclasses can override
 
-
         // Builds the HTML needed for one fill segment. Generic enough to work with different types.
         fillSegHtml: function (type, seg) {
 
@@ -4067,7 +3908,6 @@
         },
         /* Generic rendering utilities for subclasses
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Computes HTML classNames for a single-day element
         getDayClasses: function (date, noThemeHighlight) {
@@ -4101,9 +3941,6 @@
 
     });
 
-    ;
-    ;
-
     /* Event-rendering and event-interaction methods for the abstract Grid class
      ----------------------------------------------------------------------------------------------------------------------*/
 
@@ -4116,7 +3953,6 @@
         isResizingSeg: false, // is a segment being resized? boolean
         isDraggingExternal: false, // jqui-dragging an external element? boolean
         segs: null, // the *event* segments currently rendered in the grid. TODO: rename to `eventSegs`
-
 
         // Renders the given events onto the grid
         renderEvents: function (events) {
@@ -4161,7 +3997,6 @@
         },
         /* Foreground Segment Rendering
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Renders foreground event segments onto the grid. May return a subset of segs that were rendered.
         renderFgSegs: function (segs) {
@@ -4210,7 +4045,6 @@
         /* Background Segment Rendering
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Renders the given background event segments onto the grid.
         // Returns a subset of the segs that were actually rendered.
         renderBgSegs: function (segs) {
@@ -4249,7 +4083,6 @@
         },
         /* Business Hours
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Compute business hour segs for the grid's current date range.
         // Caller must ask if whole-day business hours are needed.
@@ -4291,7 +4124,6 @@
         },
         /* Handlers
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Attaches event-element-related handlers for *all* rendered event segments of the view.
         bindSegHandlers: function () {
@@ -4406,7 +4238,6 @@
         },
         /* Event Dragging
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Builds a listener that will track user-dragging on an event segment.
         // Generic enough to work with any type of Grid.
@@ -4616,7 +4447,6 @@
         /* External Element Dragging
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Called when a jQuery UI drag is initiated anywhere in the DOM
         externalDragStart: function (ev, ui) {
             var view = this.view;
@@ -4709,7 +4539,6 @@
         /* Drag Rendering (for both events and an external elements)
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Renders a visual indication of an event or external element being dragged.
         // `dropLocation` contains hypothetical start/end/allDay values the event would have if dropped. end can be null.
         // `seg` is the internal segment object that is being dragged. If dragging an external element, `seg` is null.
@@ -4724,7 +4553,6 @@
         },
         /* Resizing
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Creates a listener that tracks the user as they resize an event segment.
         // Generic enough to work with any type of Grid.
@@ -4877,7 +4705,6 @@
         /* Rendering Utils
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Compute the text that should be displayed on an event's element.
         // `range` can be the Event object itself, or something range-like, with at least a `start`.
         // If event times are disabled, or the event has no time, will return a blank string.
@@ -4985,7 +4812,6 @@
         },
         /* Converting events -> eventRange -> eventSpan -> eventSegs
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Generates an array of segments for the given single event
         // Can accept an event "location" as well (which only has start/end and no allDay)
@@ -5145,10 +4971,8 @@
 
     });
 
-
     /* Utilities
      ----------------------------------------------------------------------------------------------------------------------*/
-
 
     function pluckEventDateProps(event) {
         return {
@@ -5159,23 +4983,19 @@
     }
     FC.pluckEventDateProps = pluckEventDateProps;
 
-
     function isBgEvent(event) { // returns true if background OR inverse-background
         var rendering = getEventRendering(event);
         return rendering === 'background' || rendering === 'inverse-background';
     }
     FC.isBgEvent = isBgEvent; // export
 
-
     function isInverseBgEvent(event) {
         return getEventRendering(event) === 'inverse-background';
     }
 
-
     function getEventRendering(event) {
         return firstDefined((event.source || {}).rendering, event.rendering);
     }
-
 
     function groupEventsById(events) {
         var eventsById = {};
@@ -5189,12 +5009,10 @@
         return eventsById;
     }
 
-
 // A cmp function for determining which non-inverted "ranges" (see above) happen earlier
     function compareRanges(range1, range2) {
         return range1.start - range2.start; // earlier ranges go first
     }
-
 
     /* External-Dragging-Element Data
      ----------------------------------------------------------------------------------------------------------------------*/
@@ -5261,8 +5079,6 @@
         return {eventProps: eventProps, startTime: startTime, duration: duration, stick: stick};
     }
 
-
-    ;
     ;
 
     /*
@@ -5379,26 +5195,27 @@
         /* Options
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Computes a default column header formatting string if `colFormat` is not explicitly defined
         computeColHeadFormat: function () {
             // if more than one week row, or if there are a lot of columns with not much space,
             // put just the day numbers will be in each cell
-            if (this.rowCnt > 1 || this.colCnt > 10) {
-                return 'ddd'; // "Sat"
+            if (this.rowCnt > 1) {
+                return 'ddd';
+            }
+            else if (this.colCnt >= 7) {
+                return ($(window).outerWidth() > 1000 ? 'ddd DD MMM' : 'ddd DD'); // "Sat"
             }
             // multiple days, so full single date string WON'T be in title text
             else if (this.colCnt > 1) {
-                return this.view.opt('dayOfMonthFormat'); // "Sat 12/10"
+                return ($(window).outerWidth() > 450 ? 'dddd DD MMM' : 'ddd DD MMM'); // "Sat"
             }
             // single day, so full single date string will probably be in title text
             else {
-                return 'dddd'; // "Saturday"
+                return 'dddd DD MMMM'; // "Saturday"
             }
         },
         /* Slicing
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Slices up a date range into a segment for every week-row it intersects with
         sliceRangeByRow: function (range) {
@@ -5484,7 +5301,6 @@
         /* Header Rendering
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderHeadHtml: function () {
             var view = this.view;
 
@@ -5562,7 +5378,6 @@
         /* Background Rendering
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderBgTrHtml: function (row) {
             return '' +
                 '<tr>' +
@@ -5601,7 +5416,6 @@
         /* Generic
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Generates the default HTML intro for any row. User classes should override
         renderIntroHtml: function () {
         },
@@ -5609,10 +5423,8 @@
         // when increment internalApiVersion
         // wrapTr (scheduler)
 
-
         /* Utils
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Applies the generic "intro" and "outro" HTML to the given cells.
         // Intro means the leftmost cell when the calendar is LTR and the rightmost cell when RTL. Vice-versa for outro.
@@ -5630,9 +5442,6 @@
         }
 
     };
-
-    ;
-    ;
 
     /* A component that renders a grid of whole-days that runs horizontally. There can be multiple rows, one per week.
      ----------------------------------------------------------------------------------------------------------------------*/
@@ -5729,7 +5538,6 @@
         /* Grid Number Rendering
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderNumberTrHtml: function (row) {
             return '' +
                 '<tr>' +
@@ -5806,7 +5614,6 @@
         /* Options
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Computes a default event time formatting string if `timeFormat` is not explicitly defined
         computeEventTimeFormat: function () {
             return this.view.opt('extraSmallTimeFormat'); // like "6p" or "6:30p"
@@ -5817,7 +5624,6 @@
         },
         /* Dates
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         rangeUpdated: function () {
             this.updateDayTable();
@@ -5843,7 +5649,6 @@
         },
         /* Hit System
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         prepareHits: function () {
             this.colCoordCache.build();
@@ -5874,7 +5679,6 @@
          ------------------------------------------------------------------------------------------------------------------*/
         // FYI: the first column is the leftmost column, regardless of date
 
-
         getCellHit: function (row, col) {
             return {
                 row: row,
@@ -5892,7 +5696,6 @@
         /* Event Drag Visualization
          ------------------------------------------------------------------------------------------------------------------*/
         // TODO: move to DayGrid.event, similar to what we did with Grid's drag methods
-
 
         // Renders a visual indication of an event or external element being dragged.
         // `eventLocation` has zoned start and end (optional)
@@ -5914,7 +5717,6 @@
         /* Event Resize Visualization
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Renders a visual indication of an event being resized
         renderEventResize: function (eventLocation, seg) {
             this.renderHighlight(this.eventToSpan(eventLocation));
@@ -5927,7 +5729,6 @@
         },
         /* Event Helper
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Renders a mock "helper" event. `sourceSeg` is the associated internal segment object. It can be null.
         renderHelper: function (event, sourceSeg) {
@@ -5974,9 +5775,7 @@
         /* Fill System (highlight, background events, business hours)
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         fillSegTag: 'td', // override the default tag name
-
 
         // Renders a set of rectangles over the given segments of days.
         // Only returns segments that successfully rendered.
@@ -6034,15 +5833,11 @@
 
     });
 
-    ;
-    ;
-
     /* Event-rendering methods for the DayGrid class
      ----------------------------------------------------------------------------------------------------------------------*/
 
     DayGrid.mixin({
         rowStructs: null, // an array of objects, each holding information about a row's foreground event-rendering
-
 
         // Unrenders all events currently rendered on the grid
         unrenderEvents: function () {
@@ -6309,7 +6104,6 @@
 
     });
 
-
 // Computes whether two segments' columns collide. They are assumed to be in the same row.
     function isDaySegCollision(seg, otherSegs) {
         var i, otherSeg;
@@ -6328,13 +6122,11 @@
         return false;
     }
 
-
 // A cmp function for determining the leftmost event
     function compareDaySegCols(a, b) {
         return a.leftCol - b.leftCol;
     }
 
-    ;
     ;
 
     /* Methods relate to limiting the number events for a given day on a DayGrid
@@ -6344,7 +6136,6 @@
     DayGrid.mixin({
         segPopover: null, // the Popover that holds events that can't fit in a cell. null when not visible
         popoverSegs: null, // an array of segment objects that the segPopover holds. null when not visible
-
 
         removeSegPopover: function () {
             if (this.segPopover) {
@@ -6699,9 +6490,6 @@
 
     });
 
-    ;
-    ;
-
     /* A component that renders one or more columns of vertical time slots
      ----------------------------------------------------------------------------------------------------------------------*/
 // We mixin DayTable, even though there is only a single row of days
@@ -6801,7 +6589,6 @@
         /* Options
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Parses various options into properties of this object
         processOptions: function () {
             var view = this.view;
@@ -6865,7 +6652,6 @@
         /* Hit System
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         prepareHits: function () {
             this.colCoordCache.build();
             this.slatCoordCache.build();
@@ -6920,7 +6706,6 @@
         /* Dates
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         rangeUpdated: function () {
             this.updateDayTable();
         },
@@ -6968,7 +6753,6 @@
         },
         /* Coordinates
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         updateSize: function (isResize) { // NOT a standard Grid method
             this.slatCoordCache.build();
@@ -7019,7 +6803,6 @@
         /* Event Drag Visualization
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Renders a visual indication of an event being dragged over the specified date(s).
         // A returned value of `true` signals that a mock "helper" event has been rendered.
         renderDrag: function (eventLocation, seg) {
@@ -7043,7 +6826,6 @@
         /* Event Resize Visualization
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Renders a visual indication of an event being resized
         renderEventResize: function (eventLocation, seg) {
             return this.renderEventLocationHelper(eventLocation, seg); // returns mock event elements
@@ -7054,7 +6836,6 @@
         },
         /* Event Helper
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Renders a mock "helper" event. `sourceSeg` is the original segment object and might be null (an external drag)
         renderHelper: function (event, sourceSeg) {
@@ -7067,7 +6848,6 @@
         /* Business Hours
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderBusinessHours: function () {
             this.renderBusinessSegs(
                 this.buildBusinessHourSegs()
@@ -7079,9 +6859,8 @@
         /* Now Indicator
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         getNowIndicatorUnit: function () {
-            return 'minute'; // will refresh on the minute
+            return 'month';
         },
         renderNowIndicator: function (date) {
             // seg system might be overkill, but it handles scenario where line needs to be rendered
@@ -7116,7 +6895,6 @@
         /* Selection
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         // Renders a visual indication of a selection. Overrides the default, which was to simply render a highlight.
         renderSelection: function (span) {
             if (this.view.opt('selectHelper')) { // this setting signals that a mock helper event should be rendered
@@ -7136,7 +6914,6 @@
         /* Highlight
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderHighlight: function (span) {
             this.renderHighlightSegs(this.spanToSegs(span));
         },
@@ -7145,9 +6922,6 @@
         }
 
     });
-
-    ;
-    ;
 
     /* Methods for rendering SEGMENTS, pieces of content that live on the view
      ( this file is no longer just for events )
@@ -7208,7 +6982,6 @@
         /* Foreground Events
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderFgSegs: function (segs) {
             segs = this.renderFgSegsIntoContainers(segs, this.fgContainerEls);
             this.fgSegs = segs;
@@ -7219,7 +6992,6 @@
         },
         /* Foreground Helper Events
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         renderHelperSegs: function (segs, sourceSeg) {
             var helperEls = [];
@@ -7253,7 +7025,6 @@
         /* Background Events
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderBgSegs: function (segs) {
             segs = this.renderFillSegEls('bgEvent', segs); // TODO: old fill system
             this.updateSegVerticals(segs);
@@ -7267,7 +7038,6 @@
         /* Highlight
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderHighlightSegs: function (segs) {
             segs = this.renderFillSegEls('highlight', segs); // TODO: old fill system
             this.updateSegVerticals(segs);
@@ -7280,7 +7050,6 @@
         /* Business Hours
          ------------------------------------------------------------------------------------------------------------------*/
 
-
         renderBusinessSegs: function (segs) {
             segs = this.renderFillSegEls('businessHours', segs); // TODO: old fill system
             this.updateSegVerticals(segs);
@@ -7292,7 +7061,6 @@
         },
         /* Seg Rendering Utils
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Given a flat array of segments, return an array of sub-arrays, grouped by each segment's col
         groupSegsByCol: function (segs) {
@@ -7339,7 +7107,6 @@
         },
         /* Foreground Event Rendering Utils
          ------------------------------------------------------------------------------------------------------------------*/
-
 
         // Given an array of foreground segments, render a DOM element for each, computes position,
         // and attaches to the column inner-container elements.
@@ -7400,21 +7167,34 @@
                     ) +
                 '>' +
                 '<div class="fc-content">' +
-                (timeText ?
-                    '<div class="fc-time"' +
-                    ' data-start="' + htmlEscape(startTimeText) + '"' +
-                    ' data-full="' + htmlEscape(fullTimeText) + '"' +
-                    '>' +
-                    '<span>' + htmlEscape(timeText) + '</span>' +
-                    '</div>' :
-                    ''
-                    ) +
                 (event.title ?
                     '<div class="fc-title">' +
                     htmlEscape(event.title) +
                     '</div>' :
                     ''
                     ) +
+                (timeText ?
+                    '<div class="fc-time">' + htmlEscape(timeText) +
+                    '</div>' :
+                    ''
+                    ) +
+                (event.resourceName ?
+                    '<div class="fc-resource"><i class="icon ion-calendar light"></i>&nbsp;' +
+                    htmlEscape(event.resourceName) +
+                    '</div>' :
+                    ''
+                    ) +
+                (event.type === 'task' ?
+                    '<div class="fc-due">&nbsp;<i class="ion-alert light"></i>&nbsp;' +
+                    htmlEscape(event.dueTimeText) + ' | ' +
+                    htmlEscape(event.dueDateText) +
+                    '</div>' :
+                    ''
+                    ) +
+                '<div class="fc-desc">' +
+                htmlEscape(event.desc) +
+                '</div>'
+                +
                 '</div>' +
                 '<div class="fc-bg"/>' +
                 /* TODO: write CSS for this
@@ -7431,7 +7211,6 @@
             },
             /* Seg Position Utils
              ------------------------------------------------------------------------------------------------------------------*/
-
 
             // Refreshes the CSS top/bottom coordinates for each segment element.
             // Works when called after initial render, after a window resize/zoom for example.
@@ -7468,7 +7247,6 @@
             },
             /* Foreground Event Positioning Utils
              ------------------------------------------------------------------------------------------------------------------*/
-
 
             // Given segments that are assumed to all live in the *same column*,
             // compute their verical/horizontal coordinates and assign to their elements.
@@ -7607,7 +7385,6 @@
 
             });
 
-
 // Builds an array of segments "levels". The first level will be the leftmost tier of segments if the calendar is
 // left-to-right, or the rightmost if the calendar is right-to-left. Assumes the segments are already ordered by date.
         function buildSlotSegLevels(segs) {
@@ -7633,7 +7410,6 @@
             return levels;
         }
 
-
 // For every segment, figure out the other segments that are in subsequent
 // levels that also occupy the same vertical space. Accumulate in seg.forwardSegs
         function computeForwardSlotSegs(levels) {
@@ -7654,7 +7430,6 @@
                 }
             }
         }
-
 
 // Figure out which path forward (via seg.forwardSegs) results in the longest path until
 // the furthest edge is reached. The number of segments in this path will be seg.forwardPressure
@@ -7683,7 +7458,6 @@
             }
         }
 
-
 // Find all the segments in `otherSegs` that vertically collide with `seg`.
 // Append into an optionally-supplied `results` array and return.
         function computeSlotSegCollisions(seg, otherSegs, results) {
@@ -7698,13 +7472,11 @@
             return results;
         }
 
-
 // Do these segments occupy the same vertical space?
         function isSlotSegCollision(seg1, seg2) {
             return seg1.bottom > seg2.top && seg1.top < seg2.bottom;
         }
 
-        ;
         ;
 
         /* An abstract class from which other views inherit from
@@ -7755,7 +7527,6 @@
             initialNowQueriedMs: null, // ms time the getNow was called
             nowIndicatorTimeoutID: null, // for refresh timing of now indicator
             nowIndicatorIntervalID: null, // "
-
 
             constructor: function (calendar, type, options, intervalDuration) {
 
@@ -7820,7 +7591,6 @@
             /* Date Computation
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             // Updates all internal dates for displaying the given unzoned range.
             setRange: function (range) {
                 $.extend(this, range); // assigns every property to this object's member variables
@@ -7830,7 +7600,7 @@
             // Subclasses can override. Must return all properties.
             computeRange: function (date) {
                 var intervalUnit = computeIntervalUnit(this.intervalDuration);
-                var intervalStart = date.clone().startOf(intervalUnit);
+                var intervalStart = date.clone();
                 var intervalEnd = intervalStart.clone().add(this.intervalDuration);
                 var start, end;
 
@@ -7864,11 +7634,27 @@
             // Computes the new date when the user hits the prev button, given the current date
             computePrevDate: function (date) {
                 return this.massageCurrentDate(
-                    date.clone().startOf(this.intervalUnit).subtract(this.intervalDuration), -1
+                    date.clone().subtract(new moment.duration(1, 'days')), -1
                     );
             },
             // Computes the new date when the user hits the next button, given the current date
             computeNextDate: function (date) {
+                return this.massageCurrentDate(
+                    date.clone().add(new moment.duration(1, 'days'))
+                    );
+            },
+            // Computes the new date when the user hits the prev button, given the current date
+            computePrevDateLong: function (date) {
+                if (date.diff(date.clone().startOf(this.intervalUnit), 'd') < 1)
+                    return this.massageCurrentDate(
+                        date.clone().startOf(this.intervalUnit).subtract(this.intervalDuration), -1
+                        );
+                else
+                    return this.massageCurrentDate(
+                        date.clone().startOf(this.intervalUnit));
+            },
+            // Computes the new date when the user hits the next button, given the current date
+            computeNextDateLong: function (date) {
                 return this.massageCurrentDate(
                     date.clone().startOf(this.intervalUnit).add(this.intervalDuration)
                     );
@@ -7888,7 +7674,6 @@
             },
             /* Title and Date Formatting
              ------------------------------------------------------------------------------------------------------------------*/
-
 
             // Sets the view's title property to the most updated computed value
             updateTitle: function () {
@@ -7953,7 +7738,6 @@
             /* Navigation
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             // Generates HTML for an anchor to another view into the calendar.
             // Will either generate an <a> tag or a non-clickable <span> tag, depending on enabled settings.
             // `gotoOptions` can either be a moment input, or an object with the form:
@@ -8002,7 +7786,6 @@
             // Rendering Non-date-related Content
             // -----------------------------------------------------------------------------------------------------------------
 
-
             // Sets the container element that the view should render inside of, does global DOM-related initializations,
             // and renders all the non-date-related content inside.
             setElement: function (el) {
@@ -8034,7 +7817,6 @@
             // Date Setting/Unsetting
             // -----------------------------------------------------------------------------------------------------------------
 
-
             setDate: function (date) {
                 var isReset = this.isDateSet;
 
@@ -8052,7 +7834,6 @@
             // Date Handling
             // -----------------------------------------------------------------------------------------------------------------
 
-
             handleDate: function (date, isReset) {
                 var _this = this;
 
@@ -8068,7 +7849,6 @@
             },
             // Date Render Queuing
             // -----------------------------------------------------------------------------------------------------------------
-
 
             // if date not specified, uses current
             requestDateRender: function (date) {
@@ -8087,7 +7867,6 @@
             },
             // Date High-level Rendering
             // -----------------------------------------------------------------------------------------------------------------
-
 
             // if date not specified, uses current
             executeDateRender: function (date) {
@@ -8153,13 +7932,11 @@
             // Date Rendering Triggers
             // -----------------------------------------------------------------------------------------------------------------
 
-
             onDateRender: function () {
                 this.triggerRender();
             },
             // Date Low-level Rendering
             // -----------------------------------------------------------------------------------------------------------------
-
 
             // date-cell content only
             renderDates: function () {
@@ -8171,7 +7948,6 @@
             },
             // Misc view rendering utils
             // -------------------------
-
 
             // Signals that the view's content has been rendered
             triggerRender: function () {
@@ -8203,7 +7979,6 @@
             /* Business Hours
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             // Renders business-hours onto the view. Assumes updateSize has already been called.
             renderBusinessHours: function () {
                 // subclasses should implement
@@ -8214,7 +7989,6 @@
             },
             /* Now Indicator
              ------------------------------------------------------------------------------------------------------------------*/
-
 
             // Immediately render the current time indicator and begins re-rendering it at an interval,
             // which is defined by this.getNowIndicatorUnit().
@@ -8228,22 +8002,23 @@
                 if (this.opt('nowIndicator')) {
                     unit = this.getNowIndicatorUnit();
                     if (unit) {
-                        update = proxy(this, 'updateNowIndicator'); // bind to `this`
+                        //update = proxy(this, 'updateNowIndicator');
 
                         this.initialNowDate = this.calendar.getNow();
                         this.initialNowQueriedMs = +new Date();
                         this.renderNowIndicator(this.initialNowDate);
                         this.isNowIndicatorRendered = true;
-
-                        // wait until the beginning of the next interval
-                        delay = this.initialNowDate.clone().startOf(unit).add(1, unit) - this.initialNowDate;
-                        this.nowIndicatorTimeoutID = setTimeout(function () {
-                            _this.nowIndicatorTimeoutID = null;
-                            update();
-                            delay = +moment.duration(1, unit);
-                            delay = Math.max(100, delay); // prevent too frequent
-                            _this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
-                        }, delay);
+                        /*
+                         // wait until the beginning of the next interval
+                         delay = this.initialNowDate.clone().startOf(unit).add(1, unit) - this.initialNowDate;
+                         this.nowIndicatorTimeoutID = setTimeout(function () {
+                         _this.nowIndicatorTimeoutID = null;
+                         update();
+                         delay = +moment.duration(1, unit);
+                         delay = Math.max(100, delay); // prevent too frequent
+                         _this.nowIndicatorIntervalID = setInterval(update, delay); // update every interval
+                         }, delay);
+                         */
                     }
                 }
             },
@@ -8291,7 +8066,6 @@
             /* Dimensions
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             // Refreshes anything dependant upon sizing of the container element of the grid
             updateSize: function (isResize) {
 
@@ -8301,7 +8075,7 @@
 
                 this.updateHeight(isResize);
                 this.updateWidth(isResize);
-                this.updateNowIndicator();
+                //this.updateNowIndicator();
 
                 if (isResize) {
                     this.releaseScroll();
@@ -8327,7 +8101,6 @@
             },
             /* Scroller
              ------------------------------------------------------------------------------------------------------------------*/
-
 
             capturedScroll: null,
             capturedScrollDepth: 0,
@@ -8390,6 +8163,15 @@
             queryScroll: function () {
                 return {};
             },
+            // Sets the scroll state, making sure to overcome any predefined scroll value the browser has in mind
+            forceScroll: function (scrollState) {
+                var _this = this;
+
+                this.setScroll(scrollState);
+                setTimeout(function () {
+                    _this.setScroll(scrollState);
+                }, 0);
+            },
             hardSetScroll: function (scroll) {
                 var _this = this;
                 var exec = function () {
@@ -8403,7 +8185,6 @@
             /* Height Freezing
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             freezeHeight: function () {
                 this.calendar.freezeContentHeight();
             },
@@ -8412,7 +8193,6 @@
             },
             // Event Binding/Unbinding
             // -----------------------------------------------------------------------------------------------------------------
-
 
             bindEvents: function () {
                 var _this = this;
@@ -8435,7 +8215,6 @@
             },
             // Event Setting/Unsetting
             // -----------------------------------------------------------------------------------------------------------------
-
 
             setEvents: function (events) {
                 var isReset = this.isEventSet;
@@ -8466,7 +8245,6 @@
             // Event Handling
             // -----------------------------------------------------------------------------------------------------------------
 
-
             handleEvents: function (events, isReset) {
                 this.requestEventsRender(events);
             },
@@ -8475,7 +8253,6 @@
             },
             // Event Render Queuing
             // -----------------------------------------------------------------------------------------------------------------
-
 
             // assumes any previous event renders have been cleared already
             requestEventsRender: function (events) {
@@ -8507,7 +8284,6 @@
             },
             // Event High-level Rendering
             // -----------------------------------------------------------------------------------------------------------------
-
 
             executeEventsRender: function (events) {
                 var _this = this;
@@ -8551,7 +8327,6 @@
             // Event Rendering Triggers
             // -----------------------------------------------------------------------------------------------------------------
 
-
             // Signals that all events have been rendered
             onEventsRender: function () {
                 this.renderedEventSegEach(function (seg) {
@@ -8568,7 +8343,6 @@
             // Event Low-level Rendering
             // -----------------------------------------------------------------------------------------------------------------
 
-
             // Renders the events onto the view.
             renderEvents: function (events) {
                 // subclasses should implement
@@ -8580,7 +8354,6 @@
             // Event Data Access
             // -----------------------------------------------------------------------------------------------------------------
 
-
             requestEvents: function () {
                 return this.calendar.requestEvents(this.start, this.end);
             },
@@ -8589,7 +8362,6 @@
             },
             // Event Rendering Utils
             // -----------------------------------------------------------------------------------------------------------------
-
 
             // Given an event and the default element used for rendering, returns the element that should actually be used.
             // Basically runs events and elements through the eventRender hook.
@@ -8640,7 +8412,6 @@
             /* Event Drag-n-Drop
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             // Computes if the given event is allowed to be dragged by the user
             isEventDraggable: function (event) {
                 return this.isEventStartEditable(event);
@@ -8680,7 +8451,6 @@
             /* External Element Drag-n-Drop
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             // Must be called when an external element, via jQuery UI, has been dropped onto the calendar.
             // `meta` is the parsed data that has been embedded into the dragging event.
             // `dropLocation` is an object that contains the new zoned start/end/allDay values for the event.
@@ -8710,7 +8480,6 @@
             /* Drag-n-Drop Rendering (for both events and external elements)
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             // Renders a visual indication of a event or external-element drag over the given drop zone.
             // If an external-element, seg will be `null`.
             // Must return elements used for any mock events.
@@ -8723,7 +8492,6 @@
             },
             /* Event Resizing
              ------------------------------------------------------------------------------------------------------------------*/
-
 
             // Computes if the given event is allowed to be resized from its starting edge
             isEventResizableFromStart: function (event) {
@@ -8764,7 +8532,6 @@
             },
             /* Selection (time range)
              ------------------------------------------------------------------------------------------------------------------*/
-
 
             // Selects a date span on the view. `start` and `end` are both Moments.
             // `ev` is the native mouse event that begin the interaction.
@@ -8811,7 +8578,6 @@
             /* Event Selection
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             selectEvent: function (event) {
                 if (!this.selectedEvent || this.selectedEvent !== event) {
                     this.unselectEvent();
@@ -8838,7 +8604,6 @@
              ------------------------------------------------------------------------------------------------------------------*/
             // TODO: move consistently to down/start or up/end?
             // TODO: don't kill previous selection if touch scrolling
-
 
             handleDocumentMousedown: function (ev) {
                 if (isPrimaryMouseButton(ev)) {
@@ -8871,7 +8636,6 @@
             /* Day Click
              ------------------------------------------------------------------------------------------------------------------*/
 
-
             // Triggers handlers to 'dayClick'
             // Span has start/end of the clicked area. Only the start is useful.
             triggerDayClick: function (span, dayEl, ev) {
@@ -8884,7 +8648,6 @@
             },
             /* Date Utils
              ------------------------------------------------------------------------------------------------------------------*/
-
 
             // Initializes internal variables related to calculating hidden days-of-week
             initHiddenDays: function () {
@@ -8970,9 +8733,6 @@
 
         });
 
-        ;
-        ;
-
         /*
          Embodies a div that has potential scrollbars
          */
@@ -8990,7 +8750,9 @@
                 this.el = this.renderEl();
                 this.applyOverflow();
             },
-            renderEl: function () {
+            renderEl: function (scrollTop) {
+                if (scrollTop)
+                    this.setScrollTop(scrollTop);
                 return (this.scrollEl = $('<div class="fc-scroller"></div>'));
             },
             // sets to natural height, unlocks overflow
@@ -9003,7 +8765,6 @@
             },
             // Overflow
             // -----------------------------------------------------------------------------------------------------------------
-
 
             applyOverflow: function () {
                 this.scrollEl.css({
@@ -9043,15 +8804,18 @@
             // Getters / Setters
             // -----------------------------------------------------------------------------------------------------------------
 
-
             setHeight: function (height) {
                 this.scrollEl.height(height);
             },
             getScrollTop: function () {
-                return this.scrollEl.scrollTop();
+                if (this.scrollEl)
+                    return this.scrollEl.scrollTop();
+                else
+                    return 0;
             },
             setScrollTop: function (top) {
-                this.scrollEl.scrollTop(top);
+                if (this.scrollEl)
+                    this.scrollEl.scrollTop(top);
             },
             getClientWidth: function () {
                 return this.scrollEl[0].clientWidth;
@@ -9064,13 +8828,9 @@
             }
 
         });
-
-        ;
-        ;
         function Iterator(items) {
             this.items = items || [];
         }
-
 
         /* Calls a method on every item passing the arguments through */
         Iterator.prototype.proxyCall = function (methodName) {
@@ -9083,9 +8843,6 @@
 
             return results;
         };
-
-        ;
-        ;
 
         /* Toolbar with buttons and title
          ----------------------------------------------------------------------------------------------------------------------*/
@@ -9138,14 +8895,12 @@
                 }
             }
 
-
             function removeElement() {
                 if (el) {
                     el.remove();
                     el = t.el = null;
                 }
             }
-
 
             function renderSection(position) {
                 var sectionEl = $('<div class="fc-' + position + '"/>');
@@ -9221,7 +8976,7 @@
                                         innerHtml = "<span class='fc-icon fc-icon-" + normalIcon + "'></span>";
                                     }
                                     else {
-                                        innerHtml = htmlEscape(defaultText);
+                                        innerHtml = defaultText;
                                     }
 
                                     classes = [
@@ -9231,7 +8986,7 @@
                                     ];
 
                                     button = $(// type="button" so that it doesn't submit a form
-                                        '<button type="button" class="' + classes.join(' ') + '">' +
+                                        '<button type="button" id="button-customId-' + buttonName + '" class="' + classes.join(' ') + '">' +
                                         innerHtml +
                                         '</button>'
                                         )
@@ -9308,13 +9063,11 @@
                 return sectionEl;
             }
 
-
             function updateTitle(text) {
                 if (el) {
                     el.find('h2').text(text);
                 }
             }
-
 
             function activateButton(buttonName) {
                 if (el) {
@@ -9323,14 +9076,12 @@
                 }
             }
 
-
             function deactivateButton(buttonName) {
                 if (el) {
                     el.find('.fc-' + buttonName + '-button')
                         .removeClass(tm + '-state-active');
                 }
             }
-
 
             function disableButton(buttonName) {
                 if (el) {
@@ -9340,7 +9091,6 @@
                 }
             }
 
-
             function enableButton(buttonName) {
                 if (el) {
                     el.find('.fc-' + buttonName + '-button')
@@ -9349,14 +9099,12 @@
                 }
             }
 
-
             function getViewsWithButtons() {
                 return viewsWithButtons;
             }
 
         }
 
-        ;
         ;
 
         var Calendar = FC.Calendar = Class.extend({
@@ -9370,7 +9118,6 @@
             header: null,
             footer: null,
             loadingLevel: 0, // number of simultaneous loading tasks
-
 
             // a lot of this class' OOP logic is scoped within this constructor function,
             // but in the future, write individual methods on the prototype.
@@ -9593,16 +9340,13 @@
 
                 });
 
-
             Calendar.mixin(EmitterMixin);
-
 
             function Calendar_constructor(element, overrides) {
                 var t = this;
 
                 // declare the current calendar instance relies on GlobalEmitter. needed for garbage collection.
                 GlobalEmitter.needed();
-
 
                 // Exports
                 // -----------------------------------------------------------------------------------
@@ -9615,6 +9359,11 @@
                 t.unselect = unselect;
                 t.prev = prev;
                 t.next = next;
+                t.prevLong = prevLong;
+                t.nextLong = nextLong;
+                t.now = now;
+                t.updateNowIndicator = updateNowIndicator;
+                t.setHeader = setHeader;
                 t.prevYear = prevYear;
                 t.nextYear = nextYear;
                 t.today = today;
@@ -9627,7 +9376,6 @@
                 t.option = option; // getter/setter method
                 t.publiclyTrigger = publiclyTrigger;
 
-
                 // Options
                 // -----------------------------------------------------------------------------------
 
@@ -9637,8 +9385,6 @@
                 t.overrides = $.extend({}, overrides); // make a copy
 
                 t.populateOptionsHash(); // sets this.options
-
-
 
                 // Locale-data Internals
                 // -----------------------------------------------------------------------------------
@@ -9698,14 +9444,11 @@
                     }
                 });
 
-
                 // Calendar-specific Date Utilities
                 // -----------------------------------------------------------------------------------
 
-
                 t.defaultAllDayEventDuration = moment.duration(t.options.defaultAllDayEventDuration);
                 t.defaultTimedEventDuration = moment.duration(t.options.defaultTimedEventDuration);
-
 
                 // Builds a moment using the settings of the current calendar: timezone and locale.
                 // Accepts anything the vanilla moment() constructor accepts.
@@ -9732,20 +9475,17 @@
                     return mom;
                 };
 
-
                 // Updates the given moment's locale settings to the current calendar locale settings.
                 function localizeMoment(mom) {
                     mom._locale = localeData;
                 }
                 t.localizeMoment = localizeMoment;
 
-
                 // Returns a boolean about whether or not the calendar knows how to calculate
                 // the timezone offset of arbitrary dates in the current timezone.
                 t.getIsAmbigTimezone = function () {
                     return t.options.timezone !== 'local' && t.options.timezone !== 'UTC';
                 };
-
 
                 // Returns a copy of the given date in the current timezone. Has no effect on dates without times.
                 t.applyTimezone = function (date) {
@@ -9768,7 +9508,6 @@
                     return zonedDate;
                 };
 
-
                 // Returns a moment for the current date, as defined by the client's computer or from the `now` option.
                 // Will return an moment with an ambiguous timezone.
                 t.getNow = function () {
@@ -9779,7 +9518,6 @@
                     return t.moment(now).stripZone();
                 };
 
-
                 // Get an event's normalized end date. If not present, calculate it from the defaults.
                 t.getEventEnd = function (event) {
                     if (event.end) {
@@ -9789,7 +9527,6 @@
                         return t.getDefaultEventEnd(event.allDay, event.start);
                     }
                 };
-
 
                 // Given an event's allDay status and start date, return what its fallback end date should be.
                 // TODO: rename to computeDefaultEventEnd
@@ -9810,26 +9547,19 @@
                     return end;
                 };
 
-
                 // Produces a human-readable string for the given duration.
                 // Side-effect: changes the locale of the given duration.
                 t.humanizeDuration = function (duration) {
                     return duration.locale(t.options.locale).humanize();
                 };
 
-
-
                 // Imports
                 // -----------------------------------------------------------------------------------
 
-
                 EventManager.call(t);
-
-
 
                 // Locals
                 // -----------------------------------------------------------------------------------
-
 
                 var _element = element[0];
                 var toolbarsManager;
@@ -9844,11 +9574,8 @@
                 var ignoreWindowResize = 0;
                 var date; // unzoned
 
-
-
                 // Main Rendering
                 // -----------------------------------------------------------------------------------
-
 
                 // compute the initial ambig-timezone date
                 if (t.options.defaultDate != null) {
@@ -9857,7 +9584,6 @@
                 else {
                     date = t.getNow(); // getNow already returns unzoned
                 }
-
 
                 function render() {
                     if (!content) {
@@ -9869,7 +9595,6 @@
                         renderView();
                     }
                 }
-
 
                 function initialRender() {
                     element.addClass('fc');
@@ -9927,7 +9652,6 @@
                     }
                 }
 
-
                 function destroy() {
 
                     if (currentView) {
@@ -9950,21 +9674,21 @@
                     GlobalEmitter.unneeded();
                 }
 
-
                 function elementVisible() {
                     return element.is(':visible');
                 }
 
-
-
                 // View Rendering
                 // -----------------------------------------------------------------------------------
-
 
                 // Renders a view because of a date change, view-type change, or for the first time.
                 // If not given a viewType, keep the current view but render different dates.
                 // Accepts an optional scroll state to restore to.
                 function renderView(viewType, forcedScroll) {
+                    var scrollTop;
+                    if (!currentView || (currentView.name !== 'month') || (currentView.name !== 'listMonth'))
+                        scrollTop = $('.fc-scroller').scrollTop();
+
                     ignoreWindowResize++;
 
                     var needsClearView = currentView && viewType && currentView.type !== viewType;
@@ -9988,34 +9712,33 @@
                     }
 
                     if (currentView) {
+                        if (viewType !== 'month' && viewType != 'listMonth')
+                            currentView.setScroll(scrollTop);
 
                         // in case the view should render a period of time that is completely hidden
                         date = currentView.massageCurrentDate(date);
 
                         // render or rerender the view
-                        if (
-                            !currentView.isDateSet ||
-                            !(// NOT within interval range signals an implicit date window change
-                                date >= currentView.intervalStart &&
-                                date < currentView.intervalEnd
-                                )
-                            ) {
-                            if (elementVisible()) {
+                        if (elementVisible()) {
 
-                                if (forcedScroll) {
-                                    currentView.captureInitialScroll(forcedScroll);
-                                }
-
-                                currentView.setDate(date, forcedScroll);
-
-                                if (forcedScroll) {
-                                    currentView.releaseScroll();
-                                }
-
-                                // need to do this after View::render, so dates are calculated
-                                // NOTE: view updates title text proactively
-                                updateToolbarsTodayButton();
+                            if (forcedScroll) {
+                                currentView.captureInitialScroll(forcedScroll);
                             }
+
+                            currentView.setDate(date, forcedScroll);
+
+                            if (forcedScroll) {
+                                currentView.releaseScroll();
+                            }
+
+                            // need to do this after View::render, so dates are calculated
+                            // NOTE: view updates title text proactively
+                            updateToolbarsTodayButton();
+                            setTimeout(function () {
+                                currentView.updateNowIndicator();
+                                if (!t.options.smallScreen)
+                                    $('.fc-scroller').attr("tabindex", -1).focus();
+                            });
                         }
                     }
 
@@ -10026,7 +9749,6 @@
                     ignoreWindowResize--;
                 }
 
-
                 // Unrenders the current view and reflects this change in the Header.
                 // Unregsiters the `currentView`, but does not remove from viewByType hash.
                 function clearView() {
@@ -10034,7 +9756,6 @@
                     currentView.removeElement();
                     currentView = t.view = null;
                 }
-
 
                 // Destroys the view, including the view object. Then, re-instantiates it and renders it.
                 // Maintains the same scroll state.
@@ -10053,11 +9774,8 @@
                     ignoreWindowResize--;
                 }
 
-
-
                 // Resizing
                 // -----------------------------------------------------------------------------------
-
 
                 t.getSuggestedViewHeight = function () {
                     if (suggestedViewHeight === undefined) {
@@ -10066,11 +9784,9 @@
                     return suggestedViewHeight;
                 };
 
-
                 t.isHeightAuto = function () {
                     return t.options.contentHeight === 'auto' || t.options.height === 'auto';
                 };
-
 
                 function updateSize(shouldRecalc) {
                     if (elementVisible()) {
@@ -10087,13 +9803,11 @@
                     }
                 }
 
-
                 function calcSize() {
                     if (elementVisible()) {
                         _calcSize();
                     }
                 }
-
 
                 function _calcSize() { // assumes elementVisible
                     var contentHeightInput = t.options.contentHeight;
@@ -10119,14 +9833,12 @@
                     }
                 }
 
-
                 function queryToolbarsHeight() {
                     return toolbarsManager.items.reduce(function (accumulator, toolbar) {
                         var toolbarHeight = toolbar.el ? toolbar.el.outerHeight(true) : 0; // includes margin
                         return accumulator + toolbarHeight;
                     }, 0);
                 }
-
 
                 function windowResize(ev) {
                     if (
@@ -10140,11 +9852,8 @@
                     }
                 }
 
-
-
                 /* Event Rendering
                  -----------------------------------------------------------------------------*/
-
 
                 function rerenderEvents() { // API method. destroys old events if previously rendered.
                     if (elementVisible()) {
@@ -10152,11 +9861,8 @@
                     }
                 }
 
-
-
                 /* Toolbars
                  -----------------------------------------------------------------------------*/
-
 
                 function buildToolbars() {
                     return [
@@ -10165,7 +9871,6 @@
                     ];
                 }
 
-
                 function computeHeaderOptions() {
                     return {
                         extraClasses: 'fc-header-toolbar',
@@ -10173,14 +9878,12 @@
                     };
                 }
 
-
                 function computeFooterOptions() {
                     return {
                         extraClasses: 'fc-footer-toolbar',
                         layout: t.options.footer
                     };
                 }
-
 
                 // can be called repeatedly and Header will rerender
                 function renderHeader() {
@@ -10191,7 +9894,6 @@
                     }
                 }
 
-
                 // can be called repeatedly and Footer will rerender
                 function renderFooter() {
                     footer.setToolbarOptions(computeFooterOptions());
@@ -10201,11 +9903,9 @@
                     }
                 }
 
-
                 t.setToolbarsTitle = function (title) {
                     toolbarsManager.proxyCall('updateTitle', title);
                 };
-
 
                 function updateToolbarsTodayButton() {
                     var now = t.getNow();
@@ -10217,11 +9917,8 @@
                     }
                 }
 
-
-
                 /* Selection
                  -----------------------------------------------------------------------------*/
-
 
                 // this public method receives start/end dates in any format, with any timezone
                 function select(zonedStartInput, zonedEndInput) {
@@ -10230,60 +9927,78 @@
                         );
                 }
 
-
                 function unselect() { // safe to be called before renderView
                     if (currentView) {
                         currentView.unselect();
                     }
                 }
 
-
-
                 /* Date
                  -----------------------------------------------------------------------------*/
-
 
                 function prev() {
                     date = currentView.computePrevDate(date);
                     renderView();
                 }
 
-
                 function next() {
                     date = currentView.computeNextDate(date);
                     renderView();
                 }
-
 
                 function prevYear() {
                     date.add(-1, 'years');
                     renderView();
                 }
 
-
                 function nextYear() {
                     date.add(1, 'years');
                     renderView();
                 }
 
+                function prevLong() {
+                    date = currentView.computePrevDateLong(date);
+                    renderView();
+                }
+
+                function nextLong() {
+                    date = currentView.computeNextDateLong(date);
+                    renderView();
+                }
+
+                function setHeader(headerSetup) {
+                    this.options.header = headerSetup;
+                    render();
+                }
+
+                function now() {
+                    currentView.updateNowIndicator();
+                    t.options.refreshOnNow();
+                    date = (t.getNow().hours() < 1 ? t.getNow().clone() : t.getNow().clone().subtract(this.options['scrollOffsetMinutes'], 'minute'));
+                    if (currentView.timeGrid)
+                        currentView.forceScroll(currentView.timeGrid.computeDateTop(date, date));
+                    renderView();
+                }
+
+                function updateNowIndicator() {
+                    currentView.updateNowIndicator();
+                    renderView();
+                }
 
                 function today() {
                     date = t.getNow();
                     renderView();
                 }
 
-
                 function gotoDate(zonedDateInput) {
                     date = t.moment(zonedDateInput).stripZone();
                     renderView();
                 }
 
-
                 function incrementDate(delta) {
                     date.add(moment.duration(delta));
                     renderView();
                 }
-
 
                 // Forces navigation to a view for the given date.
                 // `viewType` can be a specific view name or a generic one like "week" or "day".
@@ -10297,23 +10012,18 @@
                     renderView(spec ? spec.type : null);
                 }
 
-
                 // for external API
                 function getDate() {
                     return t.applyTimezone(date); // infuse the calendar's timezone
                 }
 
-
-
                 /* Height "Freezing"
                  -----------------------------------------------------------------------------*/
-
 
                 t.freezeContentHeight = freezeContentHeight;
                 t.thawContentHeight = thawContentHeight;
 
                 var freezeContentHeightDepth = 0;
-
 
                 function freezeContentHeight() {
                     if (!(freezeContentHeightDepth++)) {
@@ -10325,7 +10035,6 @@
                     }
                 }
 
-
                 function thawContentHeight() {
                     if (!(--freezeContentHeightDepth)) {
                         content.css({
@@ -10336,21 +10045,16 @@
                     }
                 }
 
-
-
                 /* Misc
                  -----------------------------------------------------------------------------*/
-
 
                 function getCalendar() {
                     return t;
                 }
 
-
                 function getView() {
                     return currentView;
                 }
-
 
                 function option(name, value) {
                     var newOptionHash;
@@ -10369,7 +10073,6 @@
                         setOptions(name);
                     }
                 }
-
 
                 function setOptions(newOptionHash) {
                     var optionCnt = 0;
@@ -10419,7 +10122,6 @@
                     reinitView();
                 }
 
-
                 function publiclyTrigger(name, thisObj) {
                     var args = Array.prototype.slice.call(arguments, 2);
 
@@ -10434,7 +10136,6 @@
                 t.initialize();
             }
 
-            ;
             ;
             /*
              Options binding/triggering system.
@@ -10493,13 +10194,9 @@
 
             });
 
-            ;
-            ;
-
             Calendar.defaults = {
                 titleRangeSeparator: ' \u2013 ', // en dash
-                monthYearFormat: 'MMMM YYYY', // required for en. other locales rely on datepicker computable option
-
+                monthYearFormat: 'MMM DD, YYYY',
                 defaultTimedEventDuration: '02:00:00',
                 defaultAllDayEventDuration: {days: 1},
                 forceEventDuration: false,
@@ -10515,7 +10212,7 @@
                 },
                 weekends: true,
                 weekNumbers: false,
-                weekNumberTitle: 'W',
+                weekNumberTitle: 'Week',
                 weekNumberCalculation: 'local',
                 //editable: false,
 
@@ -10533,30 +10230,25 @@
                 // locale
                 isRTL: false,
                 buttonText: {
-                    prev: "prev",
-                    next: "next",
+                    prev: "&nbsp;&nbsp;<&nbsp;&nbsp;",
+                    next: "&nbsp;&nbsp;>&nbsp;&nbsp;",
                     prevYear: "prev year",
                     nextYear: "next year",
+                    prevLong: "&nbsp;<<&nbsp;",
+                    nextLong: "&nbsp;>>&nbsp;",
                     year: 'year', // TODO: locale files need to specify this
                     today: 'today',
                     month: 'month',
                     week: 'week',
-                    day: 'day'
+                    day: 'day',
+                    now: "<i class='ion-load-c icon' style='color:#387ef5;margin-left:10px;margin-right:10px'></i>"
                 },
                 buttonIcons: {
-                    prev: 'left-single-arrow',
-                    next: 'right-single-arrow',
-                    prevYear: 'left-double-arrow',
-                    nextYear: 'right-double-arrow'
                 },
-                allDayText: 'all-day',
+                allDayText: '',
                 // jquery-ui theming
                 theme: false,
                 themeButtonIcons: {
-                    prev: 'circle-triangle-w',
-                    next: 'circle-triangle-e',
-                    prevYear: 'seek-prev',
-                    nextYear: 'seek-next'
                 },
                 //eventResizableFromStart: false,
                 dragOpacity: .75,
@@ -10581,11 +10273,9 @@
 
             };
 
-
             Calendar.englishDefaults = {// used by locale.js
                 dayPopoverFormat: 'dddd, MMMM D'
             };
-
 
             Calendar.rtlDefaults = {// right-to-left defaults
                 header: {// TODO: smarter solution (first/center/last ?)
@@ -10607,14 +10297,9 @@
                 }
             };
 
-            ;
-            ;
-
             var localeOptionHash = FC.locales = {}; // initialize and expose
 
-
 // TODO: document the structure and ordering of a FullCalendar locale file
-
 
 // Initialize jQuery UI datepicker translations while using some of the translations
 // Will set this as the default locales for datepicker.
@@ -10651,7 +10336,6 @@
                 }
             };
 
-
 // Sets FullCalendar-specific translations. Will set the locales as the global default.
             FC.locale = function (localeCode, newFcOptions) {
                 var fcOptions;
@@ -10679,7 +10363,6 @@
                 Calendar.defaults.locale = localeCode;
             };
 
-
 // NOTE: can't guarantee any of these computations will run because not every locale has datepicker
 // configs, so make sure there are English fallbacks for these in the defaults file.
             var dpComputableOptions = {
@@ -10695,7 +10378,7 @@
                 monthYearFormat: function (dpOptions) {
                     return dpOptions.showMonthAfterYear ?
                         'YYYY[' + dpOptions.yearSuffix + '] MMMM' :
-                        'MMMM YYYY[' + dpOptions.yearSuffix + ']';
+                        'MMM YYYY[' + dpOptions.yearSuffix + ']';
                 }
 
             };
@@ -10750,7 +10433,6 @@
 
             };
 
-
 // options that should be computed off live calendar options (considers override options)
 // TODO: best place for this? related to locale?
 // TODO: flipping text based on isRTL is a bad idea because the CSS `direction` might want to handle it
@@ -10784,19 +10466,14 @@
                 });
             }
 
-
 // Returns moment's internal locale data. If doesn't exist, returns English.
             function getMomentLocaleData(localeCode) {
                 return moment.localeData(localeCode) || moment.localeData('en');
             }
 
-
 // Initialize English by forcing computation of moment-derived options.
 // Also, sets it as the default.
             FC.locale('en', Calendar.englishDefaults);
-
-            ;
-            ;
 
             FC.sourceNormalizers = [];
             FC.sourceFetchers = [];
@@ -10808,10 +10485,8 @@
 
             var eventGUID = 1;
 
-
             function EventManager() { // assumed to be a calendar
                 var t = this;
-
 
                 // exports
                 t.requestEvents = requestEvents;
@@ -10836,7 +10511,6 @@
                 t.normalizeEventDates = normalizeEventDates;
                 t.normalizeEventTimes = normalizeEventTimes;
 
-
                 // locals
                 var stickySource = {events: []};
                 var sources = [stickySource];
@@ -10844,7 +10518,6 @@
                 var pendingSourceCnt = 0; // outstanding fetch requests, max one per source
                 var cache = []; // holds events that have already been expanded
                 var prunedCache; // like cache, but only events that intersect with rangeStart/rangeEnd
-
 
                 $.each(
                     (t.options.events ? [t.options.events] : []).concat(t.options.eventSources || []),
@@ -10856,8 +10529,6 @@
                     }
                 );
 
-
-
                 function requestEvents(start, end) {
                     if (!t.options.lazyFetching || isFetchNeeded(start, end)) {
                         return fetchEvents(start, end);
@@ -10867,12 +10538,10 @@
                     }
                 }
 
-
                 function reportEventChange() {
                     prunedCache = filterEventsWithinRange(cache);
                     t.trigger('eventsReset', prunedCache);
                 }
-
 
                 function filterEventsWithinRange(events) {
                     var filteredEvents = [];
@@ -10892,21 +10561,16 @@
                     return filteredEvents;
                 }
 
-
                 t.getEventCache = function () {
                     return cache;
                 };
-
 
                 t.getPrunedEventCache = function () {
                     return prunedCache;
                 };
 
-
-
                 /* Fetching
                  -----------------------------------------------------------------------------*/
-
 
                 // start and end are assumed to be unzoned
                 function isFetchNeeded(start, end) {
@@ -10914,25 +10578,21 @@
                         start < rangeStart || end > rangeEnd; // is part of the new range outside of the old range?
                 }
 
-
                 function fetchEvents(start, end) {
                     rangeStart = start;
                     rangeEnd = end;
                     return refetchEvents();
                 }
 
-
                 // poorly named. fetches all sources with current `rangeStart` and `rangeEnd`.
                 function refetchEvents() {
                     return fetchEventSources(sources, 'reset');
                 }
 
-
                 // poorly named. fetches a subset of event sources.
                 function refetchEventSources(matchInputs) {
                     return fetchEventSources(getEventSourcesByMatchArray(matchInputs));
                 }
-
 
                 // expects an array of event source objects (the originals, not copies)
                 // `specialFetchType` is an optimization parameter that affects purging of the event cache.
@@ -10972,7 +10632,6 @@
                         return Promise.resolve(prunedCache);
                     }
                 }
-
 
                 // fetches an event source and processes its result ONLY if it is still the current fetch.
                 // caller is responsible for incrementing pendingSourceCnt first.
@@ -11016,7 +10675,6 @@
                     });
                 }
 
-
                 function rejectEventSource(source) {
                     var wasPending = source._status === 'pending';
 
@@ -11027,7 +10685,6 @@
                     }
                 }
 
-
                 function decrementPendingSourceCnt() {
                     pendingSourceCnt--;
                     if (!pendingSourceCnt) {
@@ -11035,7 +10692,6 @@
                         t.trigger('eventsReceived', prunedCache);
                     }
                 }
-
 
                 function _fetchEventSource(source, callback) {
                     var i;
@@ -11146,11 +10802,8 @@
                     }
                 }
 
-
-
                 /* Sources
                  -----------------------------------------------------------------------------*/
-
 
                 function addEventSource(sourceInput) {
                     var source = buildEventSource(sourceInput);
@@ -11159,7 +10812,6 @@
                         fetchEventSources([source], 'add'); // will eventually call reportEventChange
                     }
                 }
-
 
                 function buildEventSource(sourceInput) { // will return undefined if invalid source
                     var normalizers = FC.sourceNormalizers;
@@ -11205,13 +10857,11 @@
                     }
                 }
 
-
                 function removeEventSource(matchInput) {
                     removeSpecificEventSources(
                         getEventSourcesByMatch(matchInput)
                         );
                 }
-
 
                 // if called with no arguments, removes all.
                 function removeEventSources(matchInputs) {
@@ -11224,7 +10874,6 @@
                             );
                     }
                 }
-
 
                 function removeSpecificEventSources(targetSources, isAll) {
                     var i;
@@ -11255,18 +10904,15 @@
                     reportEventChange();
                 }
 
-
                 function getEventSources() {
                     return sources.slice(1); // returns a shallow copy of sources with stickySource removed
                 }
-
 
                 function getEventSourceById(id) {
                     return $.grep(sources, function (source) {
                         return source.id && source.id === id;
                     })[0];
                 }
-
 
                 // like getEventSourcesByMatch, but accepts multple match criteria (like multiple IDs)
                 function getEventSourcesByMatchArray(matchInputs) {
@@ -11293,7 +10939,6 @@
                     return matchingSources;
                 }
 
-
                 // matchInput can either by a real event source object, an ID, or the function/URL for the source.
                 // returns an array of matching source objects.
                 function getEventSourcesByMatch(matchInput) {
@@ -11318,11 +10963,9 @@
                     });
                 }
 
-
                 function isSourcesEquivalent(source1, source2) {
                     return source1 && source2 && getSourcePrimitive(source1) == getSourcePrimitive(source2);
                 }
-
 
                 function getSourcePrimitive(source) {
                     return (
@@ -11332,7 +10975,6 @@
                         ) ||
                         source; // the given argument *is* the primitive
                 }
-
 
                 // util
                 // returns a filtered array without events that are part of any of the given sources
@@ -11347,17 +10989,13 @@
                     });
                 }
 
-
-
                 /* Manipulation
                  -----------------------------------------------------------------------------*/
-
 
                 // Only ever called from the externally-facing API
                 function updateEvent(event) {
                     updateEvents([event]);
                 }
-
 
                 // Only ever called from the externally-facing API
                 function updateEvents(events) {
@@ -11381,7 +11019,6 @@
                     reportEventChange(); // reports event modifications (so we can redraw)
                 }
 
-
                 // Returns a hash of misc event properties that should be copied over to related events.
                 function getMiscEventProps(event) {
                     var props = {};
@@ -11402,12 +11039,10 @@
                     return !/^_|^(id|allDay|start|end)$/.test(name);
                 }
 
-
                 // returns the expanded events that were created
                 function renderEvent(eventInput, stick) {
                     return renderEvents([eventInput], stick);
                 }
-
 
                 // returns the expanded events that were created
                 function renderEvents(eventInputs, stick) {
@@ -11445,7 +11080,6 @@
                     return renderedEvents;
                 }
 
-
                 function removeEvents(filter) {
                     var eventID;
                     var i;
@@ -11477,7 +11111,6 @@
                     reportEventChange();
                 }
 
-
                 function clientEvents(filter) {
                     if ($.isFunction(filter)) {
                         return $.grep(cache, filter);
@@ -11490,7 +11123,6 @@
                     }
                     return cache; // else, return all
                 }
-
 
                 // Makes sure all array event sources have their internal event objects
                 // converted over to the Calendar's current timezone.
@@ -11518,10 +11150,8 @@
                     backupEventDates(event);
                 }
 
-
                 /* Event Normalization
                  -----------------------------------------------------------------------------*/
-
 
                 // Given a raw object with key/value properties, returns an "abstract" Event object.
                 // An "abstract" event is an event that, if recurring, will not have been expanded yet.
@@ -11613,7 +11243,6 @@
                 }
                 t.buildEventFromInput = buildEventFromInput;
 
-
                 // Normalizes and assigns the given dates to the given partially-formed event object.
                 // NOTE: mutates the given start/end moments. does not make a copy.
                 function assignDatesToEvent(start, end, allDay, event) {
@@ -11623,7 +11252,6 @@
                     normalizeEventDates(event);
                     backupEventDates(event);
                 }
-
 
                 // Ensures proper values for allDay/start/end. Accepts an Event object, or a plain object with event-ish properties.
                 // NOTE: Will modify the given object.
@@ -11644,7 +11272,6 @@
                         }
                     }
                 }
-
 
                 // Ensures the allDay property exists and the timeliness of the start/end dates are consistent
                 function normalizeEventTimes(eventProps) {
@@ -11668,7 +11295,6 @@
                         }
                     }
                 }
-
 
                 // If the given event is a recurring event, break it down into an array of individual instances.
                 // If not a recurring event, return an array with the single original event.
@@ -11737,11 +11363,8 @@
                 }
                 t.expandEvent = expandEvent;
 
-
-
                 /* Event Modification Math
                  -----------------------------------------------------------------------------------------*/
-
 
                 // Modifies an event and all related events by applying the given properties.
                 // Special date-diffing logic is used for manipulation of dates.
@@ -11835,7 +11458,6 @@
                         undo: undoFunc
                     };
                 }
-
 
                 // Modifies an array of events in the following ways (operations are in order):
                 // - clear the event's `end`
@@ -11934,18 +11556,15 @@
 
             }
 
-
 // returns an undo function
             Calendar.prototype.mutateSeg = function (seg, newProps) {
                 return this.mutateEvent(seg.event, newProps);
             };
 
-
 // hook for external libs to manipulate event properties upon creation.
 // should manipulate the event in-place.
             Calendar.prototype.normalizeEvent = function (event) {
             };
-
 
 // Does the given span (start, end, and other location information)
 // fully contain the other?
@@ -11955,7 +11574,6 @@
 
                 return innerSpan.start >= eventStart && innerSpan.end <= eventEnd;
             };
-
 
 // Returns a list of events that the given event should be compared against when being considered for a move to
 // the specified span. Attached to the Calendar's prototype because EventManager is a mixin for a Calendar.
@@ -11977,7 +11595,6 @@
                 return peerEvents;
             };
 
-
 // updates the "backup" properties, which are preserved in order to compute diffs later on.
             function backupEventDates(event) {
                 event._allDay = event.allDay;
@@ -11985,10 +11602,8 @@
                 event._end = event.end ? event.end.clone() : null;
             }
 
-
             /* Overlapping / Constraining
              -----------------------------------------------------------------------------------------*/
-
 
 // Determines if the given event can be relocated to the given span (unzoned start/end with other misc data)
             Calendar.prototype.isEventSpanAllowed = function (span, event) {
@@ -12009,7 +11624,6 @@
                 return this.isSpanAllowed(span, constraint, overlap, event) &&
                     (!this.options.eventAllow || this.options.eventAllow(span, event) !== false);
             };
-
 
 // Determines if an external event can be relocated to the given span (unzoned start/end with other misc data)
             Calendar.prototype.isExternalSpanAllowed = function (eventSpan, eventLocation, eventProps) {
@@ -12033,13 +11647,11 @@
                 }
             };
 
-
 // Determines the given span (unzoned start/end with other misc data) can be selected.
             Calendar.prototype.isSelectionSpanAllowed = function (span) {
                 return this.isSpanAllowed(span, this.options.selectConstraint, this.options.selectOverlap) &&
                     (!this.options.selectAllow || this.options.selectAllow(span) !== false);
             };
-
 
 // Returns true if the given span (caused by an event drop/resize or a selection) is allowed to exist
 // according to the constraint/overlap settings.
@@ -12112,7 +11724,6 @@
                 return true;
             };
 
-
 // Given an event input from the API, produces an array of event objects. Possible event inputs:
 // 'businessHours'
 // An event ID (number or string)
@@ -12135,7 +11746,6 @@
                 return this.clientEvents(constraintInput); // probably an ID
             };
 
-
 // Does the event's date range intersect with the given range?
 // start/end already assumed to have stripped zones :(
             Calendar.prototype.eventIntersectsRange = function (event, range) {
@@ -12144,7 +11754,6 @@
 
                 return range.start < eventEnd && range.end > eventStart;
             };
-
 
             /* Business Hours
              -----------------------------------------------------------------------------------------*/
@@ -12215,9 +11824,6 @@
                 return events;
             };
 
-            ;
-            ;
-
             /* An abstract class for the "basic" views, as well as month view. Renders one or more rows of day cells.
              ----------------------------------------------------------------------------------------------------------------------*/
 // It is a manager for a DayGrid subcomponent, which does most of the heavy lifting.
@@ -12236,7 +11842,6 @@
 
                 headContainerEl: null, // div that hold's the dayGrid's rendered date header
                 headRowEl: null, // the fake row element of the day-of-week header
-
 
                 initialize: function () {
                     this.dayGrid = this.instantiateDayGrid();
@@ -12360,7 +11965,6 @@
                 /* Dimensions
                  ------------------------------------------------------------------------------------------------------------------*/
 
-
                 // Refreshes the horizontal dimensions of the view
                 updateWidth: function () {
                     if (this.colWeekNumbersVisible) {
@@ -12433,7 +12037,6 @@
                 /* Scroll
                  ------------------------------------------------------------------------------------------------------------------*/
 
-
                 computeInitialScroll: function () {
                     return {top: 0};
                 },
@@ -12446,7 +12049,6 @@
                 /* Hit Areas
                  ------------------------------------------------------------------------------------------------------------------*/
                 // forward all hit-related method calls to dayGrid
-
 
                 hitsNeeded: function () {
                     this.dayGrid.hitsNeeded();
@@ -12472,7 +12074,6 @@
                 /* Events
                  ------------------------------------------------------------------------------------------------------------------*/
 
-
                 // Renders the given events onto the view and populates the segments array
                 renderEvents: function (events) {
                     this.dayGrid.renderEvents(events);
@@ -12493,7 +12094,6 @@
                 /* Dragging (for both events and external elements)
                  ------------------------------------------------------------------------------------------------------------------*/
 
-
                 // A returned value of `true` signals that a mock "helper" event has been rendered.
                 renderDrag: function (dropLocation, seg) {
                     return this.dayGrid.renderDrag(dropLocation, seg);
@@ -12503,7 +12103,6 @@
                 },
                 /* Selection
                  ------------------------------------------------------------------------------------------------------------------*/
-
 
                 // Renders a visual indication of a selection
                 renderSelection: function (span) {
@@ -12515,7 +12114,6 @@
                 }
 
             });
-
 
 // Methods that will customize the rendering behavior of the BasicView's dayGrid
             var basicDayGridMethods = {
@@ -12568,16 +12166,14 @@
                     var view = this.view;
 
                     if (view.colWeekNumbersVisible) {
-                        return '<td class="fc-week-number" ' + view.weekNumberStyleAttr() + '></td>';
+                        return '<td class="fc-week-number ' + view.widgetContentClass + '" ' +
+                            view.weekNumberStyleAttr() + '></td>';
                     }
 
                     return '';
                 }
 
             };
-
-            ;
-            ;
 
             /* A month view with day cells running in rows (one-per-week) and columns
              ----------------------------------------------------------------------------------------------------------------------*/
@@ -12591,10 +12187,38 @@
                     // ensure 6 weeks
                     if (this.isFixedWeeks()) {
                         rowCnt = Math.ceil(range.end.diff(range.start, 'weeks', true)); // could be partial weeks due to hiddenDays
-                        range.end.add(6 - rowCnt, 'weeks');
+                        range.end.add(4 - rowCnt, 'weeks');
                     }
 
                     return range;
+                },
+                // Computes the new date when the user hits the prev button, given the current date
+                computePrevDate: function (date) {
+                    return this.massageCurrentDate(
+                        date.clone().subtract(new moment.duration(1, 'weeks')), -1
+                        );
+                },
+                // Computes the new date when the user hits the next button, given the current date
+                computeNextDate: function (date) {
+                    return this.massageCurrentDate(
+                        date.clone().add(new moment.duration(1, 'weeks'))
+                        );
+                },
+                // Computes the new date when the user hits the prev button, given the current date
+                computePrevDateLong: function (date) {
+                    if (date.diff(date.clone().startOf(this.intervalUnit), 'd') < 7)
+                        return this.massageCurrentDate(
+                            date.clone().startOf(this.intervalUnit).subtract(this.intervalDuration), -1
+                            );
+                    else
+                        return this.massageCurrentDate(
+                            date.clone().startOf(this.intervalUnit));
+                },
+                // Computes the new date when the user hits the next button, given the current date
+                computeNextDateLong: function (date) {
+                    return this.massageCurrentDate(
+                        date.clone().add(this.intervalDuration)
+                        );
                 },
                 // Overrides the default BasicView behavior to have special multi-week auto-height logic
                 setGridHeight: function (height, isAuto) {
@@ -12611,9 +12235,6 @@
                 }
 
             });
-
-            ;
-            ;
 
             fcViews.basic = {
                 'class': BasicView
@@ -12636,8 +12257,6 @@
                     fixedWeekCount: true
                 }
             };
-            ;
-            ;
 
             /* An abstract class for all agenda-related views. Displays one more columns with time slots running vertically.
              ----------------------------------------------------------------------------------------------------------------------*/
@@ -12686,7 +12305,6 @@
                 /* Rendering
                  ------------------------------------------------------------------------------------------------------------------*/
 
-
                 // Sets the display range and computes all necessary dates
                 setRange: function (range) {
                     View.prototype.setRange.call(this, range); // call the super-method
@@ -12702,17 +12320,14 @@
                     this.el.addClass('fc-agenda-view').html(this.renderSkeletonHtml());
                     this.renderHead();
 
-                    this.scroller.render();
+                    this.scroller.render(this.scrollTop);
                     var timeGridWrapEl = this.scroller.el.addClass('fc-time-grid-container');
-                    var timeGridEl = $('<div class="fc-time-grid" />').appendTo(timeGridWrapEl);
+                    timeGridWrapEl.attr("id", "fc-time-grid-container");
+                    var timeGridEl = $('<div class="fc-time-grid" id="fc-time-grid" />').appendTo(timeGridWrapEl);
                     this.el.find('.fc-body > tr > td').append(timeGridWrapEl);
 
                     this.timeGrid.setElement(timeGridEl);
                     this.timeGrid.renderDates();
-
-                    // the <hr> that sometimes displays under the time-grid
-                    this.bottomRuleEl = $('<hr class="fc-divider ' + this.widgetHeaderClass + '"/>')
-                        .appendTo(this.timeGrid.el); // inject it into the time-grid
 
                     if (this.dayGrid) {
                         this.dayGrid.setElement(this.el.find('.fc-day-grid'));
@@ -12776,7 +12391,6 @@
                 /* Business Hours
                  ------------------------------------------------------------------------------------------------------------------*/
 
-
                 renderBusinessHours: function () {
                     this.timeGrid.renderBusinessHours();
 
@@ -12794,7 +12408,6 @@
                 /* Now Indicator
                  ------------------------------------------------------------------------------------------------------------------*/
 
-
                 getNowIndicatorUnit: function () {
                     return this.timeGrid.getNowIndicatorUnit();
                 },
@@ -12806,7 +12419,6 @@
                 },
                 /* Dimensions
                  ------------------------------------------------------------------------------------------------------------------*/
-
 
                 updateSize: function (isResize) {
                     this.timeGrid.updateSize(isResize);
@@ -12825,7 +12437,6 @@
                     var scrollbarWidths;
 
                     // reset all dimensions back to the original state
-                    this.bottomRuleEl.hide(); // .show() will be called later if this <hr> is necessary
                     this.scroller.clear(); // sets height to 'auto' and clears overflow
                     uncompensateScroll(this.noScrollRowEls);
 
@@ -12861,12 +12472,6 @@
 
                         // guarantees the same scrollbar widths
                         this.scroller.lockOverflow(scrollbarWidths);
-
-                        // if there's any space below the slats, show the horizontal rule.
-                        // this won't cause any new overflow, because lockOverflow already called.
-                        if (this.timeGrid.getTotalSlatHeight() < scrollerHeight) {
-                            this.bottomRuleEl.show();
-                        }
                     }
                 },
                 // given a desired total height of the view, returns what the height of the scroller should be
@@ -12877,10 +12482,16 @@
                 /* Scroll
                  ------------------------------------------------------------------------------------------------------------------*/
 
-
                 // Computes the initial pre-configured scroll state prior to allowing the user to change it
                 computeInitialScroll: function () {
-                    var scrollTime = moment.duration(this.opt('scrollTime'));
+                    return this.computeScroll(this.opt('scrollTime'));
+                },
+                // Computes the initial pre-configured scroll state prior to allowing the user to change it
+                computeScroll: function (time, override) {
+                    if (!override && (this.scrollTop || this.scrollTop === 0))
+                        return this.scrollTop;
+
+                    var scrollTime = moment.duration(time);
                     var top = this.timeGrid.computeTimeTop(scrollTime);
 
                     // zoom can give weird floating-point values. rather scroll a little bit further
@@ -12895,13 +12506,15 @@
                 queryScroll: function () {
                     return {top: this.scroller.getScrollTop()};
                 },
-                setScroll: function (scroll) {
-                    this.scroller.setScrollTop(scroll.top);
+                setScroll: function (top) {
+                    if (top || top === 0) {
+                        this.scroller.setScrollTop(top);
+                        this.scrollTop = top;
+                    }
                 },
                 /* Hit Areas
                  ------------------------------------------------------------------------------------------------------------------*/
                 // forward all hit-related method calls to the grids (dayGrid might not be defined)
-
 
                 hitsNeeded: function () {
                     this.timeGrid.hitsNeeded();
@@ -12946,7 +12559,6 @@
                 },
                 /* Events
                  ------------------------------------------------------------------------------------------------------------------*/
-
 
                 // Renders events onto the view and populates the View's segment array
                 renderEvents: function (events) {
@@ -12996,7 +12608,6 @@
                 /* Dragging (for events and external elements)
                  ------------------------------------------------------------------------------------------------------------------*/
 
-
                 // A returned value of `true` signals that a mock "helper" event has been rendered.
                 renderDrag: function (dropLocation, seg) {
                     if (dropLocation.start.hasTime()) {
@@ -13014,7 +12625,6 @@
                 },
                 /* Selection
                  ------------------------------------------------------------------------------------------------------------------*/
-
 
                 // Renders a visual indication of a selection
                 renderSelection: function (span) {
@@ -13035,7 +12645,6 @@
 
             });
 
-
 // Methods that will customize the rendering behavior of the AgendaView's timeGrid
 // TODO: move into TimeGrid
             var agendaTimeGridMethods = {
@@ -13045,12 +12654,12 @@
                     var weekText;
 
                     if (view.opt('weekNumbers')) {
-                        weekText = this.start.format(view.opt('smallWeekFormat'));
+                        weekText = this.start.format(view.opt('weekFormat'));
 
                         return '' +
                             '<th class="fc-axis fc-week-number ' + view.widgetHeaderClass + '" ' + view.axisStyleAttr() + '>' +
                             view.buildGotoAnchorHtml(// aside from link, important for matchCellWidths
-                                {date: this.start, type: 'week', forceOff: this.colCnt > 1},
+                                {date: this.start, type: 'week', forceOff: this.colCnt >= 7},
                             htmlEscape(weekText) // inner HTML
                                 ) +
                             '</th>';
@@ -13075,7 +12684,6 @@
 
             };
 
-
 // Methods that will customize the rendering behavior of the AgendaView's dayGrid
             var agendaDayGridMethods = {
                 // Generates the HTML that goes before the all-day cells
@@ -13085,7 +12693,7 @@
                     return '' +
                         '<td class="fc-axis ' + view.widgetContentClass + '" ' + view.axisStyleAttr() + '>' +
                         '<span>' + // needed for matchCellWidths
-                        view.getAllDayHtml() +
+                        (view.opt('allDayHtml') || htmlEscape(view.opt('allDayText'))) +
                         '</span>' +
                         '</td>';
                 },
@@ -13098,9 +12706,6 @@
                 }
 
             };
-
-            ;
-            ;
 
             var AGENDA_ALL_DAY_EVENT_LIMIT = 5;
 
@@ -13130,12 +12735,16 @@
                 duration: {days: 1}
             };
 
+            fcViews.agenda3Day = {
+                type: 'agenda',
+                duration: {days: 3},
+                buttonText: '3 days'
+            };
+
             fcViews.agendaWeek = {
                 type: 'agenda',
                 duration: {weeks: 1}
             };
-            ;
-            ;
 
             /*
              Responsible for the scroller, and forwarding event-related actions into the "grid"
@@ -13397,9 +13006,6 @@
 
             });
 
-            ;
-            ;
-
             fcViews.list = {
                 'class': ListView,
                 buttonTextKey: 'list', // what to lookup in locale files
@@ -13442,9 +13048,6 @@
                     listDayAltFormat: 'dddd' // day-of-week is nice-to-have
                 }
             };
-
-            ;
-            ;
 
             return FC; // export for Node/CommonJS
         });

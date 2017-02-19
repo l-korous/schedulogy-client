@@ -118,77 +118,45 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         lock.interceptHash();
         authManager.checkAuthOnRefresh();
 
-		$rootScope.refreshedOnStartup = false;
+        ModalService.init();
+
         $rootScope.refreshStuff = function () {
-			if(Auth.isAuthenticated()) {
-				$rootScope.refreshedOnStartup = true;
-				MyItems.refresh();
-				MyResources.refresh();
-				MyUsers.refresh();
-			}
-        };
-
-        function initStuff() {
-            ModalService.init();
-        }
-
-        function processOnlineOffline() {
-            if ($rootScope.isOffline) {
-                $("#isOffline").addClass('showCustom');
-                initStuff();
+            if (Auth.isAuthenticated()) {
+                $("#isLoading").addClass('showCustom');
+                MyItems.refresh();
+                MyResources.refresh();
+                MyUsers.refresh();
                 $("#isLoading").removeClass('showCustom');
             }
-            else {
-                initStuff();
+        };
+
+        function processOnlineOffline(isOnline) {
+            if (isOnline) {
+                $("#isOffline").removeClass('showCustom');
                 $rootScope.refreshStuff();
                 $rootScope.calendarRenderedListener = $rootScope.$on('calendarRendered', function () {
-					if(!$rootScope.refreshedOnStartup)
-						$rootScope.refreshStuff();
-                    $("#isLoading").removeClass('showCustom');
+                    $rootScope.refreshStuff();
                     $rootScope.calendarRenderedListener();
                 });
             }
+            else {
+                $("#isOffline").addClass('showCustom');
+            }
         }
-
-        $rootScope.isOffline = !window.navigator.onLine;
-        document.addEventListener("online", function (e) {
-            $rootScope.isOffline = false;
-            $("#isOffline").removeClass('showCustom');
-        }, false);
-        document.addEventListener("offline", function (e) {
-            $rootScope.isOffline = true;
-            $("#isOffline").addClass('showCustom');
-        }, false);
-        $window.addEventListener("online", function (e) {
-            $rootScope.isOffline = false;
-            $("#isOffline").removeClass('showCustom');
-            $rootScope.refreshStuff();
-        }, false);
-        $window.addEventListener("offline", function (e) {
-            $rootScope.isOffline = true;
-            $("#isOffline").addClass('showCustom');
-        }, false);
 
         // Online / offline handlers.
         if (Cordova.isAndroid()) {
             document.addEventListener("deviceready", function () {
+                processOnlineOffline($cordovaNetwork.isOnline());
+
                 cordova.plugins.backgroundMode.enable();
 
                 $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
-                    $rootScope.isOffline = false;
-                    $("#isOffline").removeClass('showCustom');
-                    $rootScope.refreshStuff();
+                    processOnlineOffline(true);
                 });
                 $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
-                    $rootScope.isOffline = true;
-                    $("#isOffline").addClass('showCustom');
+                    processOnlineOffline(false);
                 });
-                if (!$cordovaNetwork.isOnline()) {
-                    $rootScope.isOffline = false;
-                    $("#isOffline").addClass('showCustom');
-                }
-
-                processOnlineOffline();
 
                 document.addEventListener("resume", function () {
                     if (Auth.isAuthenticated()) {
@@ -211,7 +179,20 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             });
         }
         else {
-            processOnlineOffline();
+            processOnlineOffline(window.navigator.onLine);
+
+            document.addEventListener("online", function (e) {
+                processOnlineOffline(true);
+            }, false);
+            document.addEventListener("offline", function (e) {
+                processOnlineOffline(false);
+            }, false);
+            $window.addEventListener("online", function (e) {
+                processOnlineOffline(true);
+            }, false);
+            $window.addEventListener("offline", function (e) {
+                processOnlineOffline(false);
+            }, false);
         }
 
         // Update now indicator periodically.
