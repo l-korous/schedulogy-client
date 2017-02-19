@@ -8815,7 +8815,7 @@
             },
             setScrollTop: function (top) {
                 if (this.scrollEl)
-                    this.scrollEl.scrollTop(top);
+                    this.scrollEl.scrollTop(top.top);
             },
             getClientWidth: function () {
                 return this.scrollEl[0].clientWidth;
@@ -9685,10 +9685,6 @@
                 // If not given a viewType, keep the current view but render different dates.
                 // Accepts an optional scroll state to restore to.
                 function renderView(viewType, forcedScroll) {
-                    var scrollTop;
-                    if (!currentView || (currentView.name !== 'month') || (currentView.name !== 'listMonth'))
-                        scrollTop = $('.fc-scroller').scrollTop();
-
                     ignoreWindowResize++;
 
                     var needsClearView = currentView && viewType && currentView.type !== viewType;
@@ -9712,9 +9708,6 @@
                     }
 
                     if (currentView) {
-                        if (viewType !== 'month' && viewType != 'listMonth')
-                            currentView.setScroll(scrollTop);
-
                         // in case the view should render a period of time that is completely hidden
                         date = currentView.massageCurrentDate(date);
 
@@ -9973,11 +9966,9 @@
 
                 function now() {
                     currentView.updateNowIndicator();
-                    t.options.refreshOnNow();
                     date = (t.getNow().hours() < 1 ? t.getNow().clone() : t.getNow().clone().subtract(this.options['scrollOffsetMinutes'], 'minute'));
                     if (currentView.timeGrid)
                         currentView.forceScroll(currentView.timeGrid.computeDateTop(date, date));
-                    renderView();
                 }
 
                 function updateNowIndicator() {

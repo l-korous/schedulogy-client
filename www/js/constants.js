@@ -4,6 +4,7 @@ angular.module('Schedulogy')
         applicationName: 'Schedulogy',
         // This is recommended by ionic
         smallScreen: 768,
+        appVersion: '2.6.0',
         startHour: 0,
         endHour: 24,
         minuteGranularity: 30,
