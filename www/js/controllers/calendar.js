@@ -4,13 +4,21 @@ angular.module('Schedulogy')
         FullCalendar.calculateCalendarRowHeight();
 
         $scope.onSwipeLeft = function () {
-            if ($rootScope.smallScreen)
-                $('#theOnlyCalendar').fullCalendar('next');
+            if ($rootScope.smallScreen) {
+                if ($('#theOnlyCalendar').fullCalendar('getView').name === 'listMonth')
+                    $('#theOnlyCalendar').fullCalendar('nextLong');
+                else
+                    $('#theOnlyCalendar').fullCalendar('next');
+            }
         };
 
         $scope.onSwipeRight = function () {
-            if ($rootScope.smallScreen)
-                $('#theOnlyCalendar').fullCalendar('prev');
+            if ($rootScope.smallScreen) {
+                if ($('#theOnlyCalendar').fullCalendar('getView').name === 'listMonth')
+                    $('#theOnlyCalendar').fullCalendar('prevLong');
+                else
+                    $('#theOnlyCalendar').fullCalendar('prev');
+            }
         };
 
         $scope.myCalendar = FullCalendar;
