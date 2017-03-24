@@ -19,6 +19,8 @@ angular.module('Schedulogy')
             $scope.myResources.refresh();
 
             $scope.currentItem = angular.extend({}, MyItems.currentItem);
+            
+            $scope.recalculateDeps();
 
             $scope.data.showRepetition = !(!($scope.currentItem.repetition));
 
@@ -126,18 +128,22 @@ angular.module('Schedulogy')
             return retVal;
         };
 
-        $scope.blocksFilter = function (inspectedEvent) {
-            if (inspectedEvent.type !== 'task')
-                return false;
-            if (!$scope.commonFilter(inspectedEvent))
-                return false;
-            if ($scope.currentItem && $scope.currentItem.constraint.start && inspectedEvent.constraint.end) {
-                var latestPossibleStartOfInspectedEvent = Item.latestPossibleStart(inspectedEvent);
-                var earliestPossibleFinishOfCurrentEvent = Item.earliestPossibleFinish($scope.currentItem);
-                if (earliestPossibleFinishOfCurrentEvent.diff(latestPossibleStartOfInspectedEvent, 'm') > 0)
+        $scope.recalculateDeps = function () {
+            $scope.filteredDependencies = $scope.myItems.items.filter(function (inspectedItem) {
+                if (inspectedItem.type !== 'task')
                     return false;
-            }
-            return true;
+                if (!$scope.commonFilter(inspectedItem))
+                    return false;
+                if ($scope.currentItem.start.diff(inspectedItem.due, 'm') > 0)
+                    return false;
+                if ($scope.currentItem && $scope.currentItem.constraint.start && inspectedItem.constraint.end) {
+                    var latestPossibleStartOfInspectedEvent = Item.latestPossibleStart(inspectedItem);
+                    var earliestPossibleFinishOfCurrentEvent = Item.earliestPossibleFinish($scope.currentItem);
+                    if (earliestPossibleFinishOfCurrentEvent.diff(latestPossibleStartOfInspectedEvent, 'm') > 0)
+                        return false;
+                }
+                return true;
+            });
         };
 
         $scope.startValueForOrderingOfDependencies = function (event) {
@@ -162,6 +168,8 @@ angular.module('Schedulogy')
 
                     if (!MyItems.recalcEventConstraints($scope.currentItem))
                         $scope.currentItem.error = 'Impossible to schedule due to constraints';
+                    else
+                        $scope.recalculateDeps();
 
                     $scope.form.$setDirty();
                     $scope.popupOpen = null;
@@ -204,6 +212,11 @@ angular.module('Schedulogy')
                 $scope.currentItem.start = DateUtils.pushTime(val, $scope.currentItem.start);
                 $scope.currentItem.startTimeText = $scope.currentItem.start.format(constants.timeFormat);
                 MyItems.processEventDuration($scope.currentItem);
+
+                if (!MyItems.recalcEventConstraints($scope.currentItem))
+                    $scope.currentItem.error = 'Impossible to schedule due to constraints';
+                else
+                    $scope.recalculateDeps();
 
                 $scope.form.$setDirty();
                 $scope.popupOpen = null;

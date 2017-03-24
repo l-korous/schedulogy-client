@@ -19,6 +19,9 @@ angular.module('Schedulogy')
 
             $scope.currentItem = angular.extend({}, MyItems.currentItem);
 
+            $scope.recalculateDeps();
+            $scope.recalculatePreqs();
+
             $scope.form.$setPristine();
 
             $scope.cachedDurValue = [0, 0];
@@ -129,30 +132,44 @@ angular.module('Schedulogy')
             return retVal;
         };
 
-        $scope.blocksFilter = function (inspectedEvent) {
-            if (inspectedEvent.type !== 'task')
-                return false;
-            if (!$scope.commonFilter(inspectedEvent))
-                return false;
-            if ($scope.currentItem && $scope.currentItem.constraint.start && inspectedEvent.constraint.end) {
-                var latestPossibleStartOfInspectedEvent = Item.latestPossibleStart(inspectedEvent);
-                var earliestPossibleFinishOfCurrentEvent = Item.earliestPossibleFinish($scope.currentItem);
-                if (earliestPossibleFinishOfCurrentEvent.diff(latestPossibleStartOfInspectedEvent, 'm') > 0)
+        $scope.recalculateDeps = function () {
+            $scope.filteredDependencies = $scope.myItems.items.filter(function (inspectedItem) {
+                if (inspectedItem.type !== 'task')
                     return false;
-            }
-            return true;
+                if (!$scope.commonFilter(inspectedItem))
+                    return false;
+                if (MyItems.getBTime().diff(inspectedItem.due, 'm') > 0)
+                    return false;
+                if ($scope.currentItem && $scope.currentItem.constraint.start && inspectedItem.constraint.end) {
+                    var latestPossibleStartOfInspectedEvent = Item.latestPossibleStart(inspectedItem);
+                    var earliestPossibleFinishOfCurrentEvent = Item.earliestPossibleFinish($scope.currentItem);
+                    if (earliestPossibleFinishOfCurrentEvent.diff(latestPossibleStartOfInspectedEvent, 'm') > 0)
+                        return false;
+                }
+                return true;
+            });
         };
 
-        $scope.needsFilter = function (inspectedEvent) {
-            if (!$scope.commonFilter(inspectedEvent))
-                return false;
-            if ($scope.currentItem && inspectedEvent.constraint.start && $scope.currentItem.constraint.end) {
-                var latestPossibleStartOfCurrentEvent = Item.latestPossibleStart($scope.currentItem);
-                var earliestPossibleFinishOfInspectedEvent = Item.earliestPossibleFinish(inspectedEvent);
-                if (latestPossibleStartOfCurrentEvent.diff(earliestPossibleFinishOfInspectedEvent, 'm') < 0)
+        $scope.recalculatePreqs = function () {
+            $scope.filteredPrerequisites = $scope.myItems.items.filter(function (inspectedItem) {
+                if (!$scope.commonFilter(inspectedItem))
                     return false;
-            }
-            return true;
+                if (inspectedItem.type === 'task' && MyItems.getBTime().diff(inspectedItem.due, 'm') > 0)
+                    return false;
+                if (inspectedItem.type === 'event' && MyItems.getBTime().diff(inspectedItem.end, 'm') > 0)
+                    return false;
+                if ($scope.currentItem && inspectedItem.constraint.start && $scope.currentItem.constraint.end) {
+                    var latestPossibleStartOfCurrentEvent = Item.latestPossibleStart($scope.currentItem);
+                    var earliestPossibleFinishOfInspectedEvent = Item.earliestPossibleFinish(inspectedItem);
+                    if (latestPossibleStartOfCurrentEvent.diff(earliestPossibleFinishOfInspectedEvent, 'm') < 0)
+                        return false;
+                }
+                return true;
+            });
+        };
+
+        $scope.startValueForOrderingOfPrerequisites = function (event) {
+            return -event.start.unix();
         };
 
         $scope.startValueForOrderingOfDependencies = function (event) {
@@ -167,6 +184,10 @@ angular.module('Schedulogy')
 
                 if (!MyItems.recalcEventConstraints($scope.currentItem))
                     $scope.currentItem.error = 'Impossible to schedule due to constraints';
+                else {
+                    $scope.recalculateDeps();
+                    $scope.recalculatePreqs();
+                }
 
                 $scope.form.$setDirty();
                 $scope.popupOpen = null;
@@ -182,6 +203,10 @@ angular.module('Schedulogy')
 
                 if (!MyItems.recalcEventConstraints($scope.currentItem))
                     $scope.currentItem.error = 'Impossible to schedule due to constraints';
+                else {
+                    $scope.recalculateDeps();
+                    $scope.recalculatePreqs();
+                }
 
                 $scope.form.$setDirty();
                 $scope.popupOpen = null;

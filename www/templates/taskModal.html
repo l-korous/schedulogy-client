@@ -112,7 +112,7 @@
                 </label>
                 <label class="item item-select" >
                     <select id="taskPrerequisites" ng-model="newPrerequisite" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
-                            ng-options="event._id as event.info for event in filteredPrerequisites = (myItems.items | filter : needsFilter : true | orderBy:startValueForOrderingOfDependencies)"
+                            ng-options="event._id as event.info for event in filteredPrerequisites | orderBy:startValueForOrderingOfPrerequisites"
                             ng-change="myItems.addPrerequisite(currentItem, newPrerequisite)">
                         <option ng-selected="true" value="">{{filteredPrerequisites.length === 0 ? 'no other possible Prerequisite Task, see Help for explanation' : 'select a prerequisite task'}}</option>
                     </select>
@@ -134,7 +134,7 @@
 
                 <label class="item item-select">
                     <select id="taskDependencies" ng-model="newDependency" style="width:100%;max-width:100%;direction:ltr;padding-left:25px;font-size:.9em;"
-                            ng-options="event._id as event.info for event in filteredDependencies = (myItems.items | filter : blocksFilter : true | orderBy:startValueForOrderingOfDependencies)"
+                            ng-options="event._id as event.info for event in filteredDependencies | orderBy:startValueForOrderingOfDependencies"
                             ng-change="myItems.addDependency(currentItem, newDependency)">
                         <option ng-selected="true" value="">{{filteredDependencies.length === 0 ? 'no other possible Dependent Task, see Help for explanation' : 'select a dependent task'}}</option>
                     </select>
