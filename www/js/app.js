@@ -120,6 +120,16 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
 
         ModalService.init();
 
+        $rootScope.refreshWidget = function () {
+            if (ace.platform === "Android") {
+                ace.android.appWidget.clear();
+
+                MyItems.getCurrentItems().forEach(function (item) {
+                    ace.android.appWidget.add(item.startTimeText + ' | ' + item.title + ' (' + item.type.toUpperCase() + ')');
+                });
+            }
+        };
+
         $rootScope.refreshStuff = function () {
             if (Auth.isAuthenticated()) {
                 $("#isLoading").addClass('showCustom');
@@ -127,6 +137,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 MyResources.refresh();
                 MyUsers.refresh();
                 $("#isLoading").removeClass('showCustom');
+                $rootScope.refreshWidget();
             }
         };
 
@@ -147,6 +158,27 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         // Online / offline handlers.
         if (Cordova.isAndroid()) {
             document.addEventListener("deviceready", function () {
+
+                if (ace.platform == "Android") {
+                    setupWidget();
+                }
+
+                function setupWidget() {
+                    // Handle the app being resumed by a widget click:
+                    ace.addEventListener("android.intentchanged", checkForWidgetActivation);
+                }
+
+                function checkForWidgetActivation() {
+                    if (ace.platform != "Android") {
+                        return;
+                    }
+
+                    ace.android.getIntent().invoke("getIntExtra", "widgetSelectionIndex", -1, function (value) {
+                        // value is the index of the item clicked
+                        // or -1 if no item has been clicked
+                    });
+                }
+
                 processOnlineOffline($cordovaNetwork.isOnline());
 
                 cordova.plugins.backgroundMode.enable();

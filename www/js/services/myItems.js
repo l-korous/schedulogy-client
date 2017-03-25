@@ -50,6 +50,8 @@ angular.module('Schedulogy')
 
             // Store the scroll, so that after the modal is hidden, we can re-establish the scroll.
             _this.scrollTop = $('.fc-scroller').scrollTop();
+            
+            $rootScope.refreshWidget();
 
             // Scroll to where I was before.
             setTimeout(function () {
@@ -178,12 +180,6 @@ angular.module('Schedulogy')
             return itemToDelete;
         };
 
-        _this.getCurrentEvents = function (now) {
-            return $.grep(this.items, function (item) {
-                return ((item.start <= now) && (item.end >= now));
-            });
-        };
-
         _this.deleteAll = function (successCallback, errorCallback) {
             _this.shouldShowLoading = true;
             $timeout(function () {
@@ -260,6 +256,14 @@ angular.module('Schedulogy')
                 errorCallback && errorCallback();
                 console.log(err);
             });
+        };
+        
+        _this.getCurrentItems = function() {
+            var currentItems = _this.items.filter(function(item) {
+                var diffToBTime = item.start.diff(_this.getBTime(), 'm');
+                return diffToBTime > 0 && diffToBTime < 1440;
+            });
+            return currentItems;
         };
 
         _this.imposeEventDurationBound = function (passedItem) {

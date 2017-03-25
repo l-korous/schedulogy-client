@@ -9966,6 +9966,7 @@
 
                 function now() {
                     date = (t.getNow().hours() < 1 ? t.getNow().clone() : t.getNow().clone().subtract(this.options['scrollOffsetMinutes'], 'minute'));
+                    t.options.refreshOnNow();
                     if (currentView.timeGrid)
                         currentView.forceScroll({top: currentView.timeGrid.computeDateTop(date, date)});
                     renderView();

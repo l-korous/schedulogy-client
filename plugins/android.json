@@ -7,21 +7,39 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-inappbrowser": {
+        "com.maginsoft.mfilechooser": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
+        "cordova-plugin-ace": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         },
         "cordova-plugin-background-mode": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
-        }
-    },
-    "dependent_plugins": {
-        "cordova-plugin-network-information": {
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
-        },
+        }
+    },
+    "dependent_plugins": {
         "cordova-plugin-device": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
+        },
+        "cordova-plugin-network-information": {
             "PACKAGE_NAME": "org.apache.cordova.SCHEDULOGY"
         }
     }
