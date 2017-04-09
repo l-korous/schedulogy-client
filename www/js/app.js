@@ -123,9 +123,13 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         $rootScope.refreshWidget = function () {
             if (ace.platform === "Android") {
                 ace.android.appWidget.clear();
+                
+                $rootScope.currentItems = MyItems.getCurrentItems().slice(0).sort(function(a, b) {
+                    return !a.startTimeText;
+                });
 
-                MyItems.getCurrentItems().forEach(function (item) {
-                    ace.android.appWidget.add(item.startTimeText + ' | ' + item.title + ' (' + item.type.toUpperCase() + ')');
+                $rootScope.currentItems.forEach(function (item) {
+                    ace.android.appWidget.add((item.startTimeText ? item.startTimeText + ' | ' : '') + item.title + ' (' + item.type.toUpperCase() + ')');
                 });
             }
         };
@@ -169,13 +173,17 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 }
 
                 function checkForWidgetActivation() {
-                    if (ace.platform != "Android") {
+                    if (ace.platform !== "Android") {
                         return;
                     }
 
                     ace.android.getIntent().invoke("getIntExtra", "widgetSelectionIndex", -1, function (value) {
-                        // value is the index of the item clicked
-                        // or -1 if no item has been clicked
+                        if(value > -1)
+                        {
+                            var item = $rootScope.currentItems[value];
+                            MyItems.setCurrentItem(item._id);
+                            ModalService.openModal(item.type);
+                        }
                     });
                 }
 

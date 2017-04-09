@@ -261,7 +261,11 @@ angular.module('Schedulogy')
         _this.getCurrentItems = function() {
             var currentItems = _this.items.filter(function(item) {
                 var diffToBTime = item.start.diff(_this.getBTime(), 'm');
-                return diffToBTime > 0 && diffToBTime < 1440;
+                if(diffToBTime > 0 && diffToBTime <= 1440)
+                    return true;
+                if((item.allDay || item.type === 'reminder') && diffToBTime >= -1440 && diffToBTime <= 1440)
+                    return true;
+                return false;
             });
             return currentItems;
         };
