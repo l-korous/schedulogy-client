@@ -6,13 +6,17 @@ angular.module('Schedulogy')
         _this.dirtyItems = [];
 
         _this.refresh = function () {
+            var deferred = $q.defer();
             Task.query({btime: _this.getBTime().unix()}, function (data) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
+                deferred.resolve();
             }, function (err) {
                 if (err.data && err.data.tasks && err.data.dirtyTasks) {
                     _this.importFromTasks(err.data.tasks, err.data.dirtyTasks);
                 }
+                deferred.resolve();
             });
+            return deferred.promise;
         };
 
         _this.importFromTasks = function (tasks, dirtyTasks) {
@@ -50,7 +54,7 @@ angular.module('Schedulogy')
 
             // Store the scroll, so that after the modal is hidden, we can re-establish the scroll.
             _this.scrollTop = $('.fc-scroller').scrollTop();
-            
+
             $rootScope.refreshWidget();
 
             // Scroll to where I was before.
@@ -84,7 +88,7 @@ angular.module('Schedulogy')
                         blocks: [],
                         allDay: false,
                         blocksForShow: [],
-                        notifications:[],
+                        notifications: [],
                         constraint: {
                             start: null,
                             end: null
@@ -103,7 +107,7 @@ angular.module('Schedulogy')
                         blocks: [],
                         blocksForShow: [],
                         allDay: false,
-                        notifications:[],
+                        notifications: [],
                         needs: [],
                         needsForShow: [],
                         constraint: {
@@ -181,20 +185,14 @@ angular.module('Schedulogy')
         };
 
         _this.deleteAll = function (successCallback, errorCallback) {
-            _this.shouldShowLoading = true;
-            $timeout(function () {
-                if (_this.shouldShowLoading)
-                    $rootScope.isLoading = true;
-            }, 500);
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
 
             Task.deleteAll({}, function (data) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
-                _this.shouldShowLoading = false;
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 successCallback && successCallback();
             }, function (err) {
-                _this.shouldShowLoading = false;
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 errorCallback && errorCallback();
                 // error callback
                 console.log(err);
@@ -217,53 +215,41 @@ angular.module('Schedulogy')
                 });
             }
         };
-        
+
         _this.deleteItemsByRepetitionId = function (repetitionId, successCallback, errorCallback) {
-            _this.shouldShowLoading = true;
-            $timeout(function () {
-                if (_this.shouldShowLoading)
-                    $rootScope.isLoading = true;
-            }, 500);
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
 
             Task.removeByRepetitionId({repetitionId: repetitionId}, function (data, headers) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
-                _this.shouldShowLoading = false;
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 successCallback && successCallback();
             }, function (err) {
-                _this.shouldShowLoading = false;
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 errorCallback && errorCallback();
                 console.log(err);
             });
         };
 
         _this.deleteItem = function (itemToDelete, successCallback, errorCallback) {
-            _this.shouldShowLoading = true;
-            $timeout(function () {
-                if (_this.shouldShowLoading)
-                    $rootScope.isLoading = true;
-            }, 500);
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
 
             Task.toServer(itemToDelete).$remove({btime: _this.getBTime().unix(), taskId: itemToDelete._id}, function (data, headers) {
                 _this.importFromTasks(data.tasks, data.dirtyTasks);
-                _this.shouldShowLoading = false;
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 successCallback && successCallback();
             }, function (err) {
-                _this.shouldShowLoading = false;
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 errorCallback && errorCallback();
                 console.log(err);
             });
         };
-        
-        _this.getCurrentItems = function() {
-            var currentItems = _this.items.filter(function(item) {
+
+        _this.getCurrentItems = function () {
+            var currentItems = _this.items.filter(function (item) {
                 var diffToBTime = item.start.diff(_this.getBTime(), 'm');
-                if(diffToBTime > 0 && diffToBTime <= 1440)
+                if (diffToBTime > 0 && diffToBTime <= 1440)
                     return true;
-                if((item.allDay || item.type === 'reminder') && diffToBTime >= -1440 && diffToBTime <= 1440)
+                if ((item.allDay || item.type === 'reminder') && diffToBTime >= -1440 && diffToBTime <= 1440)
                     return true;
                 return false;
             });
@@ -321,7 +307,7 @@ angular.module('Schedulogy')
                         _this.saveItem(itemToSave, 0, successCallback, errorCallback);
                     }
                     else if (resolution === 'repetition') {
-                       _this.saveItem(itemToSave, 1, successCallback, errorCallback);
+                        _this.saveItem(itemToSave, 1, successCallback, errorCallback);
                     }
                 });
             }
@@ -329,28 +315,22 @@ angular.module('Schedulogy')
 
         _this.saveItem = function (passedItem, updateAllOccurences, successCallback, errorCallback) {
             var itemToSave = passedItem || _this.currentItem;
-            _this.shouldShowLoading = true;
-            $timeout(function () {
-                if (_this.shouldShowLoading)
-                    $rootScope.isLoading = true;
-            }, 500);
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
             Task.toServer(itemToSave).$save({btime: _this.getBTime().unix(), updateAllOccurences: updateAllOccurences}, function (data) {
                 _this.tasksInResponseSuccessHandler(data, function () {
                     successCallback && successCallback();
-                    _this.shouldShowLoading = false;
-                    $rootScope.isLoading = false;
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 });
             }, function (err) {
                 _this.tasksInResponseErrorHandler(err, function () {
                     errorCallback && errorCallback();
-                    _this.shouldShowLoading = false;
-                    $rootScope.isLoading = false;
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 });
             });
         };
 
         _this.recalcEventConstraints = function (itemPassed) {
-            $rootScope.isLoading = true;
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
 
             var item = itemPassed ? itemPassed : _this.currentItem;
 
@@ -360,7 +340,7 @@ angular.module('Schedulogy')
             Item.setBTime(_this.getBTime());
 
             Task.toServer(item).$checkConstraints({btime: _this.getBTime().unix()}, function (data) {
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 var constraintProcessResult = Item.processConstraint(item, data);
                 if (constraintProcessResult) {
                     item = constraintProcessResult;
@@ -369,7 +349,7 @@ angular.module('Schedulogy')
                 else
                     defer.resolve(false);
             }, function (err) {
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 defer.resolve(true);
                 // error callback
                 console.log(err);

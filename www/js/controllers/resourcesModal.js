@@ -3,11 +3,11 @@ angular.module('Schedulogy')
         $scope.myResources = MyResources;
         
         $scope.open = function () {
-            $rootScope.isLoading = true;
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
             $scope.successInfo = '';
             $scope.errorInfo = '';
             $scope.myResources.refresh(function () {
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
             });
 
             ModalService.openModalInternal('resources');

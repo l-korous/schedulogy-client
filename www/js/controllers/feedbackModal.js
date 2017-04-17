@@ -28,14 +28,14 @@ angular.module('Schedulogy')
             if ($scope.form.$invalid)
                 return;
 
-            $rootScope.isLoading = true;
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
             $http.post(settings.serverUrl + '/msg', {msg: $scope.data.feedbackText})
                 .success(function () {
-                    $rootScope.isLoading = false;
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                     $scope.data.successInfo = constants.feedbackSuccessInfo;
                 })
                 .error(function (errorResponse) {
-                    $rootScope.isLoading = false;
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                     $scope.data.errorInfo = errorResponse.msg;
                 });
         };

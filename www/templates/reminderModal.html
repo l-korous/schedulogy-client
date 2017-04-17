@@ -37,7 +37,7 @@
                     <div class="input-label">
                         Start Date
                     </div>
-                    <input readonly="true" type="text" ng-model="currentItem.startDateText" ng-click="openDatePicker('start');" name="startDate" required id="reminderStartDate"/>
+                    <input type="date" ng-model="currentItem.startDate" name="startDate" required id="reminderStartDate"/>
                 </label>
 
                 <ion-toggle ng-model="data.showRepetition" ng-change="switchRepetition()" toggle-class="toggle-assertive">Repetition</ion-toggle>

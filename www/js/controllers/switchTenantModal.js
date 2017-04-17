@@ -29,7 +29,7 @@ angular.module('Schedulogy')
             $scope.data.successInfo = '';
             $scope.data.errorInfo = '';
 
-            $rootScope.isLoading = true;
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
             $http.post(settings.serverUrl + '/switchTenant', {tenantCode: $scope.data.tenantCode})
                 .success(function (data) {
                     Auth.processToken(data.token);
@@ -38,11 +38,11 @@ angular.module('Schedulogy')
                         MyResources.refresh();
                         MyUsers.refresh();
                         MyItems.refresh();
-                        $rootScope.isLoading = false;
+                        $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                     });
                 })
                 .error(function (errorResponse) {
-                    $rootScope.isLoading = false;
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                     $scope.data.errorInfo = errorResponse.msg;
                 });
         };

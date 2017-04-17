@@ -4,13 +4,9 @@ angular.module('Schedulogy')
         $scope.successInfo = null;
 
         $scope.open = function () {
-            $rootScope.isLoading = true;
             $scope.successInfo = '';
             $scope.errorInfo = '';
-            $scope.myUsers.refresh(function () {
-                $rootScope.isLoading = false;
-            });
-
+            $scope.myUsers.refresh();
             ModalService.openModalInternal('users');
         };
 

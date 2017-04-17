@@ -1042,3 +1042,7 @@ input::-webkit-inner-spin-button {
     background:#33cd5f;
     color:white ! important;
 }
+
+#button-customId-now {
+    background:#222 ! important;
+}

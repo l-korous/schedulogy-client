@@ -121,10 +121,10 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         ModalService.init();
 
         $rootScope.refreshWidget = function () {
-            if (ace.platform === "Android") {
+            if (Cordova.isAndroid()) {
                 ace.android.appWidget.clear();
-                
-                $rootScope.currentItems = MyItems.getCurrentItems().slice(0).sort(function(a, b) {
+
+                $rootScope.currentItems = MyItems.getCurrentItems().slice(0).sort(function (a, b) {
                     return !a.startTimeText;
                 });
 
@@ -136,19 +136,18 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
 
         $rootScope.refreshStuff = function () {
             if (Auth.isAuthenticated()) {
-                $("#isLoading").addClass('showCustom');
-                MyItems.refresh();
                 MyResources.refresh();
                 MyUsers.refresh();
-                $("#isLoading").removeClass('showCustom');
-                $rootScope.refreshWidget();
+                MyItems.refresh().then(function () {
+                    $rootScope.refreshWidget();
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
+                });
             }
         };
 
         function processOnlineOffline(isOnline) {
             if (isOnline) {
                 $("#isOffline").removeClass('showCustom');
-                $rootScope.refreshStuff();
                 $rootScope.calendarRenderedListener = $rootScope.$on('calendarRendered', function () {
                     $rootScope.refreshStuff();
                     $rootScope.calendarRenderedListener();
@@ -163,22 +162,11 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         if (Cordova.isAndroid()) {
             document.addEventListener("deviceready", function () {
 
-                if (ace.platform == "Android") {
-                    setupWidget();
-                }
-
-                function setupWidget() {
-                    // Handle the app being resumed by a widget click:
-                    ace.addEventListener("android.intentchanged", checkForWidgetActivation);
-                }
+                ace.addEventListener("android.intentchanged", checkForWidgetActivation);
 
                 function checkForWidgetActivation() {
-                    if (ace.platform !== "Android") {
-                        return;
-                    }
-
                     ace.android.getIntent().invoke("getIntExtra", "widgetSelectionIndex", -1, function (value) {
-                        if(value > -1)
+                        if (value > -1)
                         {
                             var item = $rootScope.currentItems[value];
                             MyItems.setCurrentItem(item._id);

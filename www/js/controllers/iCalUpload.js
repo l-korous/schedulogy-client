@@ -20,7 +20,7 @@ angular.module('Schedulogy')
         };
 
         $scope.uploadFile = function () {
-            $rootScope.isLoading = true;
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
 
             // This is done through rootScope, because otherwise it somehow does not work. Not a big deal, but may be fixed.
             var file = $rootScope.icalFile;
@@ -30,7 +30,7 @@ angular.module('Schedulogy')
                     $scope.successInfo = constants.iCalUploadSuccess;
                     $rootScope.icalFile = null;
                     $scope.errorInfo = null;
-                    $rootScope.isLoading = false;
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 });
             }, function (err) {
                 try {
@@ -39,14 +39,14 @@ angular.module('Schedulogy')
                         $scope.successInfo = null;
                         $scope.errorInfo = constants.iCalUploadError;
                         $rootScope.icalFile = null;
-                        $rootScope.isLoading = false;
+                        $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                     });
                 }
                 catch (e) {
                     $scope.successInfo = null;
                     $scope.errorInfo = constants.iCalUploadError;
                     $rootScope.icalFile = null;
-                    $rootScope.isLoading = false;
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 }
             });
         };

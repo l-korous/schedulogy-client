@@ -25,12 +25,15 @@ angular.module('Schedulogy')
         };
 
         _this.refresh = function (callback) {
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
             Resource.query({}, function (data) {
                 _this.importData(data.resourcesLocal);
                 $rootScope.myResourceId = _this.getMyResourceId();
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 callback && callback();
             }, function (err) {
                 console.log('Resource.query - error');
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
             });
         };
 
@@ -50,15 +53,15 @@ angular.module('Schedulogy')
 
         _this.saveResource = function (passedResource, successCallback, errorCallback) {
             var resource = passedResource || _this.currentResource;
-            $rootScope.isLoading = true;
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
             resource.$save({btime: MyItems.getBTime().unix()}, function (data) {
                 _this.importData(data.resourcesLocal);
                 successCallback && successCallback();
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
             }, function (err) {
                 console.log('saveResource error: ' + err);
                 errorCallback && errorCallback();
-                $rootScope.isLoading = false;
+                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
             });
         };
 

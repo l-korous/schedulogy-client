@@ -26,14 +26,14 @@ angular.module('Schedulogy')
             if ($scope.form.$invalid)
                 return;
 
-            $rootScope.isLoading = true;
+            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
             $http.post(settings.serverUrl + '/inviteToTenant', {email: $scope.data.inviteeEmail})
                 .success(function () {
-                    $rootScope.isLoading = false;
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                     $scope.data.successInfo = constants.invitationSuccessInfo;
                 })
                 .error(function (errorResponse) {
-                    $rootScope.isLoading = false;
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                     $scope.data.errorInfo = errorResponse.msg;
                 });
         };
