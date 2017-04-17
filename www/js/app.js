@@ -109,7 +109,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             };
         });
     })
-    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyItems, ModalService, Cordova, $cordovaNetwork, $timeout, $interval, lock, authManager, constants, MyResources, MyUsers, $ionicPlatform) {
+    .run(function ($rootScope, $state, settings, Auth, $location, $window, MyItems, ModalService, Cordova, $cordovaNetwork, $timeout, $interval, lock, authManager, constants, MyResources, MyUsers, $ionicPlatform, $q) {
         // Settings - so that they are accessible from anywhere.
         $rootScope.settings = settings;
         $rootScope.constants = constants;
@@ -135,14 +135,19 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
         };
 
         $rootScope.refreshStuff = function () {
+            var d = $q.defer();
             if (Auth.isAuthenticated()) {
                 MyResources.refresh();
                 MyUsers.refresh();
                 MyItems.refresh().then(function () {
                     $rootScope.refreshWidget();
                     $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
+                    d.resolve();
                 });
             }
+            else
+                d.resolve();
+            return d.promise;
         };
 
         function processOnlineOffline(isOnline) {

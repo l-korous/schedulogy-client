@@ -26,6 +26,8 @@
                     </select>
                 </label>
 
+                <ion-toggle id="eventAllDay" ng-model="currentItem.allDay" toggle-class="toggle-positive">All-Day</ion-toggle>
+
                 <label class="item item-input" ng-class="{'has-error' : form.title.$invalid && !form.title.$pristine }">
                     <input placeholder="Title" autocomplete="off" type="text" ng-model="currentItem.title" id="reminderPrimaryInput" required name="title" ng-disabled="currentItem.done">
                 </label>
@@ -33,11 +35,18 @@
                     <textarea placeholder="Description" ng-model="currentItem.desc" id="reminderModalTextarea" ng-disabled="currentItem.done"></textarea>
                 </label>
 
-                <label class="item item-input" ng-class="{'has-error' : form.startDate.$invalid && !form.startDate.$pristine }">
+                <label class="item item-input" ng-class="{ 'has-error' : form.startDate.$invalid && !form.startDate.$pristine }">
                     <div class="input-label">
                         Start Date
                     </div>
-                    <input type="date" ng-model="currentItem.startDate" name="startDate" required id="reminderStartDate"/>
+                    <input type="date" ng-model="currentItem.startDate" name="startDate" required id="reminderStartDate" ng-change="processStartDateChange();"/>
+                </label>
+
+                <label class="item item-input" ng-show="!currentItem.allDay" ng-class="{ 'has-error' : form.startTime.$invalid && !form.startTime.$pristine }">
+                    <div class="input-label">
+                        Start Time
+                    </div>
+                    <input type="time" ng-model="currentItem.startDate" step="1800" name="startTime" id="reminderStartTime" ng-required="!currentItem.allDay" ng-change="processStartDateChange();"/>
                 </label>
 
                 <ion-toggle ng-model="data.showRepetition" ng-change="switchRepetition()" toggle-class="toggle-assertive">Repetition</ion-toggle>

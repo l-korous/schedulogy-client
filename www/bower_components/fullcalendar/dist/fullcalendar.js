@@ -9968,18 +9968,21 @@
 
                 function now() {
                     startRefreshingSpinner();
-                    date = (t.getNow().hours() < 1 ? t.getNow().clone() : t.getNow().clone().subtract(this.options['scrollOffsetMinutes'], 'minute'));
-                    t.options.refreshOnNow();
-                    if (currentView.timeGrid)
-                        currentView.forceScroll({top: currentView.timeGrid.computeDateTop(date, date)});
-                    renderView();
+                    t.options.refreshOnNow().then(function () {
+                        if (currentView.timeGrid)
+                        {
+                            date = (t.getNow().hours() < 1 ? t.getNow().clone() : t.getNow().clone().subtract(t.options['scrollOffsetMinutes'], 'minute'));
+                            currentView.forceScroll({top: currentView.timeGrid.computeDateTop(date, date)});
+                        }
+                        renderView();
+                    });
                 }
-                
+
                 function startRefreshingSpinner() {
                     $('#refreshingSpinner').removeClass('ion-refresh');
                     $('#refreshingSpinner').addClass('ion-refreshing');
                 }
-                
+
                 function stopRefreshingSpinner() {
                     $('#refreshingSpinner').removeClass('ion-refreshing');
                     $('#refreshingSpinner').addClass('ion-refresh');
@@ -10246,7 +10249,7 @@
                     month: 'month',
                     week: 'week',
                     day: 'day',
-                    now: "<i id='refreshingSpinner' class='ion-refresh icon' style='font-size:1.7em;color:white;margin-left:12px;margin-right:12px;padding:0;line-height:12px;'></i>"
+                    now: "<i id='refreshingSpinner' class='ion-refresh icon' style='font-size:1.7em;margin-left:12px;margin-right:12px;padding:0;line-height:12px;'></i>"
                 },
                 buttonIcons: {
                 },

@@ -46,16 +46,14 @@
                     <div class="input-label">
                         Due Date
                     </div>
-                    <input readonly="true" type="text" ng-model="currentItem.dueDateText" ng-click="openDatePicker('due');" name="dueDate" id="dueDate"
-                           required/>
+                    <input type="date" ng-model="currentItem.dueDate" name="dueDate" min="{{currentItem.constraint.startDue.format('YYYY-MM-DD')}}" max="{{currentItem.constraint.endDue.format('YYYY-MM-DD')}}" required id="taskDueDate" ng-change="processDueDateChange();"/>
                 </label>
 
-                <label class="item item-input" ng-show="!currentItem.allDay" ng-class="{ 'has-error' : form.floatingDueTime.$invalid && !form.floatingDueTime.$pristine }">
+                <label class="item item-input" ng-show="!currentItem.allDay" ng-class="{ 'has-error' : form.dueTime.$invalid && !form.dueTime.$pristine }">
                     <div class="input-label">
                         Due Time
                     </div>
-                    <input readonly="true" type="text" ng-model="currentItem.dueTimeText" ng-click="openTimePicker('due');" name="dueTime" id="dueTime"
-                           ng-required="!currentItem.allDay"/>
+                    <input type="time" ng-model="currentItem.dueDate" step="1800" min="{{currentItem.constraint.startDueTime}}" max="{{currentItem.constraint.endDueTime}}" name="dueTime" id="taskDueTime" ng-required="!currentItem.allDay" ng-change="processDueDateChange();"/>
                 </label>
 
                 <label class="item item-input range" ng-class="{ 'has-error' : form.floatingDuration.$invalid && !form.floatingDuration.$pristine }">

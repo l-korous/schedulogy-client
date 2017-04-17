@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .service('FullCalendar', function (moment, settings, constants, MyItems, $window, $timeout, uiCalendarConfig, $rootScope) {
+    .service('FullCalendar', function (moment, settings, constants, MyItems, $window, $timeout, uiCalendarConfig, $rootScope, $q) {
         var _this = this;
 
         this.setCallbacks = function (toSet) {
@@ -64,7 +64,11 @@ angular.module('Schedulogy')
                         _this.callbacks.select(start, end, jsEvent, view, resource);
                 },
                 refreshOnNow: function () {
-                    $rootScope.refreshStuff();
+                    var d = $q.defer();
+                    $rootScope.refreshStuff().then(function() {
+                        d.resolve();
+                    });
+                    return d.promise;
                 },
                 viewRender: function (view, element) {
                     switch (view.name) {

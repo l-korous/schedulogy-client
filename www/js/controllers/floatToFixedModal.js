@@ -25,7 +25,7 @@ angular.module('Schedulogy')
             MyItems.currentItem.type = 'event';
             if ($scope.floatToFixedMethod === 'resize') {
                 MyItems.processChangeOfEventType(MyItems.currentItem, 'task');
-                MyItems.currentItem.dur += ($scope.floatToFixedDelta.minutes() / constants.minuteGranularity);
+                MyItems.currentItem.dur += ($scope.floatToFixedDelta.asMilliseconds() / (60000 * constants.minuteGranularity));
                 MyItems.imposeEventDurationBound();
                 MyItems.processEventDuration();
                 MyItems.recalcEventConstraints();

@@ -111,6 +111,7 @@ angular.module('Schedulogy')
                         title: task.title,
                         desc: task.desc,
                         resource: task.resource,
+                        allDay: task.allDay,
                         start: task.start.unix(),
                         done: task.done,
                         repetition: task.repetition ? {

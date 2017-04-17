@@ -8,11 +8,9 @@ angular.module('Schedulogy')
             if (start)
                 item.start = start;
 
+            item.startDate = item.start.toDate();
+            
             item.startDateText = item.start.format(constants.dateFormatLong);
-            if (item.allDay)
-                item.startTimeText = null;
-            else
-                item.startTimeText = item.start.format(constants.timeFormat);
 
             if (item.start.local().day() === moment(new Date()).local().day())
                 item.startDateText += ' (today)';
@@ -25,12 +23,14 @@ angular.module('Schedulogy')
             }
         };
         this.setRepetitionEnd = function (item) {
+            item.repetition.endDate = item.repetition.end.toDate();
             item.repetition.endDateText = item.repetition.end.format(constants.dateFormatLong);
         };
         this.setDue = function (item, due) {
             if (due)
                 item.due = due;
 
+            item.dueDate = item.due.toDate();
             item.dueDateText = item.due.format(constants.dateFormatLong);
 
             if (item.allDay)
@@ -54,9 +54,11 @@ angular.module('Schedulogy')
             // For fixedAllDay, we deduct one day from what we present as the 'end'.
             if (item.allDay) {
                 var custom_end = item.end.clone().add(-1, 'days');
+                item.endDate = custom_end.toDate();
                 item.endDateText = custom_end.format(constants.dateFormat);
                 item.endTimeText = null;
             } else {
+                item.endDate = item.end.toDate();
                 item.endDateText = item.end.format(constants.dateFormat);
                 item.endTimeText = item.end.format(constants.timeFormat);
             }
@@ -70,7 +72,9 @@ angular.module('Schedulogy')
                 var constraintStartDue = constraintStart.clone().add(item.dur * constants.minuteGranularity, 'm');
                 item.constraint = angular.extend(item.constraint, {
                     start: constraintStart,
+                    startTime: item.start.format(constants.dateFormat) === constraintStart.format(constants.dateFormat) ? constraintStart.format(constants.timeFormat) : null,
                     startDue: constraintStartDue,
+                    startDueTime: item.due.format(constants.dateFormat) === constraintStartDue.format(constants.dateFormat) ? constraintStartDue.format(constants.timeFormat) : null,
                     startDateText: constraintStart.format(constants.dateFormatLong),
                     startTimeText: constraintStart.format(constants.timeFormat),
                     startDateDueText: constraintStartDue.format(constants.dateFormatLong),
@@ -80,8 +84,7 @@ angular.module('Schedulogy')
                 item.constraint = {
                     // If the item is currently going on (i.e. this.btime > item.start), push the constraint start before this.btime
                     // => if the user wants to move the current task to later, he should move it to earlier than this.btime actually.
-                    start: item.type === 'task' ? ((item.start.diff(this.btime.local(), 'm') < 0) ? item.start.clone() : this.btime.local()) : moment({y: 2010}),
-                    startDue: null,
+                    start: moment({y: 2017}),
                     startDateText: null,
                     startTimeText: null,
                     startDateDueText: null,
@@ -93,6 +96,7 @@ angular.module('Schedulogy')
                 var constraintEnd = moment(resConstraint.end).local();
                 item.constraint = angular.extend(item.constraint, {
                     end: constraintEnd,
+                    endTime: item.end.format(constants.dateFormat) === constraintEnd.format(constants.dateFormat) ? constraintEnd.format(constants.timeFormat) : null,
                     endDateText: constraintEnd.format(constants.dateFormat),
                     endTimeText: constraintEnd.format(constants.timeFormat)
                 });
@@ -114,6 +118,7 @@ angular.module('Schedulogy')
                     var minDue = item.constraint.startDue;
                     if (item.due.diff(minDue, 'm') < 0) {
                         item.due = minDue;
+                        item.dueDate = item.due.toDate();
                         item.dueDateText = item.due.format(constants.dateFormatLong);
                         item.dueTimeText = item.due.format(constants.timeFormat);
                     }
@@ -121,6 +126,7 @@ angular.module('Schedulogy')
                     var maxDue = item.constraint.end;
                     if (item.due.diff(maxDue, 'm') > 0) {
                         item.due = maxDue;
+                        item.dueDate = item.due.toDate();
                         item.dueDateText = item.due.format(constants.dateFormatLong);
                         item.dueTimeText = item.due.format(constants.timeFormat);
                     }
@@ -130,6 +136,7 @@ angular.module('Schedulogy')
                     var maxEnd = item.constraint.end;
                     if (item.end.diff(maxEnd, 'm') > 0) {
                         item.end = maxEnd;
+                        item.endDate = maxEnd.toDate();
                         item.endDateText = (item.allDay ? item.end.startOf('day') : item.end).format(constants.dateFormat);
                         item.endTimeText = (item.allDay ? item.end.startOf('day') : item.end).format(constants.timeFormat);
                     }
@@ -230,9 +237,10 @@ angular.module('Schedulogy')
                     }
                     break;
                 case 'reminder':
+                    var start = moment.unix(task.start).local();
+                    start = (task.allDay ? start.startOf('day') : start);
                     var item = angular.extend(item, {
-                        allDay: true,
-                        editable: false,
+                        allDay: (task.allDay),
                         done: task.done,
                         repetition: task.repetition,
                         className: task.done ? 'doneReminder' : '',
@@ -243,8 +251,8 @@ angular.module('Schedulogy')
                         item.textColor = constants.itemColor('reminder', false);
                     }
 
-                    var start = task.done ? moment.unix(task.start).local() : moment.unix(Math.max(this.btime.unix(), task.start)).local();
                     this.setStart(item, start);
+
                     if (item.repetition) {
                         item.repetition.end = moment.unix(task.repetition.end).local();
                         this.setRepetitionEnd(item);

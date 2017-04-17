@@ -124,6 +124,7 @@ angular.module('Schedulogy')
                     var startTime = _this.getBTime().clone();
                     _this.currentItem = angular.extend(_this.currentItem, {
                         resource: $rootScope.myResourceId,
+                        dur: 1,
                         allDay: true
                     });
                     Item.setStart(_this.currentItem, startTime);
@@ -340,14 +341,16 @@ angular.module('Schedulogy')
             Item.setBTime(_this.getBTime());
 
             Task.toServer(item).$checkConstraints({btime: _this.getBTime().unix()}, function (data) {
-                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 var constraintProcessResult = Item.processConstraint(item, data);
                 if (constraintProcessResult) {
                     item = constraintProcessResult;
                     defer.resolve(true);
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 }
-                else
+                else {
                     defer.resolve(false);
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
+                }
             }, function (err) {
                 $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 defer.resolve(true);
@@ -459,6 +462,7 @@ angular.module('Schedulogy')
             }
 
             toReturn.second(0);
+            toReturn.millisecond(0);
             return toReturn;
         };
     });

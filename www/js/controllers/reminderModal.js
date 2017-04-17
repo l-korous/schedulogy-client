@@ -54,41 +54,16 @@ angular.module('Schedulogy')
             }
         };
 
-        $scope.datePicker = {
-            start: {
-                callback: function (val) {
-                    $scope.currentItem.start = DateUtils.pushDatePart(moment(val), $scope.currentItem.start);
-                    Item.setStart($scope.currentItem);
-                    $scope.form.$setDirty();
-                    $scope.popupOpen = false;
-                },
-                closeCallback: function () {
-                    $scope.popupOpen = false;
-                }
-            },
-            repetitionEnd: {
-                callback: function (val) {
-                    $scope.currentItem.repetition.end = DateUtils.pushDatePart(moment(val), $scope.currentItem.repetition.end);
-                    Item.setRepetitionEnd($scope.currentItem);
-                    $scope.form.endDate.$setDirty();
-                    $scope.popupOpen = false;
-                },
-                closeCallback: function () {
-                    $scope.popupOpen = false;
-                }
-            }
+        $scope.processStartDateChange = function() {
+            $scope.currentItem.start = moment($scope.currentItem.startDate);
+            Item.setStart($scope.currentItem);
+            $scope.form.$setDirty();
         };
-
-        $scope.openDatePicker = function (which) {
-            $scope.popupOpen = true;
-
-            if (which === 'start')
-                $scope.datePicker.start.inputDate = $scope.currentItem ? $scope.currentItem.start.toDate() : MyItems.getBTime();
-
-            if (which === 'repetitionEnd')
-                $scope.datePicker.repetitionEnd.inputDate = $scope.currentItem ? $scope.currentItem.repetition.end.toDate() : MyItems.getBTime().clone().add(constants.defaultMonthsUntil, 'months');
-
-            ionicDatePicker.openDatePicker($scope.datePicker[which]);
+        
+        $scope.processRepetitionEndDateChange = function() {
+            $scope.currentItem.repetition.end = moment($scope.currentItem.repetition.endDate);
+            Item.setRepetitionEnd($scope.currentItem);
+            $scope.form.endDate.$setDirty();
         };
 
         $scope.remove = function () {

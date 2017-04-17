@@ -57,13 +57,13 @@ angular.module('Schedulogy')
                 }
                 else {
                     // This means !allDay -> allDay
-                    if (MyItems.currentItem.type === 'event' && MyItems.currentItem.allDay && MyItems.currentItem.startTimeText) {
+                    if ((MyItems.currentItem.type === 'event' || MyItems.currentItem.type === 'reminder') && MyItems.currentItem.allDay && MyItems.currentItem.startTimeText) {
                         Item.setStart(MyItems.currentItem);
                         MyItems.currentItem.dur = constants.defaultTaskDuration[1];
                         MyItems.processEventDuration(MyItems.currentItem);
                     }
                     // This means allDay -> !allDay
-                    else if (MyItems.currentItem.type === 'event' && !MyItems.currentItem.allDay && !MyItems.currentItem.startTimeText) {
+                    else if ((MyItems.currentItem.type === 'event' || MyItems.currentItem.type === 'reminder') && !MyItems.currentItem.allDay && !MyItems.currentItem.startTimeText) {
                         Item.setStart(MyItems.currentItem);
                         MyItems.currentItem.dur = constants.defaultTaskDuration[0];
                         MyItems.processEventDuration(MyItems.currentItem);

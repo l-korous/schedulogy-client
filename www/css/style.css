@@ -416,6 +416,7 @@ h2 {
 .fc-event {
     line-height:1;
     border-radius:0;
+    min-height: 2.2em;
 }
 
 .fc-event .fc-bg {
@@ -1041,8 +1042,4 @@ input::-webkit-inner-spin-button {
     border: 1px solid #ddd ! important;
     background:#33cd5f;
     color:white ! important;
-}
-
-#button-customId-now {
-    background:#222 ! important;
 }

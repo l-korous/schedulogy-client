@@ -175,73 +175,18 @@ angular.module('Schedulogy')
         $scope.startValueForOrderingOfDependencies = function (event) {
             return event.start.unix();
         };
+        
+        $scope.processDueDateChange = function() {
+            $scope.currentItem.due = moment($scope.currentItem.dueDate);
+            Item.setDue($scope.currentItem);
+            MyItems.processEventDuration($scope.currentItem);
 
-        // Date & time picker
-        $scope.datePicker = {
-            callback: function (val) {
-                $scope.currentItem.due = DateUtils.pushDatePart(moment(val), $scope.currentItem.due);
-                Item.setDue($scope.currentItem);
+            if (!MyItems.recalcEventConstraints($scope.currentItem))
+                $scope.currentItem.error = 'Impossible to schedule due to constraints';
+            else
+                $scope.recalculateDeps();
 
-                if (!MyItems.recalcEventConstraints($scope.currentItem))
-                    $scope.currentItem.error = 'Impossible to schedule due to constraints';
-                else {
-                    $scope.recalculateDeps();
-                    $scope.recalculatePreqs();
-                }
-
-                $scope.form.$setDirty();
-                $scope.popupOpen = null;
-            },
-            closeCallback: function () {
-                $scope.popupOpen = null;
-            }
-        };
-        $scope.timePicker = {
-            callback: function (val) {
-                $scope.currentItem.due = DateUtils.pushTime(val, $scope.currentItem.due);
-                Item.setDue($scope.currentItem);
-
-                if (!MyItems.recalcEventConstraints($scope.currentItem))
-                    $scope.currentItem.error = 'Impossible to schedule due to constraints';
-                else {
-                    $scope.recalculateDeps();
-                    $scope.recalculatePreqs();
-                }
-
-                $scope.form.$setDirty();
-                $scope.popupOpen = null;
-            },
-            closeCallback: function () {
-                $scope.popupOpen = null;
-            }
-        };
-
-        $scope.openDatePicker = function () {
-            $scope.popupOpen = 'date';
-
-            $scope.datePicker.inputDate = $scope.currentItem ? $scope.currentItem.due.toDate() : MyItems.getBTime();
-            if ($scope.currentItem.constraint.start)
-                $scope.datePicker.from = $scope.currentItem.constraint.start.toDate();
-            if ($scope.currentItem.constraint.end)
-                $scope.datePicker.to = $scope.currentItem.constraint.end.toDate();
-
-            ionicDatePicker.openDatePicker($scope.datePicker);
-        };
-        $scope.openTimePicker = function () {
-            $scope.popupOpen = 'time';
-            $scope.timePicker.inputTime = $scope.currentItem ? (DateUtils.toMinutes($scope.currentItem.due) * 60) : MyItems.getBTime();
-
-            var dueDateEqualsStartConstraint =
-                $scope.currentItem.constraint.start ? DateUtils.equalDays($scope.currentItem.due, $scope.currentItem.constraint.startDue) : false;
-
-            var dueDateEqualsEndConstraint =
-                $scope.currentItem.constraint.end ? DateUtils.equalDays($scope.currentItem.due, $scope.currentItem.constraint.end) : false;
-
-            $scope.timePicker.constraint = {
-                from: dueDateEqualsStartConstraint ? (DateUtils.toMinutes($scope.currentItem.constraint.startDue)) : constants.startHour * 60,
-                to: dueDateEqualsEndConstraint ? DateUtils.toMinutes($scope.currentItem.constraint.end) : constants.endHour * 60
-            };
-            ionicTimePicker.openTimePicker($scope.timePicker);
+            $scope.form.$setDirty();
         };
 
         $scope.$on('Esc', function () {
