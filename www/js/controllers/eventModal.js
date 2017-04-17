@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('EventModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, ionicDatePicker, ionicTimePicker, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
+    .controller('EventModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
         $scope.myItems = MyItems;
         $scope.myResources = MyResources;
         $scope.currentItem = null;

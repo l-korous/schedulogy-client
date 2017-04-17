@@ -1,4 +1,4 @@
-angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ionic-datepicker', 'ionic-timepicker', 'ngLodash', 'ngCordova', 'ngCookies', 'auth0', 'auth0.lock', 'angular-jwt'])
+angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic', 'angularMoment', 'ngLodash', 'ngCordova', 'ngCookies', 'auth0', 'auth0.lock', 'angular-jwt'])
     .config(function ($stateProvider) {
         $stateProvider
             .state('main', {
@@ -65,31 +65,6 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 return localStorage.getItem('idToken');
             }
         });
-    })
-    .config(function (ionicDatePickerProvider, ionicTimePickerProvider, constants, moment) {
-        var datePickerObj = {
-            setLabel: 'Set',
-            todayLabel: 'Today',
-            closeLabel: 'Close',
-            mondayFirst: true,
-            monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
-            templateType: 'popup',
-            from: new Date(2012, 8, 1),
-            to: moment(new Date()).add(constants.weeks, 'w').toDate(),
-            showTodayButton: false,
-            dateFormat: 'dd MMMM yyyy',
-            closeOnSelect: true,
-            disableWeekdays: []
-        };
-        ionicDatePickerProvider.configDatePicker(datePickerObj);
-
-        var timePickerObj = {
-            format: 24,
-            step: constants.minuteGranularity,
-            setLabel: 'Set',
-            closeLabel: 'Close'
-        };
-        ionicTimePickerProvider.configTimePicker(timePickerObj);
     })
     .config(function ($httpProvider) {
         $httpProvider.defaults.withCredentials = true;

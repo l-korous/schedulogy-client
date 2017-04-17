@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ReminderModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, Notification, MyResources, ModalService, $ionicScrollDelegate, ionicDatePicker, $timeout) {
+    .controller('ReminderModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, Notification, MyResources, ModalService, $ionicScrollDelegate, $timeout) {
         $scope.myItems = MyItems;
         $scope.myResources = MyResources;
         $scope.popupOpen = false;
