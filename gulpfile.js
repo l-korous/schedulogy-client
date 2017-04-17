@@ -116,6 +116,7 @@ gulp.task('minify-css', function () {
         "www/bower_components/fullcalendar/dist/fullcalendar.min.css",
         "www/css/animate.min.css",
         "www/css/modalAnimations.css",
+        "www/css/ionicons.css",
         "www/css/style.css"
     ])
         .pipe(concat('style.min.css'))
