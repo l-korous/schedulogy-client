@@ -10249,7 +10249,7 @@
                     month: 'month',
                     week: 'week',
                     day: 'day',
-                    now: "<i id='refreshingSpinner' class='ion-refresh icon' style='font-size:1.7em;margin-left:12px;margin-right:12px;padding:0;line-height:12px;'></i>"
+                    now: "<i id='refreshingSpinner' class='ion-refreshing icon' style='font-size:1.7em;margin-left:12px;margin-right:12px;padding:0;line-height:12px;'></i>"
                 },
                 buttonIcons: {
                 },
