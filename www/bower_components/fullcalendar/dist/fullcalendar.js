@@ -9969,11 +9969,9 @@
                 function now() {
                     startRefreshingSpinner();
                     t.options.refreshOnNow().then(function () {
-                        if (currentView.timeGrid)
-                        {
                             date = (t.getNow().hours() < 1 ? t.getNow().clone() : t.getNow().clone().subtract(t.options['scrollOffsetMinutes'], 'minute'));
+                        if (currentView.timeGrid)
                             currentView.forceScroll({top: currentView.timeGrid.computeDateTop(date, date)});
-                        }
                         renderView();
                     });
                 }

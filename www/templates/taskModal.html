@@ -46,14 +46,16 @@
                     <div class="input-label">
                         Due Date
                     </div>
-                    <input type="date" ng-model="currentItem.dueDate" name="dueDate" min="{{currentItem.constraint.startDue.format('YYYY-MM-DD')}}" max="{{currentItem.constraint.endDue.format('YYYY-MM-DD')}}" required id="taskDueDate" ng-change="processDueDateChange();"/>
+                    <input ng-if="!$root.canDoDateTimeInputs" type="text" class="datepicker" ng-model="currentItem.dueDate" name="taskDueDate" required id="taskDueDate"/>
+                    <input ng-if="$root.canDoDateTimeInputs" type="date" ng-model="currentItem.dueDate" name="taskDueDate" min="{{currentItem.constraint.startDue.format('YYYY-MM-DD')}}" max="{{currentItem.constraint.endDue.format('YYYY-MM-DD')}}" required id="taskDueDate" ng-change="processDueDateChange();"/>
                 </label>
 
                 <label class="item item-input" ng-show="!currentItem.allDay" ng-class="{ 'has-error' : form.dueTime.$invalid && !form.dueTime.$pristine }">
                     <div class="input-label">
                         Due Time
                     </div>
-                    <input type="time" ng-model="currentItem.dueDate" step="1800" min="{{currentItem.constraint.startDueTime}}" max="{{currentItem.constraint.endDueTime}}" name="dueTime" id="taskDueTime" ng-required="!currentItem.allDay" ng-change="processDueDateChange();"/>
+                    <input ng-if="!$root.canDoDateTimeInputs" type="text" class="timepicker" ng-model="currentItem.dueTime" name="taskDueTime" ng-required="!currentItem.allDay" id="taskDueTime" />
+                    <input ng-if="$root.canDoDateTimeInputs" type="time" ng-model="currentItem.dueDate" step="1800" min="{{currentItem.constraint.startDueTime}}" max="{{currentItem.constraint.endDueTime}}" name="taskDueTime" id="taskDueTime" ng-required="!currentItem.allDay" ng-change="processDueDateChange();"/>
                 </label>
 
                 <label class="item item-input range" ng-class="{ 'has-error' : form.floatingDuration.$invalid && !form.floatingDuration.$pristine }">

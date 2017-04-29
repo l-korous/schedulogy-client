@@ -39,14 +39,16 @@
                     <div class="input-label">
                         Start Date
                     </div>
-                    <input type="date" ng-model="currentItem.startDate" name="startDate" required id="reminderStartDate" ng-change="processStartDateChange();"/>
+                    <input ng-if="!$root.canDoDateTimeInputs" type="text" class="datepicker" ng-model="currentItem.startDate" name="reminderStartDate" required id="reminderStartDate"/>
+                    <input ng-if="$root.canDoDateTimeInputs" type="date" ng-model="currentItem.startDate" name="reminderStartDate" required id="reminderStartDate" ng-change="processStartDateChange();"/>
                 </label>
 
                 <label class="item item-input" ng-show="!currentItem.allDay" ng-class="{ 'has-error' : form.startTime.$invalid && !form.startTime.$pristine }">
                     <div class="input-label">
                         Start Time
                     </div>
-                    <input type="time" ng-model="currentItem.startDate" step="1800" name="startTime" id="reminderStartTime" ng-required="!currentItem.allDay" ng-change="processStartDateChange();"/>
+                    <input ng-if="!$root.canDoDateTimeInputs" type="text" class="timepicker" ng-model="currentItem.startTime" name="reminderStartTime" ng-required="!currentItem.allDay" id="reminderStartTime" />
+                    <input ng-if="$root.canDoDateTimeInputs" type="time" ng-model="currentItem.startDate" step="1800" name="reminderStartTime" id="reminderStartTime" ng-required="!currentItem.allDay" ng-change="processStartDateChange();"/>
                 </label>
 
                 <ion-toggle ng-model="data.showRepetition" ng-change="switchRepetition()" toggle-class="toggle-assertive">Repetition</ion-toggle>

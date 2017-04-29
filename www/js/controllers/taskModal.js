@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('TaskModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, lodash) {
+    .controller('TaskModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, Notification, $timeout, MyResources, ModalService, $ionicScrollDelegate, $rootScope) {
         $scope.myItems = MyItems;
         $scope.myResources = MyResources;
         $scope.popupOpen = null;
@@ -42,6 +42,27 @@ angular.module('Schedulogy')
 
                 $(function () {
                     $('#taskModalTextarea').autogrow();
+                    if (!$rootScope.canDoDateTimeInputs) {
+                        $("#taskDueDate").datepicker({
+                            onClose: function (dateText, inst) {
+                                $scope.currentItem.dueDate = dateText;
+                                $scope.processDueDateChange();
+                            },
+                            minDate: $scope.currentItem.constraint.startDue ? $scope.currentItem.constraint.startDue.format('MM/DD/YYYY') : null,
+                            maxDate: $scope.currentItem.constraint.endDue ? $scope.currentItem.constraint.endDue.format('MM/DD/YYYY') : null
+                        });
+
+                        $("#taskDueTime").on('change', function () {
+                            $scope.currentItem.dueTime = $('#taskDueTime')[0].value;
+                            $scope.processDueDateChange();
+                        });
+
+                        $("#taskDueTime").timepicker({
+                            timeFormat: 'H:i',
+                            minTime: $scope.currentItem.constraint.startDueTime,
+                            maxTime: $scope.currentItem.constraint.endDueTime
+                        });
+                    }
                 });
             });
         };
@@ -175,16 +196,21 @@ angular.module('Schedulogy')
         $scope.startValueForOrderingOfDependencies = function (event) {
             return event.start.unix();
         };
-        
-        $scope.processDueDateChange = function() {
-            $scope.currentItem.due = moment($scope.currentItem.dueDate);
-            Item.setDue($scope.currentItem);
+
+        $scope.processDueDateChange = function () {
+            Item.setDueFromDateAndTime($scope.currentItem);
+
             MyItems.processEventDuration($scope.currentItem);
 
             if (!MyItems.recalcEventConstraints($scope.currentItem))
                 $scope.currentItem.error = 'Impossible to schedule due to constraints';
-            else
+            else {
                 $scope.recalculateDeps();
+                if (!$rootScope.canDoDateTimeInputs) {
+                    $('#taskDueDate').timepicker('option', {'minDate': $scope.currentItem.constraint.startDue ? $scope.currentItem.constraint.startDue.format('MM/DD/YYYY') : null, 'maxDate': $scope.currentItem.constraint.endDue ? $scope.currentItem.constraint.endDue.format('MM/DD/YYYY') : null});
+                    $('#taskDueTime').timepicker('option', {'minTime': $scope.currentItem.constraint.startDueTime, 'maxTime': $scope.currentItem.constraint.endDueTime});
+                }
+            }
 
             $scope.form.$setDirty();
         };

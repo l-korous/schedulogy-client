@@ -42,26 +42,34 @@ angular.module('Schedulogy').controller('EventModalCtrl', function (DateUtils, $
 
             $(function () {
                 $('#eventModalTextarea').autogrow();
-                //if($rootScope.canDoDateTimeInputs)
-                $("#eventStartDate").datepicker({
-                    onClose: function (dateText, inst) {
-                        $scope.currentItem.startDate = dateText;
-                        $scope.processStartDateChange();
-                    },
-                    minDate: $scope.currentItem.constraint.start.format('MM/DD/YYYY'),
-                    maxDate: $scope.currentItem.constraint.end.format('MM/DD/YYYY')
-                });
+                if (!$rootScope.canDoDateTimeInputs) {
+                    $("#eventStartDate").datepicker({
+                        onClose: function (dateText, inst) {
+                            $scope.currentItem.startDate = dateText;
+                            $scope.processStartDateChange();
+                        },
+                        minDate: $scope.currentItem.constraint.start ? $scope.currentItem.constraint.start.format('MM/DD/YYYY') : null,
+                        maxDate: $scope.currentItem.constraint.end ? $scope.currentItem.constraint.end.format('MM/DD/YYYY') : null
+                    });
 
-                $("#eventStartTime").timepicker({
-                    timeFormat: 'H:i',
-                    minTime: $scope.currentItem.constraint.startTime,
-                    maxTime: $scope.currentItem.constraint.endTime
-                });
-                
-                $("#eventStartTime").on('change', function() {
-                    $scope.currentItem.startTime = $('#eventStartTime')[0].value;
-                    $scope.processStartDateChange();
-                })
+                    $("#eventStartTime").on('change', function () {
+                        $scope.currentItem.startTime = $('#eventStartTime')[0].value;
+                        $scope.processStartDateChange();
+                    });
+
+                    $("#eventStartTime").timepicker({
+                        timeFormat: 'H:i',
+                        minTime: $scope.currentItem.constraint.startTime,
+                        maxTime: $scope.currentItem.constraint.endTime
+                    });
+
+                    $("#repetitionEndDate").datepicker({
+                        onClose: function (dateText, inst) {
+                            $scope.currentItem.repetition.endDate = dateText;
+                            $scope.processRepetitionEndDateChange();
+                        }
+                    });
+                }
             });
         });
     };
@@ -174,7 +182,7 @@ angular.module('Schedulogy').controller('EventModalCtrl', function (DateUtils, $
 
     $scope.processStartDateChange = function () {
         Item.setStartFromDateAndTime($scope.currentItem);
-        
+
         MyItems.processEventDuration($scope.currentItem);
 
         if (!MyItems.recalcEventConstraints($scope.currentItem))
@@ -182,7 +190,7 @@ angular.module('Schedulogy').controller('EventModalCtrl', function (DateUtils, $
         else {
             $scope.recalculateDeps();
             if (!$rootScope.canDoDateTimeInputs) {
-                $('#eventStartTime').timepicker('option', {'minDate': $scope.currentItem.constraint.start.format('MM/DD/YYYY'), 'maxDate': $scope.currentItem.constraint.end.format('MM/DD/YYYY')});
+                $('#eventStartDate').timepicker('option', {'minDate': $scope.currentItem.constraint.start ? $scope.currentItem.constraint.start.format('MM/DD/YYYY') : null, 'maxDate': $scope.currentItem.constraint.end ? $scope.currentItem.constraint.end.format('MM/DD/YYYY') : null});
                 $('#eventStartTime').timepicker('option', {'minTime': $scope.currentItem.constraint.startTime, 'maxTime': $scope.currentItem.constraint.endTime});
             }
         }
@@ -191,9 +199,8 @@ angular.module('Schedulogy').controller('EventModalCtrl', function (DateUtils, $
     };
 
     $scope.processRepetitionEndDateChange = function () {
-        $scope.currentItem.repetition.end = moment($scope.currentItem.repetition.endDate);
-        Item.setRepetitionEnd($scope.currentItem);
-        $scope.form.endDate.$setDirty();
+        Item.setRepetitionEndFromDate($scope.currentItem);
+        $scope.form.repetitionEndDate.$setDirty();
     };
 
     $scope.$on('Esc', function () {

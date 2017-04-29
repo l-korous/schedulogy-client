@@ -3,7 +3,7 @@ angular.module('Schedulogy').service('Item', function (moment, constants, DateUt
     this.setBTime = function (btime) {
         this.btime = btime;
     };
-    this.setStartFromDateAndTime = function (item, date, time) {
+    this.setStartFromDateAndTime = function (item) {
         item.start = $rootScope.canDoDateTimeInputs ? moment(item.startDate) : moment(item.startDate, 'MM/DD/YYYY');
         if (!$rootScope.canDoDateTimeInputs) {
             item.start.set({
@@ -14,6 +14,7 @@ angular.module('Schedulogy').service('Item', function (moment, constants, DateUt
 
         item.startDateText = item.start.format(constants.dateFormatLong);
 
+        item.startTime = item.start.format('HH:mm');
         if (item.start.local().day() === moment(new Date()).local().day())
             item.startDateText += ' (today)';
         else {
@@ -43,9 +44,35 @@ angular.module('Schedulogy').service('Item', function (moment, constants, DateUt
                 item.startDateText += ' (tomorrow)';
         }
     };
-    this.setRepetitionEnd = function (item) {
-        item.repetition.endDate = item.repetition.end.toDate();
+    this.setRepetitionEndFromDate = function (item) {
+        item.repetition.end = $rootScope.canDoDateTimeInputs ? moment(item.repetition.endDate) : moment(item.repetition.endDate, 'MM/DD/YYYY');
         item.repetition.endDateText = item.repetition.end.format(constants.dateFormatLong);
+    };
+    this.setRepetitionEnd = function (item) {
+        item.repetition.endDate = $rootScope.canDoDateTimeInputs ? item.repetition.end.toDate() : item.repetition.end.format('MM/DD/YYYY');
+        item.repetition.endDateText = item.repetition.end.format(constants.dateFormatLong);
+    };
+    this.setDueFromDateAndTime = function (item) {
+        item.due = $rootScope.canDoDateTimeInputs ? moment(item.dueDate) : moment(item.dueDate, 'MM/DD/YYYY');
+        if (!$rootScope.canDoDateTimeInputs) {
+            item.due.set({
+                'hour': parseInt(item.dueTime.substring(0, 2)),
+                'minute': parseInt(item.dueTime.substring(3, 4))
+            });
+        }
+        
+        item.dueDateText = item.due.format(constants.dateFormatLong);
+        
+        item.dueTime = item.start.format('HH:mm');
+        if (item.due.local().day() === moment(new Date()).local().day())
+            item.dueDateText += ' (today)';
+        else {
+            var hourDifference = item.due.diff(new Date(), "hour");
+            if (hourDifference > -24 && hourDifference < 0)
+                item.dueDateText += ' (yesterday)';
+            if (hourDifference < 24 && hourDifference > 0)
+                item.dueDateText += ' (tomorrow)';
+        }
     };
     this.setDue = function (item, due) {
         if (due)
@@ -177,7 +204,8 @@ angular.module('Schedulogy').service('Item', function (moment, constants, DateUt
             // Some technicality
             stick: true,
             color: constants.itemColor(task.type, task.allDay),
-            borderColor: constants.itemBorderColor
+            borderColor: constants.itemBorderColor,
+            originalRepetition: task.repetition
         };
         switch (task.type) {
             case 'task':

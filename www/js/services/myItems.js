@@ -305,7 +305,7 @@ angular.module('Schedulogy')
 
         _this.processSaveRequest = function (passedItem, successCallback, errorCallback) {
             var itemToSave = passedItem || _this.currentItem;
-            if (!itemToSave.repetition || !itemToSave._id)
+            if (!itemToSave.repetition || !itemToSave._id || !itemToSave.originalRepetition)
                 _this.saveItem(itemToSave, 0, successCallback, errorCallback);
             else {
                 ModalService.openModal('singleOrRepetition');

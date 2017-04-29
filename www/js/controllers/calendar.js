@@ -65,7 +65,10 @@ angular.module('Schedulogy')
                     // This means allDay -> !allDay
                     else if ((MyItems.currentItem.type === 'event' || MyItems.currentItem.type === 'reminder') && !MyItems.currentItem.allDay && !MyItems.currentItem.startTimeText) {
                         Item.setStart(MyItems.currentItem);
-                        MyItems.currentItem.dur = constants.defaultTaskDuration[0];
+                        if (MyItems.currentItem.type === 'reminder')
+                            MyItems.currentItem.dur = 2;
+                        else
+                            MyItems.currentItem.dur = constants.defaultTaskDuration[0];
                         MyItems.processEventDuration(MyItems.currentItem);
                     }
 

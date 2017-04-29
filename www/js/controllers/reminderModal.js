@@ -1,5 +1,5 @@
 angular.module('Schedulogy')
-    .controller('ReminderModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, Notification, MyResources, ModalService, $ionicScrollDelegate, $timeout) {
+    .controller('ReminderModalCtrl', function (DateUtils, $scope, constants, MyItems, Item, moment, $rootScope, MyResources, ModalService, $ionicScrollDelegate, $timeout) {
         $scope.myItems = MyItems;
         $scope.myResources = MyResources;
         $scope.popupOpen = false;
@@ -23,6 +23,30 @@ angular.module('Schedulogy')
 
                 $(function () {
                     $('#reminderModalTextarea').autogrow();
+                    if (!$rootScope.canDoDateTimeInputs) {
+                        $("#reminderStartDate").datepicker({
+                            onClose: function (dateText, inst) {
+                                $scope.currentItem.startDate = dateText;
+                                $scope.processStartDateChange();
+                            }
+                        });
+
+                        $("#reminderStartTime").on('change', function () {
+                            $scope.currentItem.startTime = $('#reminderStartTime')[0].value;
+                            $scope.processStartDateChange();
+                        });
+
+                        $("#reminderStartTime").timepicker({
+                            timeFormat: 'H:i'
+                        });
+
+                        $("#repetitionEndDate").datepicker({
+                            onClose: function (dateText, inst) {
+                                $scope.currentItem.repetition.endDate = dateText;
+                                $scope.processRepetitionEndDateChange();
+                            }
+                        });
+                    }
                 });
             });
         };
@@ -54,16 +78,14 @@ angular.module('Schedulogy')
             }
         };
 
-        $scope.processStartDateChange = function() {
-            $scope.currentItem.start = moment($scope.currentItem.startDate);
-            Item.setStart($scope.currentItem);
+        $scope.processStartDateChange = function () {
+            Item.setStartFromDateAndTime($scope.currentItem);
             $scope.form.$setDirty();
         };
-        
-        $scope.processRepetitionEndDateChange = function() {
-            $scope.currentItem.repetition.end = moment($scope.currentItem.repetition.endDate);
-            Item.setRepetitionEnd($scope.currentItem);
-            $scope.form.endDate.$setDirty();
+
+        $scope.processRepetitionEndDateChange = function () {
+            Item.setRepetitionEndFromDate($scope.currentItem);
+            $scope.form.repetitionEndDate.$setDirty();
         };
 
         $scope.remove = function () {
