@@ -65,7 +65,7 @@ angular.module('Schedulogy')
                 },
                 refreshOnNow: function () {
                     var d = $q.defer();
-                    $rootScope.refreshStuff().then(function() {
+                    $rootScope.refreshData().then(function() {
                         d.resolve();
                     });
                     return d.promise;

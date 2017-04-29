@@ -113,16 +113,13 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             }
         };
 
-        $rootScope.refreshStuff = function () {
+        $rootScope.refreshData = function () {
             var d = $q.defer();
             if (Auth.isAuthenticated()) {
                 MyResources.refresh();
                 MyUsers.refresh();
                 MyItems.refresh().then(function () {
-                    $rootScope.refreshWidget();
-                    $timeout(function () {
-                        $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
-                    }, 1000);
+                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                     d.resolve();
                 });
             }
@@ -131,13 +128,24 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             return d.promise;
         };
 
+        $rootScope.refreshAll = function () {
+            if (Auth.isAuthenticated()) {
+                $timeout(function () {
+                    $rootScope.focusedEl = $(':focus');
+                    $('#theOnlyCalendar').fullCalendar('option', 'now', MyItems.getBTime);
+                    $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
+                    $rootScope.refreshData();
+                    $timeout(function () {
+                        $rootScope.focusedEl.focus();
+                    });
+                });
+            }
+        };
+
         function processOnlineOffline(isOnline) {
             if (isOnline) {
                 $("#isOffline").removeClass('showCustom');
-                $rootScope.calendarRenderedListener = $rootScope.$on('calendarRendered', function () {
-                    $rootScope.refreshStuff();
-                    $rootScope.calendarRenderedListener();
-                });
+                $rootScope.refreshAll();
             }
             else {
                 $("#isOffline").addClass('showCustom');
@@ -169,7 +177,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                         }
                         else if (value > -1)
                         {
-                            var item = $rootScope.currentItems[value];
+                            var item = $rootScope.currentItems[value - 3];
                             MyItems.setCurrentItem(item._id);
                             ModalService.openModal(item.type);
                         }
@@ -188,17 +196,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 });
 
                 document.addEventListener("resume", function () {
-                    if (Auth.isAuthenticated()) {
-                        $timeout(function () {
-                            $rootScope.focusedEl = $(':focus');
-                            $('#theOnlyCalendar').fullCalendar('option', 'now', MyItems.getBTime);
-                            $('#theOnlyCalendar').fullCalendar('updateNowIndicator');
-                            $rootScope.refreshStuff();
-                            $timeout(function () {
-                                $rootScope.focusedEl.focus();
-                            });
-                        });
-                    }
+                    $rootScope.refreshAll();
                 });
 
                 $ionicPlatform.registerBackButtonAction(function (event) {

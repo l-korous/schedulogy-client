@@ -8,8 +8,9 @@ angular.module('Schedulogy')
         _this.refresh = function () {
             var deferred = $q.defer();
             Task.query({btime: _this.getBTime().unix()}, function (data) {
-                _this.importFromTasks(data.tasks, data.dirtyTasks);
-                deferred.resolve();
+                _this.importFromTasks(data.tasks, data.dirtyTasks).then(function () {
+                    deferred.resolve();
+                });
             }, function (err) {
                 if (err.data && err.data.tasks && err.data.dirtyTasks) {
                     _this.importFromTasks(err.data.tasks, err.data.dirtyTasks);
@@ -20,6 +21,7 @@ angular.module('Schedulogy')
         };
 
         _this.importFromTasks = function (tasks, dirtyTasks) {
+            var deferred = $q.defer();
             if (dirtyTasks.length > 0)
                 ModalService.openModal('dirtyTasks');
 
@@ -60,7 +62,9 @@ angular.module('Schedulogy')
             // Scroll to where I was before.
             setTimeout(function () {
                 $('.fc-scroller').scrollTop(_this.scrollTop);
+                deferred.resolve();
             });
+            return deferred.promise;
         };
 
         _this.setCurrentItem = function (itemId) {
@@ -247,7 +251,7 @@ angular.module('Schedulogy')
 
         _this.getCurrentItems = function () {
             var currentItems = _this.items.filter(function (item) {
-                if(item.type === 'reminder' && item.done)
+                if (item.type === 'reminder' && item.done)
                     return false;
                 var diffToBTime = item.start.diff(_this.getBTime(), 'm');
                 if (diffToBTime > 0 && diffToBTime <= 1440)
