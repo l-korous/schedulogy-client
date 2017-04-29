@@ -119,7 +119,9 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                 MyResources.refresh();
                 MyUsers.refresh();
                 MyItems.refresh().then(function () {
-                    $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
+                    $timeout(function () {
+                        $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
+                    }, 0);
                     d.resolve();
                 });
             }

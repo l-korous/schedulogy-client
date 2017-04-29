@@ -25,15 +25,12 @@ angular.module('Schedulogy')
         };
 
         _this.refresh = function (callback) {
-            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
             Resource.query({}, function (data) {
                 _this.importData(data.resourcesLocal);
                 $rootScope.myResourceId = _this.getMyResourceId();
-                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 callback && callback();
             }, function (err) {
                 console.log('Resource.query - error');
-                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
             });
         };
 

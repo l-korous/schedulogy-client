@@ -11,22 +11,18 @@ angular.module('Schedulogy')
         };
 
         _this.refresh = function (callback) {
-            $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
             User.query({btime: MyItems.getBTime().unix()}, function (data) {
                 _this.users = data.usersLocal;
                 _this.tenantCode = data.params.tenantCode;
                 _this.originalTenantCode = data.params.originalTenantCode;
-                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
                 callback && callback();
             }, function (err) {
                 console.log('User.query - error');
-                $('#theOnlyCalendar').fullCalendar('stopRefreshingSpinner');
             });
         };
 
         _this.saveUser = function (successCallback, errorCallback) {
             $('#theOnlyCalendar').fullCalendar('startRefreshingSpinner');
-
             // TODO This is not the best place for this.
             if (_this.currentUser.admin)
                 _this.currentUser.role = 'admin';
