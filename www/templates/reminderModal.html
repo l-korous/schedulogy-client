@@ -51,7 +51,7 @@
 
                 <ion-toggle ng-model="data.showRepetition" ng-change="switchRepetition()" toggle-class="toggle-assertive">Repetition</ion-toggle>
 
-                <label class="item item-input item-nested-list" ng-show="currentItem.repetition">
+                <label class="item item-input item-nested-list" ng-if="currentItem.repetition">
                     <div class="list nested-list" style="margin-bottom:0;">
                         <label class="item item-text item-no-wrap" ng-show="currentItem._id && (form.endDate.$dirty || form.frequency.$dirty)">
                             You are changing the repetition, if you save this Reminder, all existing occurences will be overwritten.

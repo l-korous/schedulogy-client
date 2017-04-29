@@ -12,6 +12,7 @@
                 <div ng-show="form.title.$error.required && !form.title.$pristine" class="item help-block">Please provide a valid title.</div>
                 <div ng-show="form.startDate.$error.required" class="item help-block">Please provide a valid date.</div>
                 <div ng-show="form.startTime.$error.required" class="item help-block">Please provide a valid time.</div>
+                <div ng-show="form.repetitionEndDate.$error.required" class="item help-block">Please provide a valid date for repetition.</div>
                 <div ng-show="form.duration.$error.required" class="item help-block">Please provide a valid duration.</div>
                 <div ng-show="form.resource.$error.required" class="item help-block">Please provide a valid Calendar.</div>
                 <div ng-show="currentItem.error" class="item help-block">{{currentItem.error}}</div>
@@ -43,14 +44,16 @@
                     <div class="input-label">
                         Start Date
                     </div>
-                    <input type="date" ng-model="currentItem.startDate" name="startDate" min="{{currentItem.constraint.start.format('YYYY-MM-DD')}}" max="{{currentItem.constraint.end.format('YYYY-MM-DD')}}" required id="eventStartDate" ng-change="processStartDateChange();"/>
+                    <input ng-if="!$root.canDoDateTimeInputs" type="text" class="datepicker" ng-model="currentItem.startDate" name="startDate" required id="eventStartDate"/>
+                    <input ng-if="$root.canDoDateTimeInputs" type="date" ng-model="currentItem.startDate" name="startDate" min="{{currentItem.constraint.start.format('YYYY-MM-DD')}}" max="{{currentItem.constraint.end.format('YYYY-MM-DD')}}" required id="eventStartDate" ng-change="processStartDateChange();"/>
                 </label>
 
                 <label class="item item-input" ng-show="!currentItem.allDay" ng-class="{ 'has-error' : form.startTime.$invalid && !form.startTime.$pristine }">
                     <div class="input-label">
                         Start Time
                     </div>
-                    <input type="time" ng-model="currentItem.startDate" step="1800" min="{{currentItem.constraint.startTime}}" max="{{currentItem.constraint.endTime}}" name="startTime" id="eventStartTime" ng-required="!currentItem.allDay" ng-change="processStartDateChange();"/>
+                    <input ng-if="!$root.canDoDateTimeInputs" type="text" class="timepicker" name="startTime" required id="eventStartTime" />
+                    <input ng-if="$root.canDoDateTimeInputs" type="time" ng-model="currentItem.startDate" step="1800" min="{{currentItem.constraint.startTime}}" max="{{currentItem.constraint.endTime}}" name="startTime" id="eventStartTime" ng-required="!currentItem.allDay" ng-change="processStartDateChange();"/>
                 </label>
 
                 <label class="item item-input range" ng-class="{ 'has-error' : form.duration.$invalid && !form.duration.$pristine }">
@@ -63,7 +66,7 @@
 
                 <ion-toggle ng-model="data.showRepetition" ng-change="switchRepetition()" toggle-class="toggle-positive">Repetition</ion-toggle>
 
-                <label class="item item-input item-nested-list no-top-border" ng-show="currentItem.repetition">
+                <label class="item item-input item-nested-list no-top-border" ng-if="currentItem.repetition">
                     <div class="list nested-list" style="margin-bottom:0;">
                         <label class="item item-text item-no-wrap" ng-show="currentItem._id && (form.repetitionEndDate.$dirty || form.frequency.$dirty)">
                             You are changing the repetition, if you save this Event, all existing occurences will be overwritten.
@@ -83,7 +86,7 @@
                             <div class="input-label">
                                 End Date
                             </div>
-                            <input type="date" ng-model="currentItem.repetition.endDate" name="repetitionEndDate"/>
+                            <input type="text" class="datepicker" ng-model="currentItem.repetition.endDate" name="repetitionEndDate" ng-change="processRepetitionEndDateChange" ng-required="data.showRepetition"/>
                         </label>
                     </div>
                 </label>

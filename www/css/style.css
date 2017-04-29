@@ -1043,3 +1043,16 @@ input::-webkit-inner-spin-button {
     background:#33cd5f;
     color:white ! important;
 }
+
+#ui-datepicker-div{
+    position:absolute;
+}
+
+.datepicker {
+    position:relative;
+    z-index: 50 ! important;
+}
+
+body.modal-open {
+    pointer-events:auto;
+}

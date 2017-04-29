@@ -86,7 +86,7 @@
         <script src="js/controllers/removeResourceModal.js"></script>
 
     </head>
-    <body ng-app="Schedulogy" ng-keyup="$root.keyUpHandler($event.keyCode, $event.ctrlKey);">
+    <body ng-app="Schedulogy" ng-keydown="$root.keyUpHandler($event.keyCode, $event.ctrlKey);">
         <div ui-view></div>
     </body>
 </html>
