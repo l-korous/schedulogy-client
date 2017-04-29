@@ -103,6 +103,10 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
                     return !a.startTimeText;
                 });
 
+                ace.android.appWidget.add('* NEW Reminder');
+                ace.android.appWidget.add('* NEW Event');
+                ace.android.appWidget.add('* NEW Task');
+
                 $rootScope.currentItems.forEach(function (item) {
                     ace.android.appWidget.add((item.startTimeText ? item.startTimeText + ' | ' : '') + item.title + ' (' + item.type.toUpperCase() + ')');
                 });
@@ -148,7 +152,22 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
 
                 function checkForWidgetActivation() {
                     ace.android.getIntent().invoke("getIntExtra", "widgetSelectionIndex", -1, function (value) {
-                        if (value > -1)
+                        if (value === 0)
+                        {
+                            MyItems.newCurrentItem('reminder');
+                            ModalService.openModal('reminder');
+                        }
+                        if (value === 1)
+                        {
+                            MyItems.newCurrentItem('event');
+                            ModalService.openModal('event');
+                        }
+                        if (value === 2)
+                        {
+                            MyItems.newCurrentItem('task');
+                            ModalService.openModal('task');
+                        }
+                        else if (value > -1)
                         {
                             var item = $rootScope.currentItems[value];
                             MyItems.setCurrentItem(item._id);

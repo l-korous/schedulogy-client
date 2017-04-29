@@ -247,6 +247,8 @@ angular.module('Schedulogy')
 
         _this.getCurrentItems = function () {
             var currentItems = _this.items.filter(function (item) {
+                if(item.type === 'reminder' && item.done)
+                    return false;
                 var diffToBTime = item.start.diff(_this.getBTime(), 'm');
                 if (diffToBTime > 0 && diffToBTime <= 1440)
                     return true;
