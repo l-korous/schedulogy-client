@@ -1,6 +1,5 @@
 'use strict';
 var gulp = require('gulp');
-var sourcemaps = require('gulp-sourcemaps');
 var bytediff = require('gulp-bytediff');
 var wiredep = require('wiredep');
 var concat = require('gulp-concat');
@@ -122,7 +121,6 @@ gulp.task('minify-css', function () {
         "www/css/style.css"
     ])
         .pipe(concat('style.min.css'))
-        .pipe(cleanCss())
         .pipe(gulp.dest('www/css-min'));
 });
 
