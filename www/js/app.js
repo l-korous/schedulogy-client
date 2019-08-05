@@ -41,6 +41,7 @@ angular.module('Schedulogy', ['ngResource', 'ui.router', 'ui.calendar', 'ionic',
             options: {
                 auth: {
                     redirect: false,
+                    responseType: 'token id_token',
                     sso: false,
                     connectionScopes: {
                         'google-oauth2': ['openid', 'email', 'profile'],
