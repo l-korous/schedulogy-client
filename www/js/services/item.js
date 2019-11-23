@@ -286,7 +286,7 @@ angular.module('Schedulogy').service('Item', function (moment, constants, DateUt
                 }
                 break;
             case 'reminder':
-                var start = moment.unix(task.start).local();
+                var start = (task.done || !task.allDay) ? moment.unix(task.start).local() : moment.unix(Math.max(this.btime.unix(), task.start)).local();
                 start = (task.allDay ? start.startOf('day') : start);
                 var item = angular.extend(item, {
                     allDay: (task.allDay),
